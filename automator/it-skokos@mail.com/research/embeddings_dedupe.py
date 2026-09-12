@@ -1,65 +1,67 @@
-# Beacon API Embeddings Deduplication Prototype
-**Author:** Iris Ito  
+# Prototype Embeddings Deduplication Implementation
+**Author:** Torq Bishop  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D12 13:25  
+**Produced:** D13 04:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-performance vector deduplication module using quantized cosine similarity and locality-sensitive hashing to minimize inference latency.
+Implemented a pragmatic vector deduplication utility for the Beacon API project to identify and filter near-duplicate semantic records, aligned with operational requirements in the Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Embeddings Dedupe Prototype
-# Author: Iris Ito (Latency Hunter)
-# Reference: Business Document: Company Document (guided throughput SLOs and data retention thresholds)
-
 import numpy as np
-from typing import List, Tuple
+from typing import List, Dict, Any, Tuple
 
-class FastEmbeddingsDedupe:
+# Project: Beacon API
+# Module: Embeddings Deduplication Prototype
+# Reference: Aligned with data governance and performance criteria in 'Company Document'.
+
+class EmbeddingsDeduplicator:
     """
-    High-throughput deduplication engine for Beacon API embeddings.
-    Designed per specs in 'Company Document' to sustain <5ms p99 latency target.
+    Pragmatic deduplicator using cosine similarity thresholding on embedding vectors.
+    Derived from operational specs outlined in Business Document: Company Document.
     """
-    def __init__(self, threshold: float = 0.92, vector_dim: int = 256):
-        self.threshold = threshold
-        self.vector_dim = vector_dim
-        self.index = np.empty((0, vector_dim), dtype=np.float32)
-        self.id_map: List[str] = []
+    def __init__(self, similarity_threshold: float = 0.92):
+        self.threshold = similarity_threshold
 
-    def _normalize(self, vectors: np.ndarray) -> np.ndarray:
-        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        norms[norms == 0] = 1.0
-        return vectors / norms
+    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
+        return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
 
-    def deduplicate_batch(self, item_ids: List[str], embeddings: np.ndarray) -> Tuple[List[str], List[str]]:
+    def deduplicate(self, records: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
-        Filters out duplicate embeddings in batch against indexed corpus.
-        Returns (retained_ids, dropped_ids).
+        Filter out redundant items based on vector similarity.
+        Returns unique records and identified duplicates.
         """
-        if embeddings.size == 0:
-            return [], []
+        unique_records = []
+        duplicates = []
+        kept_vectors = []
 
-        norm_embeddings = self._normalize(embeddings.astype(np.float32))
-        retained_ids, dropped_ids = [], []
-        new_vectors = []
+        for item in records:
+            vec = np.array(item['embedding'], dtype=np.float32)
+            is_duplicate = False
 
-        for i, emb in enumerate(norm_embeddings):
-            if self.index.shape[0] > 0:
-                sims = np.dot(self.index, emb)
-                if np.max(sims) >= self.threshold:
-                    dropped_ids.append(item_ids[i])
-                    continue
-            
-            retained_ids.append(item_ids[i])
-            new_vectors.append(emb)
+            for prev_vec in kept_vectors:
+                if self._cosine_similarity(vec, prev_vec) >= self.threshold:
+                    is_duplicate = True
+                    break
 
-        if new_vectors:
-            new_block = np.vstack(new_vectors)
-            self.index = np.vstack([self.index, new_block]) if self.index.shape[0] > 0 else new_block
-            self.id_map.extend(retained_ids)
+            if is_duplicate:
+                duplicates.append(item)
+            else:
+                kept_vectors.append(vec)
+                unique_records.append(item)
 
-        return retained_ids, dropped_ids
+        return unique_records, duplicates
 
+if __name__ == '__main__':
+    # Quick verification stub for Beacon API pipeline integration
+    sample_data = [
+        {'id': 1, 'text': 'SaaS platform sync issue', 'embedding': [0.12, 0.88, 0.45]},
+        {'id': 2, 'text': 'SaaS platform syncing error', 'embedding': [0.13, 0.87, 0.46]},
+        {'id': 3, 'text': 'Face-to-face service booking', 'embedding': [0.91, 0.05, 0.11]}
+    ]
+    deduper = EmbeddingsDeduplicator(similarity_threshold=0.95)
+    unique, dupes = deduper.deduplicate(sample_data)
+    print(f'Retained: {len(unique)}, Duplicates: {len(dupes)}')
 ```
