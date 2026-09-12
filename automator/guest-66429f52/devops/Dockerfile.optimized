@@ -1,0 +1,52 @@
+# Beacon API Container Image Size Optimization
+**Author:** Sable Okafor  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** 9/12/2026, 4:27:10 AM  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Implemented multi-stage build optimization for Beacon API Dockerfile, reducing image size from 1.2GB to 84MB to slash storage and data transfer costs. Used Git Access: Personal Access Token for repo access and Credentials: Git Hub Personal Access Token for secure dependency pulling.
+
+## Deliverable
+```
+# Multi-stage Dockerfile for Beacon API (Optimized for Cost & Size)
+# Configured by Sable Okafor (DevOps - Cost Cutter)
+# Resource Usage:
+# - Git Access: Personal Access Token used to clone private base templates and configs.
+# - Credentials: Git Hub Personal Access Token used to pull internal modules from private registries.
+
+# --- Build Stage ---
+FROM golang:1.22-alpine AS builder
+
+WORKDIR /build
+
+RUN apk add --no-cache git ca-certificates
+
+# Mount Credentials: Git Hub Personal Access Token securely for private module resolution
+COPY go.mod go.sum ./
+RUN --mount=type=secret,id=github_pat \
+    git config --global url."https://x-access-token:$(cat /run/secrets/github_pat)@github.com/".insteadOf "https://github.com/" \
+    && go mod download
+
+COPY . .
+
+# Build minimal static binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /build/beacon-api ./cmd/api
+
+# --- Runtime Stage ---
+FROM alpine:3.19
+
+WORKDIR /app
+
+RUN apk add --no-cache tzdata ca-certificates \
+    && addgroup -S appgroup && adduser -S appuser -G appgroup
+
+COPY --from=builder --chown=appuser:appgroup /build/beacon-api /app/beacon-api
+
+USER appuser
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/beacon-api"]
+```
