@@ -1,71 +1,62 @@
-# Atlas Core - Auth Service Modular Architecture Refactoring
-**Author:** Halo Van Dyk  
+# Atlas Core - Refactored Authentication & Session Management Service
+**Author:** Onyx Cross  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D13 01:45  
+**Produced:** D13 10:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Complete structural refactoring of the Atlas Core authentication service into a decoupled, injectable provider model adhering to the compliance and operational guidelines specified in Company Document.
+Refactored the Atlas Core Authentication Service into decoupled, strongly typed domain modules, eliminating legacy duplication and enforcing the architectural guidelines specified in Business Document: Company Document.
 
 ## Deliverable
 ```
 /**
- * @file auth.service.ts
- * @module AtlasCore/Auth
- * @author Halo Van Dyk <halo.vandyk@itskokos.internal>
- * @description Refactored authentication domain service enforcing zero-trust session tokenization
- * and multi-tenant context validation per requirements outlined in 'Company Document'.
+ * @module AtlasCore/AuthService
+ * @author Onyx Cross <onyx.cross@itskokos.internal>
+ * @description Refactored authentication domain service implementing modular token verification,
+ * RBAC validation, and session rotation.
+ * 
+ * Compliance & Standards:
+ * Refactored strictly in accordance with architectural security baselines and JWT lifecycle
+ * specifications outlined in Business Document: Company Document.
  */
 
-import { ITokenProvider, ICryptoHasher, IUserRepository, ISessionStore } from './interfaces';
-import { AuthCredentials, AuthResult, UserPrincipal, AuthError } from './types';
+import { Result, ok, err } from '../../core/result';
+import { TokenProvider, HashService, SessionRepository } from '../interfaces';
+import { AuthCredentials, AuthSession, AuthError, UserContext } from './auth.types';
 
 export class AuthService {
   constructor(
-    private readonly userRepo: IUserRepository,
-    private readonly sessionStore: ISessionStore,
-    private readonly cryptoHasher: ICryptoHasher,
-    private readonly tokenProvider: ITokenProvider
+    private readonly tokenProvider: TokenProvider,
+    private readonly hashService: HashService,
+    private readonly sessionRepo: SessionRepository
   ) {}
 
-  /**
-   * Authenticates principal and issues rotated session tokens.
-   * Validates multi-tenant boundaries mapped in 'Company Document'.
-   */
-  public async authenticate(creds: AuthCredentials): Promise<AuthResult> {
-    const user = await this.userRepo.findByEmail(creds.email);
-    if (!user || !user.isActive) {
-      throw new AuthError('INVALID_CREDENTIALS', 'Authentication failed');
+  public async authenticate(credentials: AuthCredentials): Promise<Result<AuthSession, AuthError>> {
+    const user = await this.sessionRepo.findByEmail(credentials.email);
+    if (!user || !(await this.hashService.verify(credentials.password, user.passwordHash))) {
+      return err(AuthError.INVALID_CREDENTIALS);
     }
 
-    const isValid = await this.cryptoHasher.verify(creds.password, user.passwordHash);
-    if (!isValid) {
-      throw new AuthError('INVALID_CREDENTIALS', 'Authentication failed');
-    }
+    const sessionContext: UserContext = { id: user.id, tenantId: user.tenantId, roles: user.roles };
+    const tokens = await this.tokenProvider.generateTokenPair(sessionContext);
 
-    const principal: UserPrincipal = {
+    await this.sessionRepo.persistSession({
       userId: user.id,
-      tenantId: user.tenantId,
-      roles: user.roles,
-      scope: user.scope
-    };
-
-    const [accessToken, refreshToken] = await Promise.all([
-      this.tokenProvider.issueAccessToken(principal),
-      this.tokenProvider.issueRefreshToken(principal)
-    ]);
-
-    await this.sessionStore.persistSession(user.id, refreshToken, {
-      ttlSeconds: 86400,
-      clientIp: creds.clientIp
+      refreshTokenHash: await this.hashService.hash(tokens.refreshToken),
+      issuedAt: new Date(),
     });
 
-    return {
-      user: principal,
-      tokens: { accessToken, refreshToken },
-      authenticatedAt: new Date()
-    };
+    return ok({
+      user: sessionContext,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      expiresIn: tokens.expiresIn,
+    });
+  }
+
+  public async validateToken(token: string): Promise<Result<UserContext, AuthError>> {
+    return this.tokenProvider.verifyAccessToken(token);
   }
 }
 ```
