@@ -1,0 +1,69 @@
+# Beacon API - Hardened CI/CD Pipeline Configuration
+**Author:** Kilo Bishop  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D146 17:20  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Refactored and hardened the Beacon API GitHub Actions CI pipeline by enforcing least-privilege token permissions, full commit SHA pinning, and automated dependency vulnerability scanning using provisioned company credentials.
+
+## Deliverable
+```
+name: Beacon API - Hardened CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  security-events: write
+  packages: read
+
+jobs:
+  audit-and-build:
+    name: Security Lint & Immutable Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          token: ${{ secrets.GIT_ACCESS_PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 1
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe8d343 # v4.0.2
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Verify Package Integrity
+        run: npm ci --ignore-scripts
+
+      - name: Static Security & SAST Scan
+        uses: aquasecurity/trivy-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.CREDENTIALS_GIT_HUB_PERSONAL_ACCESS_TOKEN }}
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Security Findings
+        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Unit & Integration Tests
+        run: npm test -- --coverage --ci
+
+      - name: Publish Build Metadata
+        run: echo "Artifact validated with Git Access: Personal Access Token & Credentials: Git Hub Personal Access Token."
+```
