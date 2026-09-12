@@ -1,42 +1,40 @@
-# Atlas Core: Mobile Nav Overhaul Chaos Test & UX Resilience Spec
-**Author:** Rune Hale  
+# Chaos Test Matrix & UI Stress Spec: Atlas Core Mobile Nav Overhaul
+**Author:** Nova Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 11:30  
+**Produced:** D12 23:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Chaos-driven design verification and stress test specification for the mobile navigation overhaul on Atlas Core, incorporating compliance guidelines from the Company Document.
+Comprehensive edge-case stress specification and breakdown testing protocol for the Atlas Core mobile navigation overhaul, focusing on layout breakages, gesture conflicts, and state resilience.
 
 ## Deliverable
 ```
-# Atlas Core: Mobile Nav Overhaul - Chaos & Resilience Spec
-**Owner:** Rune Hale (Design / Chaos Testing)
-**Scope:** Mobile Navigation Drawer, Gestures, & Viewport Resilience
-**Reference:** `Company Document` (Used to extract core IA hierarchy, brand compliance, and enterprise accessibility standards).
+# ATLAS CORE: Mobile Navigation Overhaul - Chaos UI/UX Stress Spec
+**Author:** Nova Bishop (Design / Chaos Testing)
+**Project:** Atlas Core | I.T. Skokos SaaS & Face-to-Face Services Platform
 
----
+## 1. Context & Resource Utilization
+- **Business Document: Company Document**: Leveraged as the baseline structural reference to extract required dual-domain routing (SaaS tenant tools vs. F2F on-site dispatch services). Used to identify critical navigation paths and ensure high-stress failure modes still preserve baseline brand compliance and mandatory compliance disclosures.
 
-### 1. Document Reference & Baseline
-We cross-referenced the `Company Document` to identify mandatory SaaS navigation paths versus face-to-face service booking flows. The baseline guarantees AA accessibility contrast and touch target thresholds (48x48dp minimum) before applying chaos stress vectors.
+## 2. Chaos Scenarios & Boundary Stress Matrix
 
-### 2. Chaos Test Vectors & Edge Case Specifications
+### Scenario A: Rapid Gesture Collisions & Drawer Thrashing
+- **Vector**: Simultaneous 3-finger horizontal pan, rapid toggle of hamburger menu icon (15 clicks/sec), and OS-level swipe-back gesture.
+- **Expected Failure**: Sheet backdrop desync, layout freeze in half-open state, double backdrop alpha compounding.
+- **Required Guardrail**: Hard-lock animation state with strict debouncing (200ms) and enforce CSS `pointer-events: none` on transitioning parent drawers.
 
-#### A. Multi-Touch Race Conditions & Interrupted Gestures
-* **Vector:** Rapid simultaneous edge-swipe open and backdrop tap dismiss within 50ms.
-* **Spec:** Physics engine must cancel spring momentum immediately. Drawer state machine must settle to binary `CLOSED` or `OPEN` without intermediate UI ghosting or gesture lock.
-* **Visual Cue:** If interrupted mid-arc, snap with `cubic-bezier(0.2, 0.8, 0.2, 1)` within 120ms.
+### Scenario B: Viewport & Dynamic Font Scaling Destruction
+- **Vector**: Set viewport width to 280px (extreme foldables/legacy), OS dynamic text scaling to 300% (Accessibility XXL), device rotated mid-render.
+- **Expected Failure**: Nav labels truncating into ellipses without tooltips, F2F scheduling CTA overlapping SaaS workspace switcher.
+- **Required Guardrail**: Implement flex-wrap fallbacks, vertical stacking sub-menus with strict max-heights, and auto-scrolling container overflows with custom snap indicators.
 
-#### B. Viewport & Foldable Dynamic Mutation
-* **Vector:** Viewport resize/orientation change mid-transition on dual-screen/foldable devices.
-* **Spec:** Mobile nav must instantly unmount drawer overlays when crossing breakpoint (>768px) and transfer focus state to desktop sidebar without lost focus trap.
+### Scenario C: Deep Tenant Hierarchy & Dirty State Multi-Tenant Switching
+- **Vector**: Tenant switcher carrying 50+ localized team names with special/Unicode characters (e.g., RTL strings, zero-width spaces, emoji spam).
+- **Expected Failure**: DOM node explosion inside sticky header, text overflow escaping container bounds.
+- **Required Guardrail**: Virtualized list rendering for tenant selector, strict `overflow: hidden` + CSS text truncation, auto-detection of RTL text direction per list item.
 
-#### C. Network Partition & Session Drop During Nav Render
-* **Vector:** Dynamic module badges (SaaS alerting + Face-to-Face booking updates) fail mid-render.
-* **Spec:** Nav items must render skeleton placeholders. Navigation links must remain interactive even if real-time microservice counters 504 out.
-
-### 3. Sign-off Criteria
-- Zero UI freeze under 10Hz rapid gesture spam.
-- Screen reader focus trapped properly within open nav, restored to hamburger trigger on escape.
-- All criteria align with security & UX rules in `Company Document`.
+## 3. Chaos Verification Checklist
+- [ ] Nav drawer survives offline drop while executing sub-menu fetch.
+- [ ] F2F Service Dispatch shortcut remains interactive under 90% CPU throttling.
 ```
