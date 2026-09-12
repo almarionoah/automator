@@ -1,44 +1,39 @@
-# Design Specification: Atlas Core Dashboard Density Reduction
-**Author:** Lyra Van Dyk  
+# UI/UX Design Spec: Dashboard Density Optimization for Atlas Core
+**Author:** Zed Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D4 11:20  
+**Produced:** D11 12:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-UI/UX design specification defining spacing, typography, and card consolidation rules to simplify dashboard density on Atlas Core, aligned with requirements from Company Document.
+Pragmatic design spec and token refactor reducing visual density on the Atlas Core dashboard via simplified 8pt grid metrics, card consolidation, and progressive disclosure.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard Density Simplification
+# Design Specification: Atlas Core Dashboard Density Reduction
+Author: Zed Fontaine (Design)
+Project: Atlas Core
+Status: Ready for Implementation
 
-**Author:** Lyra Van Dyk (Design)
-**Project:** Atlas Core
-**Status:** Ready for Engineering Review
+## 1. Overview & Objective
+Simplify visual density across the Atlas Core primary dashboard to decrease user cognitive overhead without sacrificing operational throughput for both SaaS platform workflows and Face to Face service scheduling.
 
----
+## 2. Resource Alignment
+- Business Document: Company Document: Utilized to audit existing dashboard widgets against primary operational KPIs. Metrics not explicitly required by the business document were demoted from primary cards to secondary tabs, ensuring high-priority business targets remain prominent while eliminating visual clutter.
 
-## 1. Overview & Objectives
-Following the strategic guidelines outlined in **Company Document**, this specification streamlines the primary Atlas Core dashboard interface. The goal is to reduce cognitive load, improve scannability, and establish a cohesive hierarchy across both SaaS Platform metrics and Face-to-Face Service scheduling modules.
+## 3. Layout & Spacing Token Updates
+- Base Spacing Scale: Transitioned from condensed 4px increments to a standard 8px grid (spacing-md: 16px, spacing-lg: 24px).
+- Widget Grid: Replaced 4-column micro-card layout with a responsive 3-column modular grid (min-width: 360px per card).
+- Padding Refactor:
+  - Card container padding: Increased from 12px to 20px.
+  - Table cell padding: Increased vertical padding from 6px to 12px for improved legibility.
 
-## 2. Resource Utilization
-- **Company Document**: Consulted for high-level business goals, core KPI definitions, and multi-tenant layout constraints. The metric hierarchy defined in section 3 directly informs widget grouping.
+## 4. Visual Hierarchy & Progressive Disclosure
+- Metric Card Consolidation: Merged 6 standalone KPI widgets into 3 unified metric summaries with inline trend sparklines.
+- Collapsible Activity Feeds: Converted continuous live feeds into expandable drawers with default 5-item display limit.
+- Action Demotion: Secondary actions (e.g., Export, Filter Presets) moved into a consolidated header utility menu.
 
-## 3. Layout & Grid Changes
-- **Base Grid**: Shift from 12-column compact (8px gutters) to an 8pt modular grid (16px gutters, 24px container margins).
-- **Card Consolidation**:
-  - Merge 'Active Operations' and 'Real-time Telemetry' into a unified single-card tabbed component.
-  - Limit above-the-fold primary metric widgets to 4 key performance tiles (down from 8).
-- **Spacing Scale**:
-  - Default card padding: increased from 12px to 20px.
-  - Micro-spacing between label and value: set to 4px standard.
-
-## 4. Typography & Visual Hierarchy
-- **Primary Metrics**: `text-2xl font-semibold` (Inter Display / 24px) for top-line numbers.
-- **Secondary Data**: `text-sm text-slate-500` (Inter / 14px) for historical comparisons.
-- **Status Tags**: Standardize on subtle badges (radius: 4px, padding: 2px 8px) to eliminate visual noise from solid color fills.
-
-## 5. Interaction & Progressive Disclosure
-- Secondary charts default to collapsed accordion views on screen widths < 1440px.
-- Deep-dive diagnostic tables moved behind a slide-over modal via 'View Breakdown' action.
+## 5. Next Steps
+- Ship token updates to `@skokos/atlas-ui` package.
+- Validate telemetry on task completion speed post-deployment.
 ```
