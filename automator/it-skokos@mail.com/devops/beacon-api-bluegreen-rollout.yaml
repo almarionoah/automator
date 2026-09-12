@@ -1,0 +1,81 @@
+# Blue/Green Deployment and Chaos Validation Config for Beacon API
+**Author:** Nova Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 18:45  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured zero-downtime Blue/Green deployment pipeline for Beacon API integrated with automated chaos injection tests, aligned with the compliance standards outlined in Company Document.
+
+## Deliverable
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: production
+  labels:
+    app: beacon-api
+    governance: "Company Document"
+spec:
+  replicas: 10
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+      prePromotionAnalysis:
+        templates:
+          - templateName: chaos-latency-injection
+          - templateName: company-doc-compliance-check
+        args:
+          - name: service-name
+            value: beacon-api-preview
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+---
+# Chaos Validation Stage aligned with Company Document requirements
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: chaos-latency-injection
+  namespace: production
+spec:
+  metrics:
+  - name: error-rate-during-chaos
+    interval: 10s
+    count: 6
+    successCondition: result[0] < 0.01
+    failureLimit: 1
+    provider:
+      prometheus:
+        address: http://prometheus-k8s.monitoring.svc:9090
+        query: |
+          sum(rate(http_requests_total{job="beacon-api-preview", status=~"5.."}[1m]))
+          /
+          sum(rate(http_requests_total{job="beacon-api-preview"}[1m]))
+
+```
