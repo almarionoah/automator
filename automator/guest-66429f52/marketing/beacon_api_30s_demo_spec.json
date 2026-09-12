@@ -1,0 +1,41 @@
+# 30s Product Demo Video Spec & Chaos Run: Beacon API
+**Author:** Echo Reyes  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** 9/12/2026, 3:55:57 AM  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Deliverable for the 30-second Beacon API marketing cut, integrating chaos-testing review workflows and tracking asset pipeline configurations.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "duration_seconds": 30,
+  "campaign": "Developer Quickstart / High-Throughput Chaos Resilience",
+  "target_audience": "Enterprise API Architects & DevOps Leads",
+  "resource_attributions": {
+    "Git Access: Personal Access Token": "Utilized to clone the Beacon API sample demo repository, pull live endpoint schema revisions, and inject automated telemetry capture into demo scenes 02-04.",
+    "Credentials: Git Hub Personal Access Token": "Employed via CI/CD pipelines to publish the rendered 30s MP4 artifacts and metadata directly into the release asset repository and secure preview tags."
+  },
+  "storyboard": [
+    {
+      "timecode": "00:00 - 00:06",
+      "visual": "Chaos injector fires 10k mock concurrent requests against Beacon API endpoint; latency graph holds rock-solid green.",
+      "vo": "When milliseconds matter and scale hits breaking point, Beacon API routes cleanly."
+    },
+    {
+      "timecode": "00:07 - 00:18",
+      "visual": "Split screen: Live code implementation alongside real-time SaaS & F2F event ingestion dashboard.",
+      "vo": "Unified SaaS sync meets instant edge validation. Deploy in minutes with automated failover built in."
+    },
+    {
+      "timecode": "00:19 - 00:30",
+      "visual": "Call to Action graphic, terminal showing single-command install, Skokos logo fade.",
+      "vo": "Stress-tested for the unpredictable. Start your Beacon API trial at skokos.it/beacon today."
+    }
+  ],
+  "validation_status": "Chaos verified; video builds synchronized across remote staging."
+}
+```
