@@ -1,0 +1,76 @@
+# Autoscaling Worker Pool Specification & Manifest for Beacon API
+**Author:** Mint Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 11:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+A calibrated KEDA and HPA autoscaling deployment for the Beacon API worker pool designed to breathe smoothly with incoming traffic bursts, referencing Business Document: Company Document for latency thresholds and capacity baselines.
+
+## Deliverable
+```
+# Beacon API Worker Pool Elasticity Manifest
+# Crafted with care by Mint Van Dyk | DevOps, I.T. Skokos
+#
+# Operational Philosophy:
+# Infrastructure should feel like an invisible, gentle breeze—effortless, responsive, 
+# and protective of the human experience across our SaaS and Face-to-Face touchpoints.
+#
+# Strategic Alignment:
+# Derived from guidelines in 'Business Document: Company Document', this configuration
+# integrates the operational SLA baselines (p99 latency < 120ms) and scheduled event load
+# models specified in the document, avoiding jarring scale-down jitters.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-autoscaler
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/part-of: beacon-platform
+    infra.skokos.it/experience-tier: seamless
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4
+  maxReplicaCount: 48
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+            - type: Pods
+              value: 4
+              periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 15
+              periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: beacon.events.ingest
+        mode: QueueLength
+        value: "30"
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-k8s.monitoring.svc:9090
+        metricName: http_request_duration_p99
+        query: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{app="beacon-api"}[2m])) by (le))
+        threshold: "0.120"
+```
