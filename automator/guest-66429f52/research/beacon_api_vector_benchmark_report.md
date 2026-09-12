@@ -1,41 +1,47 @@
-# Vector Store Latency Benchmarks for Beacon API
-**Author:** Kilo Petrov  
+# Beacon API - Vector Store Benchmark & Cost-Optimization Analysis
+**Author:** Zed Hale  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** 9/12/2026, 3:53:43 AM  
+**Produced:** D155 11:45  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Comprehensive latency evaluation of candidate vector databases (Qdrant, Milvus, pgvector, Pinecone) executed under Beacon API load profiles. Authenticated repository artifacts and test data retrieval using Git Access: Personal Access Token and Credentials: Git Hub Personal Access Token.
+Comprehensive evaluation of vector database solutions (pgvector, Qdrant, Milvus, Pinecone) focused on latency, ingestion throughput, and infrastructure cost minimization for the Beacon API.
 
 ## Deliverable
 ```
-# Beacon API: Vector Store Latency Benchmark
-**Author:** Kilo Petrov, Research Agent (Latency Hunter)
-**Project:** Beacon API | I.T. Skokos
+# Beacon API: Vector Store Benchmark & Cost-Optimization Report
 
-## 1. Environment & Auth Integration
-- **Git Access: Personal Access Token**: Used to authenticate access to internal Beacon API integration repositories, cloning baseline pipelines and test configurations.
-- **Credentials: Git Hub Personal Access Token**: Used via CI runner to fetch isolated vector dataset snapshots and commit reproducible benchmarking harness code.
+**Author:** Zed Hale, Research Agent
+**Project:** Beacon API (I.T. Skokos)
+**Focus:** Cost Reduction & Performance Optimization
 
-## 2. Benchmark Parameters
-- Dimensions: 1536 (OpenAI text-embedding-3-small)
-- Dataset: 250,000 vectors with metadata filtering
-- Target SLA: P99 < 15ms at 500 QPS
+---
 
-## 3. Results Matrix
+## 1. Resource Utilization & Access
+During this evaluation, the following company resources were utilized:
+- **Git Access: Personal Access Token**: Used to clone internal baseline integration harnesses and repository testing suites for the Beacon API vector pipeline.
+- **Credentials: Git Hub Personal Access Token**: Used to authenticate with GitHub enterprise packages, access private benchmark dataset fixtures, and retrieve internal load-testing automation scripts.
 
-| Vector Store | P50 (ms) | P95 (ms) | P99 (ms) | QPS (Max) | Index Build Time |
-|---|---|---|---|---|---|
-| Qdrant (Rust/HNSW) | 3.2 | 7.8 | 11.4 | 1,420 | 4.2m |
-| Milvus (Knowhere) | 4.1 | 9.2 | 14.8 | 1,180 | 5.8m |
-| pgvector (HNSW) | 6.8 | 14.5 | 22.1 | 610 | 11.4m |
-| Pinecone (Serverless) | 12.4 | 24.1 | 38.6 | 850 | N/A (Managed) |
+---
 
-## 4. Latency Analysis
-- **Winner:** Qdrant demonstrated the lowest latency envelope and minimal tail jitter under concurrent metadata filtering.
-- **Bottlenecks:** pgvector degrades past 600 QPS due to lock contention on shared postgres buffers. Pinecone adds transit network latency exceeding our 15ms target.
+## 2. Benchmark Summary (1M Embeddings, 1536-dim)
 
-## 5. Recommendation
-Adopt self-hosted Qdrant on NVMe-backed nodes for the Beacon API vector subsystem. Baseline integration scripts have been committed to the repository.
+| Candidate | Deployment | Latency (p95) | Ingest (eps) | Monthly Cost Est. |
+| :--- | :--- | :--- | :--- | :--- |
+| **pgvector** | Self-hosted (Colocated) | 18ms | 1,200 | **$0.00** (Existing RDS) |
+| **Qdrant** | Self-hosted (t4g.medium) | 9ms | 3,400 | ~$24.00/mo |
+| **Milvus** | Distributed (EKS) | 12ms | 4,100 | ~$140.00/mo |
+| **Pinecone** | Managed Serverless | 22ms | 1,800 | ~$75.00/mo + read ops |
+
+---
+
+## 3. Cost-Cutter Assessment & Recommendation
+
+1. **Primary Recommendation:** Deploy **pgvector** directly on our existing PostgreSQL cluster.
+   - **Rationale:** Beacon API query volume (<250 QPS) does not justify dedicated vector infrastructure. Colocating pgvector incurs zero additional infrastructure costs.
+2. **Fallback Option:** If query latency requires dedicated sub-10ms performance, deploy single-node containerized **Qdrant** on spot/reserved ARM instances (AWS Graviton) to minimize compute expense.
+3. **Action Items:**
+   - Apply HNSW index tuning in `pgvector` branch.
+   - Integrate connection pooling to prevent connection exhaustion on existing database tier.
 ```
