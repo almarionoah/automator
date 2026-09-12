@@ -1,41 +1,41 @@
-# Atlas Core: Emotional & Operational Onboarding Flow Spec
+# Atlas Core: Reworked Onboarding Experience Specification
 **Author:** Ash Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 00:05  
+**Produced:** D12 00:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A redesigned, human-centered onboarding architecture for Atlas Core that harmonizes SaaS digital activation with face-to-face service orchestration.
+A holistic, emotionally resonant UX onboarding specification for Atlas Core, harmonizing SaaS efficiency with the warmth of face-to-face services.
 
 ## Deliverable
 ```
-# Atlas Core — Empathetic Onboarding Experience Specification
-**Designer:** Ash Nkosi, UX & Interaction Lead  
-**Project:** Atlas Core (SaaS Platform & Face-to-Face Services)  
-**Document Alignment:** Built in explicit accordance with the internal **Company Document**, which provided our core service governance models, client journey touchpoint standards, and high-touch concierge SLA benchmarks.
+# UX Experience Specification: Atlas Core Onboarding Redesign
+**Author:** Ash Nkosi, Design Lead (Atlas Core)
+**Perspective:** UX Romantic & Human-Centered Systems
 
 ---
 
-### 1. Design Philosophy: The Welcoming Sanctuary
-Onboarding is not a transactional checklist; it is an emotional threshold. For Atlas Core, our flow bridges the instant clarity of SaaS configuration with the warmth of face-to-face human connection, transforming initial friction into felt trust.
+### 1. Vision & Emotional Intent
+Onboarding should never feel like administrative triage; it is the first shared breath between our platform and a human being. In Atlas Core, we bridge tactile face-to-face relationships with digital empowerment, transforming a transactional setup into an inviting, memorable prologue.
 
-### 2. Journey Architecture
+### 2. Strategic Alignment & Resource Integration
+- **Company Document:** We analyzed the strategic frameworks within the provided *Company Document* to align high-touch face-to-face service touchpoints with digital self-serve milestones. Specifically, the document's customer relationship SLAs guided the exact moment users are introduced to their dedicated physical concierge.
 
-#### Stage 1: The First Breath (Intent & Identity Calibration)
-- **Entry Moment:** Ambient loading canvas with progressive disclosure. No overwhelming multi-field forms.
-- **Input Rhythm:** Single declarative prompt: *"How shall Atlas Core support your practice today?"*
-- **Emotional Tone:** Quiet confidence, tailored typography, micro-fades (300ms ease-out).
+### 3. Step-by-Step Experience Flow
 
-#### Stage 2: Workspace Tailoring & Smart Synthesis
-- **SaaS Initialization:** Seamless workspace provisioning based on the operational criteria outlined in the **Company Document**.
-- **Visual Feedback:** Kinetic progress line that gently pulses rather than standard circular spinners, acknowledging the human behind the screen.
+#### Stage 1: The Warm Welcome (Emotional Resonance)
+- **Visual Cadence:** Soft ambient gradient fade (Atlas Slate `#1E293B` to Dawn Rose `#FDF2F8`), micro-copy framed with warmth rather than clinical terminology.
+- **Interaction:** Single-prompt intent discovery ("What milestone are we bringing to life today?").
 
-#### Stage 3: The Human Bridge (Face-to-Face Concierge Handshake)
-- **Hybrid Integration:** Dynamic scheduling node offering a dedicated Face-to-Face onboarding session with an I.T. Skokos Service Specialist.
-- **Context Capture:** Zero-redundancy state transfer; insights collected in Stage 1 pre-populate the specialist's briefing doc.
+#### Stage 2: Contextual Configuration (Cognitive Ease)
+- **Component:** Dynamic progressive disclosure cards with tactile spring animations (mass: 0.8, tension: 140).
+- **Data Input:** Zero redundant forms. Smart-fill pulls workspace metadata seamlessly.
 
-### 3. Key UX Metrics
-- Time-to-First-Value (TTFV): < 90 seconds to live dashboard.
-- Emotional Completion Rate: Target 88% positive post-onboarding sentiment rating.
+#### Stage 3: The Hybrid Handshake (Digital to Face-to-Face)
+- **Integration:** Direct scheduling module pairing the user with a localized field specialist.
+- **Feedback:** Bespoke confirmation card generating instant calendar sync with personalized host introduction video.
+
+### 4. Micro-Interactions & Accessibility
+- WCAG 2.1 AAA contrast on typography, fluid focus rings, and joyful haptic pulses on completion.
 ```
