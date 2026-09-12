@@ -13,7 +13,7 @@ Comprehensive threat-aware survey of competitor release notes cross-referenced w
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=1U1602639N397112D
+- Pay: https://www.paypal.com/checkoutnow?token=5PM11351P9750951U
 
 ## Deliverable
 ```
