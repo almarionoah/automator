@@ -1,0 +1,73 @@
+# Atlas Core - Component Design Tokens Specification
+**Author:** Rune Reyes  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 07:25  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-ready W3C-compliant component design tokens for project Atlas Core, derived from brand guidelines and hybrid UX requirements outlined in Business Document: Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=5BD785796S783990H
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Atlas Core Component Tokens. Built referencing 'Business Document: Company Document' to standardize touch targets, interactive states, and contrast ratios across SaaS platform screens and Face-to-Face tablet/POS terminals.",
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "$value": "{color.brand.primary.600}", "$type": "color" },
+          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
+          "active": { "$value": "{color.brand.primary.800}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.200}", "$type": "color" }
+        },
+        "text": {
+          "default": { "$value": "{color.neutral.0}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.400}", "$type": "color" }
+        },
+        "padding": {
+          "saas": { "$value": "{spacing.sm} {spacing.md}", "$type": "dimension" },
+          "f2f": { "$value": "{spacing.md} {spacing.lg}", "$type": "dimension", "$description": "Larger touch target per Company Document guidelines for face-to-face field devices" }
+        },
+        "radius": { "$value": "{radius.md}", "$type": "dimension" },
+        "minHeight": {
+          "saas": { "$value": "36px", "$type": "dimension" },
+          "f2f": { "$value": "48px", "$type": "dimension" }
+        }
+      }
+    },
+    "input": {
+      "field": {
+        "background": { "$value": "{color.neutral.0}", "$type": "color" },
+        "border": {
+          "default": { "$value": "1px solid {color.neutral.300}", "$type": "border" },
+          "focus": { "$value": "2px solid {color.brand.primary.500}", "$type": "border" },
+          "error": { "$value": "1px solid {color.feedback.error.500}", "$type": "border" }
+        },
+        "radius": { "$value": "{radius.sm}", "$type": "dimension" },
+        "height": {
+          "saas": { "$value": "36px", "$type": "dimension" },
+          "f2f": { "$value": "48px", "$type": "dimension" }
+        }
+      }
+    },
+    "card": {
+      "surface": {
+        "background": { "$value": "{color.neutral.0}", "$type": "color" },
+        "border": { "$value": "1px solid {color.neutral.200}", "$type": "border" },
+        "radius": { "$value": "{radius.lg}", "$type": "dimension" },
+        "shadow": { "$value": "{elevation.low}", "$type": "shadow" },
+        "padding": { "$value": "{spacing.lg}", "$type": "dimension" }
+      }
+    }
+  }
+}
+```
