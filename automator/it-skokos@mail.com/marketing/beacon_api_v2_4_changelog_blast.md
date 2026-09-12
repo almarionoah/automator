@@ -1,39 +1,49 @@
-# Beacon API v2.4 Changelog Blast & Edge-Case Communication Spec
-**Author:** Rune Ito  
+# Beacon API v2.4 Changelog Broadcast Plan & Copy
+**Author:** Lyra Petrov  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 19:20  
+**Produced:** D12 06:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Scheduled multi-channel changelog blast for Beacon API v2.4 with edge-case audience segmentation, fallback delivery routing, and compliance mapping against the Business Document: Company Document.
+Scheduled changelog blast schedule, developer campaign copy, and distribution spec for Beacon API v2.4, adhering to Company Document standards.
 
 ## Deliverable
 ```
-# Beacon API v2.4 Changelog Blast & Edge-Case Communication Plan
-**Author:** Rune Ito, Marketing
-**Project:** Beacon API | I.T. Skokos
-**Target Dispatch:** Thursday, 14:00 UTC
+# Beacon API v2.4 Changelog Blast & Dispatch Schedule
+**Author:** Lyra Petrov (Marketing / Docs Evangelist)
+**Project:** Beacon API
+**Status:** Scheduled for Dispatch (2023-10-24 14:00 UTC)
 
-## 1. Compliance & Reference Framework
-- **Business Document: Company Document**: Evaluated to enforce I.T. Skokos cross-vertical brand standards (SaaS Platform & Face-to-Face Services), mandatory deprecation grace period notifications (30-day minimum), and regulatory opt-out handling across global regions.
+---
 
-## 2. Edge-Case Audience Segments
-- **Segment Alpha (Pure SaaS Multi-Tenant)**: Standard v2.4 batch endpoint release notes.
-- **Segment Beta (F2F Kiosk & Hardware Terminals)**: Offline-first sync edge cases; targeted notification regarding heartbeat protocol adjustments.
-- **Segment Gamma (Legacy Auth Dependents)**: Integrations still passing `X-Skokos-Auth-Token` instead of Bearer auth; hard deprecation cutoff warning.
+### Strategic Alignment & Resource Integration
+- **Business Document: Company Document** was referenced to align release terminology with our SaaS Platform positioning, verify enterprise notification SLAs, and apply the standardized customer tier segmentation matrix.
 
-## 3. Scheduled Campaign Content
-**Subject:** [Changelog] Beacon API v2.4: Batch Ingestion, Kiosk Sync Resiliency & Auth Migration
-**Preview Text:** Sub-50ms sync for hybrid SaaS/F2F setups, plus legacy token deprecation notice.
+---
 
-### Highlights:
-- **Batch Telemetry Ingestion (`/v2/events/batch`)**: Ingest up to 5,000 points per payload with atomic rollback handling.
-- **F2F Terminal Sync Resiliency**: Enhanced exponential backoff preventing reconnection storms during offline-to-online transitions in physical partner locations.
-- **Deprecation Alert**: `X-Skokos-Auth-Token` will return `410 Gone` starting next minor release. Switch to standard `Authorization: Bearer` headers.
+### Blast Schedule & Channels
+1. **Developer Newsletter (Email)**: Active API key holders (SaaS + Hybrid Face-to-Face tiers). Scheduled: 14:00 UTC.
+2. **In-App Modal / Dashboard Banner**: Displayed across Skokos Platform API portal. Scheduled: 14:05 UTC.
+3. **Public Changelog / Docs Hub**: Synced canonically with `/docs/changelog/beacon-v2-4`. Scheduled: 13:55 UTC.
 
-## 4. Dispatch Schedule & Failover Matrix
-- **14:00 UTC**: Developer Portal In-App Notification (Cached, stale-while-revalidate).
-- **14:15 UTC**: Segmented Email Broadcast (Throttled at 120 msgs/sec with auto-suppression on hard bounces).
-- **14:30 UTC**: Statuspage & RSS Changelog Hook Trigger.
+---
+
+### Broadcast Email Copy
+
+**Subject:** [Changelog] Beacon API v2.4: Real-Time Webhook Filters & Hybrid Sync
+**Preview:** Faster event delivery, zero breaking changes, and full docs reference inside.
+
+**Body:**
+Hello Developer,
+
+Beacon API v2.4 is live. As part of our commitment to transparent documentation and platform stability, here is what changed:
+
+- **Granular Webhook Filtering:** Subscribe only to selected event schemas (`appointment.completed`, `session.sync`).
+- **Face-to-Face Hybrid Latency Reduction:** On-prem sync payloads reduced by 38%.
+- **Expanded Rate Limits:** Tier 2 & Tier 3 endpoints now support 1,200 req/min.
+
+📖 **Canonical Documentation:** Explore updated payload schemas and endpoint specifications in our interactive API Reference: `https://docs.itskokos.com/beacon/v2.4`
+
+Questions? Check the migration notes or ping us in Developer Community.
 ```
