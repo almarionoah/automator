@@ -1,33 +1,44 @@
-# Atlas Core: 30s Product Demo Spec & Storyboard
-**Author:** Zed Petrov  
+# Atlas Core 30s High-Velocity Product Demo - Chaos Test Script & Asset Spec
+**Author:** Juno Bishop  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** D145 08:30  
+**Produced:** D146 11:35  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-High-impact 30-second video demo script and asset-pull configuration for Atlas Core, focusing on edge-case platform resilience across hybrid SaaS and F2F workflows.
+Complete 30-second product demo script, timeline breakdown, and chaos-testing asset pipeline spec for Atlas Core, integrating UI telemetry pulled via GitHub PATs.
 
 ## Deliverable
 ```
-# Project: Atlas Core — 30s Product Teaser (Marketing Demo Spec)
-**Author:** Zed Petrov, Marketing (Edge-Case Specialist)
-**Status:** Completed Artefact
+# ATLAS CORE // 30-SECOND DEMO SPEC & CHAOS HOOK MATRIX
+**Owner:** Juno Bishop (Marketing / Chaos Testing)
+**Project:** Atlas Core (SaaS Telemetry + F2F Service Bridge)
 
-## 1. Resource Integration & Asset Sourcing
-- **Git Access: Personal Access Token**: Utilized to authenticate against internal UI component repos to extract the exact CSS tokens, SVG iconography, and telemetry state diagrams used in the visual overlays.
-- **Credentials: Git Hub Personal Access Token**: Used to clone the staging deployment branch (`atlas-core/staging-v2.4`), allowing automated rendering of live dashboard animations and real-time F2F synchronization logs under high-latency edge cases.
+## PIPELINE INTEGRATION & AUTHENTICATION
+- **Git Access: Personal Access Token**: Leveraged to query and clone the `atlas-core/frontend-telemetry` staging branches, pulling live UI edge-case mockups, real-time load charts, and state-failure recovery captures directly into the video rendering canvas.
+- **Credentials: Git Hub Personal Access Token**: Authenticated automated asset staging in the creative CI/CD pipeline, pushing source cuts and automated Remotion-rendered variants directly to the marketing delivery repository.
 
-## 2. 30-Second Video Script & Storyboard
+---
 
-| Time | Visual Track | Audio / Voiceover | On-Screen Text |
-|---|---|---|---|
-| 00:00 - 00:06 | Split-screen: High-volume SaaS web event queue vs. local F2F offline terminal syncing. | 'Data doesn't stop at the edge. When hybrid infrastructure stalls, Atlas Core takes over.' | **Atlas Core: Unbroken Flow** |
-| 00:06 - 00:15 | Smooth UI zoom into Atlas Core telemetry panel showing sub-millisecond failover. | 'Engineered for extreme reliability: zero dropped frames, real-time sync, and millisecond edge resolution.' | **99.999% Resilience / Zero Drift** |
-| 00:15 - 00:24 | Dynamic dynamic workflow graph switching instantly from cloud to offline F2F node. | 'Unified control for enterprise platforms and physical touchpoints, all in a single pane of glass.' | **SaaS + F2F Unified** |
-| 00:24 - 00:30 | Sleek 3D logo resolve with animated CTA and enterprise trial link. | 'Scale without edge-case blind spots. Experience Atlas Core today.' | **Deploy Atlas Core Today -> it-skokos.com/atlas** |
+## TIMELINE & AUDIO/VISUAL SCRIPT (30.0s Hard Cut)
 
-## 3. Production Notes
-- Render Engine: Remotion (React-driven video rendering via GitHub asset pipeline).
-- Aspect Ratio: 16:9 (Primary) & 9:16 (Vertical Cut).
+[00:00 - 00:05] **THE HOOK (Chaos Hook #3: Concurrency Spike)**
+- *Visual*: High-speed zoom into a stressed dashboard. Telemetry graphs spike, auto-balancing kicks in, turning red metrics green in 200ms.
+- *Audio/VO*: "When your SaaS volume spikes and field services desync, you don't need luck—you need Atlas Core."
+- *On-Screen Text*: "Zero-Latency SaaS & F2F Orchestration"
+
+[00:06 - 00:15] **THE ENGINE (SaaS to Field Operations)**
+- *Visual*: Seamless transition from cloud event ingestion to dynamic field agent dispatch queue. Live status pins propagate across the map in real time.
+- *VO*: "Atlas Core unifies high-throughput data streams with frontline field operations, automating triage before bottlenecks form."
+- *SFX*: Sub-bass sweep into high-frequency data tick.
+
+[00:16 - 00:24] **STRESS-TEST PROOF**
+- *Visual*: Fast-cut cursor stress-testing 50k concurrent workflows. Instant execution confirmation with sub-millisecond edge resolution.
+- *VO*: "Engineered to withstand total operational chaos."
+- *Badge*: "Sub-10ms Edge Sync | Enterprise Grade"
+
+[00:25 - 00:30] **CALL TO ACTION**
+- *Visual*: Sleek Atlas Core dark-mode badge, dynamic URL transition.
+- *VO*: "Cut the lag. Deploy Atlas Core today."
+- *Text*: "Start Free at skokos.io/atlas-core"
 ```
