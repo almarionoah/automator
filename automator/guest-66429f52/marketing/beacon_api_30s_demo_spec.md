@@ -1,42 +1,35 @@
-# 30-Second Beacon API Product Demo Script & Production Plan
-**Author:** Zed Cross  
+# Beacon API - 30-Second Product Demo Script & Production Spec
+**Author:** Zed Okafor  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D152 11:05  
+**Produced:** D152 15:00  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Refactored storyboard, timed voiceover script, and asset pipeline integration plan for the 30-second Beacon API demo video, incorporating secure repository access workflows.
+30-second promotional product demo video script and asset pipeline spec for the Beacon API launch campaign.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30-Second Product Demo
-**Creator:** Zed Cross (Marketing)
-**Project:** Beacon API (I.T. Skokos SaaS & F2F)
-**Iteration:** v4 (Refactored for maximum retention & conversion)
+# Production Spec: Beacon API 30s Demo Video
+**Author:** Zed Okafor (Marketing)
+**Project:** Beacon API
 
----
+## 1. Asset & Source Pipeline
+- **Git Access: Personal Access Token**: Used to clone the latest UI design assets, SDK integration snippets, and high-res vector logs directly from the internal frontend repository.
+- **Credentials: Git Hub Personal Access Token**: Authenticated automated asset extraction scripts in GitHub Actions to pull live sandbox metrics and terminal recording frames used in the video b-roll.
 
-## 1. Asset & Resource Pipeline
-To build and verify the code overlays used in the demo UI captures, the following secure resources were utilized:
-- **Git Access: Personal Access Token**: Used to pull real-time API response schema fixtures directly from the `beacon-core-api` staging branch to ensure demo payload accuracy.
-- **Credentials: Git Hub Personal Access Token**: Applied in the automated CI demo asset pipeline to fetch the latest UI design tokens and SVG icons from the centralized brand repository.
+## 2. Video Script & Storyboard (30 Seconds)
 
----
+| Time | Visual | Audio / Voiceover | On-Screen Text |
+|---|---|---|---|
+| 0:00-0:05 | Fast cut: Overwhelmed developer looking at broken API dashboards. Alert icons flashing. | "Tired of sluggish integrations and fragile data pipelines slowing your releases?" | Fix Integration Bottlenecks |
+| 0:05-0:12 | Dynamic screen capture: Initializing Beacon API via CLI with 3 lines of code. Terminal shows instant '200 OK'. | "Meet Beacon API. Plug-and-play architecture built for high-throughput SaaS platforms." | 3 Lines of Code. Sub-10ms Latency. |
+| 0:12-0:20 | UI Walkthrough: Real-time telemetry dashboard syncing live data streams seamlessly. | "Automate real-time event routing, streamline F2F sync services, and scale effortlessly." | Enterprise Ready. Real-Time Telemetry. |
+| 0:20-0:26 | Split screen showing happy team shipping features while metrics trend up. | "Ship faster. Cut latency by 40%. Deliver reliability your customers feel." | 99.99% Uptime SLA |
+| 0:26-0:30 | Sleek animated end-card with I.T. Skokos & Beacon API logos, CTA button. | "Start building today with Beacon API at skokos.it/beacon." | Start Free Today -> skokos.it/beacon |
 
-## 2. Storyboard & Voiceover Script (Exact 30s Run Time)
-
-| Timecode | Visual Overlay | Audio / Voiceover (Energetic, Crisp) |
-| :--- | :--- | :--- |
-| **00:00 - 00:05** | Fast cuts: broken endpoints, red 500 error screens. Text: *Latency killing conversions?* | "Struggling with inconsistent API latency across your SaaS and in-person touchpoints?" |
-| **00:05 - 00:12** | Smooth UI reveal: Beacon API dashboard initializing in dark mode. Live routing map glowing. | "Meet Beacon API by I.T. Skokos. Unified data routing built for real-time scale." |
-| **00:12 - 00:20** | Split screen: Python & Node.js SDK snippets executing, instant sub-5ms latency metric badge pops. | "Plug in with our lightweight SDKs in under three minutes. Sub-millisecond sync across digital and F2F channels." |
-| **00:20 - 00:26** | Analytics pane displaying 99.999% uptime and zero-drop transactions. | "Reliable. Scalable. Obsessively optimized for modern engineering teams." |
-| **00:26 - 00:30** | Call-to-action lockup: `beacon.itskokos.com` + CTA button: *Start Free Trial*. | "Deploy Beacon API today at itskokos.com." |
-
----
-
-## 3. Post-Production Notes
-- Motion Graphics: 60fps kinetic typography on key metrics.
-- Audio: Low-pass filtered synth bed dipping at VO entry points.
+## 3. Distribution Channels
+- LinkedIn Video Ad (1:1 & 16:9 cuts)
+- X / Twitter Developer Feed (16:9)
+- Beacon API Landing Page Hero
 ```
