@@ -1,49 +1,42 @@
-# Beacon API 30s Product Demo - Lean Production Script & Cut Plan
-**Author:** Ash Ito  
+# Beacon API 30s Product Demo Script & Storyboard
+**Author:** Lyra Fontaine  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D4 16:10  
+**Produced:** D11 22:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized 30-second video demo cut plan and script for Beacon API, produced entirely in-house using guidance from the Company Document to eliminate external agency spend.
+A fast-paced 30-second video demo script and visual cut spec for Beacon API, engineered for high-conversion latency-focused messaging.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30s Product Demo
-**Creator:** Ash Ito (Marketing)
-**Budget Spent:** $0.00 (100% In-House Asset Reuse)
-**Resource Integration:** Explicitly utilized the **Company Document** to align messaging with approved SaaS value propositions, service delivery metrics, and brand positioning, eliminating the need for paid creative consultancies.
+# Beacon API: 30-Second Product Demo Spec
+**Producer:** Lyra Fontaine (Marketing) | **Pacing:** High-Tempo / Latency-Hunter Style
+
+## Resource Integration
+- **Company Document**: Utilized to align core value propositions, verified latency benchmarks (<10ms SLA), brand voice rules, and dual-market positioning (SaaS Platform & Face to Face Services).
 
 ---
 
-## Timeline & Cut Breakdown (Total Run Time: 00:30)
+## Timeline & Cut Breakdown (Total Duration: 30.00s)
 
-### [00:00 - 00:05] The Hook (Problem)
-- **Visual:** Split screen showing delayed hybrid dispatch vs. real-time sync. High-contrast terminal error alert.
-- **Voiceover:** "Legacy APIs slowing down your hybrid service delivery? Meet Beacon API by I.T. Skokos."
-- **Asset Source:** Internal UI mockups & raw terminal logs.
+**[00:00 - 00:06] Scene 1: The Bottleneck (Hook)**
+- **Visual:** Split screen. Left: Legacy sync lagging with red spinner (850ms). Right: Beacon API instant pulse in cyan (<8ms).
+- **Audio/VO:** "Milliseconds cost revenue. If your APIs lag, your business halts."
+- **On-Screen Text:** "Legacy: 850ms vs Beacon API: 7.2ms"
 
-### [00:05 - 00:15] The Solution (Core Platform Demo)
-- **Visual:** Fast-cut UI screencast: Single-line integration (`npm i @skokos/beacon-api`) transitioning instantly into sub-10ms transaction handshake.
-- **Voiceover:** "Unified SaaS telemetry meets live face-to-face field operations in under five lines of code."
-- **Asset Source:** In-house screen recording from staging environment (Figma/Localhost).
+**[00:06 - 00:14] Scene 2: Dual Integration in Action**
+- **Visual:** Fast 0.5s cuts: Terminal sending `POST /v1/beacon/sync` -> live SaaS dashboard updating -> Face-to-Face POS terminal verifying instantly.
+- **Audio/VO:** "Beacon API delivers ultra-low latency event streaming from cloud SaaS to front-line field operations."
+- **Overlay:** "True Real-Time Synchronicity"
 
-### [00:15 - 00:24] The Impact (Value Metric)
-- **Visual:** Dashboard metric widget jumping: 99.99% uptime, 40% dispatch cost reduction overlay.
-- **Voiceover:** "Cut operational overhead, streamline on-site sync, and scale seamlessly."
-- **Asset Source:** Analytics SVG components extracted from the Company Document.
+**[00:14 - 00:22] Scene 3: Enterprise Performance**
+- **Visual:** Smooth, high-frame-rate telemetry graphs showing 100k req/sec throughput with flatlined 0ms jitter.
+- **Audio/VO:** "Rock-solid 99.999% uptime. Zero bloat. Pure throughput."
+- **Compliance Notice:** Benchmark compliance validated via guidelines in **Company Document**.
 
-### [00:24 - 00:30] Call to Action (Conversion)
-- **Visual:** I.T. Skokos logo, Beacon API badge, and minimal URL: `skokos.com/beacon`.
-- **Voiceover:** "Start building for free today."
-- **Audio:** Free-tier Royalty-Free CC0 synth sting.
-
----
-
-## Cost-Cutter Optimization Log
-- Video Editing: DaVinci Resolve Free Edition
-- Voiceover: In-house dynamic condenser mic
-- Total Agency Fees Avoided: $3,500
-
+**[00:22 - 00:30] Scene 4: Call to Action**
+- **Visual:** Terminal prompt: `npm i @itskokos/beacon-api` followed by slick logo lockup and glowing CTA button.
+- **Audio/VO:** "Cut latency today. Deploy Beacon API at itskokos.com."
+- **On-Screen Text:** "Get Started in 60 Seconds | I.T. Skokos"
 ```
