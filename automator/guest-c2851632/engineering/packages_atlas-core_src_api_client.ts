@@ -13,7 +13,7 @@ Migrated Atlas Core from untyped HTTP wrappers to a strictly typed, schema-valid
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=64V60372JU576881C
+- Pay: https://www.paypal.com/checkoutnow?token=6T1163957A772192T
 
 ## Deliverable
 ```
