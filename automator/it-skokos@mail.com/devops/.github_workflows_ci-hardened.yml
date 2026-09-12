@@ -1,0 +1,73 @@
+# Beacon API - Hardened Cost-Optimized CI Pipeline
+**Author:** Onyx Fontaine  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 16:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened GitHub Actions workflow for the Beacon API repository adhering to security baselines from Business Document: Company Document while enforcing aggressive build caching and runner timeouts to drastically reduce compute costs.
+
+## Deliverable
+```
+name: Beacon API CI Hardened
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Principle of least privilege enforced per Business Document: Company Document
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true # Cost cutter: kill stale builds immediately
+
+jobs:
+  audit-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10 # Cost guardrail: prevent hung jobs billing compute
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # Pin commit SHA
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe8d343
+        with:
+          node-version: '20.x'
+          cache: 'npm' # Cost cutter: reuse dependencies
+
+      - name: Security & Compliance Audit
+        run: |
+          # Baseline mapped from Business Document: Company Document
+          npm audit --audit-level=high
+
+      - name: Install Dependencies
+        run: npm ci --ignore-scripts # Harden against install lifecycle hooks
+
+      - name: Run Tests & Linters
+        run: |
+          npm run lint
+          npm test -- --coverage
+
+      - name: Static Security Scan (SAST)
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+```
