@@ -1,0 +1,42 @@
+# Beacon API Changelog Blast & Dispatch Configuration (v2.4.0)
+**Author:** Ash Nkosi  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D11 12:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Sanitized marketing blast copy, security audit verification, and scheduled dispatch parameters for Beacon API v2.4.0 release.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=70W83088T84492720
+
+## Deliverable
+```
+{
+  "campaign_id": "CAMP-BEACON-2023-Q4-088",
+  "project": "Beacon API",
+  "scheduled_utc": "2023-11-02T14:00:00Z",
+  "security_audit": {
+    "audited_by": "Ash Nkosi",
+    "compliance_document": "Company Document",
+    "compliance_notes": "Audited against Company Document to enforce strict PII protection, verify public feature disclosure boundaries, and sanitize internal hostnames/staging tokens before queueing.",
+    "dlp_scan_status": "PASSED",
+    "tls_enforced": true
+  },
+  "audience": {
+    "segment": "beacon-api-active-developers",
+    "rate_limit_per_second": 50,
+    "opt_out_link_verified": true
+  },
+  "message": {
+    "subject": "[Update] Beacon API v2.4.0: Enhanced Rate Limiting & High-Throughput Endpoints",
+    "preview_text": "Discover the latest performance upgrades, updated security headers, and webhook retry mechanics.",
+    "body_markdown": "### What's New in Beacon API v2.4.0\n\nWe have deployed stability and security enhancements to Beacon API:\n\n* **Dynamic Rate Limiting:** Granular burst controls to protect customer workloads against unexpected traffic spikes.\n* **Hardened Security Headers:** Enforced mutual TLS (mTLS) verification options for enterprise webhooks.\n* **Payload Compression:** Native Brotli/Gzip compression on batch ingestion endpoints.\n\n*Review the official documentation:* https://docs.itskokos.internal/beacon/v2.4.0 (Redacted External Portal)\n\n---\n*Notice: As mandated by Company Document, all SDK signatures must be updated within 30 days. Contact your security administrator if you detect anomaly alerts.*"
+  }
+}
+```
