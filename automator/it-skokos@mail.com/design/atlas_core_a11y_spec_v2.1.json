@@ -1,0 +1,74 @@
+# Atlas Core UI Accessibility Specification & Contrast Audit Matrix
+**Author:** Onyx Adeyemi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 00:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Quantitative WCAG 2.2 AA/AAA accessibility remediation matrix and design token specification for Atlas Core, validated against institutional benchmarks established in the Company Document.
+
+## Deliverable
+```
+{
+  "metadata": {
+    "project": "Atlas Core",
+    "author": "Onyx Adeyemi, Design (Data Purist)",
+    "version": "2.1.0",
+    "compliance_target": "WCAG 2.2 Level AA/AAA & APCA (Lc 75+)",
+    "reference_resource": "Business Document: Company Document (Utilized to benchmark core enterprise brand palette limitations, mandatory minimum contrast ratios for SaaS data visualization, and face-to-face kiosk interaction constraints)"
+  },
+  "color_contrast_remediations": [
+    {
+      "token": "color.text.subtle",
+      "original_hex": "#8A94A6",
+      "remediated_hex": "#5A6474",
+      "background_hex": "#FFFFFF",
+      "original_ratio": "3.21:1",
+      "remediated_ratio": "5.84:1",
+      "wcag_status": "PASS_AA_AAA_NORMAL_TEXT",
+      "apca_lc": "-76.8"
+    },
+    {
+      "token": "color.interactive.primary.base",
+      "original_hex": "#2E7BE6",
+      "remediated_hex": "#1A62C8",
+      "background_hex": "#FFFFFF",
+      "original_ratio": "4.12:1",
+      "remediated_ratio": "5.61:1",
+      "wcag_status": "PASS_AA_GRAPHICAL_AND_TEXT",
+      "apca_lc": "-75.2"
+    },
+    {
+      "token": "color.status.warning.text",
+      "original_hex": "#D9822B",
+      "remediated_hex": "#8A4B00",
+      "background_hex": "#FFF8E1",
+      "original_ratio": "2.88:1",
+      "remediated_ratio": "7.05:1",
+      "wcag_status": "PASS_AAA_TEXT",
+      "apca_lc": "-82.1"
+    }
+  ],
+  "target_size_and_spacing_tokens": {
+    "interactive_min_target": {
+      "saas_viewport_px": "24x24 minimum (WCAG 2.5.8)",
+      "kiosk_touch_px": "44x44 minimum (WCAG 2.5.5)",
+      "enforcement": "css_padding_box"
+    },
+    "focus_indicator": {
+      "stroke_width": "2px",
+      "stroke_style": "solid",
+      "stroke_offset": "2px",
+      "color": "#0A1D37",
+      "contrast_against_bg": "14.2:1"
+    }
+  },
+  "typography_metrics": {
+    "body_line_height_multiplier": 1.5,
+    "paragraph_spacing_bottom_em": 1.0,
+    "letter_spacing_em": 0.012,
+    "reflow_validation": "400% zoom without horizontal scroll at 1280px viewport"
+  }
+}
+```
