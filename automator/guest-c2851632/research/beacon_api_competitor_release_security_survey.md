@@ -13,7 +13,7 @@ Security-focused intelligence assessment surveying competitor release notes to e
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=9AF96888E1226173F
+- Pay: https://www.paypal.com/checkoutnow?token=2F5993708V5220302
 
 ## Deliverable
 ```
