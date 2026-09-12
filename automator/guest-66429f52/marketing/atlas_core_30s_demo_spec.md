@@ -1,44 +1,47 @@
-# Atlas Core 30s Product Demo - Production Spec & Script
-**Author:** Pixel Reyes  
+# Atlas Core 30s Product Demo Video Script & Storyboard Spec
+**Author:** Pixel Cross  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** D151 02:10  
+**Produced:** D152 02:50  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Cost-optimized 30-second product demo script, timeline breakdown, and asset extraction pipeline documentation for Atlas Core.
+Production-ready video storyboard and timed script for a 30-second product demo of Atlas Core, accounting for edge-case UI states and asset sync workflows.
 
 ## Deliverable
 ```
-# Project: Atlas Core - 30s Product Demo
-**Producer:** Pixel Reyes (Marketing)
-**Budget Strategy:** In-house zero-cost rendering via repository asset extraction.
-
-## Resource Utilization
-- **Git Access: Personal Access Token:** Utilized to clone the `atlas-core-web` repository and pull raw SVG vector assets, brand guides, and current UI mockups directly from source control, bypassing expensive third-party agency asset fees.
-- **Credentials: Git Hub Personal Access Token:** Applied in the automated CI/CD pipeline to fetch pre-rendered UI screen captures and trigger open-source headless browser recordings, eliminating manual screen recording software licensing costs.
+# Production Spec: Atlas Core 30s Teaser Demo
+**Creator:** Pixel Cross (Marketing / Edge-Case Archeologist)
+**Project:** Atlas Core
+**Scope:** High-tempo 30s product walk-through targeting developer/platform engineers.
 
 ---
 
-## 30-Second Video Script & Storyboard
+### Asset & Environment Provenance
+- **Git Access: Personal Access Token**: Utilized to pull raw SVG vector assets, latest UI components, and design tokens directly from the core repo to ensure frame-accurate mockups without visual drift.
+- **Credentials: Git Hub Personal Access Token**: Configured within the CI/CD asset pipeline to trigger automated screenshot captures across edge-case responsive breakpoints (ultrawide, mobile split-view, high-latency states).
 
-### [00:00 - 00:05] Hook: The Bottleneck
-- **Visual:** Fast-cut screen capture of overloaded SaaS dashboards transitioning to red latency indicators.
-- **Voiceover (VO):** "SaaS scaling hitting a wall? Meet Atlas Core."
-- **On-Screen Text:** Eliminate Infrastructure Drag.
+---
 
-### [00:05 - 00:15] Core Solution: Instant Orchestration
-- **Visual:** High-resolution UI interaction pulled from Git assets showing 1-click provisioning of F2F and SaaS hybrid endpoints.
-- **VO:** "Unify SaaS platforms and face-to-face services in a single lightweight core. Deploy in seconds, not sprints."
-- **On-Screen Text:** Hybrid SaaS + F2F Integration.
+### Video Breakdown & Timings
 
-### [00:15 - 00:25] Proof & Feature Highlight
-- **Visual:** Real-time analytics dashboard rendering live throughput metrics at 99.99% uptime.
-- **VO:** "Cut overhead by 40% while doubling endpoint reliability."
-- **On-Screen Text:** 40% Lower Overhead | Zero Downtime.
+**00:00 - 00:05 | Hook (The Chaos of Fragmented Ops)**
+- *Visual:* Rapid-fire montage of broken dashboard states, rate-limit warnings, and edge-case sync errors.
+- *Voiceover:* "Platform reliability breaks at the boundaries. Is your core stack keeping up?"
+- *On-Screen Text:* "Fragmented tooling = Hidden failure modes."
 
-### [00:25 - 00:30] Call to Action
-- **Visual:** Minimalist closing title card with animated logo and CTA URL.
-- **VO:** "Scale smarter. Get started with Atlas Core today."
-- **On-Screen Text:** Visit itskokos.com/atlas-core
+**00:05 - 00:15 | Solution (Atlas Core Overview)**
+- *Visual:* Smooth transition into Atlas Core unified control plane. Dynamic zoom into real-time telemetry streaming.
+- *Voiceover:* "Meet Atlas Core. Unified intelligence across SaaS platforms and F2F field operations."
+- *On-Screen Text:* "Atlas Core: Deterministic Control at Scale."
+
+**00:15 - 00:25 | Edge-Case Handling in Action**
+- *Visual:* Split screen showing simulated high-concurrency failover resolving in under 12ms. Status indicators shift instantly green.
+- *Voiceover:* "Automate remediation even in non-standard edge conditions with zero downtime."
+- *On-Screen Text:* "Sub-15ms Failover | Edge-Tested Resilience"
+
+**00:25 - 00:30 | CTA & Outro**
+- *Visual:* Clean 3D lockup of Atlas Core logo + I.T. Skokos badge.
+- *Voiceover:* "Deploy resilient architectures today. Start with Atlas Core."
+- *On-Screen Text:* "atlascore.itskokos.com | Cut the friction."
 ```
