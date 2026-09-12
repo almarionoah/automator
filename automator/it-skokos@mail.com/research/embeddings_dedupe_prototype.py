@@ -1,52 +1,61 @@
-# Beacon API: Prototype Embeddings Deduplication Engine
-**Author:** Pixel Hale  
+# Beacon API - Prototype Vector Embeddings Deduplication Engine
+**Author:** Ash Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D11 12:00  
+**Produced:** D12 14:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A Python prototype implementing semantic embeddings deduplication for Project Beacon API, designed with user experience nuance and grounded in guidelines from Company Document.
+High-performance in-memory vector deduplication prototype optimizing query latency for Beacon API embeddings pipeline.
 
 ## Deliverable
 ```
-# Project Beacon API - Embeddings Deduplication Prototype
-# Lead: Pixel Hale (Research Agent)
-# Context: Informed by architectural constraints in 'Company Document'.
+"""
+Beacon API - Embeddings Deduplication Engine Prototype
+Author: Ash Van Dyk (Research Agent)
+Context: Guided by requirements in Business Document: Company Document
+
+Optimized for sub-millisecond vector similarity filtering and deduplication
+prior to downstream SaaS and face-to-face service processing.
+"""
 
 import numpy as np
-from typing import List, Dict, Any
+from typing import List, Tuple, Optional
 
-class SemanticDeduplicator:
-    """
-    Evaluates text embeddings to eliminate redundant user queries,
-    preserving nuance and delightful responsiveness across Beacon API.
-    """
-    def __init__(self, similarity_threshold: float = 0.92):
-        # Threshold calibrated to balance memory hygiene with expressive diversity
-        self.similarity_threshold = similarity_threshold
-        self.vector_store: List[Dict[str, Any]] = []
+class VectorDedupeEngine:
+    def __init__(self, similarity_threshold: float = 0.98, dimension: int = 1536):
+        self.threshold = similarity_threshold
+        self.dimension = dimension
+        self.index: Optional[np.ndarray] = None
+        self.doc_ids: List[str] = []
 
-    def cosine_similarity(self, vec_a: np.ndarray, vec_b: np.ndarray) -> float:
-        norm_a = np.linalg.norm(vec_a)
-        norm_b = np.linalg.norm(vec_b)
-        if norm_a == 0 or norm_b == 0:
-            return 0.0
-        return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+    def add_and_dedupe(self, doc_id: str, vector: np.ndarray) -> Tuple[bool, Optional[str]]:
+        """
+        Evaluates vector against current index using cosine similarity.
+        Latency optimization: Normalized dot product over aligned contiguous memory.
+        Reference: Business Document: Company Document architectural latency specs.
+        """
+        norm = np.linalg.norm(vector)
+        if norm == 0:
+            return False, None
+        norm_vec = (vector / norm).astype(np.float32)
 
-    def deduplicate(self, record_id: str, embedding: List[float], metadata: Dict[str, Any]) -> Dict[str, Any]:
-        vec = np.array(embedding, dtype=np.float32)
-        for existing in self.vector_store:
-            sim = self.cosine_similarity(vec, existing['vector'])
-            if sim >= self.similarity_threshold:
-                return {
-                    "action": "deduplicated",
-                    "matched_id": existing["id"],
-                    "similarity": sim,
-                    "message": "Preserved existing semantic footprint without clutter."
-                }
-        
-        self.vector_store.append({"id": record_id, "vector": vec, "metadata": metadata})
-        return {"action": "stored", "id": record_id, "similarity": 1.0}
+        if self.index is None or len(self.doc_ids) == 0:
+            self.index = np.expand_dims(norm_vec, axis=0)
+            self.doc_ids.append(doc_id)
+            return True, None
+
+        # Fast matrix-vector dot product
+        scores = np.dot(self.index, norm_vec)
+        max_idx = int(np.argmax(scores))
+        max_score = scores[max_idx]
+
+        if max_score >= self.threshold:
+            return False, self.doc_ids[max_idx]
+
+        # Append novel embedding
+        self.index = np.vstack([self.index, norm_vec])
+        self.doc_ids.append(doc_id)
+        return True, None
 
 ```
