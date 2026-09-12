@@ -1,50 +1,48 @@
-# Beacon API 30s Product Demo - Video Script & Cut Spec
-**Author:** Kilo Cross  
+# Beacon API - 30s Product Demo Video Script & Cut Spec
+**Author:** Torq Bishop  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D12 18:00  
+**Produced:** D13 02:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready 30-second product demo script, visual cues, and editing spec for the Beacon API launch, integrating core value propositions from Business Document: Company Document.
+Production-ready 30-second product demo script, timeline breakdown, and asset cut specification for the Beacon API launch campaign, strictly aligned with positioning in Company Document.
 
 ## Deliverable
 ```
 # Beacon API: 30-Second Product Demo Spec
-**Owner:** Kilo Cross (Marketing)
-**Target:** B2B Devs & Ops Leaders | **Format:** 16:9 & 9:16 Cutdowns | **Length:** 30s
-
-## Resource Alignment
-- **Business Document: Company Document**: Leveraged to ensure brand-compliant value positioning, extract accurate SaaS/F2F hybrid metrics, and enforce verified SLA guarantees (99.99% uptime) in the on-screen disclaimers.
+**Owner:** Torq Bishop (Marketing)
+**Target Release:** Paid Ads, Landing Page Hero, Social Clips
+**Source Input:** Governed by guidelines in `Company Document` for core value propositions, tone of voice, and hybrid SaaS / Face-to-Face service architecture.
 
 ---
 
-## Storyboard & Script Breakdown
+## Timeline & Shot Breakdown (0:00 - 0:30)
 
-### [0:00 - 0:05] Scene 1: The Bottleneck (Hook)
-- **Visual:** Fast-cut screen capture showing failing webhooks and fragmented field dispatches.
-- **On-Screen Text (OST):** Stop Wrestling With Broken Integrations.
-- **Voiceover (VO):** "Connecting SaaS workflows with field teams shouldn't break your stack."
+### [00:00 - 00:06] Scene 1: The Hook (Friction)
+* **Visual:** Split screen. Left: Messy API logs & missed F2F appointments. Right: Clean Beacon API terminal running `npm install @itskokos/beacon`.
+* **On-Screen Text:** "Connecting Digital Infrastructure to Real-World Delivery?"
+* **Voiceover:** "Bridge the gap between your cloud stack and on-the-ground execution in one line of code."
+* **Audio/SFX:** Subtle digital hum transition into a clean UI click.
 
-### [0:05 - 0:13] Scene 2: The Solution (Beacon API In Action)
-- **Visual:** Terminal screen zooming into clean `curl` command executing against Beacon API endpoint, returning `200 OK` with real-time location payload in under 45ms.
-- **OST:** Sub-50ms Real-Time Sync.
-- **VO:** "Meet Beacon API by I.T. Skokos. Instant telemetry and seamless orchestration in just three lines of code."
+### [00:06 - 00:16] Scene 2: Core Platform in Action
+* **Visual:** UI capture of Beacon API dashboard. Real-time telemetry routing hybrid SaaS tasks directly to field agents.
+* **On-Screen Text:** "Real-Time Routing | Instant Verification | 99.99% Uptime"
+* **Voiceover:** "Beacon API synchronizes your platform workflows with face-to-face services with sub-second latency."
+* **Source Alignment:** Value props and latency thresholds adapted directly from `Company Document` section on platform delivery.
 
-### [0:13 - 0:22] Scene 3: Hybrid SaaS & Field Operations
-- **Visual:** Split screen: Left side shows SaaS dashboard updating live; right side shows on-site technician receiving instant dispatch prompt via Beacon link.
-- **OST:** Unified SaaS + Face-to-Face Execution.
-- **VO:** "Bridge cloud automation directly to face-to-face services with sub-second reliability."
+### [00:16 - 00:24] Scene 3: The Result (Impact)
+* **Visual:** Fast-cut motion graphics showing completed dispatch status, verified field handshake, and live analytics graph scaling upwards.
+* **Voiceover:** "Automate logistics, verify milestones on-site, and scale without operational drag."
 
-### [0:22 - 0:30] Scene 4: Call to Action (Outro)
-- **Visual:** Polished UI dashboard showing analytics graph spike, fading to I.T. Skokos Beacon API logo and interactive URL.
-- **OST:** Build Faster. Deploy Today. itskokos.com/beacon
-- **VO:** "Ship faster today. Start your free trial at itskokos.com/beacon."
+### [00:24 - 00:30] Scene 4: Call to Action (Outro)
+* **Visual:** I.T. Skokos brand card + Beacon API lockup.
+* **On-Screen Text:** "Deploy Beacon API Today | itskokos.com/beacon"
+* **Voiceover:** "Build smarter. Deliver faster. Get started at itskokos.com."
 
 ---
 
-## Production Notes
-- **Pacing:** Upbeat, tech-forward electronic backing track (side-chained to VO).
-- **Captions:** Burned-in sans-serif subtitles (high contrast) for muted social feeds.
-- **Export Presets:** 4K ProRes Master, H.264 1080x1920 (TikTok/Reels), H.264 1920x1080 (Web/LinkedIn).
+## Export Specs
+* Master: 4K 16:9 (1920x1080 / 3840x2160) @ 60fps
+* Vertical Cutdown: 1080x1920 (9:16) for Paid Social
 ```
