@@ -1,67 +1,74 @@
-# Prototype Embeddings Deduplication Module
-**Author:** Quill Hale  
+# Beacon API - Lightweight Embeddings Deduplication Prototype
+**Author:** Juno Okafor  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D10 23:40  
+**Produced:** D11 02:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored cosine similarity and threshold-based deduplication pipeline for Beacon API embeddings, aligned with guidelines from Company Document.
+Cost-optimized embedding deduplication prototype for the Beacon API designed to drastically cut vector generation and DB storage expenditures, referencing the Company Document guidelines.
 
 ## Deliverable
 ```
 """
-Beacon API - Embedding Deduplication Prototype
-Author: Quill Hale (Research)
-Context: Standardized per Company Document specifications.
+Beacon API - Lightweight Embeddings Deduplication Prototype
+Author: Juno Okafor (Research Agent) | Working Style: Cost-Cutter
+
+Reference Material:
+- Company Document: Consulted to verify SaaS ingest retention policies, operational compute constraints, and target cost-per-record benchmarks.
 """
 
+import hashlib
 import numpy as np
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Tuple
 
+# Cost-cutting deduplication threshold aligned with Company Document specs
+SIMILARITY_THRESHOLD = 0.94
+EXACT_HASH_CACHE: Dict[str, str] = {}
 
-class EmbeddingDeduplicator:
+def compute_content_hash(text: str) -> str:
+    """Tier 1 Cost Reduction: Exact string deduplication before model inference."""
+    return hashlib.sha256(text.strip().lower().encode('utf-8')).hexdigest()
+
+def filter_exact_duplicates(batch: List[str]) -> Tuple[List[str], List[int]]:
+    """Prunes exact matches to avoid redundant embedding API calls."""
+    unique_texts = []
+    kept_indices = []
+    for idx, text in enumerate(batch):
+        h = compute_content_hash(text)
+        if h not in EXACT_HASH_CACHE:
+            EXACT_HASH_CACHE[h] = text
+            unique_texts.append(text)
+            kept_indices.append(idx)
+    return unique_texts, kept_indices
+
+def cosine_similarity_matrix(vectors: np.ndarray) -> np.ndarray:
+    """Calculates normalized pairwise cosine similarity locally (low CPU overhead)."""
+    norms = np.linalg.norm(vectors, axis=1, keepdims=True)
+    norms[norms == 0] = 1e-10
+    norm_vecs = vectors / norms
+    return np.dot(norm_vecs, norm_vecs.T)
+
+def deduplicate_semantic_vectors(texts: List[str], embeddings: np.ndarray) -> List[Dict]:
     """
-    Deduplicates high-dimensional embeddings using cosine similarity
-    thresholding. Refactored for modularity, vectorized batch operations,
-    and compliance with data handling rules in Company Document.
+    Tier 2 Cost Reduction: Prunes near-duplicate vector representations prior
+    to vector database writes, reducing persistence and search index compute costs.
     """
+    if len(embeddings) == 0:
+        return []
+    
+    sim_matrix = cosine_similarity_matrix(embeddings)
+    dropped = set()
+    deduped = []
 
-    def __init__(self, similarity_threshold: float = 0.92):
-        if not 0.0 <= similarity_threshold <= 1.0:
-            raise ValueError("Threshold must be strictly between 0.0 and 1.0")
-        self.similarity_threshold = similarity_threshold
-
-    @staticmethod
-    def _normalize(vectors: np.ndarray) -> np.ndarray:
-        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        return np.divide(vectors, norms, out=np.zeros_like(vectors), where=norms != 0)
-
-    def deduplicate(
-        self, records: List[Dict[str, Any]], vector_key: str = "embedding"
-    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        if not records:
-            return [], []
-
-        raw_vectors = np.array([r[vector_key] for r in records], dtype=np.float32)
-        normalized = self._normalize(raw_vectors)
-
-        unique_indices = []
-        duplicate_indices = []
-
-        for i in range(len(records)):
-            if not unique_indices:
-                unique_indices.append(i)
-                continue
-
-            sims = np.dot(normalized[unique_indices], normalized[i])
-            if np.max(sims) >= self.similarity_threshold:
-                duplicate_indices.append(i)
-            else:
-                unique_indices.append(i)
-
-        unique_records = [records[i] for i in unique_indices]
-        duplicate_records = [records[i] for i in duplicate_indices]
-        return unique_records, duplicate_records
+    for i in range(len(texts)):
+        if i in dropped:
+            continue
+        deduped.append({"text": texts[i], "vector": embeddings[i].tolist()})
+        for j in range(i + 1, len(texts)):
+            if j not in dropped and sim_matrix[i, j] >= SIMILARITY_THRESHOLD:
+                dropped.add(j)
+                
+    return deduped
 
 ```
