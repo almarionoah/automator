@@ -1,0 +1,74 @@
+# Blue/Green Deployment Orchestration for Beacon API
+**Author:** Torq Marlow  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 11:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Zero-downtime Blue/Green rollout configuration for Beacon API using Argo Rollouts, engineered for invisible transitions and uninterrupted user delight, referencing operational standards from Company Document.
+
+## Deliverable
+```
+# Beacon API - Blue/Green Zero-Downtime Rollout Specification
+# Author: Torq Marlow (DevOps)
+# Design Philosophy: The best deployment is invisible—a seamless, poetic shift where the user's journey never stutters.
+# Reference: Built in strict accordance with 'Company Document' for zero-downtime SaaS availability and graceful session draining.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: it-skokos-saas
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+        lifecycle:
+          preStop:
+            exec:
+              # Graceful connection drain duration aligned with 'Company Document' session guidance
+              command: ["/bin/sh", "-c", "sleep 15"]
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app: beacon-api
+      scaleDownDelaySeconds: 60
+      prePromotionAnalysis:
+        templates:
+        - templateName: beacon-latency-and-error-gate
+        args:
+        - name: service-name
+          value: beacon-api-preview
+```
