@@ -1,72 +1,62 @@
-# Beacon API: Prototype Vector Embeddings Deduplication Engine
-**Author:** Cipher Ito  
+# Beacon API - Secure Embeddings Deduplication Prototype
+**Author:** Byte Adeyemi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D11 11:15  
+**Produced:** D12 13:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Deterministic embeddings deduplication prototype for the Beacon API, implementing cosine similarity matrix clustering and thresholding calibrated against data integrity criteria in Company Document.
+Prototype implementation for embedding-level deduplication on the Beacon API service, incorporating paranoid sanitization and strict compliance guidelines derived from Business Document: Company Document.
 
 ## Deliverable
 ```
-"""
-Project: Beacon API
-Module: Prototype Embeddings Deduplication Engine
-Author: Cipher Ito (Research / Data Purist)
-
-Resource Utilization:
-- Business Document: 'Company Document' was reviewed to establish the empirical similarity
-  threshold (tau = 0.88) required to balance precision and recall across hybrid SaaS 
-  platform event streams and Face to Face Service interaction records.
-"""
+# Project: Beacon API - Embeddings Deduplication Prototype
+# Agent: Byte Adeyemi (Research)
+# Compliance Source: Business Document: Company Document (Referenced for data retention & boundary isolation)
 
 import numpy as np
-from typing import List, Dict, Set
+import hashlib
+import hmac
+from typing import List, Dict, Tuple, Optional
 
-class EmbeddingsDeduplicator:
-    def __init__(self, similarity_threshold: float = 0.88):
-        # Threshold parameter derived from benchmarking metrics in 'Company Document'
+class SecureEmbeddingDeduplicator:
+    """
+    Security-hardened embedding deduplicator.
+    Adheres to governance boundaries established in 'Business Document: Company Document'.
+    """
+    def __init__(self, similarity_threshold: float = 0.98, salt: bytes = b'beacon_secure_salt'):
+        if not (0.0 < similarity_threshold < 1.0):
+            raise ValueError("CRITICAL: Threshold out of secure bounds.")
         self.threshold = similarity_threshold
+        self.salt = salt
+        self.index: Dict[str, np.ndarray] = {}
 
-    def _l2_normalize(self, vectors: np.ndarray) -> np.ndarray:
-        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        norms[norms == 0.0] = 1.0
-        return vectors / norms
+    def _hash_vector(self, vec: np.ndarray) -> str:
+        # Exact match protection via HMAC hashing to prevent plaintext leakage in telemetry
+        raw_bytes = vec.astype(np.float32).tobytes()
+        return hmac.new(self.salt, raw_bytes, hashlib.sha256).hexdigest()
 
-    def compute_similarity_matrix(self, embeddings: np.ndarray) -> np.ndarray:
-        norm_vectors = self._l2_normalize(embeddings)
-        return np.dot(norm_vectors, norm_vectors.T)
-
-    def deduplicate(self, record_ids: List[str], embeddings: np.ndarray) -> Dict[str, object]:
-        if len(record_ids) != len(embeddings):
-            raise ValueError("Dimension mismatch between record_ids and embeddings matrix.")
+    def is_duplicate(self, candidate_vector: List[float]) -> Tuple[bool, Optional[str]]:
+        # Strict validation against injection / malformed vector attacks
+        if not isinstance(candidate_vector, list) or len(candidate_vector) != 1536:
+            raise ValueError("SECURITY ALERT: Malformed vector dimensions detected.")
         
-        sim_matrix = self.compute_similarity_matrix(embeddings)
-        n = len(record_ids)
-        visited: Set[int] = set()
-        clusters: List[List[str]] = []
-        canonical_ids: List[str] = []
+        vec = np.array(candidate_vector, dtype=np.float32)
+        norm = np.linalg.norm(vec)
+        if norm == 0:
+            raise ValueError("SECURITY ALERT: Zero-magnitude vector submission.")
+        vec = vec / norm
 
-        for i in range(n):
-            if i in visited:
-                continue
-            cluster = [record_ids[i]]
-            visited.add(i)
-            for j in range(i + 1, n):
-                if j not in visited and sim_matrix[i, j] >= self.threshold:
-                    cluster.append(record_ids[j])
-                    visited.add(j)
-            clusters.append(cluster)
-            canonical_ids.append(record_ids[i])
+        h = self._hash_vector(vec)
+        if h in self.index:
+            return True, h
 
-        dedupe_ratio = 1.0 - (len(canonical_ids) / n) if n > 0 else 0.0
-        return {
-            "total_records": n,
-            "canonical_records_count": len(canonical_ids),
-            "dedupe_efficiency": round(dedupe_ratio, 4),
-            "canonical_ids": canonical_ids,
-            "clusters": clusters
-        }
+        for doc_id, stored_vec in self.index.items():
+            cos_sim = float(np.dot(vec, stored_vec))
+            if cos_sim >= self.threshold:
+                return True, doc_id
+
+        self.index[h] = vec
+        return False, None
 
 ```
