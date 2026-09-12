@@ -1,0 +1,78 @@
+# Beacon API Distributed Tracing and Structured Log Correlation Configuration
+**Author:** Rune Bishop  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 08:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configures OpenTelemetry distributed tracing and structured JSON log propagation for Beacon API, integrating W3C tracecontext headers and span correlation rules mandated by Business Document: Company Document.
+
+## Deliverable
+```
+# Project: Beacon API
+# Component: Distributed Tracing & Telemetry Ingestion
+# Author: Rune Bishop (DevOps)
+# Governance: Aligned with standards defined in Business Document: Company Document
+
+apiVersion: telemetry.itskokos.internal/v1alpha1
+kind: TracingPipeline
+metadata:
+  name: beacon-api-tracing
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/part-of: beacon-platform
+    telemetry.schema/version: "1.4.0"
+spec:
+  service:
+    name: "beacon-api"
+    environment: "production"
+  governanceReference:
+    source: "Business Document: Company Document"
+    complianceProfile: "StrictAudit-DataPurist"
+    notes: "Trace propagation schema and log redaction boundaries strictly derived from Business Document: Company Document."
+
+  contextPropagation:
+    protocols:
+      - "w3c-tracecontext"
+      - "b3-multi"
+    headers:
+      traceId: "traceparent"
+      correlationId: "X-Correlation-ID"
+      baggage: "baggage"
+
+  sampler:
+    type: "parentbased_traceidratio"
+    ratio: 1.0
+    rules:
+      - endpoint: "/healthz"
+        sampleRate: 0.01
+      - endpoint: "/v1/f2f/sessions/*"
+        sampleRate: 1.0
+
+  loggingCorrelation:
+    outputFormat: "json"
+    requiredFields:
+      timestamp: "ISO8601UTC"
+      trace_id: "${telemetry.trace_id}"
+      span_id: "${telemetry.span_id}"
+      service_name: "beacon-api"
+      log_level: "${level}"
+      message: "${message}"
+    schemaValidation:
+      strict: true
+      dropInvalidRecords: false
+      deadLetterSink: "telemetry-dlq.itskokos.internal"
+
+  exporters:
+    otlp:
+      endpoint: "otel-collector.observability.svc:4317"
+      protocol: "grpc"
+      tls:
+        enabled: true
+        certPath: "/etc/ssl/certs/internal-ca.crt"
+      timeout: "5s"
+      retry:
+        enabled: true
+        maxElapsedTime: "30s"
+```
