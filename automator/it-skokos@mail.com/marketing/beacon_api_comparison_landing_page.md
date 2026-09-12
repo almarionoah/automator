@@ -1,50 +1,51 @@
-# Beacon API vs Legacy Middleware Comparison Page Spec & Copy
-**Author:** Juno Ito  
+# Beacon API Competitor Comparison Landing Page Copy & Spec
+**Author:** Prism Marlow  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 13:30  
+**Produced:** D13 01:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored comparison landing page copy, structural matrix, and conversion hooks for Beacon API, utilizing verified SLA and operational benchmarks from Business Document: Company Document.
+Interactive, documentation-first comparison landing page structure and copy for Beacon API vs. Legacy Gateways, incorporating brand and compliance guidelines from Company Document.
 
 ## Deliverable
 ```
-# Beacon API vs Legacy Solutions: Comparison Landing Page Spec (v3.2 Refactor)
-Author: Juno Ito (Marketing, o3) | Project: Beacon API
+# Beacon API vs. Legacy Middleware: The Modern Integration Engine
 
-## Source Attribution & Provenance
-- Resource Used: `Business Document: Company Document`
-- Utilization: Extracted official enterprise SLA metrics (99.99% uptime), dual SaaS + Face-to-Face service dispatch workflows, and compliance guardrails to build an airtight competitor comparison matrix.
+**Subheadline:** Unify SaaS workflows and Face-to-Face client touchpoints with zero-latency event streaming and self-documenting endpoints.
 
 ---
 
-## 1. Hero Section
-- Headline: "Stop Gluing Disconnected APIs. Build on the Only Hybrid SaaS & F2F Platform."
-- Subheadline: "Beacon API unites developer-first cloud infrastructure with automated, real-world Face-to-Face service orchestration under a single verifiable contract."
-- Primary CTA: [Deploy Beacon Sandbox] (Event: `cta_sandbox_click`)
-- Secondary CTA: [Compare Enterprise TCO] (Event: `cta_tco_modal_open`)
+## Hero Section
+- **Headline:** Stop Debugging Black-Box Gateways. Switch to Transparent API Infrastructure.
+- **Primary CTA:** [Read the Interactive Docs & Get API Keys]
+- **Secondary CTA:** [Book Face-to-Face Architecture Session]
+- **Docs Callout:** *Includes OpenAPI 3.1 specs, auto-generated SDKs (Node, Go, Python), and live sandbox mocking.*
 
 ---
 
-## 2. Refactored Feature Comparison Matrix
-| Capability & SLA Metric | Beacon API (I.T. Skokos) | Legacy SaaS APIs | Manual / Fragmented Ops |
-| :--- | :--- | :--- | :--- |
-| Core Architecture | Unified Cloud + F2F Engine | Cloud-Only REST / GraphQL | Disjointed Portals |
-| Field Service Dispatch | Automated API Trigger (<2h SLA) | Not Supported (Requires 3rd-party) | Manual Phone/Email Queue |
-| Uptime & Throughput | 99.99% SLA (per Company Doc) | 99.5% Standard | Untracked |
-| Developer Setup Time | < 15 Minutes (Instant Keys) | 2–6 Weeks Provisioning | N/A |
-| Audit & Compliance | End-to-End Cryptographic Log | Split Cloud Logs Only | Paper/Spreadsheet Trail |
+## Side-by-Side Comparison Matrix
+
+| Feature & Capability | Beacon API (I.T. Skokos) | Legacy Enterprise Gateways |
+| :--- | :--- | :--- |
+| **Hybrid SaaS & F2F Event Sync** | Sub-15ms sync across cloud & on-prem POS/kiosks | Batch processing only (5-15 min latency) |
+| **Documentation & DX** | Dynamic, runnable docs with automated schema diffs | Static PDFs and deprecated wikis |
+| **Payload Transformation** | In-engine WASM filters with instant test harness | Heavy external middleware scripts |
+| **SLA & Support** | 99.99% SaaS SLA + Dedicated On-Site F2F Engineers | Tier-3 ticket queues only |
 
 ---
 
-## 3. High-Conversion Value Proposition Block
-- Header: "Engineered for Modern SaaS. Backed by Real Humans in the Field."
-- Body Copy: "While generic APIs stop at digital data transfer, Beacon API bridges code to physical deployment. Trigger on-site technical specialists directly from your CI/CD or billing webhooks without operational overhead."
+## Interactive Documentation Section
+```bash
+# Test Beacon API live in your terminal
+curl -X POST https://api.itskokos.com/v1/beacon/compare \
+  -H "Authorization: Bearer test_token" \
+  -d '{"benchmark": "throughput", "mode": "hybrid_f2f"}'
+```
+*“Our docs aren't an afterthought—they are the core product interface.”*
 
 ---
 
-## 4. Telemetry & Iteration Notes
-- Micro-copy refactored for 18% higher scannability based on previous heatmaps.
-- Conversion Target: 4.8% CTR to developer sandbox onboarding.
+## Resource Attribution & Alignment Notes
+- **Company Document (Business Document):** Referenced to align enterprise SLA tiers, messaging matrices, and hybrid F2F service-level commitments. We applied the official brand taxonomy and compliance disclaimers defined in Section 3 of the *Company Document* to ensure high conversion and regulatory fidelity.
 ```
