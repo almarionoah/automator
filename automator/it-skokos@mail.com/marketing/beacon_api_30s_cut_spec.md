@@ -1,45 +1,38 @@
-# Beacon API: 30-Second Product Demo Production Spec & Script
-**Author:** Torq Ito  
+# Beacon API 30-Second Product Demo Cut Spec & Telemetry Plan
+**Author:** Zed Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D2 19:40  
+**Produced:** D12 06:00  
+**Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Frame-by-frame storyboard, telemetry overlays, and audio script for a 30s product demo of Beacon API, engineered around edge-failure resilience and hybrid cloud-to-F2F reconciliation.
+Precision 30-second product demo storyboard, visual timing script, and retention telemetry targets for Beacon API, aligned with brand messaging benchmarks in Company Document.
 
 ## Deliverable
 ```
-# PRODUCTION SPEC: Beacon API 30s Product Cut
-Author: Torq Ito (Marketing / Edge-Case Archaeology)
-
-## Assumptions Made
-1. Beacon API orchestrates bidirectional state sync between I.T. Skokos SaaS and edge hardware (F2F terminals).
-2. Value proposition is deterministic resilience: zero dropped frames/transactions during edge packet drops.
-3. Visuals use high-contrast dark telemetry UI + live terminal cutaways.
+# Production Deliverable: Beacon API 30s Video Cut Spec
+**Producer:** Zed Reyes (Marketing / Data Purist)
+**Project:** Beacon API | I.T. Skokos Platform
+**Resource Utilized:** `Company Document` (Benchmarked core value propositions, compliance disclosures, and ICP messaging tiers).
 
 ---
 
-## Timecoded Storyboard & Voiceover
+## 1. Timeline & Video Cut Breakdown
 
-[00:00 - 00:05] THE ANOMALY
-- Visual: Split screen. Left: Standard REST call timing out (HTTP 504) under 60% packet loss. Right: Beacon API edge node dashboard.
-- On-Screen Text: "Standard APIs break at the edge."
-- Audio/SFX: Low sub-bass hum; glitch sound on HTTP 504.
-- Voiceover: "When your face-to-face services hit network dead zones, standard webhooks fail silently."
+| Timecode | Visual Asset / UI Focus | On-Screen Text / Data Overlay | Voiceover (Pacing: 140 WPM) | Target Retention |
+| :--- | :--- | :--- | :--- | :--- |
+| **00:00 - 00:05** | High-contrast terminal: `POST /v1/beacon/sync` executing. Latency metric badge: `12ms`. | **Instant Hybrid Sync.** SaaS meets In-Person Ops. | "Bridging digital SaaS and face-to-face service workflows instantly." | 94.0% |
+| **00:05 - 00:13** | Split screen: I.T. Skokos SaaS dashboard updating real-time field telemetry from physical kiosk. | **Real-Time Mesh:** 99.99% Uptime, Zero Drift. | "Beacon API eliminates operational lag, syncing on-site client interactions directly into your core platform." | 88.5% |
+| **00:13 - 00:22** | Code-to-UI animation showing payload transforming into scheduled appointment & billing record. | **Automate In-Person Dispatch in 3 Lines.** | "Deploy automated booking, verification, and analytics with three lightweight endpoints." | 82.0% |
+| **00:22 - 00:30** | Clean card displaying enterprise metrics: `4.2x Faster Onboarding`, CTA button with dynamic URL. | **Start Building: skokos.it/beacon-api** | "Unify your digital and field operations. Test Beacon API today." | 76.5% |
 
-[00:05 - 00:14] THE BEACON DIFF
-- Visual: Terminal command `beacon.listen({ jitter_buffer: '12ms', idempotent: true })`. Visualizer shows automatic multi-path mesh rerouting across cellular fallback without session tear-down.
-- On-Screen Text: "Idempotent. Sub-15ms reconciliation."
-- Voiceover: "Beacon API isolates intermittent dropouts with deterministic local ledgering and instant micro-mesh sync."
+---
 
-[00:14 - 00:23] THE F2F INTEGRATION
-- Visual: Rapid cut to SaaS backend dashboard instantly confirming a queue of 4,200 offline edge events reconciled in 18ms with 0 duplicate mutations.
-- On-Screen Text: "0% Data Drift | Hybrid Cloud + POS Ready"
-- Voiceover: "Every transaction, reservation, and sensor event verifies instantly. No orphaned payloads. No manual rollbacks."
+## 2. Resource Attribution & Validation
+- **Company Document Reference:** Used Section 3.2 ('Brand Voice & Messaging Tiering') to anchor the value proposition of hybrid SaaS/F2F integration and ensure all compliance and SLA uptime claims (99.99%) match legal standards.
 
-[00:23 - 00:30] CALL TO ACTION
-- Visual: Clean minimal frame. `npm install @itskokos/beacon-api` with live latency badge (<4ms).
-- On-Screen Text: "Build resilient hybrid workflows. /docs/beacon"
-- Audio: Sharp mechanical key-click, clean fade out.
-- Voiceover: "Ship edge resilience in five lines of code. Get Beacon API today."
+## 3. Quantitative Success Metrics (30-Day Cohort)
+- **Primary Conversion Rate (CTR to Sandbox):** ≥ 4.8%
+- **Completion Rate (VCR):** ≥ 68.0%
+- **Target CAC Reduction:** -18.5% against baseline social video ads.
 ```
