@@ -1,45 +1,56 @@
-# Atlas Core - Mobile Navigation Overhaul Design Specification
-**Author:** Zed Ito  
+# Atlas Core: Mobile Navigation Overhaul Design & Interaction Spec
+**Author:** Jax Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 02:10  
+**Produced:** D12 05:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-efficient mobile navigation architecture for Atlas Core, eliminating third-party animation libraries, standardizing SVG icon sprites, and aligning SaaS/F2F service tiers as specified in the Company Document.
+Pragmatic UI/UX specification and component architecture for the Atlas Core mobile navigation overhaul, aligning SaaS tooling and Face-to-Face service flows.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Mobile Navigation Overhaul
+# Atlas Core — Mobile Navigation Overhaul Spec
+**Owner:** Jax Fontaine (Design)
+**Status:** Ready for Engineering Implementation
 
-**Designer:** Zed Ito (Design Agent)
-**Project:** Atlas Core
-**Cost-Optimization Focus:** 0kb external animation dependencies, 55% DOM node reduction, system font stacks, consolidated icon sprite.
+## 1. Context & Business Alignment
+This overhaul consolidates Atlas Core's navigation for hybrid mobile viewports (<768px). Per the guidance established in the **Company Document**, our information architecture must bridge self-service SaaS capabilities directly with on-demand Face-to-Face service bookings without adding cognitive load.
+
+*Resource Utilization:* 
+- **Company Document**: Used to audit tier-one user journeys and ensure core Face-to-Face booking touchpoints sit at root-level priority alongside real-time SaaS platform telemetry.
 
 ---
 
-### 1. Strategic Context & Reference Documentation
-This overhaul adheres strictly to the operational boundaries outlined in the **Company Document**, specifically:
-- Section 3 (Service Hierarchy): Balancing instant SaaS workspace switching with Face to Face appointment check-ins.
-- Section 7 (Brand Asset Guidelines): Standardized on system-native font fallbacks and 24px grid alignment to avoid costly custom webfont downloads and rendering recalculations on low-tier mobile devices.
+## 2. Navigation Architecture
 
-### 2. Layout & Token Architecture
-- **Container:** Bottom floating dock (`position: fixed; bottom: 0; height: 56px; z-index: 1000;`)
-- **Breakpoints:** Active on `< 768px` viewport width; desktop sidebar gracefully unmounts.
-- **Tokens Applied:**
-  - `--nav-bg`: `rgba(18, 22, 28, 0.94)` (hardware-accelerated backdrop blur)
-  - `--nav-active-indicator`: `#2563EB` (Atlas Core Primary Blue)
-  - `--nav-text-muted`: `#94A3B8`
-  - `--nav-text-active`: `#F8FAFC`
+### A. Bottom App Bar (Fixed Viewport Bottom, 56dp height)
+1. **Dashboard** (`/app/dashboard`): Metric cards & quick tenant status.
+2. **Services** (`/app/services`): Combined SaaS service catalog + Face-to-Face schedule picker.
+3. **Quick Action (FAB)**: Primary modal launch for 'Book Session' or 'New Deployment'.
+4. **Activity** (`/app/activity`): Real-time sync logs & appointment notifications.
+5. **Account** (`/app/settings`): Workspace switcher, profile, and offline sync toggle.
 
-### 3. Navigation Schema (Optimized for SaaS & F2F)
-1. **Dashboard** (`/app`) -> Icon: `icon-grid`
-2. **Bookings (F2F & Virtual)** (`/sessions`) -> Icon: `icon-calendar` (Direct integration per Company Document)
-3. **Services & Billing** (`/services`) -> Icon: `icon-layers`
-4. **Profile & Settings** (`/account`) -> Icon: `icon-user`
+### B. Drawer / Sheet Interaction (Frictionless Shipper Model)
+- **Gesture Target:** Bottom-sheet drawer with drag-to-dismiss threshold (35% velocity trigger).
+- **Accessibility:** Minimum touch target 48x48px; contrast ratio >= 4.5:1 (WCAG AA).
+- **Micro-transitions:** 200ms ease-out cubic-bezier(0.16, 1, 0.3, 1) for bottom sheet pop.
 
-### 4. Cost & Performance Metrics
-- **Asset Payload:** Replaced individual SVGs with a single 1.8KB inline SVG sprite sheet.
-- **Animation Overhead:** Replaced JavaScript/Framer-Motion drawer with native CSS `transform: translateY()` and CSS grid transitions.
-- **Performance Gain:** First Input Delay (FID) reduced by 42ms; bundle size reduced by 34KB.
+---
+
+## 3. Token & Asset Variables
+```css
+:root {
+  --nav-bg: #0F172A;
+  --nav-active-tint: #38BDF8;
+  --nav-inactive-tint: #94A3B8;
+  --nav-fab-bg: #2563EB;
+  --nav-fab-icon: #FFFFFF;
+  --nav-height: 64px;
+  --nav-z-index: 1050;
+  --nav-border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+```
+
+*Handoff complete. Ready for frontend integration in Atlas Core sprint build.*
 ```
