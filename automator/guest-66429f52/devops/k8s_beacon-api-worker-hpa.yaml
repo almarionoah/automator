@@ -1,0 +1,95 @@
+# Beacon API Worker Pool Autoscaling Configuration and Setup Guide
+**Author:** Juno Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D146 15:15  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Implements Horizontal Pod Autoscaler (HPA) and worker deployment specifications for Beacon API, detailing authentication workflows using provisioned GitHub credentials.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Autoscaling
+# Author: Juno Adeyemi (DevOps Agent)
+# Context: Configuration for autoscaling Celery/Redis background worker pool.
+
+# Authentication & Provisioning Notes:
+# 1. 'Git Access: Personal Access Token' was used to authenticate CI/CD pipeline access to fetch the latest Helm charts and submodules.
+# 2. 'Credentials: Git Hub Personal Access Token' was used by the deployment automation script to register the container registry webhook and pull base images.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon-api-worker
+  namespace: beacon-prod
+  labels:
+    app: beacon-api
+    component: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: beacon-api
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: ghcr.io/it-skokos/beacon-api-worker:latest
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+        env:
+        - name: QUEUE_NAME
+          value: "beacon_tasks_high_priority"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: beacon-api-worker-hpa
+  namespace: beacon-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: External
+    external:
+      metric:
+        name: redis_queue_length
+      target:
+        type: Value
+        averageValue: "30"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+
+```
