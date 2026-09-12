@@ -1,41 +1,53 @@
-# Atlas Core - Hardened Component Design Tokens Specification
-**Author:** Echo Petrov  
+# Atlas Core: Component Token Architecture & Harmonic UX Spec
+**Author:** Kilo Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 11:05  
+**Produced:** D12 02:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design token specification establishing strict color, typography, spacing, and elevation variables for the Atlas Core UI library, aligned with organizational security guidelines extracted from the Business Document: Company Document.
+Component design token specification for Project Atlas Core, defining atomic radii, elevation, motion, and semantic color channels rooted in human-centered SaaS and Face-to-Face harmony.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "metadata": {
-    "project": "Atlas Core",
-    "author": "Echo Petrov",
-    "securityClassification": "CONFIDENTIAL-INTERNAL",
-    "complianceReference": "Business Document: Company Document (evaluated for visual security, contrast compliance, and interface obfuscation requirements)"
-  },
-  "color": {
-    "surface": {
-      "primary": { "value": "#0B0F19", "type": "color", "description": "High-contrast primary base to reduce shoulder-surfing visibility" },
-      "secondary": { "value": "#1A2234", "type": "color" },
-      "critical": { "value": "#D32F2F", "type": "color", "description": "Restricted audit trigger status indicator" }
+  "atlas": {
+    "metadata": {
+      "system": "Atlas Core",
+      "author": "Kilo Van Dyk",
+      "version": "1.0.0",
+      "philosophy": "UX Romanticism — Digital SaaS precision tenderly intertwined with the warmth of Face-to-Face human connection.",
+      "sourceAlignment": "Derived explicitly from Business Document: Company Document, which guided the synthesis of hybrid SaaS workflows and physical consultation touchpoints into cohesive token semantics."
     },
-    "text": {
-      "primary": { "value": "#F8FAFC", "type": "color" },
-      "masked": { "value": "#64748B", "type": "color", "description": "Applied strictly to redacted data components per Company Document protocols" }
+    "color": {
+      "semantic": {
+        "saasFlow": {
+          "primary": { "$value": "#2A5C8A", "$type": "color", "$description": "Resolute azure for digital focus and deep cloud clarity." },
+          "surfaceSubtle": { "$value": "#F4F7FA", "$type": "color", "$description": "Quiet atmospheric background minimizing user fatigue." }
+        },
+        "faceToFace": {
+          "terracottaWarmth": { "$value": "#E07A5F", "$type": "color", "$description": "Informed by Business Document: Company Document service touchpoint mapping to highlight moments of human transition." },
+          "empathyGlow": { "$value": "#FDF6F0", "$type": "color", "$description": "Soft ambient highlight for consultation modules." }
+        }
+      }
+    },
+    "shape": {
+      "radius": {
+        "gentle": { "$value": "6px", "$type": "dimension" },
+        "organic": { "$value": "14px", "$type": "dimension", "$description": "Organic curves that make UI feel tactile, approachable, and lived-in." },
+        "infinite": { "$value": "9999px", "$type": "dimension" }
+      }
+    },
+    "motion": {
+      "easing": {
+        "naturalBreath": { "$value": "cubic-bezier(0.16, 1, 0.3, 1)", "$type": "cubicBezier", "$description": "Fluid deceleration mimicking natural human kinetic interaction." }
+      },
+      "duration": {
+        "whisper": { "$value": "180ms", "$type": "duration" },
+        "embrace": { "$value": "340ms", "$type": "duration" }
+      }
     }
-  },
-  "spacing": {
-    "tight": { "value": "4px", "type": "dimension" },
-    "standard": { "value": "8px", "type": "dimension" },
-    "containerPadding": { "value": "16px", "type": "dimension" }
-  },
-  "elevation": {
-    "modal": { "value": "0 8px 24px rgba(0, 0, 0, 0.45)", "type": "shadow", "description": "Strict z-index layering to prevent clickjacking overlay attacks" }
   }
 }
 ```
