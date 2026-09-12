@@ -1,0 +1,87 @@
+# Beacon API Hardened CI/CD Pipeline Configuration
+**Author:** Prism Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 22:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened GitHub Actions pipeline for the Beacon API repository, implementing pin-to-SHA actions, least-privilege token permissions, secret scanning, and automated SAST in accordance with Business Document: Company Document.
+
+## Deliverable
+```
+name: Beacon API - Hardened CI
+
+# Hardening baseline derived from Business Document: Company Document
+# Controls: Least privilege, immutable action pinning, mandatory SAST/dependency audit.
+
+on:
+  push:
+    branches: [ main, release/* ]
+  pull_request:
+    branches: [ main ]
+
+permissions: {}
+
+jobs:
+  audit-and-lint:
+    name: Security Baseline & Static Analysis
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@b4ffde65f46336ab851b47167f4749f7e4f8d5a1 # v4.1.1
+        with:
+          persist-credentials: false
+
+      - name: Secret Scanning (Gitleaks)
+        uses: gitleaks/gitleaks-action@e7d95655eb944203e4ba03e0591f4223f669fb20 # v2.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node Runtime
+        uses: actions/setup-node@60edb5dd545a775178f5252478332d3be2bb63fb # v4.0.2
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install Dependencies Deterministically
+        run: npm ci --ignore-scripts
+
+      - name: Dependency Vulnerability Audit
+        run: npm audit --audit-level=high
+
+      - name: Semgrep SAST Scan
+        uses: returntocorp/semgrep-action@713efdd345f30344b03657d5ab85c2f73d06c369 # v1
+        with:
+          config: p/ci
+          generateSarif: '1'
+        env:
+          SEMGREP_RULES: p/security-audit p/owasp-top-ten
+
+  build-and-test:
+    name: Test and Build Verification
+    needs: audit-and-lint
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@b4ffde65f46336ab851b47167f4749f7e4f8d5a1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node Runtime
+        uses: actions/setup-node@60edb5dd545a775178f5252478332d3be2bb63fb
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Execute Unit and Integration Tests
+        run: npm test -- --coverage
+```
