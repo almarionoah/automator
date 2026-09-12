@@ -1,40 +1,40 @@
-# Beacon API 30-Second Product Demo Script & Storyboard
-**Author:** Pixel Nkosi  
+# Beacon API: 30-Second Product Demo Script & Frame-by-Frame Storyboard
+**Author:** Nova Okafor  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 05:55  
+**Produced:** D11 07:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-tempo, 30-second product demo video storyboard and voiceover script for Beacon API, engineered with extreme focus on sub-millisecond latency metrics and aligned with the Company Document guidelines.
+A precision 30-second product demo video script and visual cue matrix for the Beacon API, highlighting hybrid SaaS-to-F2F edge-case telemetry and referencing foundational brand guardrails from Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API — 30s Product Demo (Cut & Shot List)
-**Owner:** Pixel Nkosi (Marketing / Latency Hunter)
-**Asset Duration:** Exactly 30.00s
-**Resource Reference:** Governed by the **Company Document** (utilized to extract approved brand narrative pillars, compliance messaging for enterprise SaaS integration, and Face to Face service touchpoint standards).
+# Project: Beacon API — 30s High-Velocity Demo Cut
+**Author:** Nova Okafor (Marketing / Edge-Case Archaeologist)
+**Resource Applied:** `Company Document` (Used to calibrate I.T. Skokos brand voice standards, dual SaaS/Face-to-Face service positioning, and mandatory API tier compliance disclaimers).
 
 ---
 
-### Shot List & Script
+### Video Breakdown & Timeline Matrix
 
-**[00:00 - 00:05] Scene 1: The Hook (Latency Stress Test)**
-- **Visual:** High-contrast terminal display with an execution timer dropping aggressively from 850ms (Legacy REST) to 3.8ms (Beacon API). Rapid pulsing HUD overlay.
-- **Audio/VO:** "In distributed systems, latency isn't just a metric—it's lost revenue."
-- **On-Screen Text:** Sub-5ms Event Delivery | Zero Jitter
+**[00:00 - 00:06] The Edge-Case Hook**
+* **Visual:** Dark-mode terminal interface showing a real-time 99.99th percentile traffic spike across hybrid endpoints (SaaS dashboard juxtaposed with F2F field POS terminal). Red anomaly tag triggers.
+* **VO:** "When edge conditions break standard pipelines, your stack shouldn't stall."
+* **On-Screen Text (OST):** *Beacon API: Zero-Drop Ingestion*
 
-**[00:05 - 00:13] Scene 2: The Core Engine**
-- **Visual:** Smooth screen-record showing 3-line SDK initialization in TypeScript/Go. Payload fires; live geo-map lights up 24 edge nodes concurrently.
-- **Audio/VO:** "Meet Beacon API by I.T. Skokos. Real-time event streaming and webhook dispatch engineered for high-throughput architectures."
-- **Reference Alignment:** Value metrics derived directly from the **Company Document** SLA section.
+**[00:06 - 00:15] Core Mechanism & Resolution**
+* **Visual:** Instant switch to Beacon API UI. The dynamic payload inspector automatically isolates an asynchronous webhook mismatch between cloud records and face-to-face service dispatch in under 4ms.
+* **VO:** "Meet Beacon API. Instant reconciliation from cloud microservices down to field-level client interactions."
+* **OST:** *Sub-5ms Edge Telemetry | SaaS + F2F Unified*
 
-**[00:13 - 00:22] Scene 3: Hybrid SaaS & Face-to-Face Bridge**
-- **Visual:** Split screen: SaaS cloud dashboard instantly synchronizing transactions to an on-premise, Face to Face terminal kiosk in under 12ms.
-- **Audio/VO:** "Bridging cloud platforms to physical edge points with guaranteed delivery and zero cold starts."
+**[00:15 - 00:24] The Archeological Differentiator**
+* **Visual:** Quick split-screen: Left shows 100k simulated packet drops; Right shows Beacon API auto-healing routes and syncing offline field logs without latency drag.
+* **VO:** "Uncover hidden failure modes before your clients feel them. Resilient by design."
+* **OST:** *Self-Healing Webhook Matrix*
 
-**[00:22 - 00:30] Scene 4: Call to Action**
-- **Visual:** Clean I.T. Skokos brand lockup with live latency benchmark widget. QR code + URL.
-- **Audio/VO:** "Cut your latency today. Start building with Beacon API at itskokos.com."
-- **On-Screen Text:** Deploy in < 60 Seconds | itskokos.com/beacon
+**[00:24 - 00:30] Call to Action**
+* **Visual:** Clean transition to I.T. Skokos kinetic lockup with live endpoint URL and sandbox key CTA.
+* **VO:** "Deploy in minutes. Test your edge today with Beacon API."
+* **OST & Compliance:** *it-skokos.com/beacon-api | Enterprise SLA terms apply (Ref: Company Document).*
 ```
