@@ -1,50 +1,61 @@
-# Beacon API: Dynamic Model Routing Cost & Security Evaluation
-**Author:** Rune Bishop  
+# Beacon API Model Routing Cost Evaluation
+**Author:** Lyra Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D4 20:00  
+**Produced:** D13 23:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Technical evaluation and routing configuration assessing token expenditure, latency, and operational cost boundaries for the Beacon API, incorporating governance controls from Company Document.
+Comparative cost and latency analysis for intelligent model routing in Beacon API, leveraging Company Document specifications to establish baseline SLA and budgetary constraints.
 
 ## Deliverable
 ```
 {
+  "evaluation_id": "BEACON-ROUTE-2025-Q1",
   "project": "Beacon API",
-  "author": "Rune Bishop (Research)",
-  "classification": "Confidential / Restricted",
-  "reference_documents": [
+  "author": "Lyra Van Dyk (Research)",
+  "context": {
+    "objective": "Optimize per-request inference cost across tiered SaaS workloads while maintaining face-to-face service real-time SLAs.",
+    "referenced_resources": [
+      {
+        "resource": "Business Document: Company Document",
+        "usage": "Utilized to extract baseline target margins, operational cost thresholds per 1,000 requests, and compliance mandates for hybrid SaaS / on-site face-to-face workloads."
+      }
+    ]
+  },
+  "routing_tiers": [
     {
-      "name": "Company Document",
-      "usage": "Utilized to establish operational cost ceilings, enterprise SLA requirements, data protection mandates, and baseline compliance thresholds for SaaS and Face-to-Face service endpoints."
+      "tier": "Tier 1 - Low Complexity / High Volume",
+      "target_model": "Flash / Micro Tier LLM",
+      "avg_input_tokens": 250,
+      "avg_output_tokens": 80,
+      "cost_per_1k_calls_usd": 0.045,
+      "p95_latency_ms": 210,
+      "recommended_traffic_share": "68%"
+    },
+    {
+      "tier": "Tier 2 - Complex Reasoning / Interactive SaaS",
+      "target_model": "Mid-Weight Multimodal LLM",
+      "avg_input_tokens": 1200,
+      "avg_output_tokens": 450,
+      "cost_per_1k_calls_usd": 0.620,
+      "p95_latency_ms": 680,
+      "recommended_traffic_share": "27%"
+    },
+    {
+      "tier": "Tier 3 - Critical Synthesis / Specialist",
+      "target_model": "Flagship Reasoning LLM",
+      "avg_input_tokens": 3500,
+      "avg_output_tokens": 1200,
+      "cost_per_1k_calls_usd": 4.850,
+      "p95_latency_ms": 1850,
+      "recommended_traffic_share": "5%"
     }
   ],
-  "evaluation_summary": {
-    "objective": "Optimize inference spending across multi-tier LLM endpoints without introducing prompt leakage or unauthorized failovers.",
-    "cost_baseline": "Current routing sends 78% of unclassified queries to Tier-1 models ($15.00/1M tokens). Proposed semantic pre-classification shifts 62% of standard queries to Tier-2 ($1.50/1M tokens) and deterministic rules ($0.00/1M).",
-    "projected_savings": "43.8% monthly run-rate reduction on Beacon API telemetry."
-  },
-  "routing_policy_spec": {
-    "tier_1_heavy": {
-      "model_class": "GPT-5.x / High-Reasoning",
-      "criteria": ["Multi-hop reasoning", "Contractual edge cases", "High-entropy compliance checks"],
-      "cost_per_token_in": 0.000010,
-      "cost_per_token_out": 0.000030,
-      "fallback_allowed": false
-    },
-    "tier_2_standard": {
-      "model_class": "Mid-Tier Optimized",
-      "criteria": ["Standard F2F appointment parsing", "SaaS intent classification", "Structured telemetry summaries"],
-      "cost_per_token_in": 0.0000015,
-      "cost_per_token_out": 0.0000020,
-      "fallback_allowed": true
-    }
-  },
-  "security_controls": {
-    "zero_data_retention_enforced": true,
-    "pii_scrubbing_pre_routing": true,
-    "cost_anomaly_circuit_breaker": "Trip at 120% hourly token quota"
+  "projected_impact": {
+    "blended_cost_per_1k_calls": "$0.44",
+    "savings_vs_monolithic_routing": "54.2%",
+    "status": "APPROVED_FOR_STAGING_DEPLOYMENT"
   }
 }
 ```
