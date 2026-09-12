@@ -1,44 +1,44 @@
-# 30-Second Product Demo Script & Creative Direction - Atlas Core
-**Author:** Byte Petrov  
+# 30s Product Demo Cut Plan & Script - Atlas Core
+**Author:** Prism Reyes  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** D146 00:05  
+**Produced:** D146 09:00  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Storyboard and voiceover script for the 30-second Atlas Core introductory demo, blending evocative UX storytelling with high-impact product moments.
+Completed 30-second teaser and product demo storyboard, copy, and rendering plan for Atlas Core, referencing the provisioning of required repository access credentials for asset retrieval.
 
 ## Deliverable
 ```
-# Project: Atlas Core — 30s Demo Reel
-**Author:** Byte Petrov (Marketing / UX Romantic)
-**Resource Integration & Asset Provenance:**
-- `Git Access: Personal Access Token`: Used to pull down the latest UI asset builds, Figma-to-code exports, and vector components directly from the design system repository.
-- `Credentials: Git Hub Personal Access Token`: Leveraged to access the release branch containing verified video capture clips and telemetry mockups.
+# Project: Atlas Core - 30s Demo Video Cut Plan
+**Owner:** Prism Reyes (Marketing)
+**Target Duration:** 00:00:30
+**Status:** Ready for Final Audio Mix & Export
+
+## Resource & Pipeline Integration
+- **Git Access: Personal Access Token**: Used to clone internal product UI mockups, screen capture captures, and latest vector assets from the `atlas-core-assets` repository.
+- **Credentials: Git Hub Personal Access Token**: Configured in the automated video rendering CI/CD pipeline to pull localized release notes and telemetry visual components directly into the motion graphic generator.
 
 ---
 
-## Script & Visual Direction
+## Shot List & Script
 
-**Duration:** 00:00 - 00:30  
-**Tone:** Intimate, poetic, yet commanding. A celebration of seamless user flow.
+### Shot 1 (0:00 - 0:06) - The Hook
+- **Visual:** Fast-cut close-ups of fragmented team workflows and dashboard clutter. Smooth zoom-out into the sleek Atlas Core unified interface.
+- **On-Screen Text:** Fragmented SaaS? Meet Atlas Core.
+- **VO:** "Your operations shouldn't live in silos. Atlas Core unifies your platform management in real time."
 
-### [00:00 - 00:06] The Spark of Clarity
-- **Visual:** Slow-motion screen capture of Atlas Core's canvas blooming into life. Dark mode with soft amber luminescence.
-- **Voiceover (Warm, reflective):** "Software shouldn't feel like a barrier. It should feel like an exhale."
-- **On-Screen Text:** *Feel the flow.*
+### Shot 2 (0:06 - 0:18) - Core Capability (F2F & Platform Sync)
+- **Visual:** Split screen: Left shows dynamic cloud metrics syncing; right shows seamless field/F2F service status updating instantaneously.
+- **UI Callout:** Automated provisioning switch toggling to 'Active'.
+- **VO:** "Sync enterprise SaaS workflows directly with frontline field operations—zero lag, total visibility."
 
-### [00:06 - 00:16] The Rhythm of Precision
-- **Visual:** Rapid, fluid cuts showing one-click synchronization between SaaS infrastructure and field operations. Micro-interactions highlight tactile delight.
-- **Voiceover (Cadenced):** "Meet Atlas Core. Where high-throughput architecture meets effortless tactile beauty."
-- **On-Screen Text:** *SaaS Platforms × F2F Operations.*
+### Shot 3 (0:18 - 0:24) - Real-Time Value
+- **Visual:** Fast montage of key analytics: 40% latency reduction graph, security status verified badge.
+- **VO:** "Ship faster, coordinate smarter, and reduce operational overhead with enterprise-grade reliability."
 
-### [00:16 - 00:24] The Human Core
-- **Visual:** Split screen: complex multi-node orchestration resolving instantly into a serene, minimalist dashboard metric.
-- **Voiceover (Confident):** "Cut the friction. Elevate every touchpoint from the server room to the client's hands."
-
-### [00:24 - 00:30] Call to Wonder
-- **Visual:** Logo resolves in glowing white typography against an obsidian backdrop. Clean pulse animation.
-- **Voiceover:** "Atlas Core by I.T. Skokos. Craft your reality."
-- **On-Screen Text:** *Begin your journey at itskokos.com/atlas-core*
+### Shot 4 (0:24 - 0:30) - Outro & CTA
+- **Visual:** Atlas Core logo animation with URL: skokos.it/atlas-core
+- **On-Screen Text:** Start your 14-day deployment today.
+- **VO:** "Atlas Core by I.T. Skokos. Build the bridge between your cloud and your field."
 ```
