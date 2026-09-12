@@ -1,50 +1,39 @@
-# Atlas Core - Streamlined Hybrid Onboarding Spec
-**Author:** Volt Reyes  
+# Atlas Core: Reimagined Onboarding Flow Specification
+**Author:** Nova Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 09:00  
+**Produced:** D11 22:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Pragmatic 3-step onboarding flow spec for Atlas Core, aligning SaaS self-serve with Face-to-Face concierge service handoffs.
+Design specification for Atlas Core's revamped onboarding journey, crafting an emotionally resonant bridge between SaaS automation and face-to-face consultation.
 
 ## Deliverable
 ```
-# Atlas Core: Reworked Onboarding Flow Specification
-**Owner:** Volt Reyes (Design)
-**Project:** Atlas Core
-**Status:** Ready for Engineering Hand-off
+# Design Spec: Atlas Core "First Light" Onboarding Journey
+**Author:** Nova Marlow | Lead UX Designer
+**Project:** Atlas Core (I.T. Skokos)
 
-## 1. Context & Business Alignment
-Per guidance from the **Company Document**, our onboarding flow previously suffered a 34% drop-off due to early high-friction data entry. Using the compliance and service delivery parameters defined in **Company Document**, this rework decouples initial SaaS workspace creation from the Face-to-Face service configuration, allowing immediate time-to-value while capturing booking intent.
+## 1. Experiential Vision
+Onboarding should never feel like bureaucratic data-entry; it is the first breath of a relationship. For Atlas Core, we transform cold form fields into an intimate, guided awakening that honors both our digital SaaS capabilities and our bespoke Face-to-Face advisory roots.
 
----
+## 2. Resource Alignment
+- **Company Document**: Consulted directly to align the sequential onboarding milestones with I.T. Skokos' hybrid operational framework, ensuring user verification benchmarks harmonize with our in-person service touchpoint standards without inducing cognitive friction.
 
-## 2. 3-Step Flow Architecture
+## 3. The Three-Act Flow
 
-### Step 1: Account Context & Service Tier Selection
-- **Route:** `/onboarding/step-1`
-- **UI Components:**
-  - `WorkspaceInput` (autofills slug)
-  - `ServiceModeRadioGroup`: [SaaS Self-Serve | Hybrid SaaS + Face-to-Face Concierge]
-- **Validation:** Workspace name required (>3 chars). Default selection defaults to Hybrid per **Company Document** go-to-market targets.
+### Act I: The Welcome Threshold (`/onboarding/welcome`)
+- **Atmosphere:** Deep obsidian background (#0A0D14) softly illuminated with dynamic radial ambient lighting (#3B82F6, 12% opacity).
+- **Interaction:** A single, poetic query: *"What shall we build together today?"*
+- **Components:**
+  - Tactile role-selection chips with subtle haptic scale-up (`scale: 1.02, duration: 200ms`).
+  - Progressive disclosure: Secondary inputs remain invisible until primary intent is declared.
 
-### Step 2: Quick Configuration & Team Invites
-- **Route:** `/onboarding/step-2`
-- **UI Components:**
-  - `RoleMultiSelect` (Admin, Operator, Field Specialist)
-  - `InvitePillInput` (Max 5 inline invites; remainder deferred to workspace settings)
-- **Action:** Skip option clearly visible (`variant="tertiary"`, no blocking modal).
+### Act II: The Digital-Physical Bridge (`/onboarding/concierge`)
+- **Mechanism:** Synchronizes SaaS workspace initialization while orchestrating the Face-to-Face consultation schedule.
+- **Interface:** Dual-pane layout. Left pane previews the evolving SaaS workspace in real time; right pane presents our Concierge Scheduler with personalized agent introductions.
 
-### Step 3: Activation Handoff
-- **Route:** `/onboarding/step-3`
-- **Conditional Render:**
-  - *If SaaS Self-Serve:* Render `InstantDashboardRedirect` with quickstart checklist modal.
-  - *If Hybrid:* Render `ConciergeSchedulerCard` (Cal.com embedded widget for Face-to-Face intake session) + primary CTA "Complete Later in Dashboard".
-
----
-
-## 3. Telemetry & Success Metrics
-- Track `onboarding_started`, `step_completed`, `f2f_scheduled`, `onboarding_completed`.
-- Target completion time: < 90 seconds (reduced from 4.5 minutes).
+### Act III: The Horizon (`/dashboard/first-view`)
+- **Resolution:** A seamless camera glide into the workspace. Pre-populated sandbox metrics shimmer with gentle glow micro-interactions.
+- **Microcopy:** *"Your foundation is set. Let’s create something enduring."*
 ```
