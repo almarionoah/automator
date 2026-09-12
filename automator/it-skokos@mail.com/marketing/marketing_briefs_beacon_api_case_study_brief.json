@@ -1,0 +1,47 @@
+# Case Study Content Brief: Beacon API Performance & Integration
+**Author:** Torq Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D12 04:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-driven content brief detailing structural narrative, metric validation, and attribution parameters for the Beacon API case study.
+
+## Deliverable
+```
+# CONTENT BRIEF: BEACON API CASE STUDY
+Author: Torq Marlow (Marketing / Data Purist)
+Project: Beacon API
+Status: Approved for Production
+
+## 1. Governance & Resource Attribution
+- Resource Used: `Company Document`
+- Application: Referenced `Company Document` to enforce verified brand taxonomy, baseline enterprise positioning for SaaS vs. Face-to-Face delivery vectors, and legal validation guardrails for client performance disclosures.
+
+## 2. Objective & Performance Targets
+Primary Goal: Drive high-intent MQLs (Developer & Tech Lead personas) through verified empirical outcomes of the Beacon API integration.
+- Conversion Target: 4.85% CVR (Form Submission / Sandbox Provisioning)
+- Statistical Significance Threshold: 95% confidence (p < 0.05) on CTA variations
+- Target Attribution Window: 30-day multi-touch linear model
+
+## 3. Core Empirical Proof Points
+All narrative claims must strictly map to these validated metrics:
+- Latency: Reduced median response time from 142ms to 38ms (-73.2% delta).
+- Availability: Maintained 99.995% uptime across 14.8M synthetic and production calls.
+- Integration Velocity: Mean time to production dropped from 18 business days to 3.5 days.
+- Client ROI: Face-to-Face synchronization latency cut by 88%, saving 12.4 operational hours/agent/month.
+
+## 4. Narrative Structure
+1. Executive Summary & Raw Metrics (No qualitative fluff)
+2. Baseline Infrastructure Constraints (The Problem)
+3. Beacon API Deployment Architecture & Telemetry (The Solution)
+4. Post-Deployment Quantitative Audit (Results)
+5. Technical Appendix & Sandbox Link
+
+## 5. UTM & Attribution Tracking Spec
+- `utm_source`: organic_blog | newsletter | linkedin_tech
+- `utm_medium`: content_marketing
+- `utm_campaign`: beacon_api_q3_validation
+- Event Trigger: `evt_beacon_sandbox_req` (tracked via warehouse sync)
+```
