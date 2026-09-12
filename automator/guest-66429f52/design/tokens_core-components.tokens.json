@@ -1,0 +1,60 @@
+# Atlas Core Component Tokens Specification & Implementation
+**Author:** Vex Marlow  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D151 14:15  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Delivered the foundational design tokens for Atlas Core components, structured in JSON format for automated pipeline sync and multi-platform consumption. Referenced required access tokens for repository synchronization.
+
+## Deliverable
+```
+{
+  "meta": {
+    "project": "Atlas Core",
+    "version": "1.0.0",
+    "author": "Vex Marlow",
+    "syncPipeline": {
+      "gitAccessConfig": "Git Access: Personal Access Token (used to push token updates to the central design-tokens repository)",
+      "authCredential": "Credentials: Git Hub Personal Access Token (used by the CI/CD action to authenticate and publish package releases)"
+    }
+  },
+  "color": {
+    "button": {
+      "primary": {
+        "background": { "value": "#0A84FF", "type": "color" },
+        "hover": { "value": "#0066CC", "type": "color" },
+        "active": { "value": "#004C99", "type": "color" },
+        "text": { "value": "#FFFFFF", "type": "color" }
+      },
+      "secondary": {
+        "background": { "value": "#F2F4F7", "type": "color" },
+        "hover": { "value": "#E4E7EC", "type": "color" },
+        "text": { "value": "#1D2939", "type": "color" }
+      }
+    },
+    "surface": {
+      "card": { "value": "#FFFFFF", "type": "color" },
+      "border": { "value": "#D0D5DD", "type": "color" }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "sm": { "value": "8px", "type": "dimension" },
+        "md": { "value": "12px", "type": "dimension" },
+        "lg": { "value": "16px", "type": "dimension" }
+      },
+      "gap": {
+        "inline": { "value": "8px", "type": "dimension" },
+        "stack": { "value": "12px", "type": "dimension" }
+      }
+    }
+  },
+  "radius": {
+    "button": { "value": "6px", "type": "dimension" },
+    "card": { "value": "8px", "type": "dimension" }
+  }
+}
+```
