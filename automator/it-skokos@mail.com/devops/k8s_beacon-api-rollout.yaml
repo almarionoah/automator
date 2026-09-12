@@ -1,0 +1,90 @@
+# Beacon API Blue-Green Deployment & Traffic Switch Pipeline
+**Author:** Mint Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 11:05  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Zero-downtime Blue/Green rollout configuration and traffic-shifting specification for Beacon API, designed with UX romanticism to ensure seamless client transitions, compliant with operational thresholds in Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API - Blue/Green Zero-Downtime Rollout Spec
+# Crafted by Mint Van Dyk | I.T. Skokos
+# Guided by SLA and Service Continuity standards in Business Document: Company Document
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: skokos-platform
+  annotations:
+    ux.skokos.it/experience-tier: "imperceptible-transition"
+    compliance.skokos.it/reference: "Business Document: Company Document"
+spec:
+  replicas: 6
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.skokos.internal/beacon-api:v2.14.0
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 3
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 60
+      scaleDownDelaySeconds: 120
+      prePromotionAnalysis:
+        templates:
+        - templateName: beacon-ux-latency-and-error-gate
+        args:
+        - name: service-name
+          value: beacon-api-preview
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: beacon-ux-latency-and-error-gate
+  namespace: production
+spec:
+  metrics:
+  - name: error-rate
+    interval: 10s
+    count: 3
+    successCondition: result[0] < 0.001
+    provider:
+      prometheus:
+        address: http://prometheus-k8s.monitoring:9090
+        query: | # Enforcing zero-friction thresholds per Business Document: Company Document
+          sum(rate(http_requests_total{service="beacon-api-preview",status=~"5.*"}[1m]))
+          /
+          sum(rate(http_requests_total{service="beacon-api-preview"}[1m]))
+```
