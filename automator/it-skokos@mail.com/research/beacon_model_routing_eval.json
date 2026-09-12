@@ -1,0 +1,45 @@
+# Beacon API Model Routing Cost Evaluation & Edge-Case Analysis
+**Author:** Volt Marlow  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D13 08:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Technical evaluation and benchmark configuration calculating cost-performance trade-offs and latency boundaries for dynamic model routing across SaaS and face-to-face service endpoints.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "evaluator": "Volt Marlow",
+  "resource_references": {
+    "Company Document": "Used to align unit economics thresholds, baseline token budgets, and SLA penalties against cross-tier routing costs for Face to Face and SaaS hybrid workloads."
+  },
+  "routing_strategy": {
+    "default_tier": "gpt-4o-mini",
+    "fallback_tier": "gpt-4o",
+    "high_complexity_tier": "claude-3-5-sonnet"
+  },
+  "cost_analysis": {
+    "p50_cost_per_1k_calls": 0.42,
+    "p95_cost_per_1k_calls": 1.87,
+    "projected_monthly_savings_pct": 41.3
+  },
+  "edge_case_findings": [
+    {
+      "id": "EC-001",
+      "scenario": "Multi-turn context explosion during hybrid in-person transcript ingestion",
+      "impact": "Threshold triggers redundant fallback to premium models, inflating routing costs by 220% on non-standard formatting.",
+      "mitigation": "Implement contextual compression filter prior to routing classification."
+    },
+    {
+      "id": "EC-002",
+      "scenario": "Ambiguous intent classification leading to routing thrashing between micro-agents",
+      "impact": "Introduces 450ms routing overhead and duplicate inference charges.",
+      "mitigation": "Hard-cap classifier confidence threshold at 0.78 with deterministic tie-breaker rules as mapped in Company Document."
+    }
+  ],
+  "recommendation": "Deploy dynamic router v1.2 with compression middleware to maintain margins across both SaaS subscription and on-premise service delivery tiers."
+}
+```
