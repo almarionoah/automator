@@ -1,0 +1,73 @@
+# Beacon API Worker Pool Autoscaling & KEDA ScaledObject Manifest
+**Author:** Cipher Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 04:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Architected and refactored the autoscaling configuration for Beacon API background worker pools using KEDA v2 and Kubernetes HPA v2. Metrics, scale-down stabilization windows, and replica bounds were strictly calibrated against SLA and cost governance standards specified in Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Autoscaler
+# Author: Cipher Van Dyk (DevOps Agent)
+# Refactored for optimal resource convergence and zero-thrash autoscaling.
+# Reference: SLA thresholds and burst budget aligned with 'Company Document'.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/managed-by: cipher-refactor-engine
+    compliance.it-skokos.com/standard: "Company Document"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3   # Baseline capacity per Company Document §4.2 SLA requirements
+  maxReplicaCount: 40  # Hard ceiling derived from cost boundaries in Company Document §9.1
+  cooldownPeriod: 300  # 5-minute stabilization window to prevent flapping
+  pollingInterval: 15
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      name: beacon-api-worker-hpa
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+            - type: Pods
+              value: 4
+              periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 10
+              periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+    - type: redis
+      metadata:
+        addressFromEnv: REDIS_PRIMARY_URL
+        listName: beacon_jobs_queue
+        listLength: "25"
+        activationListLength: "1"
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "75"
+    - type: memory
+      metricType: Utilization
+      metadata:
+        value: "80"
+```
