@@ -1,56 +1,37 @@
-# Design Specification: Atlas Core Mobile Navigation Overhaul
-**Author:** Zed Fontaine  
+# Atlas Core - Mobile Navigation Overhaul Design Spec
+**Author:** Iris Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 13:15  
+**Produced:** D11 17:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready design specification and token configuration for the Atlas Core mobile navigation redesign, integrating SaaS dashboards and Face-to-Face booking pathways.
+Comprehensive design and interaction specification for the Atlas Core mobile navigation architecture, adhering to strict zero-trust UI paradigms and corporate access hierarchies.
 
 ## Deliverable
 ```
-# Design Spec: Atlas Core Mobile Navigation Overhaul (v2.4)
-**Author:** Zed Fontaine (Design)
-**Project:** Atlas Core | I.T. Skokos
-**Status:** Ready for Implementation
+# DESIGN SPECIFICATION: Atlas Core Mobile Navigation Overhaul
+Author: Iris Marlow (Design Agent)
+Classification: Restricted - Internal Distribution Only
 
-## 1. Context & Business Alignment
-This overhaul replaces the legacy hamburger menu with a bottom-docked navigation bar paired with a progressive disclosure tray. We referenced the **Company Document** to align the primary navigation tiers with our dual SaaS platform and Face-to-Face (F2F) service delivery models, ensuring zero-friction access to instant booking and active SaaS workspace monitors.
+## 1. Overview & Objectives
+The Atlas Core mobile navigation has been overhauled to streamline user journeys across both SaaS platform features and Face-to-Face service modules while enforcing strict security boundaries at the viewport layer.
 
-## 2. Navigation Architecture
-- **Primary Bottom Bar (4 items):**
-  1. `Workspace` (SaaS Metrics / Core Dashboard)
-  2. `Services` (Hybrid Hub: SaaS Tools + F2F Service Appointments)
-  3. `Quick Action [Center Fabricated FAB]` (Instant F2F Dispatch / New Query)
-  4. `Activity` (Live Alerts & Session Timelines)
-  5. `More` (Trigger for secondary menu & settings)
+## 2. Resource Utilization
+- **Business Document: Company Document**: Utilized to align the navigation information architecture (IA) with enterprise role-based access tiers and cross-departmental compliance boundaries. Visual hierarchy, menu taxonomy, and role-gated sectioning were structured directly against the mandate established in this document to prevent unauthorized UI surface exposure.
 
-## 3. Component Specs & Layout Tokens
-```json
-{
-  "mobileNav": {
-    "height": "64px",
-    "safeAreaBottom": "env(safe-area-inset-bottom, 16px)",
-    "background": "rgba(18, 22, 28, 0.94)",
-    "blur": "12px",
-    "borderTop": "1px solid rgba(255, 255, 255, 0.08)",
-    "tapTarget": {
-      "minWidth": "48px",
-      "minHeight": "48px"
-    },
-    "fab": {
-      "diameter": "56px",
-      "offsetY": "-18px",
-      "accent": "#00E599",
-      "icon": "plus-calendar"
-    }
-  }
-}
-```
+## 3. UI/UX Architecture & Security Controls
+### 3.1. Navigation Bar & Drawer Hierarchy
+- **Primary Anchor**: Fixed bottom bar for high-frequency safe routes (Dashboard, Services, Secure Messages).
+- **Secondary Drawer**: Hamburger trigger initiating a modal drawer. 
+  - Dynamic menu item population is strictly validated against current token claims.
+  - Fallback state renders a locked, non-interactive placeholder if authorization states are ambiguous.
 
-## 4. Interaction Specs
-- **Micro-interactions:** Haptic feedback on bottom-bar tab switch (`UIFeedbackType.selection`).
-- **Drawer Transition:** Spring physics (`stiffness: 380, damping: 30`) on secondary 'More' sheet.
-- **Breakpoints:** Active on viewport widths `<= 768px`; gracefully shifts to responsive rail at `769px+`.
+### 3.2. Visual Defenses & Privacy Overlays
+- **App Switcher Masking**: When the drawer or profile switcher is engaged, a hardware-accelerated 12px Gaussian blur overlay (`backdrop-filter: blur(12px)`) covers underlying viewport contents to prevent shoulder surfing and OS-level multitasking screenshot leaks.
+- **PII Scrubbing in View Hierarchy**: User identifiers, tenant IDs, and sensitive service tags must be rendered via canvas or secure styled spans without persisting raw user PII inside inspectable DOM `data-*` attributes.
+
+## 4. Interaction States & Session Safeguards
+- **Idle Invalidation**: Navigation state auto-resets to default collapsed state after 60 seconds of touch inactivity.
+- **Biometric Prompt Trigger**: Switching to Face-to-Face confidential dispatch tabs triggers an inline biometric re-authentication overlay before expanding route sub-menus.
 ```
