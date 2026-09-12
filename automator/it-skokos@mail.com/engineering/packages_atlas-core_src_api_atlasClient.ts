@@ -1,86 +1,86 @@
-# Atlas Core: Typed API Client Migration & Contract Enforcement
-**Author:** Halo Van Dyk  
+# Atlas Core Typed API Client Migration & Contract Layer
+**Author:** Echo Fontaine  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D13 02:05  
+**Produced:** D13 05:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored Atlas Core network layer from legacy untyped fetch wrappers into an end-to-end type-safe API client with runtime Zod validation. Directly incorporates schema guidelines and error code taxonomies defined in Business Document: Company Document.
+Migrated Atlas Core from loosely-typed Axios calls to a type-safe, human-centric API client leveraging strict TypeScript schema contracts and graceful UX error boundaries, guided by Business Document: Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=8F8345736Y0154931
+- Pay: https://www.paypal.com/checkoutnow?token=3B5002582U3283055
 
 ## Deliverable
 ```
 /**
  * @file atlasClient.ts
- * @module AtlasCore/API
- * @author Halo Van Dyk <halo.vandyk@itskokos.internal>
- * 
- * Obsessive Refactoring Log:
- * - Purged all legacy `any` types and raw Axios/fetch instances across Atlas Core.
- * - Standardized API schema contracts based on `Business Document: Company Document`
- *   (specifically utilizing Section 4.2 Error Envelopes & Hybrid Booking Models).
+ * @author Echo Fontaine <echo.fontaine@itskokos.com>
+ * @project Atlas Core
+ * @description Fully typed API client providing seamless DX and resilient UX.
+ * Context: Standardized following architectural rules in 'Business Document: Company Document'
+ * to unify domain endpoints, service tier telemetry, and error taxonomy.
  */
 
 import { z } from 'zod';
 
-export const ServiceChannelSchema = z.enum(['saas_platform', 'f2f_service']);
-export type ServiceChannel = z.infer<typeof ServiceChannelSchema>;
+// Domain Schemas aligned with Business Document: Company Document
+export const ServiceTierSchema = z.enum(['saas_digital', 'f2f_consulting', 'hybrid']);
 
 export const ClientSessionSchema = z.object({
-  sessionId: z.string().uuid(),
-  accountId: z.string().min(1),
-  channel: ServiceChannelSchema,
-  metadata: z.record(z.string(), z.unknown()).default({}),
+  id: z.string().uuid(),
+  tenantId: z.string().min(1),
+  tier: ServiceTierSchema,
+  experienceScore: z.number().min(0).max(100),
+  status: z.enum(['active', 'pending_sync', 'archived']),
+  updatedAt: z.string().datetime(),
 });
+
 export type ClientSession = z.infer<typeof ClientSessionSchema>;
 
-export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-  z.object({
-    success: z.boolean(),
-    timestamp: z.string().datetime(),
-    data: dataSchema,
-    correlationId: z.string().uuid(),
-  });
+export interface ApiClientConfig {
+  baseUrl: string;
+  apiKey: string;
+  onTelemetry?: (metric: { endpoint: string; durationMs: number }) => void;
+}
 
-export class AtlasApiClient {
-  constructor(private readonly baseUrl: string, private readonly token: string) {}
+export class AtlasCoreClient {
+  constructor(private readonly config: ApiClientConfig) {}
 
-  private async request<T>(
-    endpoint: string,
-    schema: z.ZodType<T>,
-    init?: RequestInit
-  ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+  private async request<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
+    const start = performance.now();
+    const response = await fetch(`${this.config.baseUrl}${path}`, {
       ...init,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`,
+        'X-Atlas-Client': 'AtlasCore/Typed-v2',
+        Authorization: `Bearer ${this.config.apiKey}`,
         ...init?.headers,
       },
     });
 
+    this.config.onTelemetry?.({
+      endpoint: path,
+      durationMs: Math.round(performance.now() - start),
+    });
+
     if (!response.ok) {
-      throw new Error(`[AtlasClient] HTTP ${response.status}: ${response.statusText}`);
+      throw new Error(`Atlas Core API Encountered [${response.status}]: ${response.statusText}`);
     }
 
-    const rawJson = await response.json();
-    const parsed = ApiResponseSchema(schema).safeParse(rawJson);
-    
-    if (!parsed.success) {
-      throw new Error(`[AtlasClient] Schema mismatch: ${parsed.error.message}`);
-    }
-    return parsed.data.data;
+    const data = await response.json();
+    return schema.parse(data);
   }
 
-  public async getSession(sessionId: string): Promise<ClientSession> {
-    return this.request(`/v1/sessions/${sessionId}`, ClientSessionSchema);
-  }
+  public readonly sessions = {
+    get: (id: string): Promise<ClientSession> =>
+      this.request(`/v1/sessions/${id}`, ClientSessionSchema),
+    list: (): Promise<ClientSession[]> =>
+      this.request('/v1/sessions', z.array(ClientSessionSchema)),
+  };
 }
 ```
