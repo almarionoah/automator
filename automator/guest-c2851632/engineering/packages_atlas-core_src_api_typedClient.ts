@@ -13,7 +13,7 @@ Replaced legacy untyped API requests with a zero-dependency, strongly typed clie
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=3VD841629K634573Y
+- Pay: https://www.paypal.com/checkoutnow?token=8U1662758B222321M
 
 ## Deliverable
 ```
