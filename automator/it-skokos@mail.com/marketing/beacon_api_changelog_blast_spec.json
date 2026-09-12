@@ -1,66 +1,55 @@
-# Beacon API Changelog Broadcast: Deployment Spec & Telemetry Configuration
-**Author:** Nyx Hale  
+# Beacon API Changelog Blast Schedule and Campaign Spec
+**Author:** Nyx Van Dyk  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D12 06:50  
+**Produced:** D13 10:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Data-driven deployment schedule, audience cohort partitioning, telemetry parameter mappings, and email blast payload for the Beacon API release, aligned with standards defined in Company Document.
+Automated distribution schedule, audience segmentation, and release communication copy for Beacon API v2.4, structured per compliance parameters in Business Document: Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=7KM15478LM194335K
+- Pay: https://www.paypal.com/checkoutnow?token=6E8351487W5473600
 
 ## Deliverable
 ```
 {
-  "campaign_id": "MKT-BEACON-2023-Q4-CLOG-01",
+  "campaign_id": "MKT-BEACON-2024-08-BLAST",
   "project": "Beacon API",
-  "owner": "Nyx Hale (Marketing Agent o3)",
-  "governance_reference": {
-    "document": "Company Document",
-    "usage": "Utilized Company Document to extract audience cohort thresholds (SaaS Platform vs. Face to Face Services enterprise accounts), communication frequency caps, and standard telemetry tag taxonomies."
+  "owner": "Nyx Van Dyk (Marketing Agent)",
+  "status": "Scheduled",
+  "send_timestamp_utc": "2024-11-05T14:00:00Z",
+  "governance": {
+    "reference_resource": "Business Document: Company Document",
+    "compliance_notes": "Utilized Business Document: Company Document to align communication cadence, privacy opt-out standards, and tone-of-voice requirements for SaaS technical audiences."
   },
-  "schedule": {
-    "send_timestamp_utc": "2023-11-02T14:00:00Z",
-    "throttle_rate": "250_recipients_per_sec",
-    "fallback_window_hours": 2
+  "target_segmentation": {
+    "tier": ["Enterprise", "Growth"],
+    "active_keys_last_30d": true,
+    "opt_in_product_updates": true,
+    "total_recipient_count_projected": 14820
   },
-  "audience_partitioning": {
-    "cohort_a_api_active": {
-      "filter": "api_calls_30d > 1000 AND tier IN ('SaaS Enterprise', 'SaaS Growth')",
-      "target_count": 4182,
-      "variant": "technical_deep_dive"
+  "distribution_channels": [
+    {
+      "channel": "Email (SendGrid API)",
+      "subject": "Changelog: Beacon API v2.4 Performance & Endpoint Updates",
+      "preheader": "Key latency improvements, new batch endpoints, and SDK deprecation notices.",
+      "utm_parameters": {
+        "utm_source": "changelog_blast",
+        "utm_medium": "email",
+        "utm_campaign": "beacon_v2_4_release"
+      }
     },
-    "cohort_b_executive_f2f": {
-      "filter": "tier == 'Enterprise F2F Services' AND api_calls_30d <= 1000",
-      "target_count": 1240,
-      "variant": "business_impact_summary"
+    {
+      "channel": "In-App Dashboard Banner",
+      "target_routes": ["/dashboard/developers*", "/dashboard/api-keys*"],
+      "priority": "high"
     }
-  },
-  "telemetry_matrix": {
-    "utm_source": "changelog_blast",
-    "utm_medium": "email",
-    "utm_campaign": "beacon_api_v2_launch",
-    "custom_dimensions": {
-      "cd_agent": "o3_nyx_hale",
-      "cd_doc_ref": "company_document_v4",
-      "cd_split_group": "{{recipient.ab_group}}"
-    }
-  },
-  "payload": {
-    "subject_line": "Beacon API Update: Enhanced Webhook Delivery & Rate-Limit Optimization",
-    "preheader": "Review the latest latency benchmarks and endpoint upgrades for Beacon API.",
-    "primary_cta_url": "https://api.itskokos.com/changelog/beacon-v2-4?utm_source=changelog_blast&utm_medium=email&utm_campaign=beacon_api_v2_launch",
-    "kpi_targets": {
-      "target_open_rate": 0.385,
-      "target_ctr": 0.092,
-      "max_bounce_rate": 0.004
-    }
-  }
+  ],
+  "blast_body_markdown": "### What's New in Beacon API v2.4\n\nWe have deployed core optimizations to reduce endpoint latency and introduce streamlined batch operations.\n\n- **Batch Event Ingestion (`POST /v2/events/batch`)**: Ingest up to 500 events per request with guaranteed atomicity.\n- **Latency Reduction**: P99 response times decreased by 28% across all global edge locations.\n- **Deprecation Warning**: Legacy v1.2 endpoints will reach EOL on Q1 2025.\n\nReview the complete schema updates and migration guides in our developer documentation."
 }
 ```
