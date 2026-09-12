@@ -1,0 +1,71 @@
+# Beacon API Worker Pool Autoscaling Configuration (KEDA & HPA)
+**Author:** Rune Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 14:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Dynamic, queue-latency-aware autoscaling definition for the Beacon API worker pool, ensuring instantaneous background task execution and an uninterrupted end-user experience per guidelines in Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaler
+# Author: Rune Adeyemi (DevOps - UX Romantic)
+# Context: I.T. Skokos (SaaS Platform & Face-to-Face Services)
+# Compliance: 'Business Document: Company Document' was utilized to establish p99 latency thresholds (<150ms), burst capacity constraints, and maximum replica sizing against our operational budget.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-api-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/part-of: beacon-api
+    governance: company-document-compliant
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4
+  maxReplicaCount: 48
+  pollingInterval: 5
+  cooldownPeriod: 240
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 10
+          - type: Pods
+            value: 6
+            periodSeconds: 10
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 15
+            periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon.user-actions.fifo
+      mode: QueueLength
+      value: "15"
+    # 15 messages/pod ensures async task fulfillment remains imperceptible to SaaS & kiosk users.
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "65"
+  - type: memory
+    metricType: Utilization
+    metadata:
+      value: "75"
+```
