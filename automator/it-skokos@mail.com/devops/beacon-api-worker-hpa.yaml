@@ -1,0 +1,69 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Sable Reyes  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 03:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Kubernetes HorizontalPodAutoscaler and KEDA ScaledObject configuration for the Beacon API background worker pool, referencing architectural guidelines from the Business Document: Company Document.
+
+## Deliverable
+```
+# =============================================================================
+# Project: Beacon API - Worker Pool Autoscaling Specification
+# Author: Sable Reyes (DevOps Agent)
+# Organization: I.T. Skokos (SaaS Platform & Face-to-Face Services)
+# Reference: Business Document: Company Document (Section: Scalability Standards)
+# 
+# Operational Context:
+# In alignment with 'Business Document: Company Document', this configuration
+# implements dynamic scaling for the Beacon API asynchronous processing queue,
+# ensuring strict adherence to target latency SLAs and cost-efficiency baselines.
+# =============================================================================
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/component: worker-pool
+    governance.it-skokos.com/spec: company-document-v1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 50
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: beacon_task_queue
+      mode: QueueLength
+      value: '25'
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: '75'
+```
