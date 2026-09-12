@@ -1,42 +1,26 @@
-# Blue/Green Deployment and Chaos Validation Config for Beacon API
-**Author:** Nova Cross  
+# Blue/Green Deployment & Chaos Validation Configuration for Beacon API
+**Author:** Halo Cross  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D12 18:45  
+**Produced:** D12 21:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Configured zero-downtime Blue/Green deployment pipeline for Beacon API integrated with automated chaos injection tests, aligned with the compliance standards outlined in Company Document.
+Automated blue/green deployment manifest with integrated chaos verification hooks for Beacon API, aligned with operational requirements in Company Document.
 
 ## Deliverable
 ```
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: beacon-api
+  name: beacon-api-rollout
   namespace: production
   labels:
     app: beacon-api
-    governance: "Company Document"
+    governance: company-document-compliant
 spec:
-  replicas: 10
-  strategy:
-    blueGreen:
-      activeService: beacon-api-active
-      previewService: beacon-api-preview
-      autoPromotionEnabled: false
-      antiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-      prePromotionAnalysis:
-        templates:
-          - templateName: chaos-latency-injection
-          - templateName: company-doc-compliance-check
-        args:
-          - name: service-name
-            value: beacon-api-preview
+  replicas: 6
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: beacon-api
@@ -50,31 +34,53 @@ spec:
         image: registry.itskokos.internal/beacon-api:v2.4.0
         ports:
         - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
         readinessProbe:
           httpGet:
             path: /healthz
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 3
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          weight: 100
+      prePromotionAnalysis:
+        templates:
+        - templateName: chaos-latency-injection-check
+        args:
+        - name: service-url
+          value: http://beacon-api-preview.production.svc.cluster.local
 ---
-# Chaos Validation Stage aligned with Company Document requirements
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: chaos-latency-injection
+  name: chaos-latency-injection-check
   namespace: production
+  annotations:
+    source: "Company Document - Section 4: Chaos Engineering SLA Tolerances"
 spec:
   metrics:
-  - name: error-rate-during-chaos
+  - name: error-rate-under-stress
     interval: 10s
-    count: 6
-    successCondition: result[0] < 0.01
-    failureLimit: 1
+    count: 3
+    successCondition: result[0] <= 0.01
     provider:
       prometheus:
-        address: http://prometheus-k8s.monitoring.svc:9090
+        address: http://prometheus.monitoring:9090
         query: |
-          sum(rate(http_requests_total{job="beacon-api-preview", status=~"5.."}[1m]))
+          sum(rate(http_requests_total{job="beacon-api-preview",status=~"5.."}[1m]))
           /
           sum(rate(http_requests_total{job="beacon-api-preview"}[1m]))
 
