@@ -1,37 +1,51 @@
-# Atlas Core WCAG 2.1 AA Accessibility Remediation & Design Spec
-**Author:** Halo Cross  
+# Atlas Core - WCAG 2.2 Edge-Case Accessibility Remediation Spec
+**Author:** Pixel Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D10 20:25  
+**Produced:** D11 10:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-effective accessibility remediation spec for Atlas Core, establishing high-contrast token overrides and semantic ARIA patterns referencing the Company Document to eliminate third-party audit overhead.
+Comprehensive edge-case accessibility specification for Atlas Core covering hybrid SaaS dashboards and face-to-face service kiosks, referencing baseline compliance rules from the Company Document.
 
 ## Deliverable
 ```
-# Atlas Core — Accessibility Pass (WCAG 2.1 AA)
-**Author:** Halo Cross (Design)
-**Focus:** Low-lift, zero-cost token remediation and semantic compliance
+# Atlas Core: Accessibility & Edge-Case Remediation Specification
+**Author:** Pixel Ito (Design / Edge-Case Archaeologist)
+**Project:** Atlas Core (SaaS & Face-to-Face Kiosk Modules)
+**Governing Guidance:** Referenced the foundational compliance baselines from `Company Document` to calibrate our 4.5:1 / 7:1 contrast ratios and hybrid SaaS/in-person accessibility requirements.
 
-## 1. Executive Summary & Cost Strategy
-To avoid costly third-party overlay subscriptions and lengthy UI redesigns, this pass refactors Atlas Core's existing design tokens and DOM semantics. By leveraging native browser accessibility features and strict token remapping, we achieve full WCAG 2.1 AA compliance with zero external licensing expenditure.
+---
 
-## 2. Resource Utilization
-- **Company Document**: Consulted directly to extract baseline brand palette constraints and corporate compliance minimums. Used to ensure modified high-contrast color values remain strictly within approved brand parameters without triggering costly stakeholder re-approvals.
+## 1. Edge-Case Visual Tokens & Dynamic Scaling
 
-## 3. Token & Contrast Remediation
-Existing neutral and accent tokens were remapped to satisfy minimum contrast ratios (4.5:1 normal text, 3:1 graphical UI/large text):
+### 1.1 Dynamic Type Expansion (200% - 400% Zoom)
+- **Container Behavior:** All cards in Atlas Core SaaS views must avoid hardcoded `height` properties. Minimum container sizing uses `min-height: fit-content` with CSS `clamp()`.
+- **Label Truncation Rule:** Text ellipsis (`text-overflow: ellipsis`) is strictly forbidden on actionable data elements (e.g., Kiosk Dispatch Status, Invoice Totals). Wrap and re-flow are mandatory.
 
-| Token Name | Legacy Hex | Remapped Hex | Contrast (vs Light/Dark) | Status |
-|---|---|---|---|---|
-| `--atlas-text-muted` | `#8A94A6` (3.2:1) | `#5C687A` (5.1:1) | Light Surface (`#FFFFFF`) | Fixed |
-| `--atlas-brand-interactive` | `#3B82F6` (3.8:1) | `#1D64EC` (4.6:1) | Light Surface (`#FFFFFF`) | Fixed |
-| `--atlas-surface-border` | `#E2E8F0` (1.4:1) | `#94A3B8` (3.1:1) | Component Boundary | Fixed |
-| `--atlas-focus-ring` | `rgba(0,0,0,0)` | `#1D64EC` (2px solid, offset 2px) | Universal Focus | Fixed |
+### 1.2 Windows High Contrast Mode (WHCM) & Forced Colors
+- Add explicit forced-color overrides to resolve invisible active borders:
+```css
+@media (forced-colors: active) {
+  .atlas-btn-primary, .atlas-surface-card {
+    forced-color-adjust: none;
+    outline: 2px solid ButtonText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}
+```
 
-## 4. Interaction & Focus Standards
-- **Focus Visible**: Applied standard CSS `:focus-visible` using `--atlas-focus-ring`. Deprecated custom JavaScript focus listeners to reduce runtime overhead.
-- **Keyboard Traps**: Standardized modal overlays to use native `<dialog>` elements across SaaS and face-to-face intake flows, offloading focus trapping to the browser engine.
-- **Screen Reader Labels**: Replaced icon-only buttons (`.btn-icon`) with `aria-label` attributes derived from existing i18n keys to prevent additional localization costs.
+---
+
+## 2. Touch & Physical Kiosk Interaction (Face-to-Face)
+*Aligned with physical delivery mandates established in `Company Document`:*
+- **Minimum Target Size:** 48x48 CSS px on desktop SaaS; elevated to 56x56 CSS px on Atlas Core Face-to-Face Service tablets/kiosks.
+- **Target Spacing:** 12px deadzone buffer surrounding destructive actions (e.g., 'Cancel Service Dispatch') to eliminate accidental multi-touch triggers.
+
+---
+
+## 3. Focus Traps & Complex Hierarchies
+- **Nested Modals:** Esc key stack resolver implemented. Focus reverts strictly to the originating trigger node (`data-origin-ref`).
+- **Focus Indicator:** 3px outer ring `#0D52FF` with 2px offset (`var(--atlas-focus-offset)`) ensuring distinct visibility across both dark/light themes.
 ```
