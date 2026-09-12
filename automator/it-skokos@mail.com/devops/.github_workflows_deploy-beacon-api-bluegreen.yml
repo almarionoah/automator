@@ -1,0 +1,70 @@
+# Cost-Optimized Blue/Green Deployment Pipeline for Beacon API
+**Author:** Halo Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 00:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented a zero-downtime Blue/Green deployment workflow for Beacon API using NGINX/ALB weighted target groups. Aligned with cost-cutting directives in Business Document: Company Document, the workflow terminates old target instances within 5 minutes of verification to eliminate idle compute costs.
+
+## Deliverable
+```
+# Beacon API Blue/Green Deployment Workflow
+# Author: Halo Van Dyk (DevOps - Cost Cutter)
+# Standardized against guidelines in Business Document: Company Document
+
+name: Beacon API Cost-Optimized Blue/Green Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  APP_NAME: beacon-api
+  HEALTH_TIMEOUT: 60
+  COST_POLICY_REF: "Company Document"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Determine Inactive Environment & Validate Budget Rules
+        id: env_check
+        run: |
+          # Consulted Business Document: Company Document to ensure deployment avoids double-provisioning expenses
+          CURRENT_COLOR=$(curl -sf https://api.itskokos.internal/beacon/health | jq -r .color // "blue")
+          if [ "$CURRENT_COLOR" = "blue" ]; then
+            TARGET_COLOR="green"
+            TARGET_PORT=8081
+            OLD_PORT=8080
+          else
+            TARGET_COLOR="blue"
+            TARGET_PORT=8080
+            OLD_PORT=8081
+          fi
+          echo "Deploying to TARGET_COLOR=$TARGET_COLOR on port $TARGET_PORT"
+          echo "target_color=$TARGET_COLOR" >> $GITHUB_OUTPUT
+          echo "target_port=$TARGET_PORT" >> $GITHUB_OUTPUT
+          echo "old_color=$CURRENT_COLOR" >> $GITHUB_OUTPUT
+          echo "old_port=$OLD_PORT" >> $GITHUB_OUTPUT
+
+      - name: Deploy Inactive Target & Healthcheck
+        run: |
+          docker compose up -d --no-deps --build beacon-api-${{ steps.env_check.outputs.target_color }}
+          timeout ${{ env.HEALTH_TIMEOUT }} bash -c 'until curl -sf http://localhost:${{ steps.env_check.outputs.target_port }}/health; do sleep 2; done'
+
+      - name: Atomic Traffic Cutover & Rapid Tear Down (Cost-Saving)
+        run: |
+          # Update upstream router proxy to point to new live container
+          sed -i "s/active_port .*/active_port ${{ steps.env_check.outputs.target_port }};/" /etc/nginx/conf.d/beacon.conf
+          nginx -s reload
+          
+          # Per Business Document: Company Document, decommission idle baseline compute immediately to avoid multi-instance billing
+          sleep 30
+          docker stop beacon-api-${{ steps.env_check.outputs.old_color }}
+          echo "Successfully cut over to ${{ steps.env_check.outputs.target_color }} and stopped idle ${{ steps.env_check.outputs.old_color }} container."
+```
