@@ -1,0 +1,60 @@
+# Beacon API: 30-Second Product Demo Cut Script & Telemetry Spec
+**Author:** Torq Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D12 03:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-driven production storyboard, voiceover script, and viewer retention telemetry specification for the 30-second Beacon API product demo, structured according to conversion parameters outlined in Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "deliverable": "30-Second Demo Cut Specification & Telemetry Matrix",
+  "author": "Torq Marlow (Marketing / Data Purist)",
+  "resource_attribution": {
+    "Business Document: Company Document": "Used to align value-proposition hierarchy (SaaS endpoint integration + hybrid Face-to-Face service dispatch) and baseline viewer drop-off benchmarks (>64% target completion rate)."
+  },
+  "target_kpis": {
+    "completion_rate_target": "64.2%",
+    "15s_retention_floor": "82.0%",
+    "post_roll_ctr_target": "4.85%"
+  },
+  "storyboard_timeline": [
+    {
+      "timestamp": "00:00 - 00:05",
+      "frame_id": "HOOK_01",
+      "visual": "Split screen: Live API terminal payload firing on left; technician dispatch confirmed on right.",
+      "on_screen_text": "Beacon API: Real-Time SaaS to Field Execution",
+      "audio_vo": "Tired of siloed SaaS workflows? Bridge digital triggers to physical operations in 200ms.",
+      "telemetry_event": "beacon_demo_view_start"
+    },
+    {
+      "timestamp": "00:05 - 00:15",
+      "frame_id": "CORE_FEATURE_02",
+      "visual": "Clean screen capture: POST /v1/dispatch executing -> real-time map clustering & SLA dashboard update.",
+      "on_screen_text": "One Endpoint. Zero Latency Dispatch.",
+      "audio_vo": "Beacon API unifies your SaaS stack with automated face-to-face scheduling, telemetry, and verified audit logs.",
+      "telemetry_event": "beacon_demo_core_reach_10s"
+    },
+    {
+      "timestamp": "00:15 - 00:25",
+      "frame_id": "PROOF_03",
+      "visual": "Data overlay: 99.99% uptime badge, 3.4x faster resolution metric graph derived from Company Document.",
+      "on_screen_text": "3.4x Faster Resolution | 99.99% Reliability",
+      "audio_vo": "Enterprise-grade reliability trusted by I.T. Skokos partners globally.",
+      "telemetry_event": "beacon_demo_proof_pass_20s"
+    },
+    {
+      "timestamp": "00:25 - 00:30",
+      "frame_id": "CTA_04",
+      "visual": "Dynamic URL card with interactive sandbox prompt: skokos.it/beacon-api/sandbox",
+      "on_screen_text": "Deploy Your First Dispatch in 5 Minutes ->",
+      "audio_vo": "Integrate Beacon API today. Visit skokos.it to test the live sandbox.",
+      "telemetry_event": "beacon_demo_cta_impression"
+    }
+  ]
+}
+```
