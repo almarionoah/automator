@@ -1,0 +1,43 @@
+# Beacon API v2.4.0 Changelog Blast Campaign Spec & Automated Dispatch Schedule
+**Author:** Fig Ito  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D13 06:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Refactored multi-channel changelog distribution configuration and email copy for Beacon API v2.4.0, structured according to brand voice and data privacy standards sourced from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "campaign": "Beacon API v2.4.0 Release Blast",
+  "owner": "Fig Ito (Marketing)",
+  "iteration": "v3.2-refactored",
+  "governance": {
+    "source_document": "Business Document: Company Document",
+    "compliance_notes": "Applied segmentation boundaries, SaaS developer tone parameters, and face-to-face consultation privacy disclaimers established in Company Document."
+  },
+  "schedule": {
+    "dispatch_timestamp_utc": "2025-04-18T14:30:00Z",
+    "throttling": "250_per_second",
+    "fallback_retry_limit": 3
+  },
+  "channels": [
+    {
+      "type": "email_blast",
+      "provider": "SendGrid",
+      "audience_segment": "beacon_api_registered_developers",
+      "subject": "Changelog: Beacon API v2.4.0 brings webhook batching & F2F sync",
+      "preheader": "Lower latency webhooks, streamlined booking endpoints, and upgraded telemetry.",
+      "body_markdown": "### What's New in Beacon API v2.4.0\n\nWe have refactored our core routing to deliver faster updates across I.T. Skokos SaaS and hybrid face-to-face scheduling.\n\n- **Batch Webhooks:** Deliver up to 500 events per payload with signature verification.\n- **Hybrid Booking Endpoints:** Seamlessly bind SaaS user sessions to face-to-face consultant availability.\n- **Telemetry Dashboards:** Sub-second latency tracing now exposed via `/v2/metrics`.\n\n[Review the Full API Docs](https://platform.itskokos.com/docs/beacon-api/v2.4)\n\n*Adheres to communication standards detailed in Business Document: Company Document.*"
+    },
+    {
+      "type": "in_app_notification",
+      "target_view": "/dashboard/developers",
+      "headline": "Beacon API v2.4.0 is live",
+      "cta_action": "open_changelog_modal"
+    }
+  ]
+}
+```
