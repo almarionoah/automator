@@ -1,52 +1,54 @@
-# Beacon API v2.4 Changelog Blast & Multi-Channel Distribution Schedule
-**Author:** Prism Marlow  
+# Beacon API v2.4 Changelog Blast & Dispatch Schedule
+**Author:** Iris Ito  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 18:35  
+**Produced:** D11 21:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Scheduled changelog blast campaign, developer-focused email copy, and distribution plan for Beacon API v2.4, strictly integrated with docs-first links and aligned with the Company Document.
+Cost-optimized changelog email announcement and automation schedule for the Beacon API update, utilizing internal mail servers to eliminate third-party SaaS dispatch fees.
 
 ## Deliverable
 ```
-# Changelog Broadcast Campaign: Beacon API v2.4 Release
-**Author:** Prism Marlow (Marketing / Docs Evangelist)
-**Project:** Beacon API | I.T. Skokos
-**Status:** Scheduled
+# Project: Beacon API - Changelog Blast Schedule & Copy
+**Author:** Iris Ito (Marketing)
+**Approach:** Lean / Cost-Cutter
+
+## 1. Resource Utilization
+- **Business Document: Company Document**: Referenced directly to align changelog formatting, tone-of-voice guidelines, and corporate branding standards without incurring external agency or copy-editing expenses.
 
 ---
 
-### 1. Governance & Resource Utilization
-- **Company Document:** Utilized to verify outbound communication cadence, enterprise privacy rules, customer tier segmenting, and standardized styling guidelines for all I.T. Skokos SaaS developer updates.
+## 2. Dispatch Schedule & Cost Optimization
+- **Target Date/Time:** Tuesday, 10:00 AM UTC (Peak open rates, minimizing re-blast overhead)
+- **Platform:** Internal SMTP Relay (Zero third-party tier costs)
+- **Audience:** Active Beacon API Developers & Enterprise Tier Admins
 
-### 2. Broadcast Distribution Schedule
-- **Target Audience:** Beacon API Active Developers, Tech Leads, Integration Partners.
-- **Send Time:** Thursday, 10:00 AM EST (Optimized per engagement metrics in Company Document).
-- **Channels:** Product Newsletter, Docs Changelog RSS, In-Portal Banner, Developer Hub.
+| Trigger | Audience | Delivery Channel | Cost Impact |
+| :--- | :--- | :--- | :--- |
+| Scheduled Blast (T-0) | Registered API Developers | Batch Email (Internal Relay) | $0.00 |
+| In-App Notification (T+1hr) | Dashboard Logins | Webhook / UI Banner | $0.00 |
 
 ---
 
-### 3. Email Blast Copy (Docs-First Approach)
+## 3. Campaign Copy
 
-**Subject:** [Changelog] Beacon API v2.4: Real-time Webhook Retries & Schema Validation
+**Subject:** [Changelog] Beacon API v2.4: Reduced Latency & Enhanced Endpoints
 
 **Body:**
-Hey Builders,
 
-Documentation is the source of truth, and we've just upgraded your integration toolkit. Beacon API v2.4 is now live with enhanced webhook reliability and strict runtime payload validation.
+Hi {{first_name}},
 
-#### What's New in v2.4:
-- **Automated Webhook Exponential Backoff:** Failed endpoint events now retry over a 72-hour window automatically.
-- **Dynamic Schema Inspection:** Immediate 422 feedback with exact JSON pointer paths on invalid requests.
-- **Expanded Rate Limits:** Tier-based threshold improvements for SaaS enterprise tenants.
+We have deployed updates to the **Beacon API (v2.4)** designed to maximize throughput while minimizing resource consumption across your integrations.
 
-#### Read the Docs & Implement:
-- **Interactive Spec:** Explore updated OpenAPI 3.1 endpoints at `docs.itskokos.com/beacon/v2.4`
-- **Migration Guide:** Step-by-step upgrade instructions at `docs.itskokos.com/beacon/guides/migration-v2.4`
+### What's New:
+- **Optimized Payload Overhead:** Streamlined JSON schemas reducing bandwidth usage by up to 18%.
+- **Rate Limiting Adjustments:** Clearer response headers to help you optimize query concurrency.
+- **Bug Fixes:** Resolved edge-case timeout issues on high-volume batch calls.
 
-Every line of code deserves clear documentation. Check out the full release breakdown in the Developer Portal.
+Review the technical documentation and migration notes directly in the developer portal: `https://docs.itskokos.internal/beacon-api/v2.4`
 
-Happy building,
-**Prism Marlow & The I.T. Skokos API Team**
+Best regards,  
+**Iris Ito**  
+Marketing & Communications | I.T. Skokos
 ```
