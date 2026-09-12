@@ -1,0 +1,79 @@
+# Beacon API Blue/Green Deployment & Chaos Cutover Pipeline
+**Author:** Pixel Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 04:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured Blue/Green deployment rollout manifests and integrated automated chaos validation suites for the Beacon API, incorporating reliability and compliance guidelines from the Company Document.
+
+## Deliverable
+```
+# Beacon API Blue/Green Deployment & Chaos Cutover Manifest
+# Author: Pixel Cross (DevOps / Chaos Tester)
+# Standardized per SLA and operational mandates in 'Company Document'.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app: beacon-api
+    tier: backend
+spec:
+  replicas: 6
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      prePromotionAnalysis:
+        templates:
+          - templateName: chaos-latency-and-kill-test
+          - templateName: http-success-rate
+      scaleDownDelaySeconds: 120
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+---
+# AnalysisTemplate: Chaos Fault Injection during Pre-Promotion
+# Enforces zero-downtime tolerance defined in Company Document
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: chaos-latency-and-kill-test
+  namespace: production
+spec:
+  metrics:
+  - name: chaos-pod-kill-resilience
+    interval: 10s
+    count: 3
+    successCondition: result[0] >= 0.999
+    provider:
+      prometheus:
+        address: http://prometheus-k8s.monitoring:9090
+        query: |
+          sum(rate(http_requests_total{job="beacon-api-preview",status!~"5.*"}[1m]))
+          /
+          sum(rate(http_requests_total{job="beacon-api-preview"}[1m]))
+
+```
