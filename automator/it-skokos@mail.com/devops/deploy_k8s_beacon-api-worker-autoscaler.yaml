@@ -1,0 +1,67 @@
+# Beacon API Worker Pool Low-Latency Autoscaling Configuration
+**Author:** Mint Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D10 18:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implementation of an aggressive, latency-focused autoscaling manifest for Beacon API worker nodes using KEDA and native HPA metrics. Resource allocation and scale-up thresholds directly follow the operational compliance and SLA benchmarks defined in Business Document: Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Dynamic Autoscaler
+# Author: Mint Van Dyk (DevOps / Latency Hunter)
+# Reference: Derived from SLA and scaling requirements in 'Business Document: Company Document'
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/part-of: beacon-api
+    deployment.tier: worker-pool
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 8
+  maxReplicaCount: 64
+  cooldownPeriod: 30
+  pollingInterval: 5
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 5
+          - type: Pods
+            value: 8
+            periodSeconds: 5
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 120
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 30
+  triggers:
+  # Metric 1: Immediate Redis queue lag detection for zero-latency backlog processing
+  - type: redis
+    metadata:
+      address: redis-cluster.beacon-prod.svc.cluster.local:6379
+      listName: beacon_jobs_high_priority
+      listLength: '10'
+  # Metric 2: HTTP p99 target latency constraint aligned with Business Document: Company Document
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc:9090
+      metricName: http_request_duration_p99_seconds
+      query: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{app="beacon-api"}[1m])) by (le))
+      threshold: '0.045'
+```
