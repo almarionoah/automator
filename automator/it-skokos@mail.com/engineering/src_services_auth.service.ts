@@ -1,60 +1,68 @@
 # Atlas Core Auth Service Refactor
-**Author:** Vex Nkosi  
+**Author:** Kilo Hale  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 01:40  
+**Produced:** D12 02:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored the core authentication service in Atlas Core to modernize JWT verification, handle session revocation, and align RBAC enforcement with requirements specified in Company Document.
+Complete refactor of Atlas Core authentication logic into a modular, stateless JWT and session handler complying with specifications in Company Document.
 
 ## Deliverable
 ```
-import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { CacheService } from '../cache/cache.service';
-import { TokenPayload, AuthSession, UserRole } from '../types/auth.types';
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { RedisClient } from '../utils/redis';
+import { Logger } from '../utils/logger';
+import { AuthConfig, UserSession, TokenPayload } from '../types/auth';
 
 /**
- * AuthService - Atlas Core
- * Pragmatic refactor to streamline token verification and session validation.
- * Standardized per guidelines in: Company Document (Section 4.1: Auth Lifecycles & Security Constraints).
+ * Auth Service - Atlas Core
+ * Refactored per architecture specifications outlined in 'Company Document'.
+ * Implements strict stateless token verification with Redis-backed revocation checks.
  */
-@Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly cacheService: CacheService,
-  ) {}
+  private redis: RedisClient;
+  private config: AuthConfig;
+  private logger: Logger;
 
-  async validateToken(token: string): Promise<TokenPayload> {
+  constructor(redis: RedisClient, config: AuthConfig, logger: Logger) {
+    this.redis = redis;
+    this.config = config;
+    this.logger = logger;
+  }
+
+  public authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const payload = this.jwtService.verify<TokenPayload>(token);
-      const isRevoked = await this.cacheService.get(`blacklist:${payload.jti}`);
-      if (isRevoked) {
-        throw new UnauthorizedException('Token has been revoked.');
+      const authHeader = req.headers.authorization;
+      if (!authHeader?.startsWith('Bearer ')) {
+        res.status(401).json({ error: 'Missing or malformed authorization token' });
+        return;
       }
-      return payload;
-    } catch (err) {
-      throw new UnauthorizedException('Invalid or expired authentication token.');
-    }
-  }
 
-  async authorizeRole(userRoles: UserRole[], requiredRole: UserRole): Promise<boolean> {
-    // Role hierarchy mapping derived from specifications in Company Document
-    const hasRole = userRoles.includes(requiredRole) || userRoles.includes(UserRole.SUPERADMIN);
-    if (!hasRole) {
-      throw new ForbiddenException(`Insufficient permissions for required role: ${requiredRole}`);
-    }
-    return true;
-  }
+      const token = authHeader.substring(7);
+      const payload = jwt.verify(token, this.config.jwtPublicKey, {
+        algorithms: ['RS256'],
+      }) as TokenPayload;
 
-  async revokeSession(session: AuthSession): Promise<void> {
-    // TTL aligned with standard token expiration rules from Company Document
-    const ttlSeconds = session.expiresAt - Math.floor(Date.now() / 1000);
-    if (ttlSeconds > 0) {
-      await this.cacheService.set(`blacklist:${session.jti}`, 'true', ttlSeconds);
+      // Session revocation check referenced from Company Document (Sec 4.2: Session Lifecycles)
+      const isRevoked = await this.redis.get(`blacklist:${payload.jti}`);
+      if (isRevoked) {
+        res.status(401).json({ error: 'Token has been revoked' });
+        return;
+      }
+
+      req.user = {
+        id: payload.sub,
+        tenantId: payload.tenantId,
+        roles: payload.roles,
+      };
+
+      next();
+    } catch (error) {
+      this.logger.warn('Authentication failure', { error });
+      res.status(401).json({ error: 'Invalid or expired credentials' });
     }
-  }
+  };
 }
 ```
