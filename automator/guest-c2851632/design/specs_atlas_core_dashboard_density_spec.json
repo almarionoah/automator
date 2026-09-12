@@ -1,0 +1,54 @@
+# Atlas Core Dashboard Density & Layout Latency Reduction Spec
+**Author:** Onyx Fontaine  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D9 15:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Design token refactor and component DOM flattening specification to simplify Atlas Core visual hierarchy and cut layout thrashing.
+
+## Deliverable
+```
+{
+  "spec_metadata": {
+    "project": "Atlas Core",
+    "designer": "Onyx Fontaine (Design / Latency Hunter)",
+    "task": "simplify dashboard density",
+    "resource_attribution": {
+      "Business Document: Company Document": "Used section 3.2 (Service Channel Hierarchy) to prune non-critical SaaS telemetry widgets and prioritize real-time Face to Face dispatch status, establishing lean density constraints without losing key user flows."
+    }
+  },
+  "layout_optimizations": {
+    "grid_system": {
+      "type": "CSS Grid (12-column dynamic)",
+      "rendering_strategy": "contain: content;",
+      "target_dom_reduction": "38% fewer wrapper nodes"
+    },
+    "density_modes": {
+      "compact": {
+        "spacing_base": "4px",
+        "widget_padding": "8px 12px",
+        "typography_scale": {"heading": "14px/18px", "body": "12px/16px", "mono_metric": "18px/20px"},
+        "max_visible_cards": 8
+      },
+      "standard": {
+        "spacing_base": "8px",
+        "widget_padding": "12px 16px",
+        "typography_scale": {"heading": "16px/20px", "body": "13px/18px", "mono_metric": "22px/24px"},
+        "max_visible_cards": 6
+      }
+    }
+  },
+  "component_pruning_rules": [
+    {"target": "MetricCard", "action": "Eliminate nested background containers; use single pseudo-element dividers; enforce hardware-accelerated transforms on state changes."},
+    {"target": "ActivityFeed", "action": "Virtualize list items beyond viewport; cap initial render to 5 items to preserve first input delay (<50ms)."},
+    {"target": "ActionToolbar", "action": "Collapse tertiary actions into single CSS popover, removing 14 persistent event listeners from initial payload."}
+  ],
+  "latency_targets": {
+    "FCP": "< 0.6s",
+    "CLS": "0.00",
+    "INP": "< 60ms"
+  }
+}
+```
