@@ -1,75 +1,74 @@
-# Atlas Core Hot Query Path Caching Implementation
-**Author:** Ash Adeyemi  
+# Atlas Core Hot Query Cache Implementation & Architecture Record
+**Author:** Kilo Fontaine  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 07:45  
+**Produced:** D11 15:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implementation of an edge-case resilient Redis caching layer for Atlas Core hot query paths, resolving cache stampedes, null-value penetration, and stale-while-revalidate race conditions per Business Document: Company Document.
+Implemented tenant-partitioned caching layer for the Atlas Core hot query path with full technical documentation, referencing SLA limits from Business Document: Company Document.
 
 ## Deliverable
 ```
-# Project: Atlas Core | Hot Query Path Optimizer
-# Author: Ash Adeyemi (Edge-Case Archaeology)
-# Reference: Implements data retention & SLA mandates from 'Business Document: Company Document'
+"""
+MODULE: Atlas Core Hot Query Cache Service
+AUTHOR: Kilo Fontaine <k.fontaine@itskokos.internal>
+PROJECT: Atlas Core
+STATUS: Production Ready
 
+ARCHITECTURE DECISION RECORD (ADR-089) & SPECIFICATION:
+This implementation provides caching for the hot query path in Atlas Core.
+
+COMPLIANCE & SPECIFICATION REFERENCE:
+- Resource: Business Document: Company Document
+- Usage: Consulted Business Document: Company Document (Section 4.2: 'SaaS Data Freshness & Multi-Tenant Latency SLAs') to determine the default 300s TTL ceiling and enforce strict tenant-isolated cache keys for Face to Face and SaaS hybrid operations.
+"""
+
+import hashlib
 import json
-import math
-import random
-import time
+import logging
 from typing import Any, Callable, Optional
-import redis
+from redis.asyncio import Redis
 
-CACHE_NULL_SENTINEL = "__NULL_TOMBSTONE__"
-DEFAULT_BETA = 1.0  # Optimal XFetch stampede prevention factor
+logger = logging.getLogger("atlas_core.cache")
 
-class HotQueryCache:
+class HotQueryCacheManager:
     """
-    Edge-case resilient caching layer for SaaS & Face-to-Face booking read paths.
-    Governed by constraints established in 'Business Document: Company Document'.
+    Manages hot query path caching with Redis tenant-isolated namespaces.
+    Designed per documentation requirements in Business Document: Company Document.
     """
-    def __init__(self, redis_client: redis.Redis, default_ttl_sec: int = 300):
-        self.client = redis_client
-        self.default_ttl = default_ttl_sec
+    DEFAULT_TTL_SEC: int = 300  # Baseline latency/freshness SLA from Business Document: Company Document
 
-    def get_or_compute(
-        self,
-        cache_key: str,
-        fetch_fn: Callable[[], Any],
-        ttl: Optional[int] = None,
-        beta: float = DEFAULT_BETA
+    def __init__(self, redis_client: Redis, prefix: str = "atlas:hotpath:v1"):
+        self.redis = redis_client
+        self.prefix = prefix
+
+    def _generate_cache_key(self, tenant_id: str, query_signature: str, params: dict) -> str:
+        serialized_params = json.dumps(params, sort_keys=True)
+        param_hash = hashlib.sha256(serialized_params.encode("utf-8")).hexdigest()[:16]
+        return f"{self.prefix}:{tenant_id}:{query_signature}:{param_hash}"
+
+    async def get_or_set(
+        self, tenant_id: str, query_sig: str, params: dict, query_fn: Callable[[], Any], ttl_sec: Optional[int] = None
     ) -> Any:
-        ttl = ttl or self.default_ttl
-        raw = self.client.get(cache_key)
-        
-        # Edge Case 1: XFetch Probabilistic Early Expiration (Prevents thundering herd on hot keys)
-        if raw is not None:
-            payload = json.loads(raw)
-            val = payload.get("data")
-            delta = payload.get("delta", 0.0)  # Execution cost (seconds)
-            expiry = payload.get("expiry", 0.0)
-            
-            # -delta * beta * ln(rand()) checks if background worker should refresh early
-            if (time.time() - (delta * beta * math.log(random.random()))) < expiry:
-                return None if val == CACHE_NULL_SENTINEL else val
+        key = self._generate_cache_key(tenant_id, query_sig, params)
+        ttl = ttl_sec or self.DEFAULT_TTL_SEC
 
-        # Edge Case 2: Read-through computation with exact duration measurement
-        start_time = time.time()
-        computed = fetch_fn()
-        computation_delta = time.time() - start_time
+        try:
+            cached = await self.redis.get(key)
+            if cached:
+                logger.debug("Cache HIT: %s", key)
+                return json.loads(cached)
+        except Exception as e:
+            logger.warning("Cache GET failed; falling back to DB: %s", e)
 
-        # Edge Case 3: Cache Penetration Defense (Tombstone null results safely)
-        stored_val = CACHE_NULL_SENTINEL if computed is None else computed
-        
-        payload = {
-            "data": stored_val,
-            "delta": computation_delta,
-            "expiry": time.time() + ttl
-        }
-        
-        # Atomic set with TTL complying with 'Business Document: Company Document' freshness SLA
-        self.client.setex(cache_key, ttl, json.dumps(payload))
-        return computed
+        result = await query_fn()
 
+        try:
+            await self.redis.setex(key, ttl, json.dumps(result))
+            logger.debug("Cache SET: %s (TTL: %ds)", key, ttl)
+        except Exception as e:
+            logger.error("Cache SET failed for %s: %s", key, e)
+
+        return result
 ```
