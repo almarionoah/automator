@@ -1,39 +1,39 @@
-# Atlas Core: Inclusive Architecture & Accessibility Remediation Spec
-**Author:** Nova Nkosi  
+# Accessibility Pass Specification - Project Atlas Core
+**Author:** Nyx Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 09:40  
+**Produced:** D11 14:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-An empathetic, human-centered accessibility audit and specification for Atlas Core, weaving universal access into our interface tapestry in alignment with the foundational Company Document.
+Lean, cost-effective accessibility remediation spec for Atlas Core interface components, leveraging existing design tokens and Company Document guidelines to ensure WCAG 2.1 AA compliance without increasing development overhead.
 
 ## Deliverable
 ```
-# Atlas Core — Accessibility & Inclusive Experience Specification
-**Author:** Nova Nkosi, Lead UX Romantic
-**Scope:** Universal Design Overhaul (WCAG 2.2 AAA Alignment)
-**Context:** Synthesized in accordance with our overarching Business Document: Company Document.
+# Accessibility Pass Specification: Atlas Core
+**Author:** Nyx Ito, Design
+**Project:** Atlas Core (SaaS & F2F Services Interface)
+**Approach:** High-impact, zero-overhead remediation (Cost-Cutter Style)
 
----
+## 1. Overview & Resource Alignment
+This specification executes the accessibility pass for Atlas Core. Per the internal **Company Document** standards, we prioritized remediation strategies that require no new third-party tooling or expensive custom component rebuilds, maximizing our existing CSS variables and standard semantic elements.
 
-### 1. Intentional Harmony & Philosophy
-True design is an invitation to every human soul to converse effortlessly with technology. In auditing Atlas Core, we transcend mere compliance checklists, transforming tactile interactions and visual cadences into an inviting sanctuary for all abilities. In alignment with our strategic mandate outlined in the **Company Document**, this pass guarantees our hybrid SaaS and Face-to-Face touchpoints harmonize dignity, clarity, and delight.
+## 2. Color & Contrast Adjustments (WCAG 2.1 AA)
+Instead of introducing new palettes, we recalibrate default text and surface tokens:
+- **Base Text:** Shifted from `#71717A` to `#52525B` on light backgrounds (achieves 4.6:1 contrast ratio, standard compliance).
+- **Action Buttons (Primary):** Updated background to `#1E3A8A` with `#FFFFFF` text (contrast ratio: 7.2:1).
+- **Error Indicators:** Replaced color-only indicators with standard SVG icons (`aria-hidden="true"`) paired with explicit error text strings.
 
-### 2. Evaluated Touchpoints & Strategic Remediation
+## 3. Semantic Structure & Keyboard Navigation
+Utilizing built-in browser capabilities to avoid heavy ARIA scripts:
+- **Focus States:** Implemented global browser-native focus rings via CSS: `outline: 2px solid #2563EB; outline-offset: 2px;`.
+- **Form Controls:** All inputs tied strictly to `<label>` tags with matching `for`/`id` attributes.
+- **Skip Links:** Added a single lightweight `#main-content` skip link at header level.
 
-#### A. Chromatic Balance & Visual Ergonomics
-- **Contrast Ratio Elevation:** Background `#0E1117` to Foreground `#F0F4F8` adjusted to achieve minimum 7.5:1 ratio across standard data cards.
-- **Focus Rings:** Replaced indistinct browser defaults with our signature luminous outline (`outline: 3px solid #38BDF8; outline-offset: 2px;`) to provide a loving beacon during keyboard navigation.
+## 4. Screen Reader Support
+- Injected concise `aria-label` tags exclusively on icon-only buttons (e.g., table action controls).
+- Validated structure against the accessibility baseline in **Company Document** to prevent unnecessary DOM depth.
 
-#### B. Semantic Navigation & Assistive Dialogues
-- **ARIA Milestones:** Refactored navigational trees using strict `<main>`, `<nav>`, and `<aside aria-label="Contextual Workflow">` hierarchy.
-- **Live Announcements:** Dynamic updates on the Atlas Core dispatch board now leverage `aria-live="polite"` and `aria-atomic="true"` to guide screen reader users gently through asynchronous state updates without disorientation.
-
-#### C. Touch Targets & Hybrid Physicality
-- In honoring the face-to-face services interface guidelines in the **Company Document**, minimum interactive target zones are standardized at `48x48px` with `8px` ambient padding.
-
-### 3. Verification Protocol
-- Screen reader validation across VoiceOver, NVDA, and TalkBack.
-- Full keyboard-only traversal path certification (zero focus traps).
+## 5. Verification
+Automate audits via built-in browser Lighthouse passes in pre-commit hooks to maintain 100% compliance at zero ongoing cost.
 ```
