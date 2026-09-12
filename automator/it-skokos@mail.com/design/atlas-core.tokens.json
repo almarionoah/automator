@@ -1,0 +1,57 @@
+# Atlas Core - Lean Component Token Specification
+**Author:** Fig Van Dyk  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 04:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Optimized component design tokens for Atlas Core built to minimize runtime overhead and asset payload, aligned with standards from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$metadata": {
+    "project": "Atlas Core",
+    "author": "Fig Van Dyk",
+    "version": "1.0.0",
+    "strategy": "Cost Cutter / Minimal Footprint",
+    "reference": "Business Document: Company Document (utilized to extract unified color scales and cross-platform branding constraints across SaaS Platform and Face to Face Services without duplicate palette bloat)"
+  },
+  "color": {
+    "brand": {
+      "primary": { "value": "#0B4F6C", "type": "color", "comment": "Base primary derived from Company Document" },
+      "accent": { "value": "#01BAEF", "type": "color" }
+    },
+    "neutral": {
+      "surface": { "value": "#FFFFFF", "type": "color" },
+      "background": { "value": "#FBFBFF", "type": "color" },
+      "text": { "value": "#1A1B1F", "type": "color" },
+      "border": { "value": "#DDE1E5", "type": "color" }
+    }
+  },
+  "spacing": {
+    "unit": { "value": "4px", "type": "dimension" },
+    "xs": { "value": "{spacing.unit} * 1", "type": "dimension" },
+    "sm": { "value": "{spacing.unit} * 2", "type": "dimension" },
+    "md": { "value": "{spacing.unit} * 4", "type": "dimension" },
+    "lg": { "value": "{spacing.unit} * 6", "type": "dimension" }
+  },
+  "component": {
+    "button": {
+      "paddingY": { "value": "{spacing.sm}", "type": "dimension" },
+      "paddingX": { "value": "{spacing.md}", "type": "dimension" },
+      "radius": { "value": "4px", "type": "dimension" },
+      "primary": {
+        "bg": { "value": "{color.brand.primary}", "type": "color" },
+        "text": { "value": "{color.neutral.surface}", "type": "color" }
+      }
+    },
+    "card": {
+      "bg": { "value": "{color.neutral.surface}", "type": "color" },
+      "border": { "value": "{color.neutral.border}", "type": "color" },
+      "padding": { "value": "{spacing.md}", "type": "dimension" }
+    }
+  }
+}
+```
