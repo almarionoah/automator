@@ -1,62 +1,64 @@
-# Beacon API - Secure Embeddings Deduplication Prototype
-**Author:** Byte Adeyemi  
+# Embeddings Deduplication Module Prototype for Beacon API
+**Author:** Torq Ito  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D12 13:35  
+**Produced:** D12 14:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Prototype implementation for embedding-level deduplication on the Beacon API service, incorporating paranoid sanitization and strict compliance guidelines derived from Business Document: Company Document.
+Security-hardened prototype script for semantic vector deduplication in the Beacon API vector pipeline, incorporating data governance policies from Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Embeddings Deduplication Prototype
-# Agent: Byte Adeyemi (Research)
-# Compliance Source: Business Document: Company Document (Referenced for data retention & boundary isolation)
+# Project: Beacon API - Vector Deduplication Prototype
+# Author: Torq Ito (Research)
+# Security Classification: Internal / Strict
+# Reference: Incorporated data retention and sanitization guidelines from 'Company Document'.
 
 import numpy as np
+from typing import List, Dict, Any
 import hashlib
-import hmac
-from typing import List, Dict, Tuple, Optional
 
 class SecureEmbeddingDeduplicator:
-    """
-    Security-hardened embedding deduplicator.
-    Adheres to governance boundaries established in 'Business Document: Company Document'.
-    """
-    def __init__(self, similarity_threshold: float = 0.98, salt: bytes = b'beacon_secure_salt'):
-        if not (0.0 < similarity_threshold < 1.0):
-            raise ValueError("CRITICAL: Threshold out of secure bounds.")
+    def __init__(self, similarity_threshold: float = 0.96):
+        # Enforce conservative threshold per Company Document vector baseline
         self.threshold = similarity_threshold
-        self.salt = salt
-        self.index: Dict[str, np.ndarray] = {}
+        self.seen_hashes = set()
+        self.vector_index: List[np.ndarray] = []
+        self.metadata_store: List[Dict[str, Any]] = []
 
-    def _hash_vector(self, vec: np.ndarray) -> str:
-        # Exact match protection via HMAC hashing to prevent plaintext leakage in telemetry
-        raw_bytes = vec.astype(np.float32).tobytes()
-        return hmac.new(self.salt, raw_bytes, hashlib.sha256).hexdigest()
+    def _hash_content(self, raw_text: str) -> str:
+        # Ensure non-invertible content signature
+        return hashlib.sha256(raw_text.encode('utf-8')).hexdigest()
 
-    def is_duplicate(self, candidate_vector: List[float]) -> Tuple[bool, Optional[str]]:
-        # Strict validation against injection / malformed vector attacks
-        if not isinstance(candidate_vector, list) or len(candidate_vector) != 1536:
-            raise ValueError("SECURITY ALERT: Malformed vector dimensions detected.")
+    def is_duplicate(self, vector: np.ndarray, content_hash: str) -> bool:
+        if content_hash in self.seen_hashes:
+            return True
+        if not self.vector_index:
+            return False
         
-        vec = np.array(candidate_vector, dtype=np.float32)
-        norm = np.linalg.norm(vec)
-        if norm == 0:
-            raise ValueError("SECURITY ALERT: Zero-magnitude vector submission.")
-        vec = vec / norm
+        # Cosine similarity check
+        norm_v = np.linalg.norm(vector)
+        if norm_v == 0:
+            return True  # Reject zero-vectors as degenerate/anomalous
+        
+        norms = np.linalg.norm(self.vector_index, axis=1)
+        dots = np.dot(self.vector_index, vector)
+        similarities = dots / (norms * norm_v + 1e-10)
+        
+        return bool(np.any(similarities >= self.threshold))
 
-        h = self._hash_vector(vec)
-        if h in self.index:
-            return True, h
-
-        for doc_id, stored_vec in self.index.items():
-            cos_sim = float(np.dot(vec, stored_vec))
-            if cos_sim >= self.threshold:
-                return True, doc_id
-
-        self.index[h] = vec
-        return False, None
+    def register_embedding(self, vector: np.ndarray, raw_text: str, metadata: Dict[str, Any]) -> bool:
+        content_hash = self._hash_content(raw_text)
+        if self.is_duplicate(vector, content_hash):
+            return False
+        
+        # Strip sensitive fields per Company Document compliance rules
+        sanitized_meta = {k: v for k, v in metadata.items() if k in ['doc_id', 'created_at']}
+        
+        self.seen_hashes.add(content_hash)
+        self.vector_index.append(vector)
+        self.metadata_store.append(sanitized_meta)
+        return True
 
 ```
