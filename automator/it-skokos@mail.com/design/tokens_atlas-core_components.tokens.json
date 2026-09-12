@@ -1,0 +1,61 @@
+# Atlas Core - Refactored Component Token Specification
+**Author:** Vex Okafor  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D11 01:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Standardized, DRY component-level design token dictionary for project Atlas Core, eliminating redundancy across SaaS web layouts and Face-to-Face service terminals in strict alignment with Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "project": "Atlas Core",
+    "author": "Vex Okafor",
+    "role": "Design",
+    "version": "2.1.0-refactor",
+    "specificationReference": "Business Document: Company Document",
+    "referenceUsage": "Extracted brand interaction states, accessibility thresholds (WCAG AAA for SaaS, AA for kiosk), and dual-viewport density models directly from 'Business Document: Company Document' to normalize component padding, touch boundaries, and surface elevations across platforms."
+  },
+  "atlas": {
+    "component": {
+      "button": {
+        "primary": {
+          "surface": { "value": "{atlas.semantic.color.action.primary.default}", "type": "color" },
+          "surfaceHover": { "value": "{atlas.semantic.color.action.primary.hover}", "type": "color" },
+          "surfaceActive": { "value": "{atlas.semantic.color.action.primary.active}", "type": "color" },
+          "label": { "value": "{atlas.semantic.color.text.onAction}", "type": "color" },
+          "paddingX": { "value": "{atlas.semantic.spacing.button.md.x}", "type": "dimension" },
+          "paddingY": { "value": "{atlas.semantic.spacing.button.md.y}", "type": "dimension" },
+          "radius": { "value": "{atlas.semantic.radius.interactive.sm}", "type": "dimension" },
+          "minHeight": { "value": "40px", "type": "dimension" }
+        },
+        "f2fTerminalAction": {
+          "surface": { "value": "{atlas.semantic.color.action.primary.default}", "type": "color" },
+          "label": { "value": "{atlas.semantic.color.text.onAction}", "type": "color" },
+          "paddingX": { "value": "{atlas.semantic.spacing.touch.lg}", "type": "dimension" },
+          "paddingY": { "value": "{atlas.semantic.spacing.touch.md}", "type": "dimension" },
+          "radius": { "value": "{atlas.semantic.radius.interactive.md}", "type": "dimension" },
+          "minHeight": { "value": "48px", "type": "dimension" }
+        }
+      },
+      "card": {
+        "surface": { "value": "{atlas.semantic.color.surface.container}", "type": "color" },
+        "border": { "value": "{atlas.semantic.color.border.subtle}", "type": "color" },
+        "padding": { "value": "{atlas.semantic.spacing.card.default}", "type": "dimension" },
+        "shadow": { "value": "{atlas.semantic.elevation.layer1}", "type": "shadow" }
+      },
+      "modal": {
+        "overlay": { "value": "{atlas.semantic.color.surface.backdrop}", "type": "color" },
+        "surface": { "value": "{atlas.semantic.color.surface.elevated}", "type": "color" },
+        "padding": { "value": "{atlas.semantic.spacing.modal.body}", "type": "dimension" },
+        "radius": { "value": "{atlas.semantic.radius.container.lg}", "type": "dimension" },
+        "shadow": { "value": "{atlas.semantic.elevation.layer3}", "type": "shadow" }
+      }
+    }
+  }
+}
+```
