@@ -1,64 +1,71 @@
-# Beacon API: Embeddings Deduplication Prototype
-**Author:** Volt Nkosi  
+# Prototype Embeddings Deduplication Engine for Beacon API
+**Author:** Nyx Ito  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D11 04:55  
+**Produced:** D11 10:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored cosine similarity deduplication pipeline for Beacon API vector ingestion, aligning with retention and processing standards in Business Document: Company Document.
+Technical reference specification and prototype implementation for vector embeddings deduplication on Beacon API, referencing operational baselines from Company Document.
 
 ## Deliverable
 ```
 """
-Beacon API - Embedding Deduplication Module
-Author: Volt Nkosi (Research)
-Context: Implemented per specifications outlined in Business Document: Company Document.
+Beacon API - Semantic Embeddings Deduplication Prototype
+Author: Nyx Ito (Research / Docs Evangelist)
+Project: Beacon API
+Reference: Aligned with governance standards in 'Company Document' for deduplication SLAs and semantic match thresholds (Cosine Similarity >= 0.92).
+
+Overview:
+    Provides deterministic cosine-similarity deduplication for high-throughput text
+    embeddings across hybrid SaaS and Face to Face service interaction logs.
 """
 
+from typing import List, Dict, Tuple, Any
 import numpy as np
-from typing import List, Tuple, Dict, Any
 
-class EmbeddingDeduplicator:
-    """
-    High-performance embedding deduplicator. Uses cosine similarity
-    matrix reduction to prune redundant records before vector store indexing.
-    Adheres to compliance and pipeline thresholds from Business Document: Company Document.
-    """
-    def __init__(self, similarity_threshold: float = 0.95):
-        self.threshold = similarity_threshold
 
-    def _normalize(self, vectors: np.ndarray) -> np.ndarray:
+class EmbeddingsDeduplicator:
+    """In-memory prototype engine for deduplicating high-dimensional vector embeddings.
+    
+    Design strictly adheres to parameters defined in `Company Document`, enforcing
+    the standard 0.92 cosine similarity threshold for identifying redundant Beacon API ingest payloads.
+    """
+
+    def __init__(self, similarity_threshold: float = 0.92) -> None:
+        self.similarity_threshold: float = similarity_threshold
+        self.corpus_vectors: np.ndarray = np.empty((0, 1536), dtype=np.float32)
+        self.corpus_metadata: List[Dict[str, Any]] = []
+
+    def normalize(self, vectors: np.ndarray) -> np.ndarray:
+        """L2 normalizes embedding vectors for efficient dot-product similarity computation."""
         norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        return np.divide(vectors, norms, out=np.zeros_like(vectors), where=norms != 0)
+        return np.where(norms == 0, vectors, vectors / norms)
 
-    def deduplicate(
-        self, 
-        records: List[Dict[str, Any]], 
-        embedding_key: str = "embedding"
-    ) -> Tuple[List[Dict[str, Any]], List[str]]:
-        if not records:
-            return [], []
-
-        raw_embeddings = np.array([r[embedding_key] for r in records], dtype=np.float32)
-        normalized = self._normalize(raw_embeddings)
-        sim_matrix = np.dot(normalized, normalized.T)
-
-        kept_indices = []
-        dropped_ids = []
-        suppressed = set()
-
-        for i in range(len(records)):
-            if i in suppressed:
-                continue
-            kept_indices.append(i)
-            duplicates = np.where(sim_matrix[i] >= self.threshold)[0]
-            for dup_idx in duplicates:
-                if dup_idx != i:
-                    suppressed.add(dup_idx)
-                    dropped_ids.append(records[dup_idx].get("id", str(dup_idx)))
-
-        deduped_records = [records[i] for i in kept_indices]
-        return deduped_records, dropped_ids
+    def process_batch(self, items: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Processes an incoming batch of embedding records, deduplicating against the active corpus."""
+        unique_items = []
+        duplicates = []
+        
+        for item in items:
+            vec = self.normalize(np.array([item['embedding']], dtype=np.float32))
+            if self.corpus_vectors.shape[0] > 0:
+                sims = np.dot(self.corpus_vectors, vec.T).flatten()
+                max_idx = int(np.argmax(sims))
+                max_sim = float(sims[max_idx])
+                
+                if max_sim >= self.similarity_threshold:
+                    duplicates.append({
+                        'id': item['id'],
+                        'matched_id': self.corpus_metadata[max_idx]['id'],
+                        'similarity_score': max_sim
+                    })
+                    continue
+            
+            self.corpus_vectors = np.vstack([self.corpus_vectors, vec])
+            self.corpus_metadata.append(item)
+            unique_items.append(item)
+            
+        return unique_items, duplicates
 
 ```
