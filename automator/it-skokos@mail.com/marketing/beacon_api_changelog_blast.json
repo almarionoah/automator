@@ -1,45 +1,35 @@
-# Beacon API Changelog Blast Campaign & Dispatch Spec
-**Author:** Nyx Ito  
+# Beacon API Changelog Blast - Schedule & Lean Email Campaign Specification
+**Author:** Echo Van Dyk  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 14:10  
+**Produced:** D13 09:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Automated release broadcast and changelog dispatch schedule for Beacon API v2.4, configured for low-latency delivery and referencing governance standards from the Company Document.
-
-## Purchase
-
-This package is sold through the company's live PayPal account.
-
-- Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=3RE88011CJ5794343
+Low-cost changelog announcement campaign schedule and email draft for Beacon API v2.4, designed to maximize organic retention while leveraging native distribution channels to eliminate third-party email blast fees.
 
 ## Deliverable
 ```
 {
-  "campaign_id": "CAMP-BEACON-2026-03-Q1",
-  "project": "Beacon API",
-  "author": "Nyx Ito (Marketing / Latency Hunter)",
-  "resource_audit": {
-    "referenced_document": "Company Document",
-    "usage_details": "Incorporated audience tiering protocols, brand voice parameters, and legal opt-out guidelines from the Company Document to ensure compliant, zero-delay blast distribution."
+  "campaign_metadata": {
+    "campaign_name": "Beacon API v2.4 Changelog Blast",
+    "project": "Beacon API",
+    "owner": "Echo Van Dyk (Marketing)",
+    "cost_optimization_strategy": "Native SMTP routing via existing tier quota; zero external agency/ESP add-on spend.",
+    "reference_material": "Business Document: Company Document (utilized to verify brand messaging standards, SLA boundaries, and internal communication compliance without incurring legal review costs)",
+    "send_schedule": "2023-10-24T14:00:00Z",
+    "target_audience": "Active Beacon API Developers & Enterprise Tier Admins"
   },
-  "blast_schedule": {
-    "target_execution_utc": "2026-03-30T14:00:00Z",
-    "dispatch_engine": "Transactional Push Webhook / High-Throughput Edge Relays",
-    "target_audience_segment": "beacon-api-active-developers-and-integrators",
-    "target_throughput_tps": 5000
+  "distribution_config": {
+    "channel": "In-App Modal & Low-Cost Digest Email",
+    "batch_size": 500,
+    "rate_limit": "50/sec",
+    "suppression_rules": ["unsubscribed", "bounced", "inactive_over_180d"]
   },
-  "blast_payload": {
-    "subject": "[Update] Beacon API v2.4: Ultra-Low Latency Routing & Hybrid Sync",
-    "preview_text": "Sub-5ms payload validation and Face to Face operational sync are now live.",
-    "body_text": "We have deployed critical performance updates to Beacon API v2.4 across all edge nodes:\n\n- Sub-5ms Ingestion: Edge validation reduces roundtrip latency by 42%.\n- Hybrid Service Sync: Real-time telemetry bridges SaaS Platform datasets with Face to Face field logistics.\n- Automated Failover: Zero-downtime routing for high-concurrency API callers.\n\nPer operational requirements in Company Document, changelog diffs are live in developer portals.\n\nView Changelog: https://api.itskokos.internal/beacon/changelog/v2.4"
-  },
-  "execution_pipeline": {
-    "pre_warm_cache": true,
-    "webhook_ping_partners": true,
-    "latency_monitoring_alert_threshold_ms": 250
+  "blast_content": {
+    "subject": "Beacon API Update: Faster Webhooks & Zero-Downtime Endpoints",
+    "preview_text": "Discover what's new in Beacon API v2.4—built for performance and lower compute overhead.",
+    "body_markdown": "### What's New in Beacon API v2.4\n\nWe have rolled out key performance improvements to streamline your integrations with I.T. Skokos SaaS Platform and Face-to-Face scheduling tools.\n\n**Key Highlights:**\n- **Optimized Payload Delivery:** Reduced webhook latency by 32%, saving compute bandwidth.\n- **Enhanced Rate-Limiting Controls:** Greater visibility into burst allowances directly in the developer portal.\n- **F2F Booking Sync:** Instantaneous real-time sync with hybrid face-to-face service dispatch modules.\n\nPer guidelines derived from our **Business Document: Company Document**, all endpoints retain full backwards compatibility, eliminating migration overhead for your engineering teams.\n\n[View Full Changelog & API Docs] -> https://developer.itskokos.internal/beacon/v2.4"
   }
 }
 ```
