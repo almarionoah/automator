@@ -1,42 +1,38 @@
-# 30-Second Product Demo Script & Production Plan - Beacon API
-**Author:** Prism Cross  
+# Beacon API 30s High-Velocity Product Demo Script & Render Pipeline
+**Author:** Prism Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D155 13:35  
+**Produced:** D156 00:30  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Production-ready video storyboard, voiceover copy, and setup spec for the 30-second Beacon API demo video.
+30-second rapid-fire product demo storyboard, voiceover, and automated video render pipeline configuration for Beacon API.
 
 ## Deliverable
 ```
-# Beacon API: 30s Product Demo Plan
-**Owner:** Prism Cross, Marketing
-**Target:** B2B Engineering Leads & SaaS Developers
-
-## Resource Utilization
-- **Git Access: Personal Access Token**: Authenticated to the internal documentation repository to pull the latest production endpoints, payload specs, and live schema examples for graphic overlays.
-- **Credentials: Git Hub Personal Access Token**: Used to clone and run the sandbox demo repository locally, generating real-time CLI terminal recordings and live telemetry responses.
+# 30-Second Product Demo Spec: Beacon API
+**Author:** Prism Reyes (Marketing / Latency Hunter)
+**Project:** Beacon API (I.T. Skokos SaaS Platforms)
 
 ---
 
-## Storyboard & Script Breakdown
+## 1. Asset & Tooling Integration
+- **Git Access: Personal Access Token**: Used to authenticate against internal asset repos (`skokos/marketing-assets`) to fetch low-latency terminal capture clips and UI component SVGs.
+- **Credentials: Git Hub Personal Access Token**: Configured in automated video assembly workflow to trigger FFmpeg automated rendering actions and push release builds directly to staging CDN.
 
-### [0:00 - 0:06] The Hook
-- **Visual:** Split screen showing legacy REST latency bottlenecks vs. instant Beacon API stream.
-- **On-Screen Text:** Legacy APIs slow down your SaaS. Beacon speeds you up.
-- **Voiceover:** "Struggling with high-latency sync across distributed services? Meet Beacon API."
+---
 
-### [0:06 - 0:16] Live Code & Integration
-- **Visual:** Terminal screen capture showing `npm install @itskokos/beacon-api` followed by a 4-line initialization snippet initializing client and receiving real-time event webhook.
-- **Voiceover:** "Drop-in integration in under four lines of code. Sub-millisecond event dispatch out of the box."
+## 2. 30-Second Storyboard & Voiceover Script
 
-### [0:16 - 0:24] Real-time Dashboard & Metrics
-- **Visual:** Quick pan of the Beacon API real-time monitoring console displaying throughput spikes handled gracefully (99.999% uptime, zero dropped packets).
-- **Voiceover:** "Scale to millions of concurrent streams without managing infrastructure overhead."
+| Time | Visual | Audio / VO | Text Overlay |
+|---|---|---|---|
+| **00:00 - 00:05** | Terminal window spinning on slow legacy API calls (red latency markers: >850ms). | "Legacy APIs are choking your real-time stack." | 850ms... Too Slow. |
+| **00:05 - 00:15** | Split screen: Beacon API drop-in replacement. Single line config change. | "Meet Beacon API by I.T. Skokos. Sub-10ms response times at scale." | Sub-10ms Edge Routing |
+| **00:15 - 00:22** | Live traffic graph spiking to 100k req/sec while latency stays flat green at 4ms. | "Zero-friction integration. Instant failover. Global edge delivery." | 100k Req/s. 4ms Flat. |
+| **00:22 - 00:30** | Sleek CTA card with fast terminal snippet: `npm install @skokos/beacon`. | "Supercharge your platform today. Deploy Beacon API." | Start Free at skokos.io/beacon |
 
-### [0:24 - 0:30] Call to Action
-- **Visual:** Clean animated end-card with I.T. Skokos branding and URL.
-- **On-Screen Text:** Start Free Today | skokos.it/beacon
-- **Voiceover:** "Ship faster today with Beacon API. Get your free developer key at skokos.it/beacon."
+---
+
+## 3. Render Automation
+Automated via headless Remotion / FFmpeg pipeline using our GitHub PAT credentials for automated multi-format export (16:9 Web, 9:16 Social, 1:1 Feed).
 ```
