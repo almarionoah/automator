@@ -1,40 +1,56 @@
-# Atlas Core - Mobile Navigation Overhaul: Edge-Case Specification & Interaction Matrix
-**Author:** Pixel Ito  
+# Design Specification: Atlas Core Mobile Navigation Overhaul
+**Author:** Zed Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 11:20  
+**Produced:** D11 13:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX interaction specification and edge-case matrix for Atlas Core's mobile navigation system, bridging SaaS and Face-to-Face service touchpoints across constrained viewports.
+Production-ready design specification and token configuration for the Atlas Core mobile navigation redesign, integrating SaaS dashboards and Face-to-Face booking pathways.
 
 ## Deliverable
 ```
-# Atlas Core — Mobile Navigation Overhaul (Spec v2.4)
-**Author:** Pixel Ito (Design Agent)
-**Reference Document:** `Business Document: Company Document` (Used to map hybrid SaaS platform permissions against Face to Face Services booking states and tier entitlements across responsive breakpoints).
+# Design Spec: Atlas Core Mobile Navigation Overhaul (v2.4)
+**Author:** Zed Fontaine (Design)
+**Project:** Atlas Core | I.T. Skokos
+**Status:** Ready for Implementation
 
----
+## 1. Context & Business Alignment
+This overhaul replaces the legacy hamburger menu with a bottom-docked navigation bar paired with a progressive disclosure tray. We referenced the **Company Document** to align the primary navigation tiers with our dual SaaS platform and Face-to-Face (F2F) service delivery models, ensuring zero-friction access to instant booking and active SaaS workspace monitors.
 
-### 1. Viewport & Hardware Edge-Case Matrix
-- **Ultra-Narrow (320px - Galaxy Fold Front / iPhone SE1):**
-  - Bottom bar collapses from 5 to 4 primary items; 5th item routes into 'More' overflow.
-  - Label typography shifts to `font-size: 10px; line-height: 12px; letter-spacing: -0.2px`.
-  - Touch target remains compliant at 48x48dp via invisible touch padding.
-- **Safe-Area Dynamic Insets:**
-  - Bottom Bar: `padding-bottom: max(env(safe-area-inset-bottom), 16px)`.
-  - Handles dynamic Android 3-button vs gesture navigation switches without layout shift.
-- **Landscape / Split-Screen (Aspect ratio < 4:3 or height < 500px):**
-  - Converts bottom nav into a compact vertical side-rail (width: 56px) to preserve vertical data canvas.
+## 2. Navigation Architecture
+- **Primary Bottom Bar (4 items):**
+  1. `Workspace` (SaaS Metrics / Core Dashboard)
+  2. `Services` (Hybrid Hub: SaaS Tools + F2F Service Appointments)
+  3. `Quick Action [Center Fabricated FAB]` (Instant F2F Dispatch / New Query)
+  4. `Activity` (Live Alerts & Session Timelines)
+  5. `More` (Trigger for secondary menu & settings)
 
-### 2. Localization & Multi-Modal State Archeology
-- **Text Expansion (+40% Localization):** Dynamic text truncation with marquee on active focus for extended strings (e.g., DE/FI translations of 'Appointment Management').
-- **Degraded/Offline State:**
-  - Offline badge anchored to F2F Booking icon with pulse animation indicating queued sync.
-  - SaaS live metrics disable gracefully with skeleton states while retaining local F2F schedule cache.
-- **Multi-Role Switching:** Single-tap profile context switch integrated directly into drawer header without full-page reloads.
+## 3. Component Specs & Layout Tokens
+```json
+{
+  "mobileNav": {
+    "height": "64px",
+    "safeAreaBottom": "env(safe-area-inset-bottom, 16px)",
+    "background": "rgba(18, 22, 28, 0.94)",
+    "blur": "12px",
+    "borderTop": "1px solid rgba(255, 255, 255, 0.08)",
+    "tapTarget": {
+      "minWidth": "48px",
+      "minHeight": "48px"
+    },
+    "fab": {
+      "diameter": "56px",
+      "offsetY": "-18px",
+      "accent": "#00E599",
+      "icon": "plus-calendar"
+    }
+  }
+}
+```
 
-### 3. Component Specs
-- **BottomNav Container:** Elevation `Level 3` (0 -2px 8px rgba(0,0,0,0.08)), `backdrop-filter: blur(12px)`.
-- **Active Tab Pill:** `background: var(--atlas-brand-subtle); color: var(--atlas-primary); border-radius: 9999px;`
+## 4. Interaction Specs
+- **Micro-interactions:** Haptic feedback on bottom-bar tab switch (`UIFeedbackType.selection`).
+- **Drawer Transition:** Spring physics (`stiffness: 380, damping: 30`) on secondary 'More' sheet.
+- **Breakpoints:** Active on viewport widths `<= 768px`; gracefully shifts to responsive rail at `769px+`.
 ```
