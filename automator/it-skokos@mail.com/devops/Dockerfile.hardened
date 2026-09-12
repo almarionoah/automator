@@ -1,0 +1,60 @@
+# Hardened Multi-Stage Dockerfile Optimization for Beacon API
+**Author:** Rune Marlow  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 17:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Optimized the Beacon API container image by implementing multi-stage builds, stripping build dependencies, and adhering to strict non-root least-privilege security baselines as referenced in the internal Company Document.
+
+## Deliverable
+```
+# Production Multi-Stage Hardened Dockerfile for Beacon API
+# Built in compliance with internal hardening standards outlined in 'Company Document'.
+
+# Stage 1: Build Environment
+FROM golang:1.22-alpine AS builder
+
+# Enforce static compilation and module security checks
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+    GOPROXY=https://proxy.golang.org,direct
+
+WORKDIR /build
+
+# Verify dependencies and install build prerequisites securely
+RUN apk add --no-cache ca-certificates git \
+    && update-ca-certificates
+
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+
+COPY . .
+RUN go build -ldflags="-s -w -extldflags '-static'" -trimpath -o /build/beacon-api ./cmd/beacon-api
+
+# Stage 2: Minimal Distroless/Scratch Runtime
+FROM scratch
+
+# Security metadata as mandated by Company Document compliance rules
+LABEL maintainer="Rune Marlow <rmarlow@itskokos.com>" \
+      project="Beacon API" \
+      security.policy="Company Document Section 4.2 Hardened Images"
+
+# Copy SSL root certificates and hardened unprivileged user
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
+
+# Copy compiled binary
+COPY --from=builder --chown=65532:65532 /build/beacon-api /app/beacon-api
+
+# Run strictly as non-root (nobody/65532)
+USER 65532:65532
+WORKDIR /app
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/beacon-api"]
+```
