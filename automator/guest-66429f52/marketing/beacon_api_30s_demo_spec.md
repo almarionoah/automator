@@ -1,54 +1,48 @@
-# Beacon API 30-Second Product Demo Script & Storyboard Spec
-**Author:** Kilo Reyes  
+# Beacon API 30s Product Demo Production Package
+**Author:** Mint Cross  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D145 21:40  
+**Produced:** D147 01:00  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-High-impact 30-second product demo video script and asset breakdown for Beacon API, detailing visual cues, audio voiceover, terminal capture timings, and repository asset integration.
+Final storyboard, voiceover copy, and automated rendering configuration for the 30-second Beacon API teaser, refactored for maximum retention and technical precision.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=09112159C7275310D
 
 ## Deliverable
 ```
-# Beacon API — 30s Product Demo Video Spec & Storyboard
-**Author:** Kilo Reyes (Marketing)
-**Target Asset:** 30-Second Social & Landing Page Product Reel
-**Product:** Beacon API (I.T. Skokos SaaS Platform)
+# Production Deliverable: Beacon API 30-Second Product Demo (v4.2-final)
+
+## Resource Utilization
+- **Git Access: Personal Access Token**: Used to clone and continuously sync visual assets from the `beacon-api/marketing-assets` repository directly into the Remotion automated rendering pipeline.
+- **Credentials: Git Hub Personal Access Token**: Used to authenticate automated release tag triggers in GitHub Actions, archiving source cut reels and deployment-ready `.mp4` artifacts.
 
 ---
 
-## 1. Resource Utilization
-- **Git Access: Personal Access Token**: Used to clone the private `beacon-api-core` repository to extract verified cURL payloads, SDK examples, and live terminal interaction flows for exact UI capture accuracy.
-- **Credentials: Git Hub Personal Access Token**: Used to pull brand UI kits, SVG assets, and automated staging preview URLs from our internal `skokos-brand-assets` and CI/CD pipelines to record pixel-perfect dark-mode dashboard footage.
+## Storyboard & Shot Breakdown
 
----
+### [00:00 - 00:06] The Hook
+- **Visual**: Terminal screen typing `curl -X POST api.itskokos.com/v1/beacon/sync`. Real-time latency graph drops from 450ms to 12ms.
+- **VO**: "Still debugging fragmented SaaS integrations? Stop patching. Start streaming."
+- **Overlay**: *Beacon API: Zero-Latency Universal Connector*
 
-## 2. Storyboard & Audio/Visual Sync (0:00 - 0:30)
+### [00:06 - 00:18] The Refactor / Core Demo
+- **Visual**: Split screen. Left: 200 lines of legacy boilerplate fading away. Right: 3 lines of Beacon API client initialization.
+- **Code Snippet**: `const client = new Beacon({ auth: token }); await client.mesh.link();`
+- **VO**: "One unified endpoint orchestrates your entire SaaS stack and F2F telemetry seamlessly."
 
-### [0:00 - 0:05] Hook: The Problem
-* **Visual:** Fast-cut macro zoom into a failing API call on a terminal screen (red latency spikes, error 504).
-* **On-Screen Text:** "Real-time sync failing at scale?"
-* **Voiceover (VO):** "Traditional sync APIs drop connections when traffic spikes."
+### [00:18 - 00:26] The Proof
+- **Visual**: Rapid telemetry dashboard metrics zooming in: 99.999% uptime, end-to-end payload encryption badge, instantaneous client state sync.
+- **VO**: "Enterprise-grade reliability engineered for high-throughput teams."
 
-### [0:05 - 0:14] The Solution: Instant Integration
-* **Visual:** Seamless transition to terminal running Beacon API. A single `npm i @skokos/beacon` command, followed by a clean 3-line initialization.
-* **On-Screen Text:** "Connect in 3 Lines. Sub-10ms Global Latency."
-* **VO:** "Meet Beacon API. Ultra-low latency event streaming for mission-critical SaaS platforms."
-
-### [0:14 - 0:23] Core Feature Demo: Live Data Ingestion
-* **Visual:** Split screen. Left: JSON payload streaming in real time. Right: I.T. Skokos dashboard updating live nodes with zero stutter.
-* **On-Screen Text:** "Automated Edge Routing | Zero-Config Webhooks"
-* **VO:** "Stream millions of concurrent events effortlessly with built-in edge failover and zero-config webhooks."
-
-### [0:23 - 0:30] CTA & Outro
-* **Visual:** Slick 3D lockup of the Beacon API logo transitioning into the I.T. Skokos platform suite banner. URL and sign-up badge.
-* **On-Screen Text:** "Deploy in Minutes. Start Free at skokos.io/beacon"
-* **VO:** "Scale without limits. Ship faster with Beacon API today."
-
----
-
-## 3. Production & Export Guidelines
-* **Aspect Ratios:** 16:9 (1920x1080) for Landing/YouTube; 9:16 (1080x1920) for Shorts/LinkedIn.
-* **Audio Mix:** Upbeat synthwave bed (-18dB) under crisp studio VO (-6dB).
-* **Handoff Status:** Assets generated and cut queued for rendering.
+### [00:26 - 00:30] Call to Action
+- **Visual**: Beacon API logo animation with pulsating signal lines. Quick URL transition.
+- **VO**: "Deploy your first mesh in under 60 seconds. Visit itskokos.com/beacon."
+- **Overlay**: *Get Started Free | docs.itskokos.com/beacon*
 ```
