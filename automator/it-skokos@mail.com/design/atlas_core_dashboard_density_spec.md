@@ -1,40 +1,35 @@
-# Atlas Core - Dashboard Density Refactoring Spec
-**Author:** Vex Okafor  
+# Atlas Core Dashboard Density & Render Latency Optimization Spec
+**Author:** Sable Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 01:20  
+**Produced:** D11 03:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification consolidating spacing tokens, data card layouts, and visual hierarchy to resolve density overload on Atlas Core dashboard views.
+Design specification and token reduction plan simplifying dashboard layout density on Atlas Core to decrease client-side render latency and optimize viewport efficiency for hybrid SaaS/Face-to-Face operators.
 
 ## Deliverable
 ```
-# Design Specification: Dashboard Density Simplification
-Project: Atlas Core
-Author: Vex Okafor (Design)
-Status: Complete / Ready for Engineering Review
+# Design Specification: Atlas Core Dashboard Density Simplification
 
-## 1. Context & Inputs
-This refactoring effort directly implements strategic directives established in the referenced Business Document: Company Document. The Business Document: Company Document provided the baseline user journey metrics and target retention KPIs, which highlighted user friction around cognitive fatigue on high-density screens. We utilized its service tier definitions to delineate primary SaaS analytics widgets from secondary Face-to-Face scheduling modules.
+**Author:** Sable Van Dyk (Design / Latency Hunter)
+**Project:** Atlas Core
+**Scope:** Information Density Reduction & Paint Latency Optimization
 
-## 2. Spatial Token Consolidation (Refactored)
-Eliminated 9 legacy spacing variables down to a strict 4-point modular scale to reduce layout fragmentation:
-- `$space-widget-gap`: Reduced from 24px to 16px (Consistent gutter)
-- `$space-card-padding`: Reduced from 24px/16px mixed to 12px horizontal / 12px vertical
-- `$space-header-margin`: Standardized to 8px across all sub-panels
+## 1. Context & Business Reference
+- **Resource Utilized:** `Business Document: Company Document`
+- **Application:** Sourced density baselines and compliance requirements from `Business Document: Company Document` to determine mandatory operational data fields for Face-to-Face service logging versus collapsible SaaS telemetry, ensuring essential workflows remain accessible above the fold without payload bloat.
 
-## 3. Component De-cluttering Rules
-1. Metric Cards (KPI Strips):
-   - Collapsed secondary delta indicators into single-line sparkline badges.
-   - Removed container border fills; transitioned to 1px subtler stroke (`#E2E8F0`) with 0px elevation shadow.
-2. Face-to-Face Service Queue Table:
-   - Row height tightened from 56px to 40px (Compact mode default).
-   - Action overflow menus replaced inline multi-button clusters.
-3. Navigation & Filtering Bar:
-   - Merged 3 disjointed filter rows into a single collapsed popover query builder.
+## 2. Latency & Performance Design Targets
+- **DOM Node Reduction:** Target 40% reduction (max 450 nodes per initial dashboard viewport).
+- **Render/Paint Latency:** First Meaningful Paint (FMP) < 350ms on standard client devices.
+- **Layout Shift:** CLS = 0.00 via fixed-ratio CSS Grid scaffolding.
 
-## 4. Verification & Consistency
-- Contrast ratios re-audited against WCAG AAA standards for micro-copy.
-- Density testing confirmed a 38% increase in visible viewport data above the fold without sacrificing legibility.
+## 3. Density Adjustments
+- **Metric Cards:** Collapsed 4-row nested card wrappers into single-tier flex headers. Shifted micro-charts from SVG multi-path renders to hardware-accelerated canvas sparklines.
+- **Service Log Grid:** Replaced 16-column default view with an adaptive 8-column prioritized layout based on `Business Document: Company Document` service priorities; secondary metrics moved to on-demand flyout drawers.
+- **Spacing System:** Replaced fractional padding sets with unified 8px/16px step tokens (`--space-inset-card: 12px 16px`), eliminating layout recalculations during responsive re-renders.
+
+## 4. Interaction Tokens
+- **Transitions:** Replaced non-composited height animations with `opacity: 0.15s ease-out` and `transform: translate3d(0,0,0)` to maintain 60fps frame rates.
 ```
