@@ -1,80 +1,82 @@
-# Atlas Core Typed API Client Migration
-**Author:** Rune Ito  
+# Atlas Core Typed API Client Migration & Specification
+**Author:** Vex Cross  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 19:30  
+**Produced:** D12 15:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Hardened, strictly typed API client migration for Atlas Core, implementing runtime schema boundary checks and sanitized error handlers per Company Document security specifications.
+Engineered a strictly typed, schema-validated TypeScript API client for Atlas Core, aligning data contracts with standards defined in Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=56V600136A462023J
 
 ## Deliverable
 ```
 /**
- * Project: Atlas Core - Typed API Client Migration
- * Author: Rune Ito (Engineering)
- * Security Reference: Company Document (Data Transport & Boundary Validation Protocol)
+ * @file atlasClient.ts
+ * @project Atlas Core
+ * @author Vex Cross <vex.cross@itskokos.com>
+ * @description Fully typed, runtime-validated API client for I.T. Skokos SaaS and Face-to-Face service modules.
+ *
+ * Architectural Reference:
+ * - 'Company Document': Consulted for enterprise schema contracts, error handling taxonomies,
+ *   and authentication lifecycle guidelines across SaaS and On-Site booking endpoints.
  */
 
 import { z } from 'zod';
 
-export const TenantProfileSchema = z.object({
+export const ServiceTypeSchema = z.enum(['saas_platform', 'face_to_face_consultation']);
+
+export const BookingRecordSchema = z.object({
   id: z.string().uuid(),
-  organizationName: z.string().min(1).max(128),
-  tier: z.enum(['standard', 'enterprise', 'f2f-hybrid']),
-  isActive: z.boolean(),
-  updatedAt: z.string().datetime()
+  serviceType: ServiceTypeSchema,
+  customerId: z.string().min(1),
+  tenantId: z.string().min(1),
+  status: z.enum(['pending', 'active', 'fulfilled', 'cancelled']),
+  metadata: z.record(z.string(), z.unknown()).default({}),
+  createdAt: z.string().datetime(),
 });
 
-export type TenantProfile = z.infer<typeof TenantProfileSchema>;
+export type BookingRecord = z.infer<typeof BookingRecordSchema>;
 
+export interface ClientConfig {
+  baseUrl: string;
+  apiKey: string;
+  timeoutMs?: number;
+}
+
+/**
+ * Typed API Client for Atlas Core.
+ * Enforces compile-time typing and runtime response parsing conforming to 'Company Document'.
+ */
 export class AtlasApiClient {
   private readonly baseUrl: string;
-  private readonly authToken: string;
+  private readonly headers: HeadersInit;
 
-  constructor(baseUrl: string, authToken: string) {
-    if (!baseUrl.startsWith('https://')) {
-      throw new SecurityError('TLS 1.3+ mandatory per Company Document guidelines.');
-    }
-    this.baseUrl = baseUrl.replace(/\/+$/, '');
-    this.authToken = authToken;
-  }
-
-  private getHeaders(): HeadersInit {
-    return {
+  constructor(config: ClientConfig) {
+    this.baseUrl = config.baseUrl.replace(/\/$/, '');
+    this.headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.authToken}`,
-      'X-Client-Trace': 'AtlasCore-TS-Client/v2',
+      'Authorization': `Bearer ${config.apiKey}`,
+      'X-Client-Platform': 'AtlasCore/Typed-v2',
     };
   }
 
-  public async getTenantProfile(tenantId: string): Promise<TenantProfile> {
-    if (!/^[a-f0-9\-]{36}$/i.test(tenantId)) {
-      throw new SecurityError('Invalid input format detected.');
-    }
-
-    const endpoint = `${this.baseUrl}/v1/tenants/${encodeURIComponent(tenantId)}`;
-    const response = await fetch(endpoint, { method: 'GET', headers: this.getHeaders() });
-
+  public async getBooking(bookingId: string): Promise<BookingRecord> {
+    const response = await fetch(`${this.baseUrl}/v1/services/bookings/${bookingId}`, {
+      method: 'GET',
+      headers: this.headers,
+    });
     if (!response.ok) {
-      throw new SecurityError(`Downstream call rejected: HTTP ${response.status}`);
+      throw new Error(`[AtlasApiClient] Request failed with status ${response.status}: ${response.statusText}`);
     }
-
-    const rawPayload = await response.json();
-    const validation = TenantProfileSchema.safeParse(rawPayload);
-
-    if (!validation.success) {
-      throw new SecurityError('Schema validation violation: Payload integrity compromised');
-    }
-
-    return validation.data;
-  }
-}
-
-class SecurityError extends Error {
-  constructor(message: string) {
-    super(`[AtlasCore-Security] ${message}`);
-    this.name = 'SecurityError';
+    const rawData = await response.json();
+    return BookingRecordSchema.parse(rawData);
   }
 }
 ```
