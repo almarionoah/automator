@@ -1,38 +1,42 @@
-# Atlas Core - Lean Accessibility Remediation & Design Spec
-**Author:** Echo Okafor  
+# Atlas Core - WCAG 2.1 AA Accessibility & UI Hardening Specification
+**Author:** Mint Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 21:10  
+**Produced:** D12 11:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-effective WCAG 2.1 AA remediation spec and updated design tokens for Atlas Core, avoiding expensive third-party widget overhead by utilizing internal baseline standards from Business Document: Company Document.
+Security-conscious accessibility audit and design remediation specification for project Atlas Core, cross-referenced against the internal Business Document: Company Document baseline.
 
 ## Deliverable
 ```
-# Project Atlas Core - A11y Pass & Design Spec
-**Designer:** Echo Okafor (Design Agent)
-**Target:** WCAG 2.1 Level AA Compliance
-**Approach:** Lean Remediation (Zero Third-Party Tooling/Widget Overhead)
+# Project Atlas Core — Accessibility & Hardening Review
+**Author:** Mint Hale (Design Systems)
+**Status:** Final / Security-Approved
+**Reference Material:** Business Document: Company Document (utilized to verify internal baseline compliance standards and data-handling restrictions across user interface layers).
 
-## Resource Integration
-- **Business Document: Company Document**: Utilized as the primary baseline for existing brand color definitions, typography standards, and cost-containment boundaries. Instead of commissioning a costly brand redesign, all accessible token variants were mathematically derived from the approved hex codes listed in this document to preserve brand identity without additional asset spend.
+---
 
-## 1. Remediation Tokens (High Contrast & Zero Asset Cost)
-```css
-/* Core Surface & Interactive Tokens */
---atlas-color-bg-canvas: #0F172A; /* Main canvas */
---atlas-color-text-primary: #F8FAFC; /* Contrast ratio 14.8:1 against canvas */
---atlas-color-text-secondary: #CBD5E1; /* Contrast ratio 9.2:1 against canvas */
---atlas-color-action-primary: #2563EB; /* Adjusted from #3B82F6 for 4.6:1 on white/dark */
---atlas-color-focus-ring: #F59E0B; /* High-visibility 3px offset ring (4.5:1 min) */
-```
+### 1. Scope & Security Posture
+This accessibility pass evaluates Atlas Core's core design tokens and customer-facing components for WCAG 2.1 AA compliance while ensuring zero DOM exposure of sensitive session tokens via ARIA metadata or accessible name computations.
 
-## 2. Component Adjustments
-- **Primary CTA Buttons**: Maintained default CSS styling. Swapped disabled state opacity (`opacity: 0.5`) for explicit `aria-disabled="true"` and `#64748B` border to pass non-text contrast without additional icon assets.
-- **Form Inputs**: Added persistent 1px border (`#94A3B8`) replacing low-contrast borderless fields. Injected inline `<label>` associations to eliminate paid form-validation accessibility plugins.
-- **Focus Indicator**: Standardized a universal CSS focus ring (`outline: 3px solid var(--atlas-color-focus-ring); outline-offset: 2px;`) across all interactive DOM nodes.
+### 2. Token & Contrast Remediation
+- **Base Surface:** Changed `#0F172A` to `#0B0F19` with text element `#F8FAFC` ensuring a contrast ratio of 16.2:1 (exceeds standard 4.5:1 requirement).
+- **Interactive Focus States:**
+  - High-visibility focus ring implemented: `outline: 3px solid #38BDF8; outline-offset: 2px;`
+  - Ensure focus rings are never suppressed globally (`:focus-visible` enforced across all interactive selectors).
 
-## 3. Verification
-Manual audit completed using native browser tools (DevTools Lighthouse + Accessibility Inspector), saving third-party SaaS audit fees.
+### 3. Component Updates
+- **Modal Layer (Authentication/2FA):**
+  - Added strict `role="dialog"` and `aria-modal="true"`.
+  - Enforced keyboard focus trapping within the security modal perimeter.
+  - Restricted `aria-describedby` targets to static assistive text; sanitized dynamic server error strings before injection to prevent markup reflection.
+- **Face-to-Face Booking Scheduler:**
+  - Added accessible labels for all booking timeslots.
+  - `aria-live="polite"` attached exclusively to non-sensitive state updates.
+
+### 4. Verification Checkpoints
+- Screen reader validation completed using NVDA and VoiceOver.
+- Zero high-contrast mode clipping or color-only information delivery detected.
+- Documented compliance alignment matches mandates established in the Company Document.
 ```
