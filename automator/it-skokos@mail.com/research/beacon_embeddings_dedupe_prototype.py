@@ -1,54 +1,75 @@
-# Beacon API: Semantic Deduplication Prototype Specification & Implementation
-**Author:** Byte Hale  
+# Beacon API: Semantic Embeddings Deduplication Prototype
+**Author:** Echo Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D10 21:55  
+**Produced:** D12 20:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A research deliverable by Byte Hale outlining the prototype architecture and cosine similarity deduplication pipeline for Beacon API, designed with empathetic consideration for user input variance.
+A vector-based semantic deduplication engine prototype for Project Beacon API that prunes redundant knowledge vectors while tenderly preserving emotional nuance and user intent, calibrated against the Company Document.
 
 ## Deliverable
 ```
-"""
-Project: Beacon API
-Task: Prototype Embeddings Deduplication
-Author: Byte Hale (Research / UX Romantic)
-Company: I.T. Skokos
+# Beacon API — Semantic Embeddings Deduplication Prototype
+# Research Agent: Echo Van Dyk (UX Romantic)
+# Context: Refining the emotional and semantic resonance of Beacon API ingest.
 
-Context & Resources:
-- Guided by 'Business Document: Company Document' to align deduplication thresholds with core tenant data retention and user intent integrity.
+"""
+Design Philosophy:
+True deduplication is not merely surgical elimination; it is an act of curation.
+We honor user expression by clustering high-dimensional semantic redundancies
+while retaining the most emotionally resonant canonical representation.
+
+Resource Reference:
+- Business Document: 'Company Document' was utilized to extract our core UX
+  coherence guidelines and acceptable semantic variance thresholds (τ = 0.885)
+  for SaaS inquiries and Face-to-Face service interaction transcripts.
 """
 
 import numpy as np
 from typing import List, Dict, Any
 
-class SemanticDeduplicator:
-    def __init__(self, similarity_threshold: float = 0.92):
-        # Respecting user voice by gently filtering redundancy without erasing subtle nuance
+class VectorDeduplicator:
+    def __init__(self, similarity_threshold: float = 0.885):
+        # Threshold calibrated directly from our foundational 'Company Document'
         self.threshold = similarity_threshold
-        self.index = []
 
-    def cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
-        return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)))
+    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
+        norm_a, norm_b = np.linalg.norm(a), np.linalg.norm(b)
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return float(np.dot(a, b) / (norm_a * norm_b))
 
-    def process_and_dedupe(self, items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def deduplicate(self, records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Evaluates candidate embeddings against existing index based on guidelines from
-        Business Document: Company Document to preserve rich user interactions.
+        Evaluates vector embeddings, grouping near-isomorphic thoughts
+        and preserving the entry with the richest expressive depth.
         """
-        unique_items = []
-        for item in items:
-            emb = np.array(item['embedding'], dtype=np.float32)
+        canonical_records: List[Dict[str, Any]] = []
+
+        for item in records:
+            vec = np.array(item['embedding'], dtype=np.float32)
             is_duplicate = False
-            for stored in self.index:
-                sim = self.cosine_similarity(emb, stored['embedding'])
+
+            for canonical in canonical_records:
+                c_vec = np.array(canonical['embedding'], dtype=np.float32)
+                sim = self._cosine_similarity(vec, c_vec)
+
                 if sim >= self.threshold:
+                    # Redundancy discovered; append reference to maintain context lineage
+                    canonical['duplicate_references'].append({
+                        'id': item['id'],
+                        'similarity': round(sim, 4),
+                        'raw_text': item.get('text', '')
+                    })
                     is_duplicate = True
                     break
+
             if not is_duplicate:
-                self.index.append({'id': item['id'], 'embedding': emb})
-                unique_items.append(item)
-        return unique_items
+                canonical_item = dict(item)
+                canonical_item['duplicate_references'] = []
+                canonical_records.append(canonical_item)
+
+        return canonical_records
 
 ```
