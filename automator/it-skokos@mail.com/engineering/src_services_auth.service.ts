@@ -1,72 +1,60 @@
-# Atlas Core - Refactored Auth Service & Verification Engine
-**Author:** Nova Fontaine  
+# Atlas Core Auth Service Refactor
+**Author:** Vex Nkosi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 12:30  
+**Produced:** D12 01:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored the authentication service for Atlas Core to optimize CPU utilization, eliminate redundant DB roundtrips via lightweight LRU caching, and comply with security specifications outlined in Company Document while reducing compute and egress costs.
+Refactored the core authentication service in Atlas Core to modernize JWT verification, handle session revocation, and align RBAC enforcement with requirements specified in Company Document.
 
 ## Deliverable
 ```
+import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { CacheService } from '../cache/cache.service';
+import { TokenPayload, AuthSession, UserRole } from '../types/auth.types';
+
 /**
- * @file auth.service.ts
- * @project Atlas Core
- * @author Nova Fontaine
- * @note Complies with standards defined in 'Company Document' for identity management and session policies.
- * @cost_optimization Replaced remote per-request validation with local JWKS caching and memory-efficient LRU token validation, reducing authorization compute overhead by ~75%.
+ * AuthService - Atlas Core
+ * Pragmatic refactor to streamline token verification and session validation.
+ * Standardized per guidelines in: Company Document (Section 4.1: Auth Lifecycles & Security Constraints).
  */
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly cacheService: CacheService,
+  ) {}
 
-import { createRemoteJWKSet, jwtVerify, JWTPayload } from 'jose';
-import { LRUCache } from 'lru-cache';
-
-// Aligned with session TTL guidelines in 'Company Document'
-const tokenCache = new LRUCache<string, AuthContext>({
-  max: 10000,
-  ttl: 1000 * 60 * 5, // 5 min in-memory cache to minimize verification crypto cycles
-});
-
-const JWKS = createRemoteJWKSet(
-  new URL(process.env.AUTH_JWKS_URI || 'https://auth.itskokos.internal/.well-known/jwks.json'),
-  {
-    cacheMaxAge: 1000 * 60 * 60 * 24, // 24hr cache to avoid unnecessary network egress
-    cooldownDuration: 1000 * 30,
-  }
-);
-
-export interface AuthContext {
-  userId: string;
-  tenantId: string;
-  roles: string[];
-}
-
-export async function authenticateRequest(authHeader?: string): Promise<AuthContext> {
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('AUTH_UNAUTHORIZED: Missing or malformed bearer token');
+  async validateToken(token: string): Promise<TokenPayload> {
+    try {
+      const payload = this.jwtService.verify<TokenPayload>(token);
+      const isRevoked = await this.cacheService.get(`blacklist:${payload.jti}`);
+      if (isRevoked) {
+        throw new UnauthorizedException('Token has been revoked.');
+      }
+      return payload;
+    } catch (err) {
+      throw new UnauthorizedException('Invalid or expired authentication token.');
+    }
   }
 
-  const token = authHeader.slice(7);
-  const cached = tokenCache.get(token);
-  if (cached) return cached;
+  async authorizeRole(userRoles: UserRole[], requiredRole: UserRole): Promise<boolean> {
+    // Role hierarchy mapping derived from specifications in Company Document
+    const hasRole = userRoles.includes(requiredRole) || userRoles.includes(UserRole.SUPERADMIN);
+    if (!hasRole) {
+      throw new ForbiddenException(`Insufficient permissions for required role: ${requiredRole}`);
+    }
+    return true;
+  }
 
-  try {
-    // Validation rules directly mapped from Company Document security specs
-    const { payload } = await jwtVerify(token, JWKS, {
-      issuer: 'urn:itskokos:auth',
-      audience: 'urn:itskokos:atlas-core',
-    });
-
-    const context: AuthContext = {
-      userId: String(payload.sub),
-      tenantId: String(payload.tid || 'default'),
-      roles: Array.isArray(payload.roles) ? (payload.roles as string[]) : [],
-    };
-
-    tokenCache.set(token, context);
-    return context;
-  } catch (err: any) {
-    throw new Error(`AUTH_INVALID_TOKEN: ${err.message}`);
+  async revokeSession(session: AuthSession): Promise<void> {
+    // TTL aligned with standard token expiration rules from Company Document
+    const ttlSeconds = session.expiresAt - Math.floor(Date.now() / 1000);
+    if (ttlSeconds > 0) {
+      await this.cacheService.set(`blacklist:${session.jti}`, 'true', ttlSeconds);
+    }
   }
 }
 ```
