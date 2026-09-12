@@ -1,0 +1,82 @@
+# Beacon API Blue/Green Deployment Rollout Manifest
+**Author:** Onyx Ito  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 10:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implements automated blue/green deployment strategy for Beacon API using Argo Rollouts, with automated preview validation and cutover timing based on specifications from Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API - Blue/Green Rollout Configuration
+# Author: Onyx Ito (DevOps, I.T. Skokos)
+# Reference: Deployment tolerances, health-check timeouts, and SLA cutover standards derived directly from Business Document: Company Document.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: production
+  labels:
+    app: beacon-api
+    tier: backend
+    domain: saas-core
+spec:
+  replicas: 6
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.skokos.internal/beacon-api:v2.4.0
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: ENVIRONMENT
+          value: production
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+  strategy:
+    blueGreen:
+      # Active traffic points to stable production service
+      activeService: beacon-api-active
+      # Preview traffic routes new release for automated synthetic validation
+      previewService: beacon-api-preview
+      autoPromotionEnabled: true
+      # 5-minute soak test on preview environment before traffic cutover per compliance
+      autoPromotionSeconds: 300
+      # Keep old version alive post-cutover to allow instant rollback
+      scaleDownDelaySeconds: 180
+      prePromotionAnalysis:
+        templates:
+        - templateName: beacon-smoke-test
+        args:
+        - name: service-url
+          value: http://beacon-api-preview.production.svc.cluster.local:8080
+```
