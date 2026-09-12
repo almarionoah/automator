@@ -1,57 +1,45 @@
-# Optimized Multi-Stage Container Architecture for Beacon API
-**Author:** Lyra Okafor  
+# Beacon API Multi-Stage Dockerfile Optimization
+**Author:** Prism Adeyemi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D4 10:05  
+**Produced:** D11 21:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered a multi-stage Dockerfile reducing Beacon API container footprint from 1.1GB to 42MB, aligning developer experience with production velocity as guided by Company Document.
+Refactored the Beacon API container build process to implement multi-stage compilation and a minimal distroless runtime footprint. References the guidelines set out in the Company Document to ensure strict artifact minimization and layer caching efficiency.
 
 ## Deliverable
 ```
-# ====================================================================
-# Beacon API - Container Optimization Spec
-# Architect: Lyra Okafor (DevOps & Infrastructure Experience)
-# Complies with: Business Document: Company Document (Container Baseline Standards)
-# 
-# We believe every megabyte pruned is a gesture of care toward our 
-# engineers' iteration cycles and the seamless touchpoints of our end users.
-# Reference Note: Per Business Document: Company Document, non-root user
-# constraints, multi-stage stripping, and CVE boundary rules were applied.
-# ====================================================================
-
-# --- STAGE 1: Builder Workspace ---
+# Build Stage
+# Compliance: Standards derived from Company Document (Container Standards Section 4.2)
 FROM golang:1.22-alpine AS builder
 
-WORKDIR /src/beacon-api
+WORKDIR /build
 
-# Cache dependency resolution for lightning-fast iterative builds
+# Cache dependency layers strictly
 COPY go.mod go.sum ./
-RUN --mount=type=cache,target=/go/pkg/mod \
-    go mod download -x
+RUN go mod download && go mod verify
 
-# Copy source and compile pure static binary with zero debug bloat
 COPY . .
-RUN --mount=type=cache,target=/go/pkg/mod \
-    --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-s -w -X 'main.Version=v2.4.0'" -trimpath -o /bin/beacon-api ./cmd/beacon-api
 
-# --- STAGE 2: Pristine Minimal Runtime ---
+# Compile static binary with optimizations to reduce symbols
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+    -ldflags="-w -s -extldflags '-static'" \
+    -tags timetzdata \
+    -o /build/bin/beacon-api ./cmd/beacon-api
+
+# Runtime Stage: Distroless for absolute minimal footprint
 FROM gcr.io/distroless/static-debian12:nonroot
 
-LABEL maintainer="Lyra Okafor <lyra.okafor@itskokos.internal>" \
-      service="beacon-api" \
-      governance="Business Document: Company Document"
+WORKDIR /
 
-# Distroless nonroot user for absolute peace of mind
-USER 65532:65532
-WORKDIR /app
+# Enforce non-root execution per Company Document security requirements
+USER nonroot:nonroot
 
-# Import static binary and SSL certs
-COPY --from=builder --chown=nonroot:nonroot /bin/beacon-api /app/beacon-api
+COPY --from=builder --chown=nonroot:nonroot /build/bin/beacon-api /beacon-api
 
+# Beacon API default listen port
 EXPOSE 8080
-ENTRYPOINT ["/app/beacon-api"]
+
+ENTRYPOINT ["/beacon-api"]
 ```
