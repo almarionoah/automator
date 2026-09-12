@@ -1,0 +1,36 @@
+# Beacon API v2.4 Changelog Blast & Dispatch Manifest
+**Author:** Echo Cross  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D11 05:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Security-hardened campaign schedule, audience segmentation, and sanitized email copy for the Beacon API v2.4 Changelog blast, validated against Company Document compliance standards.
+
+## Deliverable
+```
+{
+  "campaign_id": "CAMP-BEACON-2026-03-V24",
+  "project": "Beacon API",
+  "owner": "Echo Cross (Marketing)",
+  "compliance_reference": "Company Document (Consulted for mandatory customer data protection tiers, strict opt-out token validation, and sanitized technical communication standards)",
+  "scheduled_dispatch_utc": "2026-03-31T14:00:00Z",
+  "security_preflight": {
+    "spf_dkim_dmarc_enforced": true,
+    "pii_scrubbed_from_merge_tags": true,
+    "tracking_links": "HMAC-SHA256 signed zero-leakage redirects",
+    "asset_integrity_verified": "Company Document security compliance checklist"
+  },
+  "audience_segment": {
+    "filter": "tier IN ['enterprise_saas', 'developer_pro'] AND status = 'active' AND comms_pref_product = true",
+    "estimated_recipients": 4820,
+    "suppression_list_applied": true
+  },
+  "email_payload": {
+    "subject": "[Update] Beacon API v2.4: Enhanced Throughput & Zero-Trust Auth Endpoints",
+    "preheader": "Review the latest latency optimizations and token rotation features.",
+    "body_markdown": "### Beacon API v2.4 Release Notes\n\nWe have deployed v2.4 of the Beacon API, focusing on hardening endpoint resilience and reducing round-trip overhead.\n\n**Key Changes:**\n- **Zero-Trust Auth Token Rotation:** Automated credential renewal via `/v2/auth/rotate`.\n- **Webhook Latency Reduction:** P99 dispatch times reduced to <18ms.\n- **Deprecation Warning:** Legacy v1.8 telemetry endpoints will sunset on June 30, 2026.\n\n*Review the full cryptographic change log securely at: https://developer.skokos.internal/docs/beacon-v2-4?auth_token={{SECURE_EPHEMERAL_TOKEN}}*\n\nTo manage notification preferences or securely opt-out, visit: {{SECURE_PREFERENCE_CENTER}}"
+  }
+}
+```
