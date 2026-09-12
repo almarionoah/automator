@@ -1,41 +1,46 @@
-# Atlas Core 30s Product Demo Cut & Automated Pipeline Spec
-**Author:** Onyx Cross  
+# Atlas Core 30s Product Demo Script & Cut Spec
+**Author:** Byte Nkosi  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** 9/12/2026, 3:57:51 AM  
+**Produced:** 9/12/2026, 3:41:52 AM  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Storyline, voiceover script, and zero-agency automated render configuration for the 30-second Atlas Core SaaS product demo, minimizing production costs by leveraging direct repository assets.
+Production-ready 30-second product demo video script, storyboard timeline, and asset mapping for Atlas Core, synced directly from UI component branches via GitHub PAT authentication.
 
 ## Deliverable
 ```
-# Project: Atlas Core — 30-Second SaaS Product Demo (Lean Production)
-**Author:** Onyx Cross, Marketing (I.T. Skokos)
-**Strategy:** Cost-cutter approach (100% in-house automated generation, eliminating external studio/agency spend of ~$4,500).
+# Project: Atlas Core - 30-Second Product Demo Cut Spec
+**Owner:** Byte Nkosi (Marketing)
+**Target:** Top-of-funnel SaaS & enterprise operations leads
+**Asset Sync & Version:** v2.4-stable cut
+
+## Repository & Credential Integration
+- **Git Access: Personal Access Token**: Used to clone and pull automated high-definition viewport captures from the `atlas-core-frontend` staging environment.
+- **Credentials: Git Hub Personal Access Token**: Used to authenticate asset pipeline workflows, pulling raw UI components, motion tokens, and exporting finalized render scripts to `marketing-assets/atlas-core/demo-30s`.
 
 ---
 
-### Resource Utilization Log
-- **Git Access: Personal Access Token**: Utilized to authenticate and clone private UI component libraries and raw vector screen captures directly from the `it-skokos/atlas-core-frontend` repository, bypassing manual screen-recording sessions.
-- **Credentials: Git Hub Personal Access Token**: Integrated into our CI/CD Remotion video render pipeline on GitHub Actions to programmatically stitch motion graphics, captions, and localized tracks without third-party rendering software licenses.
+## Timeline Cut Breakdown (30.00s Total)
 
----
+### [00:00 - 00:05] The Hook: Fragmented Systems
+- **Visual:** Fast-cut UI montage of fragmented legacy dashboards flashing warning alerts, smoothly transitioning to a single, clean Atlas Core unified interface.
+- **On-Screen Text (OST):** Stop context-switching. Run operations in one place.
+- **Voiceover (VO):** "Managing hybrid SaaS workflows shouldn't feel like wrestling five legacy dashboards."
+- **Motion Cue:** Motion blur pull-out into Atlas Core workspace.
 
-### 30-Second Cut Sheet & Timing
+### [00:05 - 00:15] The Solution: Real-Time Orchestration
+- **Visual:** Cursor moves across Atlas Core canvas; live telemetry graph populates with real-time F2F service sync indicators.
+- **OST:** Real-Time Sync. Zero Latency.
+- **VO:** "Atlas Core unifies platform telemetry and field services instantly with zero-latency synchronization."
 
-| Timecode | Visual (Atlas Core UI) | Voiceover (Audio Track) | On-Screen Text |
-| :--- | :--- | :--- | :--- | 
-| **00:00 - 00:05** | Split screen: Cluttered legacy spreadsheets vs. clean Atlas Core Unified Dashboard. | "Still juggling disconnected F2F operations and SaaS platforms?" | Stop the Operational Drain. |
-| **00:05 - 00:12** | Fast zoom into Real-Time Sync Engine UI (extracted via Storybook assets). | "Meet Atlas Core. Instant synchronization between on-site teams and cloud workflows." | Real-Time Sync. Zero Lag. |
-| **00:12 - 00:20** | Clickthrough: 1-click automated billing, smart resource allocation module. | "Automate dispatch, streamline client billing, and cut overhead in just three clicks." | Cut Admin Time by 65%. |
-| **00:20 - 00:26** | Mobile responsive preview alongside desktop enterprise view. | "Scalable infrastructure built for modern service providers." | Built for SaaS & Field Teams. |
-| **00:26 - 00:30** | I.T. Skokos branded end-card with dynamic QR code & CTA button. | "Start your 14-day free trial today. Visit itskokos.com/atlas-core." | Deploy Atlas Core Today. |
+### [00:15 - 00:23] Feature Highlight: One-Click Automation
+- **Visual:** User clicks 'Trigger Pipeline', modal displays instant deployment across nodes with green confirmation checks.
+- **OST:** 1-Click Execution across SaaS & F2F teams.
+- **VO:** "Automate cross-platform pipelines in one click and keep teams aligned everywhere."
 
----
-
-### Render Specs & Cost Summary
-- **Resolution:** 1080x1920 (9:16 vertical) & 1920x1080 (16:9 landscape)
-- **Render Cost:** $0.14 (GitHub Actions compute)
-- **Agency Savings:** $4,350.00
+### [00:23 - 00:30] CTA & Outro
+- **Visual:** Atlas Core logo resolves with dark-mode gloss; primary CTA button pulses.
+- **OST:** Scale smarter with Atlas Core. Get Started at skokos.it/atlas
+- **VO:** "Smarter operations, shipped fast. Start your Atlas Core trial today."
 ```
