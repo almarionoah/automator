@@ -1,72 +1,52 @@
-# Atlas Core Design System - Component Tokens Specification
-**Author:** Torq Marlow  
+# Atlas Core Component Design Tokens Specification
+**Author:** Byte Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 16:50  
+**Produced:** D13 03:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Security-hardened design tokens for Atlas Core UI components, derived from organizational guidelines in Company Document. Enforces strict input validation, non-executable token bindings, and zero third-party font injection.
+Production-ready design token architecture for Atlas Core, aligning tactile face-to-face warmth with SaaS precision, referenced directly from the Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "meta": {
+  "$metadata": {
     "project": "Atlas Core",
-    "author": "Torq Marlow (Security-Reviewed)",
-    "sourceBaseline": "Business Document: Company Document (utilized for Brand Integrity and Access Control boundary specifications)",
-    "integrityCheck": "sha256-verified-internal-only",
-    "version": "1.0.0"
+    "designer": "Byte Fontaine",
+    "reference": "Company Document",
+    "context": "Tokens systematically derived from the I.T. Skokos 'Company Document' to bridge high-utility SaaS interfaces with the empathetic warmth of face-to-face client services."
+  },
+  "color": {
+    "surface": {
+      "canvas": { "value": "#FAF9F6", "type": "color", "description": "Warm alabaster base, providing poetic breathing room for data." },
+      "elevated": { "value": "#FFFFFF", "type": "color", "description": "Pristine sanctuary surface for focused modal interactions." },
+      "accent-intimate": { "value": "#D96B43", "type": "color", "description": "Terracotta ember guiding face-to-face booking affordances." }
+    },
+    "ink": {
+      "primary": { "value": "#1A2129", "type": "color", "description": "Deep twilight slate for grounded, readable typography." },
+      "subtle": { "value": "#6B7280", "type": "color", "description": "Soft graphite for quiet secondary metadata." }
+    }
+  },
+  "motion": {
+    "duration": {
+      "breath": { "value": "280ms", "type": "duration" },
+      "lingering": { "value": "420ms", "type": "duration" }
+    },
+    "easing": {
+      "empathic": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "cubicBezier", "description": "Natural decel curve mimicking human touch." }
+    }
   },
   "component": {
     "button": {
-      "primary": {
-        "background": {
-          "value": "#0A192F",
-          "type": "color",
-          "description": "Enforces high-contrast secure action per Company Document guidelines."
-        },
-        "text": {
-          "value": "#F8FAFC",
-          "type": "color"
-        },
-        "borderRadius": {
-          "value": "4px",
-          "type": "dimension"
-        },
-        "padding": {
-          "value": "10px 18px",
-          "type": "dimension"
-        }
-      },
-      "danger": {
-        "background": {
-          "value": "#991B1B",
-          "type": "color",
-          "description": "Guarded destructive action indicator."
-        },
-        "text": {
-          "value": "#FFFFFF",
-          "type": "color"
-        }
-      }
+      "radius": { "value": "10px", "type": "dimension" },
+      "padding": { "value": "12px 24px", "type": "dimension" },
+      "shadow-resting": { "value": "0 2px 8px rgba(26, 33, 41, 0.06)", "type": "shadow" }
     },
-    "input": {
-      "surface": {
-        "background": {
-          "value": "#0F172A",
-          "type": "color"
-        },
-        "border": {
-          "value": "1px solid #334155",
-          "type": "border"
-        },
-        "focusRing": {
-          "value": "2px solid #38BDF8",
-          "type": "border"
-        }
-      }
+    "consultation-card": {
+      "border-color": { "value": "rgba(217, 107, 67, 0.18)", "type": "color" },
+      "backdrop-blur": { "value": "12px", "type": "dimension" }
     }
   }
 }
