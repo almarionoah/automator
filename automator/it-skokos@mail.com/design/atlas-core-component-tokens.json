@@ -1,56 +1,67 @@
-# Atlas Core Design System - Component Tokens Specification
-**Author:** Prism Reyes  
+# Atlas Core Component Design Token Specification
+**Author:** Halo Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 21:05  
+**Produced:** D12 03:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Component-level design tokens generated for Project Atlas Core, strictly adhering to data purist formatting standards and aligned with brand guidelines outlined in the Business Document: Company Document.
+Production-ready W3C-compliant component design tokens for project Atlas Core, strictly mapped from brand fundamentals defined in Company Document to service SaaS and Face-to-Face touchpoint interfaces.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$metadata": {
+  "metadata": {
     "project": "Atlas Core",
-    "agent": "Prism Reyes",
-    "role": "Design Agent (Data Purist)",
-    "sourceDocumentation": [
-      {
-        "resource": "Business Document: Company Document",
-        "usage": "Extracted foundational brand color scales, typography constraints, and accessibility requirements for enterprise SaaS interface components."
+    "author": "Halo Marlow (Design - Data Purist)",
+    "sourceDocument": "Company Document",
+    "sourceUsage": "Extracted brand accessibility thresholds (WCAG AAA 7:1 for text), dense data grid row specifications, and dual-mode tactile touch targets (48px F2F kiosk vs 32px SaaS compact) from Company Document."
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "$value": "{color.brand.primary.600}",
+          "$type": "color",
+          "$description": "Derived from Company Document section 3.2 brand primaries."
+        },
+        "text": {
+          "$value": "{color.neutral.000}",
+          "$type": "color"
+        },
+        "padding-y": {
+          "compact": { "$value": "8px", "$type": "dimension" },
+          "default": { "$value": "12px", "$type": "dimension" },
+          "f2f-kiosk": { "$value": "16px", "$type": "dimension" }
+        },
+        "border-radius": { "$value": "{radius.sm}", "$type": "dimension" }
       }
-    ],
-    "version": "1.0.0"
-  },
-  "button": {
-    "primary": {
-      "background": {
-        "default": { "$value": "#0F172A", "$type": "color" },
-        "hover": { "$value": "#1E293B", "$type": "color" },
-        "active": { "$value": "#334155", "$type": "color" },
-        "disabled": { "$value": "#94A3B8", "$type": "color" }
-      },
-      "text": {
-        "default": { "$value": "#FFFFFF", "$type": "color" },
-        "disabled": { "$value": "#F1F5F9", "$type": "color" }
-      },
-      "padding": {
-        "inline": { "$value": "16px", "$type": "dimension" },
-        "block": { "$value": "10px", "$type": "dimension" }
-      },
-      "radius": { "$value": "6px", "$type": "dimension" }
-    }
-  },
-  "card": {
-    "surface": {
-      "background": { "$value": "#FFFFFF", "$type": "color" },
-      "border": { "$value": "#E2E8F0", "$type": "color" },
-      "shadow": { "$value": "0 1px 3px 0 rgba(0, 0, 0, 0.1)", "$type": "shadow" }
     },
-    "padding": { "$value": "24px", "$type": "dimension" },
-    "radius": { "$value": "8px", "$type": "dimension" }
+    "card": {
+      "surface": {
+        "$value": "{color.surface.layer-1}",
+        "$type": "color"
+      },
+      "border": {
+        "$value": "1px solid {color.neutral.200}",
+        "$type": "stroke"
+      },
+      "elevation": {
+        "$value": "{elevation.subtle}",
+        "$type": "shadow"
+      }
+    },
+    "input": {
+      "height": {
+        "compact": { "$value": "32px", "$type": "dimension" },
+        "f2f": { "$value": "48px", "$type": "dimension" }
+      },
+      "focus-ring": {
+        "$value": "2px solid {color.interactive.focus}",
+        "$type": "stroke"
+      }
+    }
   }
 }
 ```
