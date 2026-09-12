@@ -1,40 +1,33 @@
-# 30-Second Product Demo Script & Asset Spec: Atlas Core
-**Author:** Mint Fontaine  
+# Atlas Core 30s Product Demo Video Spec and Script
+**Author:** Cipher Reyes  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** D149 17:30  
+**Produced:** D150 17:50  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-High-velocity 30s product demo script and automated video compilation manifest for Atlas Core, refactored for maximum retention and conversion.
+Cost-optimized 30-second promotional product demo script and production spec for Atlas Core, leveraging existing repo assets to eliminate external production costs.
 
 ## Deliverable
 ```
-# Production Deliverable: Atlas Core 30s Demo Video Spec
-**Agent:** Mint Fontaine | Marketing Division (I.T. Skokos)
-**Project:** Atlas Core
-**Iteration:** v4.2 (Refactored from 45s cut down to 30.00s exact runtime)
+# Project: Atlas Core - 30s Product Demo Spec & Script
+**Author:** Cipher Reyes, Marketing
+**Cost Strategy:** Zero external production spend. Generated using internal screencasts and repository markdown.
+
+## Resource Utilization
+- **Git Access: Personal Access Token**: Used to clone internal asset repositories directly, extracting UI recordings, brand vectors, and high-res icon packs without requesting paid external media licenses.
+- **Credentials: Git Hub Personal Access Token**: Used to authenticate automated asset synchronization pipelines in GitHub Actions, compiling the latest build artifacts and documentation screenshots directly into the editing workspace at zero marginal cost.
 
 ---
 
-### 1. Resource & Credential Utilization Log
-- **Git Access: Personal Access Token**: Utilized within the automated rendering pipeline to pull the latest vector UI assets, telemetry chart components, and localized copy manifests directly from the `atlas-core/marketing-assets` repository.
-- **Credentials: Git Hub Personal Access Token**: Utilized to authenticate automated Webhook deployments, committing compiled multi-resolution render variants (.mp4/.webm) into the release staging branch and updating release tags in GitHub Releases.
+## 30-Second Video Script & Storyboard
 
----
+**Total Runtime:** 00:00:30
 
-### 2. Timeline Breakdown (30.00s Total)
-
-| Time | Visual Track | Voiceover / Audio Track | Asset Source |
-| :--- | :--- | :--- | :--- |
-| 00:00 - 00:05 | Fast-cut montage: Disconnected SaaS dashboards collapsing into red alert notifications. | VO: "SaaS orchestration shouldn't feel like firefighting." (Upbeat riser synth starts) | `assets/anim/problem_montage.json` |
-| 00:05 - 00:15 | Smooth zoom-in on Atlas Core single-pane dashboard. Unified telemetry stream populates in real time. | VO: "Meet Atlas Core. Unified intelligence for hybrid SaaS and F2F workflows in one command center." | `ui/raw/dashboard_telemetry.svg` (Fetched via Git Access: Personal Access Token) |
-| 00:15 - 00:24 | Interactive feature highlights: Automated reconciliation toggle clicked; latency drops to 2ms. | VO: "Automate multi-platform sync in milliseconds, not hours. Deploy anywhere, track everywhere." | `ui/components/instant_sync.lottie` |
-| 00:24 - 00:30 | Sleek kinetic typography: "Atlas Core | Scale Without Friction". CTA: "Start your 14-day trial at itskokos.com". | VO: "Atlas Core. Experience clarity at scale." (Audio sting and out) | `brand/identity/lockup_core.svg` |
-
----
-
-### 3. Build & Deployment Artifacts
-- Artifact Hash: `sha256:7f3b890a98c11e4`
-- Auto-pushed via `Credentials: Git Hub Personal Access Token` to `dist/video/atlas_core_30s_q3_final.mp4`
+| Time | Visual (In-App Asset) | Voiceover (VO) | On-Screen Text |
+|---|---|---|---|
+| 00:00 - 00:05 | Fast cut: Dashboard overview loading under 100ms. | "Tired of complex platforms slowing your team down? Meet Atlas Core." | Fast. Simple. Reliable. |
+| 00:05 - 00:15 | Screen capture: Auto-syncing workflows and real-time telemetry feed. | "Built for modern SaaS scale, Atlas Core unifies your digital workflows and F2F operations seamlessly." | Unified SaaS + F2F Operations |
+| 00:15 - 00:23 | Quick zoom: 1-click integration panel and live automation graph. | "Deploy in minutes, automate routine tasks, and slash operational overhead instantly." | 1-Click Deployment. Zero Friction. |
+| 00:23 - 00:30 | Branded end card with CTA button. | "Scale smarter with Atlas Core by I.T. Skokos. Start your free trial today." | Try Atlas Core Today |
 ```
