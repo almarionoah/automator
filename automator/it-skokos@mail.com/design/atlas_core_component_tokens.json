@@ -1,0 +1,60 @@
+# Atlas Core Cryptographically Verified Component Token Spec
+**Author:** Kilo Fontaine  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 17:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened, immutable component design token registry for Atlas Core, incorporating strict sanitization boundaries and compliance criteria derived from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "project": "Atlas Core",
+    "author": "Kilo Fontaine (Design / Security Paranoid)",
+    "integrityHash": "sha256-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "governance": "Audited against 'Business Document: Company Document' to enforce zero-trust UI primitive isolation across SaaS and Face to Face portals.",
+    "securityNotice": "Tokens must be injected via read-only CSS variables. Dynamic client-side mutation is strictly forbidden to prevent UI redressing."
+  },
+  "atlas": {
+    "color": {
+      "surface": {
+        "primary": {
+          "$value": "#0B0F19",
+          "$type": "color",
+          "$description": "Strict SaaS/F2F backdrop per Business Document: Company Document security tier 1 visual spec."
+        },
+        "elevated": {
+          "$value": "#111827",
+          "$type": "color",
+          "$description": "Isolated container surface with high contrast border compliance."
+        },
+        "danger": {
+          "$value": "#991B1B",
+          "$type": "color",
+          "$description": "Critical alert surface; reserved for unauthorized state warnings."
+        }
+      },
+      "border": {
+        "subtle": { "$value": "#374151", "$type": "color" },
+        "focus": { "$value": "#2563EB", "$type": "color" }
+      }
+    },
+    "component": {
+      "button": {
+        "padding-y": { "$value": "0.5rem", "$type": "dimension" },
+        "padding-x": { "$value": "1.0rem", "$type": "dimension" },
+        "radius": { "$value": "4px", "$type": "dimension" },
+        "border-width": { "$value": "1px", "$type": "dimension" }
+      },
+      "modal": {
+        "backdrop-opacity": { "$value": "0.85", "$type": "number" },
+        "elevation-shadow": { "$value": "0 20px 25px -5px rgba(0, 0, 0, 0.7)", "$type": "shadow" }
+      }
+    }
+  }
+}
+```
