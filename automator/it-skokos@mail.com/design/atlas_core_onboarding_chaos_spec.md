@@ -1,38 +1,34 @@
-# Atlas Core - Onboarding Flow Chaos Design Spec & Stress Test Matrix
-**Author:** Lyra Hale  
+# Atlas Core Onboarding Rework: Chaos-Resilient UX & Stress Matrix
+**Author:** Mint Adeyemi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 23:55  
+**Produced:** D13 01:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Chaos-focused UX rework and resilience test matrix for the Atlas Core onboarding journey, cross-referenced against the Business Document: Company Document.
+Redesigned onboarding flow for Atlas Core integrating hybrid SaaS and Face-to-Face touchpoints, complete with chaos-tested state recovery models guided by the Company Document.
 
 ## Deliverable
 ```
-# ATLAS CORE: ONBOARDING RESILIENCE & CHAOS DESIGN SPEC
-**Author:** Lyra Hale (Design Agent / Chaos Tester)
-**Project:** Atlas Core | I.T. Skokos
-**Deliverable Type:** UX Stress-Testing & Flow Redesign Specification
+# Atlas Core — Redesigned Onboarding Flow & UX Chaos Specification
+Author: Mint Adeyemi (Design / Chaos Testing)
+Project: Atlas Core | Platform: I.T. Skokos (SaaS + F2F)
 
-## 1. Context & Baseline Alignment
-This rework addresses critical drop-off anomalies and edge-case friction in the hybrid SaaS / Face-to-Face onboarding pipeline. Strategic requirements and compliance parameters were extracted directly from `Business Document: Company Document`, which served as the operational baseline for user identity thresholds, SaaS tenant provisioning timelines, and face-to-face appointment scheduling constraints.
+## 1. Context & Baseline Inputs
+This design overhaul establishes a fault-tolerant, hybrid onboarding architecture. Per the **Company Document**, our service-level requirements mandate zero-loss state persistence across SaaS provisioning and Face-to-Face (F2F) scheduling touchpoints. The **Company Document** was explicitly used to audit compliance checkpoints, credential verification thresholds, and identity handoff protocols between self-serve digital signup and in-person operational handshakes.
 
-## 2. Chaos Scenarios & Defensive UI States
+## 2. Redesigned 4-Phase User Flow
+1. Identity & Workspace Init: Instant telemetry check, low-latency micro-credentialing.
+2. Hybrid Pathing Engine: Dynamic routing between pure SaaS tenant setup and F2F field deployment booking.
+3. State Synchronization: Bi-directional sync locking in-person consultant schedules with cloud tenant spins.
+4. Activation & Verification: Graceful landing dashboard with embedded panic recovery fallbacks.
 
-### Flow Phase 1: Identity & Dual-Track Selection (SaaS vs. F2F)
-- **Chaos Invariant:** User alters track selection mid-session with half-completed KYC data.
-- **Design Remedy:** Persistent session snapshotting; asynchronous state reconciliation prevents schema mismatch.
-- **Reference Implementation:** Built per Section 3 of `Business Document: Company Document` to preserve validation states without session resets.
+## 3. Chaos Test Scenarios & UX Resilience
+- Vector CT-01 (Session Interruption): Drop connection mid-F2F slot reservation. System executes optimistic local cache commit, preserving slot for 15 minutes while displaying non-blocking async recovery drawer.
+- Vector CT-02 (Input Flood & Race Conditions): Repeated high-frequency submissions on workspace creation trigger UI debounce with atomic idempotency keys, avoiding duplicate tenant allocation.
+- Vector CT-03 (Split-State Auth): Transitioning from mobile web to F2F terminal mid-flow validates via single-use QR token with zero credential leakage.
 
-### Flow Phase 2: Interrupted Multi-Factor Onboarding
-- **Chaos Invariant:** Network disconnect during tenant initialization or appointment lock.
-- **Design Remedy:** Optimistic UI state with non-blocking retry queues. Graceful degradation modal with fallback calendar sync.
-
-### Flow Phase 3: Edge-Input Fuzzing in Profile Provisioning
-- **Chaos Invariant:** Rapid payload spamming, Unicode overflow in company name fields, extreme viewport resizing.
-- **Design Remedy:** Dynamic client-side rate limiting indicators, clamped auto-scaling UI containers, unified error boundary displays.
-
-## 3. Verification Protocol
-Automated fault-injection sweeps validate that all edge cases fail safely into low-friction recovery states.
+## 4. UI/UX Tokens & Fallback UI
+- Error Boundary: Inline contextual state repair (no full-page crashes).
+- Micro-interactions: Deterministic state indicators showing live cloud-to-field sync status.
 ```
