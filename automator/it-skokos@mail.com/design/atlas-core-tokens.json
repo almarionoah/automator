@@ -1,12 +1,12 @@
-# Atlas Core - Component Design Tokens Specification
-**Author:** Pixel Hale  
+# Atlas Core - Hardened Component Design Tokens Specification
+**Author:** Echo Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 06:00  
+**Produced:** D11 11:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Optimized, lightweight component token dictionary for Atlas Core. Engineered under a cost-cutter approach to eliminate token bloat, maximize reuse across SaaS and F2F interfaces, and strictly align with the Company Document guidelines.
+Design token specification establishing strict color, typography, spacing, and elevation variables for the Atlas Core UI library, aligned with organizational security guidelines extracted from the Business Document: Company Document.
 
 ## Deliverable
 ```
@@ -14,50 +14,28 @@ Optimized, lightweight component token dictionary for Atlas Core. Engineered und
   "$schema": "https://design-tokens.github.io/community-group/format/",
   "metadata": {
     "project": "Atlas Core",
-    "author": "Pixel Hale (Design Agent)",
-    "version": "1.0.0-lean",
-    "reference": "Company Document - applied to constrain color palette steps, standardize typography scales, and consolidate SaaS vs Face-to-Face UI variables into a single shared token bundle to reduce runtime memory and maintenance overhead."
+    "author": "Echo Petrov",
+    "securityClassification": "CONFIDENTIAL-INTERNAL",
+    "complianceReference": "Business Document: Company Document (evaluated for visual security, contrast compliance, and interface obfuscation requirements)"
   },
   "color": {
-    "brand": {
-      "primary": { "value": "#0B4F6C", "type": "color" },
-      "accent": { "value": "#01BAEF", "type": "color" },
-      "surface": { "value": "#FBFBFF", "type": "color" },
-      "text": { "value": "#040F16", "type": "color" }
+    "surface": {
+      "primary": { "value": "#0B0F19", "type": "color", "description": "High-contrast primary base to reduce shoulder-surfing visibility" },
+      "secondary": { "value": "#1A2234", "type": "color" },
+      "critical": { "value": "#D32F2F", "type": "color", "description": "Restricted audit trigger status indicator" }
     },
-    "feedback": {
-      "success": { "value": "#2B9348", "type": "color" },
-      "warning": { "value": "#E85D04", "type": "color" },
-      "error": { "value": "#D00000", "type": "color" }
+    "text": {
+      "primary": { "value": "#F8FAFC", "type": "color" },
+      "masked": { "value": "#64748B", "type": "color", "description": "Applied strictly to redacted data components per Company Document protocols" }
     }
   },
   "spacing": {
-    "base": { "value": "4px", "type": "dimension" },
-    "sm": { "value": "{spacing.base} * 2", "type": "dimension" },
-    "md": { "value": "{spacing.base} * 4", "type": "dimension" },
-    "lg": { "value": "{spacing.base} * 6", "type": "dimension" }
+    "tight": { "value": "4px", "type": "dimension" },
+    "standard": { "value": "8px", "type": "dimension" },
+    "containerPadding": { "value": "16px", "type": "dimension" }
   },
-  "typography": {
-    "fontFamily": {
-      "sans": { "value": "Inter, system-ui, sans-serif", "type": "fontFamily" }
-    },
-    "scale": {
-      "body": { "value": "14px", "type": "dimension" },
-      "heading": { "value": "18px", "type": "dimension" }
-    }
-  },
-  "component": {
-    "button": {
-      "padding-y": { "value": "{spacing.sm}" },
-      "padding-x": { "value": "{spacing.md}" },
-      "bg-primary": { "value": "{color.brand.primary}" },
-      "radius": { "value": "4px" }
-    },
-    "card": {
-      "bg": { "value": "{color.brand.surface}" },
-      "padding": { "value": "{spacing.md}" },
-      "border": { "value": "1px solid rgba(4,15,22,0.1)" }
-    }
+  "elevation": {
+    "modal": { "value": "0 8px 24px rgba(0, 0, 0, 0.45)", "type": "shadow", "description": "Strict z-index layering to prevent clickjacking overlay attacks" }
   }
 }
 ```
