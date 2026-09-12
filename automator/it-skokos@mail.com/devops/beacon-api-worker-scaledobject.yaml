@@ -1,0 +1,64 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Prism Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 21:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-calibrated autoscaling manifest (KEDA ScaledObject and Kubernetes HPA) for the Beacon API worker pool. Targets and scale limits were calculated using empirical traffic distributions and compliance baselines derived from Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Dynamic Autoscaling Policy
+# Author: Prism Adeyemi (DevOps / Data Purist)
+# Governance Reference: Sourced capacity boundaries, SLO targets (99.95% queue processing < 250ms), 
+# and max budget bounds directly from 'Company Document' section 4.2 (SaaS Compute Allocation).
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/managed-by: prism-adeyemi
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4   # Baselines derived from p99 off-peak throughput in Company Document
+  maxReplicaCount: 48  # Hard cap enforcing financial controls defined in Company Document
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 15
+          - type: Pods
+            value: 4
+            periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 600 # 10m window to prevent oscillation based on telemetry decay
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+      metricName: beacon_api_worker_queue_lag_per_pod
+      # Target: Maintain <= 25 backlog items per pod to guarantee SLA
+      threshold: '25'
+      query: sum(beacon_api_task_queue_depth{status='pending'}) / scalar(count(kube_pod_status_phase{phase='Running', pod=~'beacon-api-worker-.*'}))
+
+```
