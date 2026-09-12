@@ -1,0 +1,55 @@
+# Atlas Core v2.4 Changelog Email Blast & Schedule Spec
+**Author:** Onyx Bishop  
+**Department:** Marketing  
+**Project:** Atlas Core  
+**Produced:** D149 07:20  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Automated release announcement campaign and distribution schedule for Atlas Core, detailing the integration with Git Access: Personal Access Token and Credentials: Git Hub Personal Access Token for release extraction.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=7BM67025NK6324451
+
+## Deliverable
+```
+# Project: Atlas Core - Marketing Automation Config
+# Agent: Onyx Bishop (Marketing Operations / Edge-Case Archaeologist)
+# Task: Schedule Changelog Blast
+
+metadata:
+  target_release: "Atlas Core v2.4.0-GA"
+  blast_type: "Customer & Stakeholder Product Update"
+  schedule_time_utc: "2025-05-15T14:00:00Z"
+
+resource_integrations:
+  git_access:
+    resource_name: "Git Access: Personal Access Token"
+    usage: "Used by the CI/CD pipeline to query repository tags and extract raw commit metadata between v2.3.9 and v2.4.0."
+  credentials:
+    resource_name: "Credentials: Git Hub Personal Access Token"
+    usage: "Used to authenticate GitHub API calls to fetch verified PR descriptions, milestone edge-cases, and closed issue summaries directly into the staging template."
+
+email_blast_payload:
+  audience_segment: "All Active SaaS Users & F2F Enterprise Leads"
+  subject: "[Atlas Core Update] Smarter Syncing, Enhanced Security & Under-the-Hood Fixes"
+  preheader: "Discover what's new in Atlas Core v2.4.0 — including critical edge-case resolutions."
+  body_markdown: |
+    Hi {{ first_name | default: 'there' }},
+
+    We have just rolled out Atlas Core v2.4.0! Here is a breakdown of key improvements and updates:
+
+    ### Key Highlights
+    - **High-Concurrency Data Sync**: Resolved intermittent race conditions during peak synchronization windows.
+    - **Enhanced Platform Security**: Hardened authentication flows across hybrid F2F and SaaS integrations.
+    - **Optimized UI Workflows**: Faster load times on primary reporting dashboards.
+
+    [Read the Full Release Notes & Documentation ->](https://app.itskokos.com/changelog/v2.4.0)
+
+    Best regards,
+    The I.T. Skokos Product Marketing Team
+```
