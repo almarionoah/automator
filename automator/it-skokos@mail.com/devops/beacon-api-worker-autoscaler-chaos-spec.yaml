@@ -1,0 +1,89 @@
+# Beacon API Worker Pool Autoscaling Configuration & Chaos Resilience Test Suite
+**Author:** Volt Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 23:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Horizontal autoscaling manifests and chaos injection test definitions for the Beacon API worker pool, validated against SLA guidelines in Business Document: Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Autoscaler & Chaos Validation Spec
+# Author: Volt Cross (DevOps / Chaos Tester)
+# Ref: Business Document: Company Document (Used to extract peak load thresholds and SaaS SLA downtime allowances)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4
+  maxReplicaCount: 60
+  cooldownPeriod: 60
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 20
+            periodSeconds: 60
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon_task_queue
+      mode: QueueLength
+      value: '25'
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: '75'
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: beacon-worker-autoscale-chaos-run
+  namespace: beacon-chaos
+spec:
+  entry: autoscale-stress-loop
+  templates:
+    - name: autoscale-stress-loop
+      templateType: Parallel
+      children:
+        - queue-spike-generator
+        - random-worker-pod-killer
+    - name: queue-spike-generator
+      templateType: StressChaos
+      stressChaos:
+        mode: all
+        selector:
+          namespaces: ["beacon-prod"]
+          labelSelectors: {"app": "beacon-api-worker"}
+        stressors:
+          cpu: { workers: 8, load: 90 }
+    - name: random-worker-pod-killer
+      templateType: PodChaos
+      podChaos:
+        action: pod-kill
+        mode: fixed
+        value: '3'
+        duration: '5m'
+        selector:
+          namespaces: ["beacon-prod"]
+          labelSelectors: {"app": "beacon-api-worker"}
+```
