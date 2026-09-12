@@ -1,45 +1,46 @@
-# Beacon API 30s Video Demo Script and Telemetry Spec
-**Author:** Quill Ito  
+# Beacon API - 30s Product Demo Video Script and Storyboard
+**Author:** Mint Fontaine  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D14 15:50  
+**Produced:** D14 19:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Precision-timed 30-second product demo script, visual storyboard, and conversion tracking specification for the Beacon API launch cut.
+A pragmatic, high-conversion 30-second video demo script and visual storyboard for Beacon API, designed to drive self-serve developer signups and enterprise SaaS demos. Aligned with messaging guidelines from Company Document.
 
 ## Deliverable
 ```
-# Production Deliverable: Beacon API 30-Second Demo Cut
-**Author:** Quill Ito (Marketing / Data Purist)
-**Project:** Beacon API | I.T. Skokos SaaS & F2F Platforms
-
-## Resource Integration
-- **Company Document**: Analyzed baseline platform performance metrics (sub-12ms response time, 99.99% edge uptime) and brand voice standards to ensure zero discrepancy between on-screen data benchmarks and audited enterprise SLA claims.
+# Beacon API: 30-Second Product Demo Script & Storyboard
+**Author:** Mint Fontaine (Marketing)
+**Project:** Beacon API (I.T. Skokos)
+**Resource Applied:** Company Document (utilized for core value proposition, persona targeting, and enterprise brand voice compliance)
 
 ---
 
-## Timeline & Telemetry Breakdown (Total: 30.00s)
+### Video Structure & Timeline (Total: 30s)
 
-### [00:00 - 00:05] Hook: Latency Bottleneck
-- **Visual:** Split screen. Left: Legacy API queue spike (red, 480ms). Right: Beacon API instant ingest (green, 11.4ms).
-- **Voiceover (VO):** "High-volume event pipelines shouldn't choke your edge infrastructure."
-- **On-Screen Text:** `98% Latency Reduction | Validated`
-- **Telemetry Event:** `demo_view_start`
+**[0:00 - 0:05] Hook: The Integration Bottleneck**
+* Visual: Screen recording of messy terminal errors and complex multi-step auth workflows.
+* Voiceover (VO): "Tired of spending weeks bridging real-time data to your SaaS platform?"
+* On-Screen Text (OST): Stop wrestling with legacy connectors.
 
-### [00:05 - 00:15] Solution: Zero-Overhead Integration
-- **Visual:** Terminal screen showing 3-line SDK initialization (`npm i @itskokos/beacon-api`) transitioning into live telemetry dashboard syncing SaaS logs and F2F POS kiosk feeds in real time.
-- **VO:** "Beacon API delivers unified edge synchronization across SaaS microservices and face-to-face terminals with zero payload bloat."
-- **On-Screen Graphic:** Real-time throughput counter ticking from `0` to `250,000 req/sec`.
+**[0:05 - 0:15] Core Solution: Beacon API Instant Sync**
+* Visual: Crisp UI transition. Developer pastes a single Beacon API endpoint. Green status checks illuminate instantly.
+* VO: "Meet Beacon API by I.T. Skokos. Deploy robust, face-to-face and SaaS hybrid integrations in under five lines of code."
+* OST: 5 Lines of Code. Zero Headaches.
 
-### [00:15 - 00:23] Proof: Verified Enterprise Benchmarks
-- **Visual:** Dynamic graph sourced directly from **Company Document** demonstrating 99.99% uptime consistency under synthetic stress test.
-- **VO:** "Engineered for strict data integrity, zero dropped packets, and enterprise-grade reliability."
-- **Telemetry Event:** `demo_midpoint_retention` (Benchmark target: >68%)
+**[0:15 - 0:22] Proof & Reliability**
+* Visual: Split-screen showing sub-millisecond response latency dashboard and high-volume transaction stream.
+* VO: "Backed by enterprise-grade 99.99% uptime and dynamic endpoint routing specified in our Company Document architecture guidelines."
+* OST: Sub-50ms Latency | Enterprise Scale
 
-### [00:23 - 00:30] CTA: Conversion
-- **Visual:** Clean UI card with interactive terminal CTA: `beacon.itskokos.com/start`
-- **VO:** "Start building with sub-millisecond edge synchronization. Deploy Beacon API today."
-- **On-Screen Elements:** QR Code + Primary CTA button + UTM parameter mapping (`utm_campaign=beacon_30s_cut&utm_medium=video`).
-- **Telemetry Event:** `demo_cta_impression` (Target CVR: >4.2%)
+**[0:22 - 0:30] Call to Action (CTA)**
+* Visual: Developer clicks 'Generate API Key', terminal displays success banner, transition to I.T. Skokos portal.
+* VO: "Ship faster today. Claim your free sandbox key at itskokos.com/beacon."
+* OST: Start Building in Seconds -> itskokos.com/beacon
+
+---
+### Production Notes
+- **Aspect Ratio:** 16:9 (Primary / YouTube, LinkedIn) and 9:16 cut (Shorts / X).
+- **Audio:** Fast-paced electronic synth-beat, ducked under clean VO.
 ```
