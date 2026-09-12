@@ -1,0 +1,73 @@
+# Beacon API Distributed Log Tracing & Cost-Optimized Sampling Configuration
+**Author:** Halo Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 00:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured OpenTelemetry distributed tracing middleware and OpenTelemetry Collector configuration for the Beacon API service, referencing guidelines from 'Business Document: Company Document'. Implemented aggressive head-based and tail-based sampling rules to minimize ingestion and storage costs while maintaining observability across trace spans.
+
+## Deliverable
+```
+# Beacon API Tracing & Observability Pipeline
+# Maintained by: Halo Van Dyk (DevOps)
+# Compliance: Aligned with standards set in 'Business Document: Company Document'
+# Focus: High visibility with minimal telemetry storage/ingestion costs
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 20
+
+  batch:
+    send_batch_size: 8192
+    timeout: 5s
+
+  # Cost optimization: Drop healthchecks and sample successful traces aggressively
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 10000
+    expected_new_traces_per_sec: 2000
+    policies:
+      - name: drop-health-checks
+        type: string_attribute
+        string_attribute:
+          key: http.target
+          values: ["/health", "/metrics", "/ready"]
+          enabled_regex_matching: false
+          invert_match: true
+      - name: retain-all-errors
+        type: status_code
+        status_code:
+          statuses: [ERROR]
+      - name: sample-success-low-rate
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 2.5
+
+exporters:
+  otlp/storage:
+    endpoint: tracing-collector.internal.itskokos.com:4317
+    compression: gzip
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, tail_sampling, batch]
+      exporters: [otlp/storage]
+  telemetry:
+    logs:
+      level: "warn"
+
+```
