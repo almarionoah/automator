@@ -1,40 +1,33 @@
-# Atlas Core: Dashboard Density Simplification Spec & Chaos Stress Matrix
-**Author:** Rune Hale  
+# Atlas Core: Dashboard Density Simplification & Visual Balance Spec
+**Author:** Ash Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 11:00  
+**Produced:** D13 08:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification and layout chaos test suite for simplifying the Atlas Core dashboard, introducing progressive disclosure while stress-testing component boundaries under extreme data states.
+Design specification crafted with a focus on emotional ergonomics and cognitive breathing room to simplify dashboard density across Atlas Core, referencing the Company Document to balance SaaS and face-to-face service workflows.
 
 ## Deliverable
 ```
-# Design Spec & Chaos Validation: Atlas Core Dashboard Density Simplification
-**Author:** Rune Hale (Design / Chaos Engineering)
+# Design Specification: Atlas Core Dashboard Density Simplification
+**Author:** Ash Bishop, UX Romantic (Design Team)
 **Project:** Atlas Core
-**Scope:** SaaS Analytics & Face-to-Face Operator Views
+**Status:** Ready for Review
 
-## 1. Context & Resource Utilization
-To reduce cognitive load and visual clutter in Atlas Core, we restructured the core dashboard from a 24-widget flat hierarchy to a progressive 3-tier layout. We referenced the **Company Document** to align with corporate density baselines, standardized typography scales, and hybrid SaaS/Face-to-Face service accessibility thresholds, ensuring that reduced density does not compromise critical operational metrics.
+## 1. Philosophy & Aesthetic Intent
+A cluttered interface is an exhausted mind. In Atlas Core, our dashboard had become an overwhelming mosaic of telemetry. This specification reclaims negative space, treating whitespace not as void, but as breathing room that fosters trust, intention, and clarity for our users navigating both SaaS operations and Face-to-Face service touchpoints.
 
-## 2. Layout & Token Simplification
-- **Grid Architecture:** 8pt baseline grid with dynamic 12-column auto-flow.
-- **Primary Metrics Panel:** Collapsed 12 micro-cards into 4 consolidated Key Performance Indicators (KPIs) featuring contextual drill-down drawers.
-- **Spacing Tokens:**
-  - Card Padding: Adjusted from `space-compact (8px)` to `space-relaxed (20px)`.
-  - Metric Row Gap: `16px` standardized.
-  - Micro-telemetry: Shifted to hover/tap popovers on Face-to-Face kiosk viewports.
+## 2. Resource Utilization
+- **Business Document: Company Document**: Directly analyzed to determine core business priorities across our hybrid SaaS platform and Face-to-Face service models. It guided our metric tiering framework, ensuring regulatory compliance milestones and critical service appointment queues retain immediate visual priority while secondary administrative widgets are deferred via progressive disclosure.
 
-## 3. Chaos Test Suite & Boundary Validation
-To ensure layout durability under adverse and unpredictable data conditions, the following stress vectors were executed:
-
-1. **Payload Blowout Stress:**
-   - Injected 64-character localized strings into KPI value slots. Verified automated text truncation (`ellipsis` + tooltip trigger) without container blowout.
-2. **Null State Inundation:**
-   - Rendered dashboard with 100% missing data streams. Validated fallback ghost skeletons maintain container height, preventing layout shift.
-3. **Viewport Morphing & Rapid Jitter:**
-   - Cycled viewport between 360px (mobile F2F terminal) and 3840px (SaaS operations wall) at 60Hz. Zero overlapping z-index collisions detected.
-4. **High-Frequency Telemetry Injection:**
-   - Streamed metric updates at 100ms intervals. Verified transition dampening suppresses visual flashing while retaining readability.
+## 3. Structural & Density System Overhaul
+- **Grid & Margin Rhythm:** Expanded baseline grid from 4px compact micro-spacing to an 8pt spatial rhythm. Section margins increased from 16px to 32px.
+- **Card Hierarchy & De-cluttering:**
+  - Collapsed secondary stat tiles into an interactive carousel with subtle directional cues.
+  - Reduced persistent border outlines; replaced with soft elevation drop-shadows (0 4px 20px rgba(0,0,0,0.04)).
+- **Progressive Disclosure:**
+  - High-frequency face-to-face scheduling feeds now surface top 3 actionable items; full history is accessible via an elegant slide-over drawer.
+  - SaaS telemetry metrics default to high-level trendlines with contextual hover states.
+- **Typography Modulation:** Unified heading styles, increasing line-height to 1.5x for body text to reduce visual fatigue.
 ```
