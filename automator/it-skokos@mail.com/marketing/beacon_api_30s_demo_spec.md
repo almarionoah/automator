@@ -1,36 +1,44 @@
-# Beacon API 30-Second Product Demo Script and Telemetry Spec
-**Author:** Vex Petrov  
+# Beacon API: 30s Product Demo Storyboard & Cut Spec
+**Author:** Rune Ito  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D12 00:25  
+**Produced:** D12 02:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Quantitative video cut breakdown, narrative script, and telemetry tracking matrix for the 30-second Beacon API demo video, derived from Company Document parameters.
+UX-romantic 30-second cut specification and voiceover storyboard for Beacon API, harmonizing cloud telemetry with tangible human touchpoints as guided by the Company Document.
 
 ## Deliverable
 ```
-# BEACON API: 30-SECOND PRODUCT DEMO SPECIFICATION
-**Author:** Vex Petrov (Marketing / Data Purist)
-**Project:** Beacon API | I.T. Skokos Hybrid SaaS & F2F Platform
-**Resource Utilized:** `Company Document` (Business Document) — Evaluated ICP definitions, compliance bounds, and baseline value-metric hierarchies to ensure messaging directly maps to verified enterprise conversion levers.
+# Beacon API — 30s Product Demo Spec
+**Lead Creative:** Rune Ito (Marketing / UX Narrative)
+**Source Inspiration:** Brand voice and hybrid service frameworks from *Company Document*.
 
 ---
 
-### 1. PERFORMANCE & TELEMETRY TARGETS
-- Target Audience: Enterprise Logistics & Hybrid Retail Ops (ICP-A)
-- View-Through Rate (VTR) Target: ≥ 48.5%
-- Demo-to-Trial Conversion Target: 4.2% (Baseline: 2.1%)
-- Core Attribution Event: `demo_vtr_30s_complete` -> `cta_api_docs_click`
+### Narrative Concept: *"Where Signal Meets Touch"*
+Aligned with our foundational *Company Document*, this 30-second vignette demonstrates how Beacon API bridges abstract data streams with intimate, face-to-face client moments.
 
 ---
 
-### 2. TIMELINE & PRODUCTION CUT BREAKDOWN
+### Storyboard & Audio Breakdown
 
-| Time | Visual Track | Audio / Voiceover Track | Telemetry Event Hook |
-| :--- | :--- | :--- | :--- |
-| **00:00 - 00:05** | Split screen: Chaos of unsynced face-to-face service logs vs. real-time clean Beacon API ingest pipeline. | *"Disjointed SaaS records and in-person operations? Beacon API syncs both in under 12 milliseconds."* | `hook_engagement_5s` |
-| **00:06 - 00:14** | Fast capture of UI: Terminal showing `POST /v1/beacon/sync` with live payload returning HTTP 200, instantly populating hybrid dashboard. | *"Bridge field interactions to your cloud backend with deterministic zero-loss streaming."* | `core_feature_saas_view` |
-| **00:15 - 00:22** | Animated architecture diagram derived from `Company Document` specifications: Field Device → Beacon Gateway → Enterprise Core. | *"Built on I.T. Skokos architecture: end-to-end telemetry, enterprise RBAC, and instant offline fallback."* | `arch_validation_20s` |
-| **00:23 - 00:30** | End-card with high-contrast URL, dynamic API key sandbox terminal prompt, and clear CTA. | *"Deploy your first live endpoint today. Visit skokos.it/beacon to start sandbox testing."* | `cta_render_30s` |
+**[00:00 - 00:07] Act I: The Latent Signal**
+* **Visual:** Macro shot of a sleek developer console. A single cursor breathes. As `beacon.connect()` resolves, soft ambient light sweeps across the UI, rendering complex metrics into calm, humanized data streams.
+* **VO:** "Data isn't just numbers. It's the pulse of your next conversation."
+* **Sound:** Deep, warm ambient hum resolving into a crisp haptic chime.
+
+**[00:08 - 00:16] Act II: Frictionless Flow (Beacon API)**
+* **Visual:** Dynamic split screen. Left: Zero-latency JSON payloads firing seamlessly via Beacon API. Right: An advisor on the I.T. Skokos SaaS platform receiving instantaneous client context with a velvety smooth UI transition.
+* **VO:** "Beacon API anticipates needs in microseconds—delivering clarity before you even ask."
+* **Sound:** Rhythmic, modern electronic pulse.
+
+**[00:17 - 00:24] Act III: The Human Resonance**
+* **Visual:** Smooth match-cut from the SaaS tablet interface to an in-person client greeting in a warm, sunlit office—highlighting I.T. Skokos's face-to-face commitment.
+* **VO:** "Cloud precision that elevates every real-world encounter."
+* **Sound:** Soft acoustic resonance blending into the beat.
+
+**[00:25 - 00:30] Outro: The Invitation**
+* **Visual:** Minimalist closing slate with glowing typography: *Beacon API: Powering Intelligent Touch.* I.T. Skokos mark and CTA: *Experience the Connection*.
+* **VO:** "Illuminate your platform. Try Beacon API today."
 ```
