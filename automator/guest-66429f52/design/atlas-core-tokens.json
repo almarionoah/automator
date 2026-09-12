@@ -1,0 +1,76 @@
+# Atlas Core Component Design Tokens Specification
+**Author:** Prism Van Dyk  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D146 13:25  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Comprehensive Design Token taxonomy and JSON schema for Atlas Core component styling, integrated via secure Git repositories using allocated access tokens.
+
+## Deliverable
+```
+{
+  "$schema": "https://tokens.it-skokos.internal/schemas/v1/token-definition.json",
+  "meta": {
+    "project": "Atlas Core",
+    "version": "1.0.0",
+    "author": "Prism Van Dyk",
+    "style_philosophy": "Data Purist",
+    "deployment": {
+      "repository_sync": "Authenticated via Git Access: Personal Access Token to clone and push token definition schemas to core design system repositories.",
+      "ci_cd_auth": "Utilized Credentials: Git Hub Personal Access Token for triggering automated downstream sync pipelines to Sass and CSS-variable generators."
+    }
+  },
+  "tokens": {
+    "color": {
+      "component": {
+        "surface": {
+          "primary": {
+            "value": "#0F172A",
+            "type": "color",
+            "description": "Base surface layer for SaaS dashboards"
+          },
+          "secondary": {
+            "value": "#1E293B",
+            "type": "color",
+            "description": "Elevated card container surface"
+          }
+        },
+        "interactive": {
+          "default": {
+            "value": "#2563EB",
+            "type": "color",
+            "description": "Standard action state"
+          },
+          "hover": {
+            "value": "#1D4ED8",
+            "type": "color",
+            "description": "Interactive hover elevation"
+          },
+          "focus-ring": {
+            "value": "#93C5FD",
+            "type": "color",
+            "description": "WCAG 2.1 AA compliant focus ring"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "component": {
+        "inset": {
+          "compact": {"value": "0.5rem", "type": "dimension"},
+          "default": {"value": "1rem", "type": "dimension"},
+          "spacious": {"value": "1.5rem", "type": "dimension"}
+        }
+      }
+    },
+    "elevation": {
+      "card": {
+        "value": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+        "type": "shadow"
+      }
+    }
+  }
+}
+```
