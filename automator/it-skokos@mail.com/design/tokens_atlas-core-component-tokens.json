@@ -1,54 +1,61 @@
-# Atlas Core - Lean Component Tokens Specification
-**Author:** Nova Petrov  
+# Atlas Core Design System - Component Tokens Specification
+**Author:** Fig Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 22:40  
+**Produced:** D12 18:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized component design token definitions and runtime mapping for Atlas Core, cutting redundant token tiers using guidelines from Business Document: Company Document.
+Component tokens specification and design tokens architecture for Atlas Core, aligning UI primitives across SaaS and Face-to-Face touchpoints based on Company Document.
 
 ## Deliverable
 ```
 {
+  "$schema": "https://design-tokens.github.io/community-group/format/",
   "meta": {
     "project": "Atlas Core",
+    "author": "Fig Bishop (Design)",
     "version": "1.0.0",
-    "author": "Nova Petrov",
-    "compliance": "Business Document: Company Document",
-    "strategy": "Cost Cutter - Flat token hierarchy to reduce build complexity, runtime memory, and maintenance overhead across SaaS and Face to Face terminal surfaces."
+    "referenceDoc": "Company Document (Business Document)",
+    "description": "Standardized component token set for I.T. Skokos SaaS and Face-to-Face services platform, derived from architectural requirements detailed in Company Document."
   },
-  "resource_alignment": {
-    "company_document_usage": "Referenced 'Business Document: Company Document' to establish exact brand color parameters, accessible contrast ratios (WCAG AAA), and standardized touch-target minimums (48px) for hybrid SaaS and Face to Face kiosk viewports, eliminating the need for expensive bespoke UI forks."
-  },
-  "tokens": {
-    "color": {
-      "brand": {
-        "primary": { "value": "#0F4C81", "type": "color", "description": "Core SaaS blue" },
-        "primary-hover": { "value": "#0A3459", "type": "color" },
-        "surface": { "value": "#FFFFFF", "type": "color" },
-        "surface-subtle": { "value": "#F4F6F8", "type": "color" },
-        "text-main": { "value": "#1A202C", "type": "color" },
-        "text-muted": { "value": "#5A6A80", "type": "color" }
-      },
-      "state": {
-        "success": { "value": "#2E7D32", "type": "color" },
-        "warning": { "value": "#ED6C02", "type": "color" },
-        "error": { "value": "#D32F2F", "type": "color" }
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "value": "{color.brand.primary.600}", "type": "color" },
+          "hover": { "value": "{color.brand.primary.700}", "type": "color" },
+          "active": { "value": "{color.brand.primary.800}", "type": "color" },
+          "disabled": { "value": "{color.neutral.200}", "type": "color" }
+        },
+        "text": {
+          "default": { "value": "{color.neutral.0}", "type": "color" },
+          "disabled": { "value": "{color.neutral.400}", "type": "color" }
+        },
+        "padding": {
+          "x": { "value": "{spacing.md}", "type": "dimension" },
+          "y": { "value": "{spacing.sm}", "type": "dimension" }
+        },
+        "radius": { "value": "{radius.default}", "type": "dimension" }
       }
     },
-    "spacing": {
-      "unit-xs": { "value": "4px", "type": "spacing" },
-      "unit-sm": { "value": "8px", "type": "spacing" },
-      "unit-md": { "value": "16px", "type": "spacing" },
-      "unit-lg": { "value": "24px", "type": "spacing" },
-      "unit-touch": { "value": "48px", "type": "spacing", "description": "Minimum touch target for Face to Face terminals" }
+    "card": {
+      "surface": {
+        "background": { "value": "{color.neutral.0}", "type": "color" },
+        "border": { "value": "{color.neutral.200}", "type": "color" },
+        "radius": { "value": "{radius.lg}", "type": "dimension" },
+        "shadow": { "value": "{elevation.card.subtle}", "type": "shadow" }
+      },
+      "padding": { "value": "{spacing.lg}", "type": "dimension" }
     },
-    "typography": {
-      "font-family-base": { "value": "Inter, system-ui, sans-serif", "type": "fontFamily" },
-      "size-body": { "value": "14px", "type": "fontSize" },
-      "size-h3": { "value": "18px", "type": "fontSize" },
-      "size-h2": { "value": "24px", "type": "fontSize" }
+    "input": {
+      "border": {
+        "default": { "value": "{color.neutral.300}", "type": "color" },
+        "focus": { "value": "{color.brand.primary.500}", "type": "color" },
+        "error": { "value": "{color.feedback.error.500}", "type": "color" }
+      },
+      "text": { "value": "{color.neutral.900}", "type": "color" },
+      "placeholder": { "value": "{color.neutral.400}", "type": "color" }
     }
   }
 }
