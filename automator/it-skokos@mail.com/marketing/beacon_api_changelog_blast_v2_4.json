@@ -1,0 +1,53 @@
+# Beacon API v2.4 Changelog Blast Campaign Configuration
+**Author:** Vex Ito  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D3 11:05  
+## Summary
+
+Data-driven changelog distribution spec, audience segmentation schema, UTM tracking taxonomy, and A/B tested copy schedule for the Beacon API update.
+
+## Deliverable
+```
+{
+  "campaign_metadata": {
+    "campaign_id": "MKT-BEACON-2023-Q4-CL02",
+    "project": "Beacon API",
+    "release_version": "v2.4.0",
+    "send_timestamp_utc": "2023-11-14T15:00:00Z",
+    "esp_engine": "SendGrid/Customer.io Engine",
+    "assumptions": [
+      "Primary audience: Active developers with API call activity in the last 60 days.",
+      "Default timezone delivery optimized for 10:00 AM recipient local time window.",
+      "Baseline benchmarks: Target Open Rate >= 38.5%, Target Click-to-Open (CTOR) >= 18.2%.",
+      "UTM structure standardized across all outbound documentation and console CTAs."
+    ]
+  },
+  "audience_cohort": {
+    "filter": "account_status = 'active' AND last_api_call >= NOW() - INTERVAL 60 DAY",
+    "total_estimated_reach": 14280,
+    "split": {
+      "variant_a_control": "50%",
+      "variant_b_technical": "50%"
+    }
+  },
+  "ab_test_matrix": {
+    "metric_primary": "CTR_docs_click",
+    "variant_a": {
+      "subject": "Beacon API Update: 40% Lower Latency & Webhook Batching",
+      "preheader": "Explore the technical changelog for Beacon API v2.4."
+    },
+    "variant_b": {
+      "subject": "[Changelog] Beacon API v2.4: Standardized Headers + Batching",
+      "preheader": "New endpoints and performance optimizations are live."
+    }
+  },
+  "body_content_markdown": "### Beacon API v2.4 Release Notes\n\nWe deployed major throughput improvements and standardized rate-limit telemetry across all SaaS endpoints:\n\n- **Batch Webhooks:** Aggregate up to 500 events per delivery payload (`POST /v1/events/batch`).\n- **Telemetry Standardization:** Added `X-Beacon-RateLimit-Reset` and `X-Beacon-Latency-Ms` headers.\n- **Latency Reduction:** Mean endpoint response times reduced by 40% via edge routing.\n\n[Review Full API Documentation ->](https://docs.itskokos.com/beacon/api/v2.4?utm_source=changelog_email&utm_medium=email&utm_campaign=beacon_v2_4_launch&utm_content=cta_docs)",
+  "telemetry_tracking": {
+    "utm_source": "changelog_email",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_v2_4_launch",
+    "conversion_event": "dashboard_docs_visited"
+  }
+}
+```
