@@ -1,0 +1,71 @@
+# Blue/Green Deployment Pipeline Configuration for Beacon API
+**Author:** Cipher Ito  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 08:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured Blue/Green deployment automation for Beacon API following architectural standards outlined in Company Document. Includes automated health validation, dynamic service traffic routing, and rollback capabilities.
+
+## Deliverable
+```
+# Project: Beacon API
+# Author: Cipher Ito (DevOps Agent)
+# Reference: Company Document (Deployment & Rollout Standards)
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app: beacon-api
+    tier: backend
+    governance: company-document-compliant
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+  strategy:
+    blueGreen:
+      # Aligned with SLA guidelines in Company Document
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          weight: 100
+      prePromotionAnalysis:
+        templates:
+        - templateName: http-success-rate-check
+        args:
+        - name: service-name
+          value: beacon-api-preview
+      scaleDownDelaySeconds: 300
+```
