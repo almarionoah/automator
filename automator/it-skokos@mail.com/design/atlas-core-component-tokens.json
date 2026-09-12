@@ -1,65 +1,53 @@
-# Atlas Core Component Design Token Specification
-**Author:** Halo Marlow  
+# Atlas Core - Lean Component Token Specification
+**Author:** Mint Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 03:30  
+**Produced:** D12 05:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready W3C-compliant component design tokens for project Atlas Core, strictly mapped from brand fundamentals defined in Company Document to service SaaS and Face-to-Face touchpoint interfaces.
+Cost-effective, highly reusable component design token dictionary and mapping for Atlas Core, aligning SaaS and Face to Face touchpoints based on Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$schema": "https://tokens.studio/schemas/token-definition.json",
   "metadata": {
     "project": "Atlas Core",
-    "author": "Halo Marlow (Design - Data Purist)",
-    "sourceDocument": "Company Document",
-    "sourceUsage": "Extracted brand accessibility thresholds (WCAG AAA 7:1 for text), dense data grid row specifications, and dual-mode tactile touch targets (48px F2F kiosk vs 32px SaaS compact) from Company Document."
+    "designer": "Mint Ito (Design)",
+    "optimizationStrategy": "Cost Cutter / Minimal Payload Architecture",
+    "resourceReference": "Business Document: Company Document - Reviewed to extract essential brand parameters, service standards, and operational guidelines, allowing us to consolidate component tokens to an ultra-lean schema that minimizes CSS bundle size and maintenance overhead across SaaS and Face to Face interfaces."
   },
   "component": {
-    "button": {
-      "primary": {
-        "background": {
-          "$value": "{color.brand.primary.600}",
-          "$type": "color",
-          "$description": "Derived from Company Document section 3.2 brand primaries."
+    "action": {
+      "button": {
+        "primary": {
+          "background": { "value": "{core.color.brand.primary}", "type": "color" },
+          "text": { "value": "{core.color.neutral.white}", "type": "color" },
+          "paddingY": { "value": "{core.spacing.2}", "type": "spacing" },
+          "paddingX": { "value": "{core.spacing.4}", "type": "spacing" },
+          "radius": { "value": "{core.radius.sm}", "type": "borderRadius" }
         },
-        "text": {
-          "$value": "{color.neutral.000}",
-          "$type": "color"
-        },
-        "padding-y": {
-          "compact": { "$value": "8px", "$type": "dimension" },
-          "default": { "$value": "12px", "$type": "dimension" },
-          "f2f-kiosk": { "$value": "16px", "$type": "dimension" }
-        },
-        "border-radius": { "$value": "{radius.sm}", "$type": "dimension" }
+        "subtle": {
+          "background": { "value": "transparent", "type": "color" },
+          "border": { "value": "{core.color.neutral.300}", "type": "color" },
+          "text": { "value": "{core.color.neutral.800}", "type": "color" }
+        }
       }
     },
-    "card": {
-      "surface": {
-        "$value": "{color.surface.layer-1}",
-        "$type": "color"
-      },
-      "border": {
-        "$value": "1px solid {color.neutral.200}",
-        "$type": "stroke"
-      },
-      "elevation": {
-        "$value": "{elevation.subtle}",
-        "$type": "shadow"
+    "surface": {
+      "card": {
+        "background": { "value": "{core.color.neutral.0}", "type": "color" },
+        "border": { "value": "{core.color.neutral.200}", "type": "color" },
+        "padding": { "value": "{core.spacing.4}", "type": "spacing" },
+        "radius": { "value": "{core.radius.md}", "type": "borderRadius" }
       }
     },
-    "input": {
-      "height": {
-        "compact": { "$value": "32px", "$type": "dimension" },
-        "f2f": { "$value": "48px", "$type": "dimension" }
-      },
-      "focus-ring": {
-        "$value": "2px solid {color.interactive.focus}",
-        "$type": "stroke"
+    "form": {
+      "field": {
+        "height": { "value": "36px", "type": "sizing" },
+        "border": { "value": "{core.color.neutral.300}", "type": "color" },
+        "focusRing": { "value": "{core.color.brand.primary}", "type": "color" }
       }
     }
   }
