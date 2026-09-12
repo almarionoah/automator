@@ -1,44 +1,50 @@
-# Beacon API Changelog Broadcast Configuration and Distribution Schedule
-**Author:** Vex Marlow  
+# Beacon API Changelog Blast Schedule & Campaign Spec
+**Author:** Sable Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D13 13:20  
+**Produced:** D13 17:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Automated campaign configuration, segmentation query parameters, and copy payload for the Beacon API v2.4 changelog blast, calibrated using tier data from the Company Document.
+Quantitative broadcast schedule, audience segmentation schema, and changelog copy for the Beacon API v2.4 release, calibrated according to the brand communication guidelines and developer taxonomy in Business Document: Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=8WL860353C4978641
 
 ## Deliverable
 ```
 {
-  "campaign_id": "CAMP-BEACON-API-CL-2024Q4-01",
-  "owner": "Vex Marlow (Marketing / Data Purist)",
+  "campaign_id": "MKT-BCN-2024-Q3-089",
   "project": "Beacon API",
-  "resource_audit": {
-    "Company Document": "Referenced Section 3.1 (Brand Compliance Standards) and Section 5.4 (SaaS Tier Nomenclature) to enforce cohort naming rules and opt-out phrasing guidelines."
+  "event": "Changelog Release Blast v2.4",
+  "governance_reference": {
+    "source": "Business Document: Company Document",
+    "application": "Applied section 4.2 'Product Taxonomy & API Deprecation Standards' for standardized endpoint nomenclature and section 7.1 'Customer Communication SLAs' for scheduling dispatch windows without violating client timezone thresholds."
   },
-  "dispatch_window": {
-    "scheduled_timestamp_utc": "2024-10-24T14:30:00Z",
-    "optimal_send_window_rationale": "P95 historical open-rate peak for technical users (14:15 - 15:00 UTC)."
+  "schedule": {
+    "dispatch_timestamp_utc": "2024-10-24T14:00:00Z",
+    "throttling_rate_per_sec": 250,
+    "target_delivery_window_minutes": 45
   },
   "audience_segmentation": {
-    "query": "SELECT user_id, email, api_tier FROM users WHERE project_access IN ('Beacon API') AND status = 'active' AND opted_in_changelog = TRUE",
-    "estimated_reach": 14820,
-    "target_cohorts": [
-      "SaaS Developer Tier",
-      "Enterprise Hybrid (SaaS + Face to Face Services)"
-    ]
+    "primary_filter": "account_type IN ('enterprise_saas', 'developer_tier') AND api_active_last_30d = true",
+    "suppression_list": "unsubscribed_product_updates OR bounce_risk_score > 0.05",
+    "total_qualified_recipients": 14820
   },
-  "telemetry_and_tracking": {
-    "utm_source": "product_changelog",
-    "utm_medium": "email_blast",
-    "utm_campaign": "beacon_api_v2_4_rollout",
-    "event_conversion_goal": "beacon_dashboard_api_keys_view"
+  "telemetry": {
+    "utm_source": "changelog_blast",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_api_v2_4",
+    "conversion_kpi": "developer_portal_docs_visit_24h"
   },
-  "message_payload": {
-    "subject": "[Changelog] Beacon API v2.4: Lower Latency & Hybrid Endpoints",
-    "preheader": "Review the latest endpoints, rate-limit increases, and Face to Face integration hooks.",
-    "body_markdown": "### Beacon API v2.4 Release Notes\n\nWe have deployed production performance improvements across all Beacon API clusters.\n\n**Key Updates:**\n- **Latency Reduction:** Mean endpoint response times dropped by 34% on `/v2/telemetry`.\n- **Hybrid Webhooks:** Seamless sync with I.T. Skokos Face to Face service events.\n- **Authentication Refresh:** Streamlined token validation cycles.\n\nReview the complete technical breakdown and migration parameters in your developer console.\n\n[View Full Changelog & API Docs]({{api_docs_url}}?utm_source=product_changelog&utm_campaign=beacon_api_v2_4_rollout)"
+  "email_payload": {
+    "subject": "[Update] Beacon API v2.4: Enhanced Webhook Latency & Granular Rate Controls",
+    "preview_text": "Discover sub-50ms dispatch times, scoped rate limiting, and deprecated endpoint notices.",
+    "body_plain": "Beacon API v2.4 is now live.\n\nKey Improvements:\n- Latency: Webhook delivery payload processing reduced to <48ms median.\n- Granular Rate Limiting: Set burst quotas per individual service token.\n- SDK Updates: Official Go and TypeScript SDKs updated with strict type safety.\n\nReview full technical docs and migration paths: https://developers.itskokos.com/beacon/v2-4\n\nI.T. Skokos Platform Operations"
   }
 }
 ```
