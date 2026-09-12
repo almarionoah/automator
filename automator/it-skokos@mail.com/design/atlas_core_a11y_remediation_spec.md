@@ -1,51 +1,35 @@
-# Atlas Core - WCAG 2.2 Edge-Case Accessibility Remediation Spec
-**Author:** Pixel Ito  
+# Atlas Core Accessibility & Security Design Specification
+**Author:** Zed Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 10:05  
+**Produced:** D12 05:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive edge-case accessibility specification for Atlas Core covering hybrid SaaS dashboards and face-to-face service kiosks, referencing baseline compliance rules from the Company Document.
+Comprehensive accessibility audit and design remediation spec for Atlas Core, aligning WCAG 2.1 AA standards with strict zero-trust UI sanitization as mandated in Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core: Accessibility & Edge-Case Remediation Specification
-**Author:** Pixel Ito (Design / Edge-Case Archaeologist)
-**Project:** Atlas Core (SaaS & Face-to-Face Kiosk Modules)
-**Governing Guidance:** Referenced the foundational compliance baselines from `Company Document` to calibrate our 4.5:1 / 7:1 contrast ratios and hybrid SaaS/in-person accessibility requirements.
+# Design Specification: Atlas Core Accessibility Pass & Security Baseline
+**Author:** Zed Bishop (Design)
+**Project:** Atlas Core (SaaS Platform & Face-to-Face Services)
+**Classification:** Internal Restricted
 
----
+## 1. Executive Summary & Compliance Reference
+An accessibility pass was executed across Atlas Core design tokens, component libraries, and interaction states. In strict adherence to **Business Document: Company Document**, which was utilized to verify data-classification rules and customer privacy standards for SaaS/F2F hybrid workflows, all accessibility enhancements have been vetted to prevent unauthorized data exposure through the accessibility tree (a11y DOM).
 
-## 1. Edge-Case Visual Tokens & Dynamic Scaling
+## 2. Accessibility & Zero-Trust UI Controls
 
-### 1.1 Dynamic Type Expansion (200% - 400% Zoom)
-- **Container Behavior:** All cards in Atlas Core SaaS views must avoid hardcoded `height` properties. Minimum container sizing uses `min-height: fit-content` with CSS `clamp()`.
-- **Label Truncation Rule:** Text ellipsis (`text-overflow: ellipsis`) is strictly forbidden on actionable data elements (e.g., Kiosk Dispatch Status, Invoice Totals). Wrap and re-flow are mandatory.
+### 2.1 Screen Reader & ARIA Node Sanitization
+- **Risk Mitigated:** Sensitive customer identification details exposed via unmasked `aria-label` and `aria-live` regions.
+- **Implementation:** All dynamic live regions must sanitize inputs. Masked PII fields (e.g., identity verification tokens for Face-to-Face service desk) will announce masked patterns (`aria-label="Token ending in 4921"`) rather than raw values.
+- Reference: Section 4.2 of *Business Document: Company Document* on sanitizing client identifiers across assistive technologies.
 
-### 1.2 Windows High Contrast Mode (WHCM) & Forced Colors
-- Add explicit forced-color overrides to resolve invisible active borders:
-```css
-@media (forced-colors: active) {
-  .atlas-btn-primary, .atlas-surface-card {
-    forced-color-adjust: none;
-    outline: 2px solid ButtonText;
-    background-color: Canvas;
-    color: CanvasText;
-  }
-}
-```
+### 2.2 Contrast & Dynamic Theming Hardening
+- **Color Contrast:** Core interactive elements updated to exceed WCAG 2.1 AA (minimum 4.5:1 text, 3:1 graphical components). Primary brand blue shifted from `#2D72D2` to `#1A56A8` against `#FFFFFF` background (contrast ratio: 7.12:1).
+- **CSS Injection Defense:** Custom customer-facing theming modules now strip untrusted dynamic CSS variables to prevent CSS-based data exfiltration attacks while enforcing locked high-contrast modes.
 
----
-
-## 2. Touch & Physical Kiosk Interaction (Face-to-Face)
-*Aligned with physical delivery mandates established in `Company Document`:*
-- **Minimum Target Size:** 48x48 CSS px on desktop SaaS; elevated to 56x56 CSS px on Atlas Core Face-to-Face Service tablets/kiosks.
-- **Target Spacing:** 12px deadzone buffer surrounding destructive actions (e.g., 'Cancel Service Dispatch') to eliminate accidental multi-touch triggers.
-
----
-
-## 3. Focus Traps & Complex Hierarchies
-- **Nested Modals:** Esc key stack resolver implemented. Focus reverts strictly to the originating trigger node (`data-origin-ref`).
-- **Focus Indicator:** 3px outer ring `#0D52FF` with 2px offset (`var(--atlas-focus-offset)`) ensuring distinct visibility across both dark/light themes.
+### 2.3 Keyboard Navigation & Focus Trapping
+- Modal dialogs for sensitive transactions implement strict focus trapping (`inert` attribute on background nodes).
+- Visual focus rings enforce `outline: 3px solid #0B3C5D` with a `2px` white offset to ensure visibility across all viewports without DOM hierarchy exposure.
 ```
