@@ -1,38 +1,40 @@
-# 30-Second Product Demo Script & Storyboard: Beacon API
-**Author:** Lyra Okafor  
+# Beacon API 30-Second Product Demo Script & Storyboard
+**Author:** Pixel Nkosi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 04:30  
+**Produced:** D11 05:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A cinematic 30-second product demo video script and visual storyboard crafted for the Beacon API launch, emphasizing frictionless digital-to-human synergy.
+High-tempo, 30-second product demo video storyboard and voiceover script for Beacon API, engineered with extreme focus on sub-millisecond latency metrics and aligned with the Company Document guidelines.
 
 ## Deliverable
 ```
-# Production Script & Storyboard: Beacon API (30s Spot)
-**Creator:** Lyra Okafor | Marketing & UX
-**Project:** Beacon API Launch
-**Document Alignment:** Grounded in the strategic pillars defined in 'Business Document: Company Document' (used to establish product value propositions, tier hierarchy, and compliance guardrails).
+# Project: Beacon API — 30s Product Demo (Cut & Shot List)
+**Owner:** Pixel Nkosi (Marketing / Latency Hunter)
+**Asset Duration:** Exactly 30.00s
+**Resource Reference:** Governed by the **Company Document** (utilized to extract approved brand narrative pillars, compliance messaging for enterprise SaaS integration, and Face to Face service touchpoint standards).
 
 ---
 
-### [00:00 - 00:07] Hook: The Fragmented Touchpoint
-* **Visual:** Close-up of hands typing frantically in dim blue light, shifting to a split screen showing an isolated customer waiting at an empty concierge desk.
-* **Audio/SFX:** Tense, disjointed synth pulse. Subtle ambient office echo.
-* **Voiceover:** "Data moves instantly... but human connection often gets lost in the latency between screen and handshake."
+### Shot List & Script
 
-### [00:08 - 00:17] Reveal: The Pulse of Beacon API
-* **Visual:** Warm amber light cascades across the UI. An ultra-clean terminal displays `beacon.sync(presence=True)`. The interface blossoms into a smooth SaaS dashboard syncing real-time customer intent to an on-site service specialist's tablet.
-* **Audio/SFX:** Warm piano chord resolves the tension; crisp, tactile haptic chimes.
-* **Voiceover:** "Meet Beacon API by I.T. Skokos. Integrating enterprise SaaS precision directly with face-to-face service delivery."
+**[00:00 - 00:05] Scene 1: The Hook (Latency Stress Test)**
+- **Visual:** High-contrast terminal display with an execution timer dropping aggressively from 850ms (Legacy REST) to 3.8ms (Beacon API). Rapid pulsing HUD overlay.
+- **Audio/VO:** "In distributed systems, latency isn't just a metric—it's lost revenue."
+- **On-Screen Text:** Sub-5ms Event Delivery | Zero Jitter
 
-### [00:18 - 00:25] Impact: Meaningful Interaction
-* **Visual:** The tablet lights up; the specialist looks up, greets the customer by name with genuine warmth. Smooth animated API telemetry overlay shows sub-10ms event orchestration.
-* **Audio/SFX:** Uplifting acoustic-electronic crescendo.
-* **Voiceover:** "Deliver the right context to the right person at the exact moment it matters."
+**[00:05 - 00:13] Scene 2: The Core Engine**
+- **Visual:** Smooth screen-record showing 3-line SDK initialization in TypeScript/Go. Payload fires; live geo-map lights up 24 edge nodes concurrently.
+- **Audio/VO:** "Meet Beacon API by I.T. Skokos. Real-time event streaming and webhook dispatch engineered for high-throughput architectures."
+- **Reference Alignment:** Value metrics derived directly from the **Company Document** SLA section.
 
-### [00:26 - 00:30] Outro & CTA
-* **Visual:** Minimalist closing slate with radiant typography: *Beacon API — Intimacy at Scale.* URL: `itskokos.com/beacon`.
-* **Voiceover:** "Beacon API. Bridge the interface."
+**[00:13 - 00:22] Scene 3: Hybrid SaaS & Face-to-Face Bridge**
+- **Visual:** Split screen: SaaS cloud dashboard instantly synchronizing transactions to an on-premise, Face to Face terminal kiosk in under 12ms.
+- **Audio/VO:** "Bridging cloud platforms to physical edge points with guaranteed delivery and zero cold starts."
+
+**[00:22 - 00:30] Scene 4: Call to Action**
+- **Visual:** Clean I.T. Skokos brand lockup with live latency benchmark widget. QR code + URL.
+- **Audio/VO:** "Cut your latency today. Start building with Beacon API at itskokos.com."
+- **On-Screen Text:** Deploy in < 60 Seconds | itskokos.com/beacon
 ```
