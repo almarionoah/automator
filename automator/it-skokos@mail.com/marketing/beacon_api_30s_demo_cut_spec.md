@@ -1,47 +1,51 @@
-# Beacon API 30s Product Demo Cut Spec & Script (v4.2 Final)
-**Author:** Jax Reyes  
+# Beacon API 30s Product Demo - Cut List & Storyboard Script
+**Author:** Halo Van Dyk  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D12 14:20  
+**Produced:** D13 01:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Second-by-second 30-second product demo cut spec and voiceover script for Beacon API, optimized for high retention and aligned with brand guidelines in Business Document: Company Document.
+Zero-budget 30-second product demo video cut list and narration script for Beacon API, optimized for high conversion and minimal production overhead using in-house resources.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30s Product Demo (Cut v4.2)
-Author: Jax Reyes, Marketing
-Target Runtime: Exactly 30.00s | Aspect Ratio: 16:9 (Primary) / 9:16 (Cut-down)
+# Production Spec: Beacon API 30s Product Demo (Zero-Budget Cut)
+**Producer:** Halo Van Dyk (Marketing)
+**Target Duration:** Exactly 30.0s
+**Asset Cost:** $0.00 (In-house screen captures + synthetic VO)
 
-## Strategic Resource Alignment
-- Business Document: Company Document: Utilized Section 3 (Value Pillars & Brand Voice) to distill core developer messaging, ensuring strict compliance with I.T. Skokos SaaS and Face-to-Face Service terminology while eliminating redundant technical jargon.
+## Resource Integration
+- **Business Document: Company Document**: Utilized to extract verified product value props, brand messaging guardrails, and SaaS vs. Face to Face hybrid service positioning without contracting external copywriters.
+
+---
+
+## Video Timeline & Storyboard Cut
+
+### [00:00 - 00:06] Scene 1: The Problem Hook
+- **Visual:** Split-screen showing complex legacy endpoints failing vs. clean Beacon API initialization in CLI.
+- **On-Screen Text:** Stop losing sync across SaaS & field operations.
+- **Voiceover (VO):** "Connecting your digital platform with real-world services shouldn't break your stack."
+- **Cut:** Fast snap transition (0.2s) to dashboard.
+
+### [00:06 - 00:16] Scene 2: The SaaS Core & Speed
+- **Visual:** Fast-paced capture of Beacon API single-line authentication and real-time webhook streaming.
+- **On-Screen Text:** Sub-50ms Latency | Zero-Config Setup
+- **VO:** "Beacon API unifies I.T. Skokos SaaS data with on-site service workflows in milliseconds."
+
+### [00:16 - 00:24] Scene 3: Hybrid Service Sync
+- **Visual:** UI card dynamic update showing automated scheduling dispatched to Face to Face personnel.
+- **On-Screen Text:** Automated Dispatch & Sync
+- **VO:** "Trigger instant service calls, update client records, and cut operational overhead effortlessly."
+
+### [00:24 - 00:30] Scene 4: Call to Action (CTA)
+- **Visual:** Clean high-contrast end card featuring URL and Free Developer Tier badge.
+- **On-Screen Text:** Deploy Today: itskokos.com/beacon-api | Free 14-Day Sandbox
+- **VO:** "Scale your platform today with Beacon API. Get started for free at itskokos.com."
 
 ---
 
-## Timeline & Cut Breakdown
-
-### [00:00 - 00:06] The Hook (High Velocity)
-- Visual: Split-screen montage. Left: Terminal stream with latency bottlenecks. Right: Seamless F2F operational dashboard failing to sync. Dynamic wipe transition into Beacon API single-line initialization.
-- On-Screen Text (OST): Stop patching disconnected data.
-- VO: "Connecting SaaS data to face-to-face operations shouldn't take weeks of custom middleware."
-
-### [00:06 - 00:15] The Core Demo (The Solution)
-- Visual: Screen capture of Beacon API dashboard. Live token generation -> Instant webhook sync -> Graph showing latency drop from 850ms to 12ms.
-- OST: Instant Sync | Sub-15ms Latency
-- VO: "Meet Beacon API by I.T. Skokos. High-throughput data orchestration built for hybrid SaaS platforms."
-
-### [00:15 - 00:24] Feature Highlight (Hybrid Capability)
-- Visual: Fast UI walkthrough: Automated endpoint discovery and real-time field-service dispatch triggers syncing in one view.
-- OST: Automated Workflows | Hybrid Sync
-- VO: "Automate event pipelines, unify field workflows, and deploy in minutes, not quarters."
-
-### [00:24 - 00:30] Resolution & CTA
-- Visual: Minimalist branded end-card with I.T. Skokos Beacon API lockup and interactive sandbox CTA button.
-- OST: Build faster. Try Beacon API Sandbox Free.
-- VO: "Scale your operations today. Try the Beacon API sandbox now."
-
----
-## Refactoring Notes
-- Cut 4.2 removes 3.5s of UI loading animations from v3.1 to maintain a 140 WPM punchy cadence.
+## Production Notes (Cost-Cutter Standard)
+- Recorded via OBS Studio (Open Source, 60fps 1080p).
+- Reused existing UI mockups from internal repos to avoid design fees.
 ```
