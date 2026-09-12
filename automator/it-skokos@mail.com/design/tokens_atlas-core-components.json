@@ -1,0 +1,60 @@
+# Atlas Core Lean Component Tokens Specification
+**Author:** Torq Marlow  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D11 21:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Cost-optimized component token dictionary for Atlas Core, consolidating SaaS platform UI and Face to Face kiosk styles into a minimal-footprint token schema adhering to the Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "project": "Atlas Core",
+    "author": "Torq Marlow",
+    "strategy": "Cost-Cutter Lean System (Zero-Bloat Token Hierarchy)",
+    "governance": "Derived directly from 'Company Document' to align multi-tier SaaS and F2F service styling without redundant asset generation."
+  },
+  "color": {
+    "brand": {
+      "primary": { "value": "#0F4C81", "type": "color", "description": "Sourced from Company Document brand specs." },
+      "accent": { "value": "#28A745", "type": "color" }
+    },
+    "surface": {
+      "base": { "value": "#FFFFFF", "type": "color" },
+      "subtle": { "value": "#F4F6F8", "type": "color" },
+      "interactive": { "value": "{color.brand.primary}", "type": "color" }
+    },
+    "text": {
+      "primary": { "value": "#1A1D20", "type": "color" },
+      "muted": { "value": "#5F6B7A", "type": "color" },
+      "inverse": { "value": "#FFFFFF", "type": "color" }
+    }
+  },
+  "space": {
+    "xs": { "value": "4px", "type": "dimension" },
+    "sm": { "value": "8px", "type": "dimension" },
+    "md": { "value": "16px", "type": "dimension" },
+    "lg": { "value": "24px", "type": "dimension" }
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": { "value": "{color.brand.primary}" },
+        "color": { "value": "{color.text.inverse}" },
+        "padding-y": { "value": "{space.sm}" },
+        "padding-x": { "value": "{space.md}" },
+        "radius": { "value": "4px" }
+      }
+    },
+    "card": {
+      "background": { "value": "{color.surface.base}" },
+      "padding": { "value": "{space.md}" },
+      "border": { "value": "1px solid {color.surface.subtle}" }
+    }
+  }
+}
+```
