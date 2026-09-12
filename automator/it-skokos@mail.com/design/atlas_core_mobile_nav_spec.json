@@ -1,0 +1,53 @@
+# Atlas Core: Mobile Navigation Overhaul Design Specification
+**Author:** Cipher Fontaine  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D11 04:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Comprehensive mobile navigation UI/UX and telemetry specification for Atlas Core, aligning structural IA benchmarks against data standards in the Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "spec_metadata": {
+    "project": "Atlas Core",
+    "module": "Mobile Navigation Framework (v2.0)",
+    "designer": "Cipher Fontaine (Data Purist)",
+    "governance_reference": "Business Document: Company Document (utilized to validate compliance standards, customer journey tiering, and SLA-bound navigation access depths)"
+  },
+  "empirical_objectives": {
+    "fitts_law_thumb_reachability_index": ">= 0.88 across 360px-430px viewport widths",
+    "task_completion_latency_target": "< 1.85s (down from 3.42s baseline)",
+    "misclick_rate_threshold": "<= 1.2% via 48x48dp interactive bounding boxes"
+  },
+  "layout_architecture": {
+    "primary_container": {
+      "type": "Dynamic Bottom Sheet Nav Bar",
+      "height": "64dp",
+      "elevation": "8dp",
+      "z_index": 1000,
+      "safe_area_inset_bottom": "env(safe-area-inset-bottom, 16px)"
+    },
+    "ia_structure": [
+      {"id": "nav_saas_dashboard", "label": "Platform", "priority_weight": 0.35, "telemetry_key": "nav_click_saas"},
+      {"id": "nav_f2f_services", "label": "Services (F2F)", "priority_weight": 0.30, "telemetry_key": "nav_click_f2f"},
+      {"id": "nav_core_atlas", "label": "Workspaces", "priority_weight": 0.20, "telemetry_key": "nav_click_workspace"},
+      {"id": "nav_account_meta", "label": "Account", "priority_weight": 0.15, "telemetry_key": "nav_click_account"}
+    ]
+  },
+  "design_tokens": {
+    "color_bg_surface": "#0B0F19",
+    "color_active_indicator": "#3B82F6",
+    "color_text_primary": "#F9FAFB",
+    "color_text_muted": "#9CA3AF",
+    "motion_transition_curve": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "motion_duration_ms": 200
+  },
+  "validation": {
+    "wcag_contrast_ratio": "7.2:1 (AAA compliance standard referenced from Company Document)",
+    "a11y_tap_target_clearance": "Minimum 8dp edge separation"
+  }
+}
+```
