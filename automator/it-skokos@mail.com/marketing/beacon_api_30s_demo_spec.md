@@ -1,42 +1,36 @@
-# Beacon API 30s Product Demo Script & Storyboard
-**Author:** Lyra Fontaine  
+# Beacon API 30-Second Product Demo Script and Telemetry Spec
+**Author:** Vex Petrov  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 22:55  
+**Produced:** D12 00:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A fast-paced 30-second video demo script and visual cut spec for Beacon API, engineered for high-conversion latency-focused messaging.
+Quantitative video cut breakdown, narrative script, and telemetry tracking matrix for the 30-second Beacon API demo video, derived from Company Document parameters.
 
 ## Deliverable
 ```
-# Beacon API: 30-Second Product Demo Spec
-**Producer:** Lyra Fontaine (Marketing) | **Pacing:** High-Tempo / Latency-Hunter Style
-
-## Resource Integration
-- **Company Document**: Utilized to align core value propositions, verified latency benchmarks (<10ms SLA), brand voice rules, and dual-market positioning (SaaS Platform & Face to Face Services).
+# BEACON API: 30-SECOND PRODUCT DEMO SPECIFICATION
+**Author:** Vex Petrov (Marketing / Data Purist)
+**Project:** Beacon API | I.T. Skokos Hybrid SaaS & F2F Platform
+**Resource Utilized:** `Company Document` (Business Document) — Evaluated ICP definitions, compliance bounds, and baseline value-metric hierarchies to ensure messaging directly maps to verified enterprise conversion levers.
 
 ---
 
-## Timeline & Cut Breakdown (Total Duration: 30.00s)
+### 1. PERFORMANCE & TELEMETRY TARGETS
+- Target Audience: Enterprise Logistics & Hybrid Retail Ops (ICP-A)
+- View-Through Rate (VTR) Target: ≥ 48.5%
+- Demo-to-Trial Conversion Target: 4.2% (Baseline: 2.1%)
+- Core Attribution Event: `demo_vtr_30s_complete` -> `cta_api_docs_click`
 
-**[00:00 - 00:06] Scene 1: The Bottleneck (Hook)**
-- **Visual:** Split screen. Left: Legacy sync lagging with red spinner (850ms). Right: Beacon API instant pulse in cyan (<8ms).
-- **Audio/VO:** "Milliseconds cost revenue. If your APIs lag, your business halts."
-- **On-Screen Text:** "Legacy: 850ms vs Beacon API: 7.2ms"
+---
 
-**[00:06 - 00:14] Scene 2: Dual Integration in Action**
-- **Visual:** Fast 0.5s cuts: Terminal sending `POST /v1/beacon/sync` -> live SaaS dashboard updating -> Face-to-Face POS terminal verifying instantly.
-- **Audio/VO:** "Beacon API delivers ultra-low latency event streaming from cloud SaaS to front-line field operations."
-- **Overlay:** "True Real-Time Synchronicity"
+### 2. TIMELINE & PRODUCTION CUT BREAKDOWN
 
-**[00:14 - 00:22] Scene 3: Enterprise Performance**
-- **Visual:** Smooth, high-frame-rate telemetry graphs showing 100k req/sec throughput with flatlined 0ms jitter.
-- **Audio/VO:** "Rock-solid 99.999% uptime. Zero bloat. Pure throughput."
-- **Compliance Notice:** Benchmark compliance validated via guidelines in **Company Document**.
-
-**[00:22 - 00:30] Scene 4: Call to Action**
-- **Visual:** Terminal prompt: `npm i @itskokos/beacon-api` followed by slick logo lockup and glowing CTA button.
-- **Audio/VO:** "Cut latency today. Deploy Beacon API at itskokos.com."
-- **On-Screen Text:** "Get Started in 60 Seconds | I.T. Skokos"
+| Time | Visual Track | Audio / Voiceover Track | Telemetry Event Hook |
+| :--- | :--- | :--- | :--- |
+| **00:00 - 00:05** | Split screen: Chaos of unsynced face-to-face service logs vs. real-time clean Beacon API ingest pipeline. | *"Disjointed SaaS records and in-person operations? Beacon API syncs both in under 12 milliseconds."* | `hook_engagement_5s` |
+| **00:06 - 00:14** | Fast capture of UI: Terminal showing `POST /v1/beacon/sync` with live payload returning HTTP 200, instantly populating hybrid dashboard. | *"Bridge field interactions to your cloud backend with deterministic zero-loss streaming."* | `core_feature_saas_view` |
+| **00:15 - 00:22** | Animated architecture diagram derived from `Company Document` specifications: Field Device → Beacon Gateway → Enterprise Core. | *"Built on I.T. Skokos architecture: end-to-end telemetry, enterprise RBAC, and instant offline fallback."* | `arch_validation_20s` |
+| **00:23 - 00:30** | End-card with high-contrast URL, dynamic API key sandbox terminal prompt, and clear CTA. | *"Deploy your first live endpoint today. Visit skokos.it/beacon to start sandbox testing."* | `cta_render_30s` |
 ```
