@@ -1,46 +1,33 @@
-# Atlas Core 30s Product Demo Script & Cut Spec
-**Author:** Byte Nkosi  
+# Atlas Core: 30s Product Demo Spec & Storyboard
+**Author:** Zed Petrov  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** 9/12/2026, 3:41:52 AM  
+**Produced:** D145 08:30  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Production-ready 30-second product demo video script, storyboard timeline, and asset mapping for Atlas Core, synced directly from UI component branches via GitHub PAT authentication.
+High-impact 30-second video demo script and asset-pull configuration for Atlas Core, focusing on edge-case platform resilience across hybrid SaaS and F2F workflows.
 
 ## Deliverable
 ```
-# Project: Atlas Core - 30-Second Product Demo Cut Spec
-**Owner:** Byte Nkosi (Marketing)
-**Target:** Top-of-funnel SaaS & enterprise operations leads
-**Asset Sync & Version:** v2.4-stable cut
+# Project: Atlas Core — 30s Product Teaser (Marketing Demo Spec)
+**Author:** Zed Petrov, Marketing (Edge-Case Specialist)
+**Status:** Completed Artefact
 
-## Repository & Credential Integration
-- **Git Access: Personal Access Token**: Used to clone and pull automated high-definition viewport captures from the `atlas-core-frontend` staging environment.
-- **Credentials: Git Hub Personal Access Token**: Used to authenticate asset pipeline workflows, pulling raw UI components, motion tokens, and exporting finalized render scripts to `marketing-assets/atlas-core/demo-30s`.
+## 1. Resource Integration & Asset Sourcing
+- **Git Access: Personal Access Token**: Utilized to authenticate against internal UI component repos to extract the exact CSS tokens, SVG iconography, and telemetry state diagrams used in the visual overlays.
+- **Credentials: Git Hub Personal Access Token**: Used to clone the staging deployment branch (`atlas-core/staging-v2.4`), allowing automated rendering of live dashboard animations and real-time F2F synchronization logs under high-latency edge cases.
 
----
+## 2. 30-Second Video Script & Storyboard
 
-## Timeline Cut Breakdown (30.00s Total)
+| Time | Visual Track | Audio / Voiceover | On-Screen Text |
+|---|---|---|---|
+| 00:00 - 00:06 | Split-screen: High-volume SaaS web event queue vs. local F2F offline terminal syncing. | 'Data doesn't stop at the edge. When hybrid infrastructure stalls, Atlas Core takes over.' | **Atlas Core: Unbroken Flow** |
+| 00:06 - 00:15 | Smooth UI zoom into Atlas Core telemetry panel showing sub-millisecond failover. | 'Engineered for extreme reliability: zero dropped frames, real-time sync, and millisecond edge resolution.' | **99.999% Resilience / Zero Drift** |
+| 00:15 - 00:24 | Dynamic dynamic workflow graph switching instantly from cloud to offline F2F node. | 'Unified control for enterprise platforms and physical touchpoints, all in a single pane of glass.' | **SaaS + F2F Unified** |
+| 00:24 - 00:30 | Sleek 3D logo resolve with animated CTA and enterprise trial link. | 'Scale without edge-case blind spots. Experience Atlas Core today.' | **Deploy Atlas Core Today -> it-skokos.com/atlas** |
 
-### [00:00 - 00:05] The Hook: Fragmented Systems
-- **Visual:** Fast-cut UI montage of fragmented legacy dashboards flashing warning alerts, smoothly transitioning to a single, clean Atlas Core unified interface.
-- **On-Screen Text (OST):** Stop context-switching. Run operations in one place.
-- **Voiceover (VO):** "Managing hybrid SaaS workflows shouldn't feel like wrestling five legacy dashboards."
-- **Motion Cue:** Motion blur pull-out into Atlas Core workspace.
-
-### [00:05 - 00:15] The Solution: Real-Time Orchestration
-- **Visual:** Cursor moves across Atlas Core canvas; live telemetry graph populates with real-time F2F service sync indicators.
-- **OST:** Real-Time Sync. Zero Latency.
-- **VO:** "Atlas Core unifies platform telemetry and field services instantly with zero-latency synchronization."
-
-### [00:15 - 00:23] Feature Highlight: One-Click Automation
-- **Visual:** User clicks 'Trigger Pipeline', modal displays instant deployment across nodes with green confirmation checks.
-- **OST:** 1-Click Execution across SaaS & F2F teams.
-- **VO:** "Automate cross-platform pipelines in one click and keep teams aligned everywhere."
-
-### [00:23 - 00:30] CTA & Outro
-- **Visual:** Atlas Core logo resolves with dark-mode gloss; primary CTA button pulses.
-- **OST:** Scale smarter with Atlas Core. Get Started at skokos.it/atlas
-- **VO:** "Smarter operations, shipped fast. Start your Atlas Core trial today."
+## 3. Production Notes
+- Render Engine: Remotion (React-driven video rendering via GitHub asset pipeline).
+- Aspect Ratio: 16:9 (Primary) & 9:16 (Vertical Cut).
 ```
