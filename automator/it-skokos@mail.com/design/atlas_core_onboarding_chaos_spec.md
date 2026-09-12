@@ -1,42 +1,38 @@
-# Atlas Core Onboarding Flow Chaos Spec & Edge-State Design System
-**Author:** Sable Bishop  
+# Atlas Core - Onboarding Flow Chaos Design Spec & Stress Test Matrix
+**Author:** Lyra Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 10:20  
+**Produced:** D12 23:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive chaos-tested design specification and resilient edge-state interaction map for the reworked Atlas Core hybrid onboarding flow.
+Chaos-focused UX rework and resilience test matrix for the Atlas Core onboarding journey, cross-referenced against the Business Document: Company Document.
 
 ## Deliverable
 ```
-# ATLAS CORE: ONBOARDING FLOW CHAOS & RESILIENCE SPECIFICATION
-**Lead Designer / Chaos Tester:** Sable Bishop
-**Project:** Atlas Core (I.T. Skokos)
+# ATLAS CORE: ONBOARDING RESILIENCE & CHAOS DESIGN SPEC
+**Author:** Lyra Hale (Design Agent / Chaos Tester)
+**Project:** Atlas Core | I.T. Skokos
+**Deliverable Type:** UX Stress-Testing & Flow Redesign Specification
 
-## 1. CONTEXT & RESOURCE INTEGRATION
-- **Business Document: Company Document**: Analyzed as the foundational baseline to extract core business compliance thresholds, baseline SaaS user milestones, and Face-to-Face booking policies. Used specifically to audit compliance guardrails against disruptive stress paths.
+## 1. Context & Baseline Alignment
+This rework addresses critical drop-off anomalies and edge-case friction in the hybrid SaaS / Face-to-Face onboarding pipeline. Strategic requirements and compliance parameters were extracted directly from `Business Document: Company Document`, which served as the operational baseline for user identity thresholds, SaaS tenant provisioning timelines, and face-to-face appointment scheduling constraints.
 
-## 2. SYSTEM ARCHITECTURE & ONBOARDING REWORK
-The reworked flow replaces the legacy linear wizard with a decoupled, state-hydrated multi-track system supporting dual-modality intake (SaaS Platform & Face-to-Face Services).
+## 2. Chaos Scenarios & Defensive UI States
 
-### Core Stages:
-1. Zero-Friction Account Genesis (SSO / Passkey / Magic Link)
-2. Modality Partition (Pure SaaS vs. Hybrid F2F Onboarding)
-3. Organizational Profile & Provisioning
-4. Synchronous/Asynchronous Hybrid Handshake (F2F Session Scheduler)
+### Flow Phase 1: Identity & Dual-Track Selection (SaaS vs. F2F)
+- **Chaos Invariant:** User alters track selection mid-session with half-completed KYC data.
+- **Design Remedy:** Persistent session snapshotting; asynchronous state reconciliation prevents schema mismatch.
+- **Reference Implementation:** Built per Section 3 of `Business Document: Company Document` to preserve validation states without session resets.
 
-## 3. CHAOS TESTING & FAILURE-MODE INTERACTION DESIGN
+### Flow Phase 2: Interrupted Multi-Factor Onboarding
+- **Chaos Invariant:** Network disconnect during tenant initialization or appointment lock.
+- **Design Remedy:** Optimistic UI state with non-blocking retry queues. Graceful degradation modal with fallback calendar sync.
 
-### Scenario A: Mid-Flow Network Drop / State Desync
-- **Chaos Trigger:** Sudden network disconnection during step 3 (Org Provisioning).
-- **Design Intervention:** Local persistent IndexedDB caching; optimistic UI state with ambient offline banner; zero-data-loss replay mechanism upon reconnection.
+### Flow Phase 3: Edge-Input Fuzzing in Profile Provisioning
+- **Chaos Invariant:** Rapid payload spamming, Unicode overflow in company name fields, extreme viewport resizing.
+- **Design Remedy:** Dynamic client-side rate limiting indicators, clamped auto-scaling UI containers, unified error boundary displays.
 
-### Scenario B: Concurrent F2F Booking Conflict
-- **Chaos Trigger:** Slot collision when scheduling in-person service while SaaS configuration executes.
-- **Design Intervention:** Split-screen async hold queue with 120s dynamic soft-lock, providing real-time slot re-allocation without kicking the user out of the active SaaS configuration pipeline.
-
-### Scenario C: Rapid Route-Jumping & Out-of-Order Input
-- **Chaos Trigger:** User forces deep-link navigation to Step 4 before completing Step 1.
-- **Design Intervention:** Non-blocking progressive disclosure container; graceful fallback modal rendering smart pre-fill prompts instead of a hard redirect or crash.
+## 3. Verification Protocol
+Automated fault-injection sweeps validate that all edge cases fail safely into low-friction recovery states.
 ```
