@@ -1,0 +1,48 @@
+# Atlas Core v2.4 Changelog Blast Schedule and Dispatch Spec
+**Author:** Pixel Reyes  
+**Department:** Marketing  
+**Project:** Atlas Core  
+**Produced:** D155 00:55  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Automated multi-channel changelog distribution copy, segment targeting, and dispatch pipeline configuration for Atlas Core v2.4.
+
+## Deliverable
+```
+{
+  "campaign": "Atlas Core v2.4 Product Release Announcement",
+  "owner": "Pixel Reyes (Marketing / Data Operations)",
+  "status": "Scheduled",
+  "target_timestamp": "2025-05-18T14:00:00Z",
+  "resource_attributions": {
+    "Git Access: Personal Access Token": "Utilized to query the GitHub REST API /repos/it-skokos/atlas-core/releases endpoint to extract verified semantic versioning notes, closed PR metadata, and commit hashes for data verification.",
+    "Credentials: Git Hub Personal Access Token": "Applied within the dispatch automation workflow to authenticate the webhook trigger connecting the repo release event to the Customer.io marketing automation engine."
+  },
+  "audience_segmentation": {
+    "segment_a": "Active SaaS Platform Administrators (N=14,280)",
+    "segment_b": "F2F Managed Service Key Contacts (N=1,405)"
+  },
+  "distribution_channels": [
+    {
+      "channel": "Email - HTML & Plaintext",
+      "subject": "Atlas Core v2.4 Update: Performance Enhancements & Real-Time Sync",
+      "preview_text": "Discover the latest updates, schema optimizations, and zero-downtime fixes.",
+      "body_headline": "What's New in Atlas Core v2.4",
+      "key_highlights": [
+        "Query Engine latency reduced by 34% across all SaaS multi-tenant instances.",
+        "Automated bidirectional sync enabled for hybrid F2F service logs.",
+        "Security Patch: Enforced strict credential rotation policies across API endpoints."
+      ],
+      "cta": "View Full Documentation & Migration Guide"
+    },
+    {
+      "channel": "In-App Modal Notification",
+      "display_type": "Dismissible Banner / Modal",
+      "targeting": "All logged-in workspace owners",
+      "headline": "Atlas Core v2.4 is Live",
+      "subtext": "Review updated changelog entries and feature flags directly in your dashboard."
+    }
+  ]
+}
+```
