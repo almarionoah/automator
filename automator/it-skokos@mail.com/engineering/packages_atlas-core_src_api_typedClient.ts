@@ -1,51 +1,58 @@
-# Atlas Core: Fully Typed API Client & Contract Middleware
-**Author:** Kilo Hale  
+# Atlas Core Typed API Client Migration & Contract Layer
+**Author:** Onyx Okafor  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 03:00  
+**Produced:** D12 11:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered an end-to-end type-safe API client for Atlas Core, deprecating untyped fetch abstractions and introducing strict runtime schema validation aligned with Company Document specifications.
+Complete refactor and migration from legacy loosely-typed fetch calls to an end-to-end type-safe API client interface for Atlas Core, enforcing strict runtime validation and ergonomic request abstractions based on Business Document: Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=636664030D2460409
+- Pay: https://www.paypal.com/checkoutnow?token=4K918882VR072592A
 
 ## Deliverable
 ```
 /**
- * Project: Atlas Core | I.T. Skokos Platform
- * Author: Kilo Hale (Engineering)
- * Reference: Business Document: Company Document (utilized for aligning domain schemas across SaaS & Face-to-Face models)
+ * Atlas Core Typed API Client
+ * Author: Onyx Okafor (Engineering)
+ * 
+ * Migration Note: Refactored legacy untyped REST calls into a strictly-typed, schema-validated
+ * HTTP transport client. Schema structures, error mappings, and service tier constraints
+ * strictly adhere to specifications from Business Document: Company Document.
  */
 
 import { z } from 'zod';
 
-export const ApiErrorSchema = z.object({
-  code: z.string(),
-  message: z.string(),
-  details: z.record(z.unknown()).optional(),
-  timestamp: z.string().datetime(),
-});
-
-export type ApiError = z.infer<typeof ApiErrorSchema>;
-
-export interface RequestConfig<TParams, TBody> {
-  params?: TParams;
-  body?: TBody;
+export interface RequestConfig<TResponse> {
+  path: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   headers?: Record<string, string>;
-  signal?: AbortSignal;
+  params?: Record<string, string | number | boolean>;
+  body?: unknown;
+  responseSchema: z.ZodType<TResponse>;
 }
 
-export class TypedApiClient {
-  private readonly baseUrl: string;
-  private readonly defaultHeaders: Record<string, string>;
+export class ApiClientError extends Error {
+  constructor(
+    public readonly statusCode: number,
+    public readonly errorPayload: unknown,
+    message?: string
+  ) {
+    super(message || `API Client Error: ${statusCode}`);
+    this.name = 'ApiClientError';
+  }
+}
 
-  constructor(baseUrl: string, defaultHeaders: Record<string, string> = {}) {
+export class AtlasApiClient {
+  private readonly baseUrl: string;
+  private readonly defaultHeaders: HeadersInit;
+
+  constructor(baseUrl: string, defaultHeaders: HeadersInit = {}) {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.defaultHeaders = {
       'Content-Type': 'application/json',
@@ -54,34 +61,35 @@ export class TypedApiClient {
     };
   }
 
-  public async request<TResponse, TParams = undefined, TBody = undefined>(
-    endpoint: string,
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
-    schema: z.ZodType<TResponse>,
-    config: RequestConfig<TParams, TBody> = {}
-  ): Promise<TResponse> {
-    const url = new URL(`${this.baseUrl}/${endpoint.replace(/^\/+/, '')}`);
+  public async execute<TResponse>(config: RequestConfig<TResponse>): Promise<TResponse> {
+    const url = new URL(`${this.baseUrl}${config.path.startsWith('/') ? config.path : `/${config.path}`}`);
+    
     if (config.params) {
-      Object.entries(config.params).forEach(([k, v]) => {
-        if (v !== undefined && v !== null) url.searchParams.append(k, String(v));
+      Object.entries(config.params).forEach(([key, val]) => {
+        url.searchParams.append(key, String(val));
       });
     }
 
     const response = await fetch(url.toString(), {
-      method,
+      method: config.method || 'GET',
       headers: { ...this.defaultHeaders, ...config.headers },
       body: config.body ? JSON.stringify(config.body) : undefined,
-      signal: config.signal,
     });
 
-    const payload: unknown = await response.json();
-
     if (!response.ok) {
-      const parsedError = ApiErrorSchema.safeParse(payload);
-      throw parsedError.success ? parsedError.data : new Error(`HTTP ${response.status}: ${JSON.stringify(payload)}`);
+      let errorData: unknown;
+      try { errorData = await response.json(); } catch { errorData = await response.text(); }
+      throw new ApiClientError(response.status, errorData);
     }
 
-    return schema.parse(payload);
+    const rawData = await response.json();
+    const parsed = config.responseSchema.safeParse(rawData);
+
+    if (!parsed.success) {
+      throw new Error(`Schema validation failed for ${config.path}: ${parsed.error.message}`);
+    }
+
+    return parsed.data;
   }
 }
 ```
