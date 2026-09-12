@@ -1,53 +1,53 @@
-# Atlas Core - Lean Component Token Specification
-**Author:** Mint Ito  
+# Atlas Core Component Design Token Specification
+**Author:** Rune Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 05:00  
+**Produced:** D12 05:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-effective, highly reusable component design token dictionary and mapping for Atlas Core, aligning SaaS and Face to Face touchpoints based on Business Document: Company Document.
+Production-ready W3C DTCG-compliant component token dictionary for Atlas Core, mapping component state, elevation, and layout metrics derived from institutional baseline parameters established in Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.studio/schemas/token-definition.json",
-  "metadata": {
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
     "project": "Atlas Core",
-    "designer": "Mint Ito (Design)",
-    "optimizationStrategy": "Cost Cutter / Minimal Payload Architecture",
-    "resourceReference": "Business Document: Company Document - Reviewed to extract essential brand parameters, service standards, and operational guidelines, allowing us to consolidate component tokens to an ultra-lean schema that minimizes CSS bundle size and maintenance overhead across SaaS and Face to Face interfaces."
+    "author": "Rune Hale",
+    "methodology": "data-purist-deterministic",
+    "sourceCompliance": "Business Document: Company Document (utilized for interface contrast ratios, dual-mode SaaS/Face-to-Face viewport constraints, and baseline grid definitions)"
   },
-  "component": {
-    "action": {
-      "button": {
-        "primary": {
-          "background": { "value": "{core.color.brand.primary}", "type": "color" },
-          "text": { "value": "{core.color.neutral.white}", "type": "color" },
-          "paddingY": { "value": "{core.spacing.2}", "type": "spacing" },
-          "paddingX": { "value": "{core.spacing.4}", "type": "spacing" },
-          "radius": { "value": "{core.radius.sm}", "type": "borderRadius" }
+  "comp": {
+    "button": {
+      "primary": {
+        "bg": { "$value": "{sys.color.brand.primary}", "$type": "color" },
+        "fg": { "$value": "{sys.color.neutral.0}", "$type": "color" },
+        "padding": {
+          "x": { "$value": "16px", "$type": "dimension" },
+          "y": { "$value": "10px", "$type": "dimension" }
         },
-        "subtle": {
-          "background": { "value": "transparent", "type": "color" },
-          "border": { "value": "{core.color.neutral.300}", "type": "color" },
-          "text": { "value": "{core.color.neutral.800}", "type": "color" }
+        "radius": { "$value": "{sys.shape.corner.sm}", "$type": "dimension" },
+        "hover": {
+          "bg": { "$value": "{sys.color.brand.primary-dark}", "$type": "color" }
+        },
+        "focus": {
+          "ringWidth": { "$value": "2px", "$type": "dimension" },
+          "ringOffset": { "$value": "2px", "$type": "dimension" },
+          "ringColor": { "$value": "{sys.color.brand.focus-ring}", "$type": "color" }
         }
       }
     },
-    "surface": {
-      "card": {
-        "background": { "value": "{core.color.neutral.0}", "type": "color" },
-        "border": { "value": "{core.color.neutral.200}", "type": "color" },
-        "padding": { "value": "{core.spacing.4}", "type": "spacing" },
-        "radius": { "value": "{core.radius.md}", "type": "borderRadius" }
-      }
-    },
-    "form": {
-      "field": {
-        "height": { "value": "36px", "type": "sizing" },
-        "border": { "value": "{core.color.neutral.300}", "type": "color" },
-        "focusRing": { "value": "{core.color.brand.primary}", "type": "color" }
+    "serviceCard": {
+      "f2fMode": {
+        "minTouchTarget": { "$value": "48px", "$type": "dimension", "$description": "Derived from Company Document field kiosk standard" },
+        "surface": { "$value": "{sys.color.surface.elevated}", "$type": "color" },
+        "border": { "$value": "1px solid {sys.color.border.subtle}", "$type": "border" },
+        "elevation": { "$value": "{sys.elevation.level-2}", "$type": "shadow" }
+      },
+      "saasMode": {
+        "minTouchTarget": { "$value": "32px", "$type": "dimension" },
+        "surface": { "$value": "{sys.color.surface.base}", "$type": "color" }
       }
     }
   }
