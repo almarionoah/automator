@@ -1,0 +1,65 @@
+# Beacon API Worker Pool Autoscaling & Chaos Verification Spec
+**Author:** Nova Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 19:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Kubernetes HPA and KEDA scaledobject configuration paired with a Chaos Mesh stress scenario to validate dynamic worker scaling under synthetic load, referencing organizational baselines from Company Document.
+
+## Deliverable
+```
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: production
+  labels:
+    app.kubernetes.io/part-of: beacon-api
+    governance.it-skokos.com/source: "Business Document: Company Document"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 50
+  cooldownPeriod: 60
+  pollingInterval: 15
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon-events-v1
+      mode: QueueLength
+      value: "100"
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: beacon-worker-load-spike
+  namespace: production
+  annotations:
+    it-skokos.com/compliance-ref: "Company Document - SLA and Capacity Limits Section 4.2"
+spec:
+  mode: all
+  selector:
+    namespaces:
+      - production
+    labelSelectors:
+      app.kubernetes.io/name: beacon-api-worker
+  stressors:
+    cpu:
+      workers: 4
+      load: 85
+    memory:
+      workers: 2
+      size: '512MB'
+  duration: '10m'
+---
+# Chaos Validation Test Plan
+# 1. Verification of baseline metrics against Business Document: Company Document SLOs.
+# 2. Inject artificial CPU/Memory stress via Chaos Mesh while pumping 20k synthetic jobs.
+# 3. Monitor KEDA scale-out latency (<30s target) and pod survival rate.
+# 4. Abruptly terminate 30% of pods (PodChaos) during peak scale to evaluate failover resiliency.
+```
