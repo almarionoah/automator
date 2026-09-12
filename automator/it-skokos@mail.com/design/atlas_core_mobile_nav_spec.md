@@ -1,48 +1,40 @@
-# Atlas Core Mobile Navigation Overhaul Design Specification
-**Author:** Volt Ito  
+# Atlas Core - Mobile Navigation Overhaul: Edge-Case Specification & Interaction Matrix
+**Author:** Pixel Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D3 22:50  
+**Produced:** D11 11:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized, lightweight mobile navigation design specification and architecture for Atlas Core, aligning IA with Business Document: Company Document while eliminating heavy JS dependencies.
+Comprehensive UI/UX interaction specification and edge-case matrix for Atlas Core's mobile navigation system, bridging SaaS and Face-to-Face service touchpoints across constrained viewports.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Mobile Navigation Overhaul
-**Designer:** Volt Ito (Design Agent - Cost-Cutter Focus)
-**Project:** Atlas Core | I.T. Skokos (SaaS Platform & Face-to-Face Services)
+# Atlas Core — Mobile Navigation Overhaul (Spec v2.4)
+**Author:** Pixel Ito (Design Agent)
+**Reference Document:** `Business Document: Company Document` (Used to map hybrid SaaS platform permissions against Face to Face Services booking states and tier entitlements across responsive breakpoints).
 
-## 1. Overview & Resource Reference
-This overhaul replaces legacy heavy-bundle navigation with a lightweight, high-performance mobile UI. Navigation nodes, tier structures, and service classifications were structured strictly in accordance with **Business Document: Company Document**, which was utilized to map primary user journeys across SaaS platform workflows and Face-to-Face service scheduling while cutting out 5 unneeded legacy routes.
+---
 
-## 2. Cost-Efficiency & Performance Targets
-- **Bundle Overhead Reduction:** Eliminated 48KB third-party JavaScript drawer libraries in favor of native CSS `:checked` state-machine navigation.
-- **Render Performance:** Transitioning using pure GPU-accelerated `transform: translateX()` properties to eliminate layout reflows on lower-end mobile devices.
-- **Icon Consolidation:** Replaced external font/SVG packs with a single consolidated inline SVG sprite.
+### 1. Viewport & Hardware Edge-Case Matrix
+- **Ultra-Narrow (320px - Galaxy Fold Front / iPhone SE1):**
+  - Bottom bar collapses from 5 to 4 primary items; 5th item routes into 'More' overflow.
+  - Label typography shifts to `font-size: 10px; line-height: 12px; letter-spacing: -0.2px`.
+  - Touch target remains compliant at 48x48dp via invisible touch padding.
+- **Safe-Area Dynamic Insets:**
+  - Bottom Bar: `padding-bottom: max(env(safe-area-inset-bottom), 16px)`.
+  - Handles dynamic Android 3-button vs gesture navigation switches without layout shift.
+- **Landscape / Split-Screen (Aspect ratio < 4:3 or height < 500px):**
+  - Converts bottom nav into a compact vertical side-rail (width: 56px) to preserve vertical data canvas.
 
-## 3. Structural Spec & Markup
-```html
-<nav class="sk-mobile-nav" aria-label="Atlas Core Mobile Nav">
-  <input type="checkbox" id="sk-nav-toggle" class="sk-nav-toggle" aria-label="Toggle Navigation Menu">
-  <div class="sk-nav-bar">
-    <div class="sk-logo">I.T. Skokos</div>
-    <label for="sk-nav-toggle" class="sk-nav-trigger" role="button" tabindex="0">☰</label>
-  </div>
-  <div class="sk-nav-drawer">
-    <ul class="sk-nav-links">
-      <li><a href="/saas/dashboard">SaaS Console</a></li>
-      <li><a href="/services/f2f">F2F Services</a></li>
-      <li><a href="/billing">Account & Billing</a></li>
-      <li><a href="/support">Support</a></li>
-    </ul>
-  </div>
-</nav>
-```
+### 2. Localization & Multi-Modal State Archeology
+- **Text Expansion (+40% Localization):** Dynamic text truncation with marquee on active focus for extended strings (e.g., DE/FI translations of 'Appointment Management').
+- **Degraded/Offline State:**
+  - Offline badge anchored to F2F Booking icon with pulse animation indicating queued sync.
+  - SaaS live metrics disable gracefully with skeleton states while retaining local F2F schedule cache.
+- **Multi-Role Switching:** Single-tap profile context switch integrated directly into drawer header without full-page reloads.
 
-## 4. Quality & Compliance Metrics
-- Touch targets configured to standard 48x48px min-size.
-- WCAG 2.1 AA compliant color contrast ratios.
-- Verified zero external runtime asset dependencies.
+### 3. Component Specs
+- **BottomNav Container:** Elevation `Level 3` (0 -2px 8px rgba(0,0,0,0.08)), `backdrop-filter: blur(12px)`.
+- **Active Tab Pill:** `background: var(--atlas-brand-subtle); color: var(--atlas-primary); border-radius: 9999px;`
 ```
