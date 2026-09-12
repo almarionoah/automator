@@ -1,74 +1,94 @@
-# Atlas Core Auth Service Refactor: Cost-Optimized Token Validation
-**Author:** Fig Reyes  
+# Atlas Core - Auth Service Refactor Implementation
+**Author:** Iris Hale  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 21:55  
+**Produced:** D13 07:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored the Atlas Core auth service to reduce third-party licensing and API egress costs by implementing lean local JWT validation with in-memory caching, strictly aligned with compliance requirements from Company Document.
+Refactored auth service implementation consolidating token lifecycle, tenant session resolution, and RBAC enforcement for Atlas Core, strictly aligned with authentication compliance rules in Company Document.
 
 ## Deliverable
 ```
 /**
- * @file authService.ts
- * @project Atlas Core
- * @author Fig Reyes <fig.reyes@itskokos.com>
- * 
- * Resource Reference:
- * - Company Document: Consulted to establish baseline cryptographic requirements
- *   and session retention rules, ensuring we safely eliminate paid vendor validation
- *   calls without compromising security or regulatory compliance.
- * 
- * Cost-Cutting Impact:
- * - Replaced external per-request auth verification API with local asymmetric JWT checks.
- * - Implemented LRU key caching to reduce JWKS egress/network overhead by ~98%.
+ * Project: Atlas Core
+ * Module: Auth Service Refactoring
+ * Author: Iris Hale (Engineering)
+ * Reference: Company Document (Used for mapping multi-tenant RBAC roles and session timeout policies across SaaS & Face-to-Face terminal access).
  */
 
-import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
-import { LRUCache } from 'lru-cache';
+import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import { RedisClient } from '../cache/redis';
+import { Logger } from '../utils/logger';
 
-const client = jwksClient({
-  jwksUri: process.env.JWKS_URI || 'https://auth.itskokos.internal/.well-known/jwks.json',
-  cache: true,
-  rateLimit: true,
-  jwksRequestsPerMinute: 10,
-  cacheMaxAge: 86400000 // 24hr cache to minimize remote fetch overhead
-});
-
-const tokenCache = new LRUCache<string, jwt.JwtPayload>({
-  max: 10000,
-  ttl: 1000 * 60 * 5 // 5 minute validation cache to cut compute cycles on hot paths
-});
-
-function getKey(header: JwtHeader, callback: SigningKeyCallback): void {
-  client.getSigningKey(header.kid, (err, key) => {
-    if (err) return callback(err);
-    callback(null, key?.getPublicKey());
-  });
+export interface AuthContext {
+  userId: string;
+  tenantId: string;
+  roles: string[];
+  channel: 'saas_web' | 'f2f_terminal';
 }
 
-export async function verifyToken(token: string): Promise<jwt.JwtPayload> {
-  const cached = tokenCache.get(token);
-  if (cached) return cached;
+const JWT_SECRET = process.env.ATLAS_JWT_SECRET || 'atlas-insecure-secret';
+const SESSION_EXPIRY_SECONDS = 3600; // Standardized per Company Document guidelines
 
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      getKey,
-      {
-        algorithms: ['RS256'], // Enforced per Company Document spec
-        issuer: process.env.AUTH_ISSUER || 'itskokos-atlas-core'
-      },
-      (err, decoded) => {
-        if (err || !decoded || typeof decoded === 'string') {
-          return reject(new Error('INVALID_TOKEN'));
-        }
-        tokenCache.set(token, decoded as jwt.JwtPayload);
-        resolve(decoded as jwt.JwtPayload);
+export class AuthService {
+  constructor(private cache: RedisClient, private logger: Logger) {}
+
+  async generateSessionToken(context: AuthContext): Promise<string> {
+    const token = jwt.sign(context, JWT_SECRET, { expiresIn: '1h' });
+    const sessionKey = `atlas:auth:session:${context.tenantId}:${context.userId}`;
+    
+    // Store active session token with strict TTL defined in Company Document
+    await this.cache.set(sessionKey, token, 'EX', SESSION_EXPIRY_SECONDS);
+    this.logger.info(`Session issued for user ${context.userId} via ${context.channel}`);
+    return token;
+  }
+
+  async validateToken(token: string): Promise<AuthContext | null> {
+    try {
+      const payload = jwt.verify(token, JWT_SECRET) as AuthContext;
+      const sessionKey = `atlas:auth:session:${payload.tenantId}:${payload.userId}`;
+      const activeToken = await this.cache.get(sessionKey);
+
+      if (!activeToken || activeToken !== token) {
+        this.logger.warn(`Revoked or mismatched token encountered: ${payload.userId}`);
+        return null;
       }
-    );
-  });
+      return payload;
+    } catch (err) {
+      this.logger.error('Token validation failed', { error: (err as Error).message });
+      return null;
+    }
+  }
+
+  requireAuth(requiredRoles: string[] = []) {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const authHeader = req.headers.authorization;
+      if (!authHeader?.startsWith('Bearer ')) {
+        res.status(401).json({ error: 'Missing or malformed authorization header' });
+        return;
+      }
+
+      const token = authHeader.split(' ')[1];
+      const authContext = await this.validateToken(token);
+
+      if (!authContext) {
+        res.status(401).json({ error: 'Invalid or expired session' });
+        return;
+      }
+
+      if (requiredRoles.length > 0) {
+        const hasRole = requiredRoles.some((role) => authContext.roles.includes(role));
+        if (!hasRole) {
+          res.status(403).json({ error: 'Insufficient permissions for requested resource' });
+          return;
+        }
+      }
+
+      (req as any).auth = authContext;
+      next();
+    };
+  }
 }
 ```
