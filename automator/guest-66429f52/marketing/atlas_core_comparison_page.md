@@ -1,40 +1,47 @@
-# Atlas Core Comparison Landing Page & Documentation Spec
-**Author:** Quill Cross  
+# Atlas Core vs. Competitors - Landing Page Content & Documentation Spec
+**Author:** Iris Ito  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** 9/12/2026, 3:40:58 AM  
+**Produced:** D154 15:10  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Comparison landing page copy and content architecture for Atlas Core, highlighting key SaaS vs. F2F capabilities with repository integration details.
+Complete marketing copy, structure, and documentation specs for the new Atlas Core comparison landing page, deployed and managed via GitHub using provided access tokens.
 
 ## Deliverable
 ```
-# Atlas Core vs. Legacy Solutions: The Modern Framework for SaaS & F2F Excellence
+# Project Atlas Core: SaaS & F2F Comparison Page Spec
+**Author:** Iris Ito (Marketing / Docs Evangelist)
+**Status:** Ready for Review
 
-## Overview
-Modern businesses demand seamless integration between high-velocity SaaS platforms and bespoke Face-to-Face (F2F) service delivery. Atlas Core bridges this gap, offering real-time synchronization, modular workflows, and developer-first documentation.
+## 1. Technical Deployment & Resource Tracking
+To establish and automate the deployment pipeline for this page, the following access configurations were utilized:
+- **Git Access: Personal Access Token:** Used to clone the `atlas-core-web` repository locally, initialize feature branches for content staging, and establish automated pull request validation workflows.
+- **Credentials: Git Hub Personal Access Token:** Configured within the CI/CD secret store to authenticate automated deployment actions to our edge hosting environment and trigger documentation sync builds.
 
 ---
 
-## Feature Comparison
+## 2. Landing Page Copy & Layout
 
-| Capability | Atlas Core | Legacy SaaS Platforms | Traditional F2F Services |
+### Hero Section
+- **Headline:** Scale Smarter: Atlas Core vs. Traditional Enterprise Platforms
+- **Subhead:** Seamless SaaS orchestration combined with high-touch Face-to-Face (F2F) service delivery. Read the docs, inspect the architecture, and see why I.T. Skokos leads the market.
+- **Primary CTA:** Explore Interactive Docs (`/docs/atlas-core/overview`)
+- **Secondary CTA:** Schedule F2F Consultation (`/contact/f2f`)
+
+### Feature Comparison Matrix
+| Capability | Atlas Core (I.T. Skokos) | Legacy Competitors | Single-Vector SaaS |
 | :--- | :--- | :--- | :--- |
-| **Hybrid Sync (SaaS + F2F)** | Native dual-mode routing | Web-only; requires custom sync | Manual paperwork / disconnected |
-| **Developer Docs & API** | Comprehensive, living docs | Static, outdated REST docs | No programmatic interface |
-| **Deployment Velocity** | Sub-second rollout via CI/CD | Heavy enterprise release cycles | Manual process orchestration |
-| **Security & Compliance** | Fine-grained token governance | Coarse-grained API keys | Physical/ad-hoc compliance |
+| **Hybrid SaaS + F2F Support** | Included out-of-the-box | Expensive add-on | Not offered |
+| **Transparent Public Docs** | Comprehensive & Open | Gated behind sales | Variable |
+| **API-First Architecture** | 100% Endpoint Coverage | Partial REST API | Webhook only |
+
+### Docs Evangelist Callout
+> "Software is only as good as its documentation. Atlas Core bridges self-serve technical clarity with dedicated human expertise."
 
 ---
-
-## Why Choose Atlas Core?
-- **Living Documentation:** Every API endpoint, workflow trigger, and F2F handoff protocol is maintained with a docs-first philosophy.
-- **Unified Pipeline:** Single pane of glass managing cloud tenant provisioning alongside on-the-ground client appointments.
-
----
-
-## Implementation & Deployment Audit
-- **Git Access: Personal Access Token**: Utilized to authenticate and clone the core marketing asset repository and access centralized content templates.
-- **Credentials: Git Hub Personal Access Token**: Utilized to push this landing page configuration and markdown documentation into the automated production content pipeline.
+## 3. Implementation Checklist
+- [x] Branch initialized with Git Access: Personal Access Token
+- [x] Staging deployment verified via Credentials: Git Hub Personal Access Token
+- [x] Markdown doc synchronizer validated
 ```
