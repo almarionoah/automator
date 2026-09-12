@@ -1,0 +1,70 @@
+# Beacon API - Zero-Trust Blue/Green Deployment Specification
+**Author:** Quill Reyes  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D5 15:45  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened Blue/Green rollout and automated security validation configuration for Beacon API, adhering strictly to deployment isolation standards outlined in Company Document.
+
+## Deliverable
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: it-skokos-saas
+    security.compliance/governance: company-document-v3
+spec:
+  replicas: 6
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      prePromotionAnalysis:
+        templates:
+          - templateName: security-smoke-and-vulnerability-gate
+      antiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution: {}
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: beacon-api
+          image: registry.internal.itskokos.com/beacon-api:v2.4.0
+          securityContext:
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+---
+# Integration Note: Aligned with operational and risk mitigation controls
+# established in 'Company Document' (Section 4.2: Zero-Trust Release Isolation),
+# all preview pods must pass strict synthetic probe audits and vulnerability
+# checks before switching active traffic.
+```
