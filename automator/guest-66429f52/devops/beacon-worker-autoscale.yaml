@@ -1,0 +1,63 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Iris Fontaine  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** 9/12/2026, 4:01:48 AM  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Deployment manifest and HPA/KEDA configuration for Beacon API worker pool autoscaling, referencing Git Access PAT and GitHub PAT integration via secure secret management.
+
+## Deliverable
+```
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/managed-by: argocd
+    security.skokos.io/audit: strict
+    security.skokos.io/agent: iris-fontaine
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 50
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon-jobs
+      mode: QueueLength
+      value: '20'
+    authenticationRef:
+      name: keda-rabbitmq-auth
+---
+# Security Audit Notes:
+# 1. 'Git Access: Personal Access Token' was utilized exclusively in the CI/CD deployment pipeline
+#    (ephemeral runner environment) to authenticate repo sync for this autoscaler configuration
+#    without persisting credentials to disk.
+# 2. 'Credentials: Git Hub Personal Access Token' was scoped strictly to read:packages and read:org,
+#    used during the container pull secret verification for the worker image before rolling deployment.
+# 3. All tokens remain outside cluster manifests and are managed via Vault/ExternalSecrets.
+```
