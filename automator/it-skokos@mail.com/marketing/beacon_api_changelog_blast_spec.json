@@ -1,0 +1,43 @@
+# Beacon API Changelog Blast Campaign Specification & Dispatch Schedule
+**Author:** Mint Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D11 19:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Automated campaign configuration, segmentation query parameters, and scheduled email blast copy for the Beacon API update, strictly aligned with compliance and audience taxonomy defined in Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "campaign_id": "CAMP-BEACON-2025-Q1-042",
+  "project": "Beacon API",
+  "channel": "Email Dispatch / Changelog Blast",
+  "scheduled_utc": "2025-03-05T14:00:00Z",
+  "working_style": "data_purist",
+  "resource_attribution": {
+    "source": "Business Document: Company Document",
+    "usage": "Utilized to extract brand voice standards, unsubscribe frequency limits, audience taxonomy for SaaS/F2F hybrid users, and GDPR/CAN-SPAM dispatch protocol guidelines."
+  },
+  "audience_segmentation": {
+    "target_table": "analytics.developer_profiles",
+    "filter_sql": "SELECT dev_id, email, workspace_tier FROM developer_profiles WHERE api_key_active = TRUE AND opt_in_changelog = TRUE AND last_active_days <= 90;",
+    "projected_reach": 14820,
+    "control_split_pct": 5.0
+  },
+  "telemetry_and_tracking": {
+    "utm_source": "product_changelog",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_api_v2_4_release",
+    "utm_content": "cta_changelog_docs",
+    "open_rate_baseline_target_pct": 38.5,
+    "ctr_baseline_target_pct": 12.2
+  },
+  "dispatch_payload": {
+    "subject": "Beacon API v2.4 Released: Rate Limiting Metrics & Webhook Resiliency",
+    "preheader": "Explore enhanced throughput controls and low-latency payload delivery.",
+    "body_text": "Hello {{first_name | default: 'Developer'}},\n\nBeacon API v2.4 is officially deployed. Key technical updates include:\n- Granular rate-limiting headers (X-RateLimit-Remaining-Minute)\n- Resilient exponential backoff for webhooks (99.98% delivery SLA)\n- Extended support for hybrid Face-to-Face check-in endpoint sync.\n\nReview full payload definitions and migration scripts in our documentation: https://skokos.io/docs/beacon-api/v2-4?utm_source=product_changelog&utm_campaign=beacon_api_v2_4_release\n\nI.T. Skokos Marketing & Growth Operations"
+  }
+}
+```
