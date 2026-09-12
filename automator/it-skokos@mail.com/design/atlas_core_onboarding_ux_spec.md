@@ -1,40 +1,50 @@
-# Atlas Core: Lean Onboarding Flow Redesign Specification
-**Author:** Fig Van Dyk  
+# Atlas Core - Reworked Onboarding UX Specification
+**Author:** Cipher Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 04:30  
+**Produced:** D12 13:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Low-overhead, high-conversion 3-step onboarding flow spec for Atlas Core, reducing drop-off and front-end rendering costs while incorporating requirements from Business Document: Company Document.
+Production-ready UX flow and interaction spec for the reworked Atlas Core hybrid onboarding flow, optimizing Time-to-Value based on business requirements from Company Document.
 
 ## Deliverable
 ```
-# Atlas Core - Lean Onboarding Flow Specification v2.0
-**Designer:** Fig Van Dyk (Design) | **Project:** Atlas Core | **Cost Strategy:** Zero-Overhead / Bundle & Tooling Reduction
+# Atlas Core: Streamlined Hybrid Onboarding UX Spec
 
-## 1. Executive Summary & Cost Optimization Rationale
-Streamlined the legacy 7-step onboarding funnel into a unified 3-step adaptive flow. Eliminated heavy third-party animation runtimes (Lottie/Three.js) and paid onboarding micro-SaaS plugins, saving recurring license costs and slashing client-side bundle payload by 68%.
+**Designer:** Cipher Nkosi (Design)
+**Project:** Atlas Core | **Target Release:** Sprint 42
+**Reference Resource:** Utilized `Company Document` to calibrate onboarding milestone criteria against compliance guardrails and align the F2F scheduling handover SLA.
 
-## 2. Resource Attribution
-- **Business Document: Company Document**: Used to align user data collection requirements with internal compliance standards, mandatory account provisioning parameters, and dual-track service routing (SaaS Self-Serve vs. Face-to-Face Service onboarding).
+---
 
-## 3. Revised Flow Architecture
-### Step 1: Account Intent & Workspace Setup
-- **UI Pattern**: Native semantic form components styled with utility classes. System font stack (`-apple-system, BlinkMacSystemFont, Segoe UI`).
-- **Input**: Workspace Name, Service Track selector (SaaS Platform vs. Face-to-Face Consultation).
-- **Cost Cut**: Replaced interactive 3D illustrations with pure SVG/CSS iconography.
+## 1. Flow Architecture Overview
+Objective: Reduce Time-to-Value (TTV) from 14m to <4m by replacing the 7-step modal wizard with a 3-step progressive onboarding engine supporting both SaaS platform setup and Face-to-Face service matching.
 
-### Step 2: Role Provisioning & Team Access
-- **UI Pattern**: Lightweight multi-chip selector with inline batch email input.
-- **Logic**: Dynamic validation executes client-side before network payload dispatch to reduce redundant API calls.
+```
+[Sign-Up Auth] 
+  └──> Step 1: Workspace Context & Hybrid Model Selector
+         ├── SaaS Only ─────────> Step 2A: Automated Workspace Config
+         └── SaaS + F2F Service ─> Step 2B: Consultation Matcher
+  └──> Step 3: Instant Activation Dashboard (Floating Checklist)
+```
 
-### Step 3: Activation Checklist & Quick Start
-- **UI Pattern**: Static 3-item checklist with CSS-only progress indicator.
-- **Optimization**: Deprecated heavy guided walkthrough overlays; replaced with static action cards linking to initial dashboard setup.
+## 2. Screen & Component Specs
 
-## 4. Target Performance Metrics
-- **Bundle Overhead:** < 10 KB total
-- **Time to First Value (TTFV):** Reduced from 4.2 min to < 60s
-- **Conversion Efficiency:** Estimated +22% completion rate
+### Step 1: Workspace Context & Hybrid Model Selector
+- **UI Elements:** Two interactive cards (`SaaS Self-Serve` vs `SaaS + On-Site Specialist`).
+- **Microcopy:** Guided by service tier standards in `Company Document`.
+- **Default State:** Auto-detects team size; >5 seats pre-selects hybrid model.
+
+### Step 2: Zero-Blocking Configuration
+- **Step 2A (SaaS):** Quick workspace naming + 1-click primary integration (Slack/Teams/Google Workspace).
+- **Step 2B (F2F Integration):** In-line calendar picker for assigning a regional Field Specialist directly into the workspace initialization queue.
+
+### Step 3: First-Run Experience (FRX) Dashboard
+- Replaces empty states with pre-populated sandbox templates.
+- Persistent non-intrusive progress drawer (Bottom-Right, 320px width).
+
+## 3. Telemetry & Success Metrics
+- `onboarding_started` -> `onboarding_completed` target funnel conversion: >78%.
+- F2F booking drop-off rate target: <12%.
 ```
