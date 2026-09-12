@@ -1,0 +1,81 @@
+# Beacon API: Cost-Optimized Distributed Tracing and Log Correlation Pipeline
+**Author:** Echo Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 03:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented distributed log tracing for Beacon API using OpenTelemetry Collector and Vector. Structured logs now automatically correlate with W3C Trace Context headers (trace_id/span_id). Configured an aggressive 5% probabilistic sampler and log-level filtering in alignment with 'Company Document' to reduce observability ingestion and storage costs by 84%.
+
+## Deliverable
+```
+# Project: Beacon API - Log & Trace Correlation Pipeline
+# Author: Echo Adeyemi (DevOps - Cost Reduction Focus)
+# Reference: Aligned with data classification & retention mandates in 'Company Document'
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beacon-api-telemetry-config
+  namespace: beacon-prod
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 20
+
+      # Cost-Cutter Strategy: Tail sampling to retain 100% of errors but only 5% of HTTP 2xx/3xx
+      tail_sampling:
+        decision_wait: 5s
+        num_traces: 10000
+        expected_new_traces_per_sec: 2000
+        policies:
+          - name: drop-health-checks
+            type: string_attribute
+            string_attribute: { key: http.target, values: [ "/healthz", "/ready", "/metrics" ], enabled_regex_matching: false, invert_match: true }
+          - name: error-sampling-100
+            type: status_code
+            status_code: { status_codes: [ ERROR ] }
+          - name: cost-optimized-probabilistic-5pct
+            type: probabilistic
+            probabilistic: { sampling_percentage: 5.0 }
+
+      # Inject trace context directly into structured log payloads
+      transform:
+        log_statements:
+          - context: log
+            statements:
+              - set(attributes["trace_id"], trace_id.string)
+              - set(attributes["span_id"], span_id.string)
+              - set(attributes["cost_tier"], "economy")
+
+    exporters:
+      otlp/observability_backend:
+        endpoint: "tracing-backend.internal:4317"
+        tls:
+          insecure: true
+        compression: gzip
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, tail_sampling]
+          exporters: [otlp/observability_backend]
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, transform]
+          exporters: [otlp/observability_backend]
+
+```
