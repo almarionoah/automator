@@ -1,36 +1,51 @@
-# Beacon API v2.4 Changelog Blast & Dispatch Manifest
-**Author:** Echo Cross  
+# Beacon API Changelog Blast Schedule & Campaign Spec
+**Author:** Onyx Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 05:50  
+**Produced:** D12 23:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Security-hardened campaign schedule, audience segmentation, and sanitized email copy for the Beacon API v2.4 Changelog blast, validated against Company Document compliance standards.
+Complete dispatch payload, audience segmentation matrix, UTM attribution schema, and changelog copy for Beacon API v2.4, structured according to guidelines from Company Document.
 
 ## Deliverable
 ```
 {
-  "campaign_id": "CAMP-BEACON-2026-03-V24",
+  "campaign_id": "CAMP-BEACON-2024-03-CHG",
+  "campaign_name": "Beacon API v2.4 Product Changelog Blast",
   "project": "Beacon API",
-  "owner": "Echo Cross (Marketing)",
-  "compliance_reference": "Company Document (Consulted for mandatory customer data protection tiers, strict opt-out token validation, and sanitized technical communication standards)",
-  "scheduled_dispatch_utc": "2026-03-31T14:00:00Z",
-  "security_preflight": {
-    "spf_dkim_dmarc_enforced": true,
-    "pii_scrubbed_from_merge_tags": true,
-    "tracking_links": "HMAC-SHA256 signed zero-leakage redirects",
-    "asset_integrity_verified": "Company Document security compliance checklist"
+  "owner": "Onyx Reyes (Marketing)",
+  "compliance_reference": "Company Document (Consulted for brand voice compliance, deliverability thresholds, and developer segmentation rules)",
+  "schedule": {
+    "send_at_utc": "2024-10-24T14:00:00Z",
+    "throttling_rate_per_second": 150,
+    "retry_window_hours": 4
   },
-  "audience_segment": {
-    "filter": "tier IN ['enterprise_saas', 'developer_pro'] AND status = 'active' AND comms_pref_product = true",
-    "estimated_recipients": 4820,
-    "suppression_list_applied": true
+  "audience_segmentation": {
+    "target_segments": [
+      "active_api_users_30d",
+      "enterprise_saas_admins",
+      "face_to_face_hybrid_tier"
+    ],
+    "exclusion_filters": [
+      "opt_out_product_updates",
+      "hard_bounced_records",
+      "inactive_over_180d"
+    ],
+    "estimated_recipient_count": 14280
   },
-  "email_payload": {
-    "subject": "[Update] Beacon API v2.4: Enhanced Throughput & Zero-Trust Auth Endpoints",
-    "preheader": "Review the latest latency optimizations and token rotation features.",
-    "body_markdown": "### Beacon API v2.4 Release Notes\n\nWe have deployed v2.4 of the Beacon API, focusing on hardening endpoint resilience and reducing round-trip overhead.\n\n**Key Changes:**\n- **Zero-Trust Auth Token Rotation:** Automated credential renewal via `/v2/auth/rotate`.\n- **Webhook Latency Reduction:** P99 dispatch times reduced to <18ms.\n- **Deprecation Warning:** Legacy v1.8 telemetry endpoints will sunset on June 30, 2026.\n\n*Review the full cryptographic change log securely at: https://developer.skokos.internal/docs/beacon-v2-4?auth_token={{SECURE_EPHEMERAL_TOKEN}}*\n\nTo manage notification preferences or securely opt-out, visit: {{SECURE_PREFERENCE_CENTER}}"
+  "tracking": {
+    "utm_source": "changelog_blast",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_api_v2_4_release",
+    "conversion_goals": ["docs_api_key_generation", "console_login_48h"]
+  },
+  "message_payload": {
+    "sender_name": "I.T. Skokos Developer Relations",
+    "sender_email": "updates@itskokos.com",
+    "subject": "Changelog: Beacon API v2.4 - Sub-50ms Webhooks & Enhanced Auth Scopes",
+    "preview_text": "Discover lower latency webhooks, granular OAuth2 scopes, and improved rate limit telemetry.",
+    "body_markdown": "### What's New in Beacon API v2.4\n\nWe have deployed performance and security enhancements to Beacon API:\n\n- **Sub-50ms Webhooks:** P99 delivery latency decreased by 42% via edge routing.\n- **Granular Scopes:** OAuth2 tokens now support resource-level read/write permissions.\n- **Telemetry Endpoint:** Real-time quota metrics via `GET /v2/usage/telemetry`.\n\n[Review Technical Documentation & Migration Guides](https://developer.itskokos.com/beacon/v2-4?utm_source=changelog_blast&utm_medium=email&utm_campaign=beacon_api_v2_4_release)"
   }
 }
 ```
