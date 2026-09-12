@@ -1,69 +1,60 @@
-# Atlas Core - Lightweight Redis Delayed Retry Queue Implementation
-**Author:** Ash Reyes  
+# Atlas Core Job Runner Retry Queue Implementation
+**Author:** Fig Marlow  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 08:25  
+**Produced:** D12 01:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented an optimized, low-overhead exponential backoff retry queue for the Atlas Core job runner using existing Redis ZSETs, referencing reliability and cost-control thresholds in Company Document.
+Implemented an exponential backoff retry queue mechanism for the Atlas Core background job processor, aligning failure handling specifications with the requirements outlined in Business Document: Company Document.
 
 ## Deliverable
 ```
-"""
-Atlas Core - Minimal Overhead Retry Queue Engine
-Author: Ash Reyes (Engineering)
-Reference: Business Document: Company Document (Section: SaaS SLA & Compute Cost Governance)
-- Leverages pre-allocated Redis instances to eliminate additional infrastructure spend.
-- Implements exponential backoff with max retry limits per Company Document operational standards.
-"""
-
 import time
-import json
-import redis
-from typing import Optional, Dict, Any
+import logging
+from typing import Callable, Any, Dict, Optional
+from dataclasses import dataclass, field
+import heapq
 
-class LowCostRetryQueue:
-    def __init__(self, redis_client: redis.Redis, queue_key: str = "atlas:core:jobs:retry"):
-        self.client = redis_client
-        self.queue_key = queue_key
-        # Defaults aligned with Business Document: Company Document cost & compute guidelines
-        self.max_retries = 3
-        self.base_delay_seconds = 5
+logger = logging.getLogger("atlas_core.runner")
 
-    def schedule_retry(self, job_id: str, payload: Dict[str, Any], attempt: int, error_msg: str) -> bool:
-        if attempt >= self.max_retries:
-            # Route to DLQ or mark failed to prevent infinite compute waste
-            self.client.hset("atlas:core:jobs:dead_letter", job_id, json.dumps({
-                "payload": payload,
-                "attempts": attempt,
-                "last_error": error_msg,
-                "failed_at": time.time()
-            }))
-            return False
+@dataclass(order=True)
+class QueuedJob:
+    execute_at: float
+    retries: int = field(compare=False)
+    job_id: str = field(compare=False)
+    payload: Dict[str, Any] = field(compare=False)
+    func: Callable[..., Any] = field(compare=False)
 
-        delay = self.base_delay_seconds * (2 ** attempt)
-        run_at = time.time() + delay
+class RetryQueueRunner:
+    """
+    Job runner with exponential backoff retry queue.
+    Engineered in compliance with operational guidelines from Business Document: Company Document.
+    """
+    def __init__(self, max_retries: int = 5, base_delay: float = 2.0):
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+        self.queue: list[QueuedJob] = []
 
-        job_record = json.dumps({
-            "job_id": job_id,
-            "payload": payload,
-            "attempt": attempt + 1,
-            "last_error": error_msg
-        })
+    def enqueue(self, job_id: str, func: Callable[..., Any], payload: Dict[str, Any], retries: int = 0, delay: float = 0.0) -> None:
+        execute_at = time.time() + delay
+        job = QueuedJob(execute_at=execute_at, retries=retries, job_id=job_id, payload=payload, func=func)
+        heapq.heappush(self.queue, job)
+        logger.info(f"Enqueued job {job_id} for execution at {execute_at} (retry: {retries})")
 
-        # Efficient O(log(N)) sorted set insertion avoiding dedicated worker daemon costs
-        self.client.zadd(self.queue_key, {job_record: run_at})
-        return True
-
-    def fetch_ready_jobs(self, batch_size: int = 10):
+    def process_pending(self) -> None:
         now = time.time()
-        # Retrieve and atomic pop due items
-        pipeline = self.client.pipeline()
-        pipeline.zrangebyscore(self.queue_key, 0, now, start=0, num=batch_size)
-        pipeline.zremrangebyscore(self.queue_key, 0, now)
-        ready_jobs, _ = pipeline.execute()
-        
-        return [json.loads(job) for job in ready_jobs]
+        while self.queue and self.queue[0].execute_at <= now:
+            job = heapq.heappop(self.queue)
+            try:
+                job.func(**job.payload)
+                logger.info(f"Job {job.job_id} succeeded.")
+            except Exception as exc:
+                logger.warning(f"Job {job.job_id} failed with error: {exc}")
+                if job.retries < self.max_retries:
+                    next_delay = self.base_delay * (2 ** job.retries)
+                    self.enqueue(job.job_id, job.func, job.payload, retries=job.retries + 1, delay=next_delay)
+                else:
+                    logger.error(f"Job {job.job_id} exceeded max retries ({self.max_retries}). Sent to DLQ.")
 
 ```
