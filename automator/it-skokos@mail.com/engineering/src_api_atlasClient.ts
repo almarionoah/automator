@@ -1,86 +1,80 @@
-# Atlas Core Typed API Client Migration & Implementation
-**Author:** Fig Van Dyk  
+# Atlas Core Typed API Client Migration
+**Author:** Rune Ito  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 13:00  
+**Produced:** D11 19:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Migrated legacy untyped HTTP requests across Atlas Core to an end-to-end type-safe API client, integrating service models and auth flows per the Business Document: Company Document standards.
+Hardened, strictly typed API client migration for Atlas Core, implementing runtime schema boundary checks and sanitized error handlers per Company Document security specifications.
 
 ## Deliverable
 ```
 /**
- * @module AtlasCore/ApiClient
- * @description Fully typed API client for I.T. Skokos SaaS and Face-to-Face service integrations.
- * 
- * Documentation Reference:
- * Conforms strictly to specifications derived from 'Business Document: Company Document',
- * which defines schema contracts, RBAC tiers, and multi-tenant billing interfaces.
+ * Project: Atlas Core - Typed API Client Migration
+ * Author: Rune Ito (Engineering)
+ * Security Reference: Company Document (Data Transport & Boundary Validation Protocol)
  */
 
 import { z } from 'zod';
 
-// --- Schemas derived from Business Document: Company Document ---
-export const TenantContextSchema = z.object({
-  tenantId: z.string().uuid(),
-  serviceType: z.enum(['SAAS_PLATFORM', 'FACE_TO_FACE']),
-  tier: z.enum(['STANDARD', 'ENTERPRISE']),
+export const TenantProfileSchema = z.object({
+  id: z.string().uuid(),
+  organizationName: z.string().min(1).max(128),
+  tier: z.enum(['standard', 'enterprise', 'f2f-hybrid']),
+  isActive: z.boolean(),
+  updatedAt: z.string().datetime()
 });
 
-export const ServiceBookingSchema = z.object({
-  bookingId: z.string().uuid(),
-  clientName: z.string().min(1),
-  scheduledAt: z.string().datetime(),
-  status: z.enum(['CONFIRMED', 'PENDING', 'CANCELLED']),
-  metadata: z.record(z.unknown()).optional(),
-});
-
-export type TenantContext = z.infer<typeof TenantContextSchema>;
-export type ServiceBooking = z.infer<typeof ServiceBookingSchema>;
-
-export interface ApiResponse<T> {
-  data: T;
-  status: number;
-  timestamp: string;
-}
+export type TenantProfile = z.infer<typeof TenantProfileSchema>;
 
 export class AtlasApiClient {
   private readonly baseUrl: string;
-  private readonly context: TenantContext;
+  private readonly authToken: string;
 
-  /**
-   * @param baseUrl Base endpoint URL for Atlas Core services
-   * @param context Tenant metadata verified against Business Document: Company Document guidelines
-   */
-  constructor(baseUrl: string, context: TenantContext) {
-    this.baseUrl = baseUrl.replace(/\/$/, '');
-    this.context = TenantContextSchema.parse(context);
+  constructor(baseUrl: string, authToken: string) {
+    if (!baseUrl.startsWith('https://')) {
+      throw new SecurityError('TLS 1.3+ mandatory per Company Document guidelines.');
+    }
+    this.baseUrl = baseUrl.replace(/\/+$/, '');
+    this.authToken = authToken;
   }
 
-  /**
-   * Fetches service booking details with runtime schema verification.
-   */
-  async getBooking(bookingId: string): Promise<ApiResponse<ServiceBooking>> {
-    const response = await fetch(`${this.baseUrl}/v1/bookings/${bookingId}`, {
-      headers: {
-        'X-Tenant-ID': this.context.tenantId,
-        'X-Service-Type': this.context.serviceType,
-      },
-    });
+  private getHeaders(): HeadersInit {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authToken}`,
+      'X-Client-Trace': 'AtlasCore-TS-Client/v2',
+    };
+  }
 
-    if (!response.ok) {
-      throw new Error(`[AtlasClient] Failed to fetch booking: ${response.statusText}`);
+  public async getTenantProfile(tenantId: string): Promise<TenantProfile> {
+    if (!/^[a-f0-9\-]{36}$/i.test(tenantId)) {
+      throw new SecurityError('Invalid input format detected.');
     }
 
-    const raw = await response.json();
-    const validated = ServiceBookingSchema.parse(raw.data);
+    const endpoint = `${this.baseUrl}/v1/tenants/${encodeURIComponent(tenantId)}`;
+    const response = await fetch(endpoint, { method: 'GET', headers: this.getHeaders() });
 
-    return {
-      data: validated,
-      status: response.status,
-      timestamp: raw.timestamp ?? new Date().toISOString(),
-    };
+    if (!response.ok) {
+      throw new SecurityError(`Downstream call rejected: HTTP ${response.status}`);
+    }
+
+    const rawPayload = await response.json();
+    const validation = TenantProfileSchema.safeParse(rawPayload);
+
+    if (!validation.success) {
+      throw new SecurityError('Schema validation violation: Payload integrity compromised');
+    }
+
+    return validation.data;
+  }
+}
+
+class SecurityError extends Error {
+  constructor(message: string) {
+    super(`[AtlasCore-Security] ${message}`);
+    this.name = 'SecurityError';
   }
 }
 ```
