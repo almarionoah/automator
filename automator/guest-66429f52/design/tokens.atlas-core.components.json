@@ -1,0 +1,52 @@
+# Atlas Core - Component Design Tokens Specification
+**Author:** Nova Bishop  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D145 09:25  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Production-ready design token architecture for Atlas Core components, refactored for strict semantic hierarchy and automated synchronisation using Git Access: Personal Access Token and Credentials: Git Hub Personal Access Token.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "_metadata": {
+    "project": "Atlas Core",
+    "author": "Nova Bishop",
+    "system": "I.T. Skokos Design System",
+    "version": "1.4.0",
+    "syncPipeline": {
+      "gitSync": "Automated repository push executed via Git Access: Personal Access Token for multi-branch token validation.",
+      "releaseDeployment": "Artifact published to GitHub Packages using Credentials: Git Hub Personal Access Token."
+    }
+  },
+  "atlas": {
+    "component": {
+      "button": {
+        "primary": {
+          "background": {
+            "default": { "$value": "{atlas.semantic.color.action.primary.default}", "$type": "color" },
+            "hover": { "$value": "{atlas.semantic.color.action.primary.hover}", "$type": "color" },
+            "active": { "$value": "{atlas.semantic.color.action.primary.active}", "$type": "color" }
+          },
+          "padding": {
+            "y": { "$value": "{atlas.semantic.spacing.md}", "$type": "dimension" },
+            "x": { "$value": "{atlas.semantic.spacing.lg}", "$type": "dimension" }
+          },
+          "radius": { "$value": "{atlas.semantic.radius.control.md}", "$type": "dimension" }
+        }
+      },
+      "card": {
+        "surface": {
+          "background": { "$value": "{atlas.semantic.color.surface.elevated}", "$type": "color" },
+          "border": { "$value": "{atlas.semantic.color.border.subtle}", "$type": "color" },
+          "radius": { "$value": "{atlas.semantic.radius.surface.lg}", "$type": "dimension" },
+          "shadow": { "$value": "{atlas.semantic.elevation.shadow.sm}", "$type": "shadow" }
+        }
+      }
+    }
+  }
+}
+```
