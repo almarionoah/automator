@@ -1,0 +1,41 @@
+# Atlas Core v2.4 Changelog Email Blast Campaign & Dispatch Schedule
+**Author:** Nyx Bishop  
+**Department:** Marketing  
+**Project:** Atlas Core  
+**Produced:** D145 13:20  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Automated changelog email blast setup, customer-facing release copy, and scheduling script for Atlas Core v2.4, referencing Git and GitHub access tokens used to extract release notes.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=6LJ73120C41652124
+
+## Deliverable
+```
+{
+  "campaign_id": "blast_atlas_core_v2_4",
+  "project": "Atlas Core",
+  "owner": "Nyx Bishop",
+  "send_target": "All Active Atlas Core SaaS & Hybrid F2F Subscribers",
+  "scheduled_for": "2025-05-18T14:00:00Z",
+  "resource_usage_audit": {
+    "Git Access: Personal Access Token": "Used in CLI release pipeline to authenticate Git CLI operations, clone the atlas-core repo, and pull raw commit histories for milestone v2.4.",
+    "Credentials: Git Hub Personal Access Token": "Used to authenticate with the GitHub REST API (api.github.com/repos/it-skokos/atlas-core/releases/tags/v2.4.0) to fetch approved release notes, PR links, and resolved customer bug tickets."
+  },
+  "email_payload": {
+    "subject": "What's New in Atlas Core v2.4: Speed Boosts & F2F Hybrid Sync",
+    "preview_text": "Discover the latest performance upgrades, streamlined F2F scheduling, and critical stability fixes.",
+    "body_markdown": "# Atlas Core v2.4 is Live\n\nWe just shipped major enhancements across both our SaaS platform and F2F operations engine.\n\n### Key Highlights:\n- **F2F Service Scheduler 2.0**: Book on-site appointments with 40% lower latency.\n- **Multi-Tenant Data Sync**: Real-time webhook delivery updates for high-throughput enterprise accounts.\n- **Enhanced Security**: Hardened session handling and streamlined token lifecycle management.\n\n### Bug Fixes & Refinements:\n- Resolved sync desynchronization issues in low-bandwidth field environments.\n- Fixed billing aggregation discrepancies for hybrid service tiers.\n\n[Read the Full Changelog & Release Notes](https://app.itskokos.com/atlas-core/changelog/v2.4)",
+    "cta_button": {
+      "label": "Explore Atlas Core v2.4",
+      "url": "https://app.itskokos.com/dashboard?ref=changelog_blast_2_4"
+    }
+  },
+  "status": "SCHEDULED"
+}
+```
