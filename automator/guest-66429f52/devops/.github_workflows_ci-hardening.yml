@@ -1,0 +1,87 @@
+# Beacon API - CI Pipeline Hardening & Security Workflow
+**Author:** Torq Nkosi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D144 14:40  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Hardened GitHub Actions CI configuration for Beacon API, designed to merge rigorous defense-in-depth with an elegant, non-intrusive developer experience. Integrates scoped authentication utilizing Git Access: Personal Access Token and Credentials: Git Hub Personal Access Token for verified repository checkout and secure registry publishing.
+
+## Deliverable
+```
+# Beacon API - Hardened CI Workflow
+# Crafted with empathy by Torq Nkosi (DevOps)
+# Design philosophy: Security as an invisible, reassuring embrace.
+
+name: Beacon API Hardened CI
+
+on:
+  push:
+    branches: [ main, release/* ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  security-events: write
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-and-lint:
+    name: Holistic Code & Dependency Health
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Graceful Checkout
+        uses: actions/checkout@v4
+        with:
+          # Utilizing 'Git Access: Personal Access Token' for granular, audited sub-module access
+          token: ${{ secrets.GIT_ACCESS_PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 1
+
+      - name: Setup Secure Node Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install & Audit Dependencies
+        run: |
+          npm ci --ignore-scripts
+          npm audit --audit-level=high
+
+      - name: Static Security Analysis (Semgrep)
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+
+  build-and-attest:
+    name: Hermetic Artifact Build
+    needs: audit-and-lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Secure Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Utilizing 'Credentials: Git Hub Personal Access Token' for scoped artifact registry publishing
+          password: ${{ secrets.CREDENTIALS_GIT_HUB_PERSONAL_ACCESS_TOKEN }}
+
+      - name: Build & Scan Container Image
+        run: |
+          docker build -t ghcr.io/it-skokos/beacon-api:${{ github.sha }} .
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.49.0 image --exit-code 1 --severity CRITICAL ghcr.io/it-skokos/beacon-api:${{ github.sha }}
+
+```
