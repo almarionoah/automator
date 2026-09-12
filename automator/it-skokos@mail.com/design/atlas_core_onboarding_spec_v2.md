@@ -1,39 +1,41 @@
-# Atlas Core: Hybrid Onboarding Flow Spec & Edge-Case Matrix
-**Author:** Quill Adeyemi  
+# Atlas Core - Streamlined Onboarding Flow Design Spec (v2.0)
+**Author:** Cipher Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 16:15  
+**Produced:** D13 03:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Interaction design specification and comprehensive edge-case handling matrix for the reworked Atlas Core onboarding flow, bridging SaaS setup and Face-to-Face consultation scheduling.
+Production-ready design specification and component breakdown for the revamped Atlas Core onboarding flow, bridging SaaS self-serve and Face to Face service scheduling.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Reworked Onboarding Flow
-**Author:** Quill Adeyemi (Design / Edge-Case Archaeologist)
-**Target:** Project Atlas Core (SaaS + Face-to-Face Onboarding)
+# Design Specification: Atlas Core Onboarding Flow (v2.0)
+**Author:** Cipher Petrov, Product Design
+**Status:** Ready for Engineering Handover
+**Target Release:** Sprint 14
 
-## 1. Context & Resource Integration
-Per the guidance in **Business Document: Company Document**, which outlines operational standards and dual-service boundaries for I.T. Skokos, this reworked flow harmonizes digital SaaS workspace setup with mandatory in-person/face-to-face onboarding touchpoints.
+## 1. Context & Business Alignment
+Per our strategic alignment with **Company Document**, this redesign consolidates user qualification for both self-serve SaaS workflows and scheduled Face-to-Face consulting sessions. **Company Document** provided the baseline user segmentation models, service-tier prerequisites, and compliance checkpoints embedded directly into this flow.
 
-## 2. Core Flow Architecture
-1. **Step 1: Tenant Identity & SSO Verification** (SaaS)
-2. **Step 2: Dual Profile Provisioning** (Admin User + Physical Office Location)
-3. **Step 3: Face-to-Face Consultation Booking** (Dispatch slot & location lock)
-4. **Step 4: Environment Initialization & Handoff Screen**
+## 2. Reworked User Flow (3-Step Fast Track)
 
-## 3. Edge-Case Matrix & Failure Recovery States
-- **Scenario E-01: Network Drop During In-Person Slot Reservation**
-  - *Behavior:* Optimistic lock on calendar slot (10m TTL). If offline, cache state in IndexedDB and present `STATE_DEGRADED_SYNC` banner with auto-reconnect ping.
-- **Scenario E-02: Tenant Domain Collision Across Dual Registrations**
-  - *Behavior:* Inline domain resolver prevents hard validation blocks; routes to claim workflow with clear ownership recovery CTA rather than standard 400 error.
-- **Scenario E-03: Mismatched Geolocation for Face-to-Face Service Zone**
-  - *Behavior:* If physical address falls outside primary service coverage (defined in Company Document), trigger fallback `REMOTE_ASSIST_BRIDGE` modal without restarting SaaS workspace provisioning.
-- **Scenario E-04: Partial Flow Abort at Step 3**
-  - *Behavior:* Save delta payload. On return, deep-link user directly to pending slot confirmation with pre-populated workspace settings.
+### Step 1: Workspace & Intent Profiling (`/onboarding/profile`)
+- **UI Layout:** Centered card (580px max-width), progress pill `1/3`.
+- **Input:** Workspace Name (text), Industry (single-select dropdown), Service Track (Segmented control: `SaaS Only` | `Hybrid SaaS + F2F Concierge`).
+- **Logic:** Selecting `Hybrid` triggers asynchronous validation against concierge availability rules specified in **Company Document**.
 
-## 4. UI Components & Micro-Interactions
-- `SyncStatusIndicator`: 3-state component (Live, Reconnecting, Local-Cache).
-- `SlotPicker`: Incorporates travel-buffer indicators.
+### Step 2: Instant Configuration & Role Assignment (`/onboarding/config`)
+- **UI Layout:** Split-view preview (Left: Config inputs; Right: Live dashboard skeleton preview).
+- **Input:** Default Team Seats, Data Region (Geo-select), Primary Objective toggle.
+- **Shipper Note:** Omit secondary permission matrices; defaults inherit standard roles to cut time-to-value.
+
+### Step 3: Activation & Handoff (`/onboarding/activation`)
+- **SaaS Track:** Primary CTA `Launch Dashboard` initializes instant workspace generation.
+- **Hybrid Track:** Embeds calendar picker for direct booking with an I.T. Skokos F2F Onboarding Specialist.
+
+## 3. UI Components & Tokens
+- Primary Button: `bg-brand-600`, `text-white`, `h-10`, `rounded-md`
+- Card Surface: `bg-surface-0`, `border-neutral-200`, `shadow-sm`
+- Transition Duration: `150ms ease-out` on step change.
 ```
