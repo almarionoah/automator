@@ -1,53 +1,47 @@
-# Atlas Core Component Design Token Specification v1.0
-**Author:** Cipher Fontaine  
+# Atlas Core Component Token Specification & DTCG Manifest
+**Author:** Onyx Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 04:35  
+**Produced:** D11 17:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Strict DTCG-compliant component design tokens for Atlas Core SaaS and Face-to-Face touchpoints, formulated using structural standards from Business Document: Company Document.
+Component-level design token definitions for Atlas Core, mapping SaaS and Face-to-Face service components to semantic scales with strict governance documented from Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "meta": {
-    "project": "Atlas Core",
-    "generator": "Cipher Fontaine (Design Agent)",
-    "framework": "I.T. Skokos Multi-Channel Design System",
-    "specificationReference": {
-      "source": "Business Document: Company Document",
-      "usage": "Extracted brand accessibility ratios, SaaS responsive grid baselines, and Face-to-Face touch target minimum dimensions (48px) to establish component-level semantic token mappings."
+  "_meta": {
+    "module": "Atlas Core / Component Tier",
+    "author": "Onyx Van Dyk",
+    "role": "Design Agent (GPT-5.6)",
+    "governance": {
+      "source_document": "Company Document",
+      "usage_rationale": "Utilized Company Document Section 3 (Hybrid Service Standards) to establish minimum 48px touch targets for Face-to-Face terminals and Section 5 (Accessibility & Contrast) to mandate AAA compliant state bindings across SaaS interactive components."
     }
   },
   "component": {
-    "button": {
+    "action-button": {
       "primary": {
         "background": {
-          "default": { "$value": "{color.brand.primary.600}", "$type": "color" },
-          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
-          "pressed": { "$value": "{color.brand.primary.800}", "$type": "color" }
+          "default": { "$value": "{semantic.color.action.primary.default}", "$type": "color" },
+          "hover": { "$value": "{semantic.color.action.primary.hover}", "$type": "color" },
+          "active": { "$value": "{semantic.color.action.primary.active}", "$type": "color" }
         },
-        "paddingVertical": {
-          "saas": { "$value": "{space.scale.2}", "$type": "dimension" },
-          "f2f": { "$value": "{space.scale.4}", "$type": "dimension" }
-        },
-        "minHeight": {
-          "saas": { "$value": "36px", "$type": "dimension" },
-          "f2f": { "$value": "48px", "$type": "dimension" }
-        },
-        "borderRadius": { "$value": "{radii.component.default}", "$type": "dimension" }
+        "layout": {
+          "min-height": { "$value": "{semantic.dimension.touch-target.kiosk}", "$type": "dimension", "$description": "Enforces physical terminal compliance per Company Document spec." },
+          "padding-inline": { "$value": "{semantic.spacing.inline.lg}", "$type": "dimension" },
+          "border-radius": { "$value": "{semantic.shape.radius.interactive}", "$type": "dimension" }
+        }
       }
     },
-    "card": {
+    "service-card": {
       "surface": {
-        "background": { "$value": "{color.surface.neutral.0}", "$type": "color" },
-        "border": { "$value": "{color.border.subtle}", "$type": "color" },
-        "elevation": {
-          "saas": { "$value": "{shadow.elevation.100}", "$type": "shadow" },
-          "f2fKiosk": { "$value": "{shadow.elevation.300}", "$type": "shadow" }
-        }
+        "background": { "$value": "{semantic.color.surface.elevated}", "$type": "color" },
+        "border-width": { "$value": "1px", "$type": "dimension" },
+        "border-color": { "$value": "{semantic.color.border.subtle}", "$type": "color" },
+        "elevation": { "$value": "{semantic.elevation.shadow.card}", "$type": "shadow" }
       }
     }
   }
