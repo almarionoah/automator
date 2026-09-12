@@ -1,33 +1,44 @@
-# Atlas Core 30s Product Demo Video Spec and Script
-**Author:** Cipher Reyes  
+# Atlas Core 30s Product Demo - Production Spec & Script
+**Author:** Pixel Reyes  
 **Department:** Marketing  
 **Project:** Atlas Core  
-**Produced:** D150 17:50  
+**Produced:** D151 02:10  
 **Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
 ## Summary
 
-Cost-optimized 30-second promotional product demo script and production spec for Atlas Core, leveraging existing repo assets to eliminate external production costs.
+Cost-optimized 30-second product demo script, timeline breakdown, and asset extraction pipeline documentation for Atlas Core.
 
 ## Deliverable
 ```
-# Project: Atlas Core - 30s Product Demo Spec & Script
-**Author:** Cipher Reyes, Marketing
-**Cost Strategy:** Zero external production spend. Generated using internal screencasts and repository markdown.
+# Project: Atlas Core - 30s Product Demo
+**Producer:** Pixel Reyes (Marketing)
+**Budget Strategy:** In-house zero-cost rendering via repository asset extraction.
 
 ## Resource Utilization
-- **Git Access: Personal Access Token**: Used to clone internal asset repositories directly, extracting UI recordings, brand vectors, and high-res icon packs without requesting paid external media licenses.
-- **Credentials: Git Hub Personal Access Token**: Used to authenticate automated asset synchronization pipelines in GitHub Actions, compiling the latest build artifacts and documentation screenshots directly into the editing workspace at zero marginal cost.
+- **Git Access: Personal Access Token:** Utilized to clone the `atlas-core-web` repository and pull raw SVG vector assets, brand guides, and current UI mockups directly from source control, bypassing expensive third-party agency asset fees.
+- **Credentials: Git Hub Personal Access Token:** Applied in the automated CI/CD pipeline to fetch pre-rendered UI screen captures and trigger open-source headless browser recordings, eliminating manual screen recording software licensing costs.
 
 ---
 
 ## 30-Second Video Script & Storyboard
 
-**Total Runtime:** 00:00:30
+### [00:00 - 00:05] Hook: The Bottleneck
+- **Visual:** Fast-cut screen capture of overloaded SaaS dashboards transitioning to red latency indicators.
+- **Voiceover (VO):** "SaaS scaling hitting a wall? Meet Atlas Core."
+- **On-Screen Text:** Eliminate Infrastructure Drag.
 
-| Time | Visual (In-App Asset) | Voiceover (VO) | On-Screen Text |
-|---|---|---|---|
-| 00:00 - 00:05 | Fast cut: Dashboard overview loading under 100ms. | "Tired of complex platforms slowing your team down? Meet Atlas Core." | Fast. Simple. Reliable. |
-| 00:05 - 00:15 | Screen capture: Auto-syncing workflows and real-time telemetry feed. | "Built for modern SaaS scale, Atlas Core unifies your digital workflows and F2F operations seamlessly." | Unified SaaS + F2F Operations |
-| 00:15 - 00:23 | Quick zoom: 1-click integration panel and live automation graph. | "Deploy in minutes, automate routine tasks, and slash operational overhead instantly." | 1-Click Deployment. Zero Friction. |
-| 00:23 - 00:30 | Branded end card with CTA button. | "Scale smarter with Atlas Core by I.T. Skokos. Start your free trial today." | Try Atlas Core Today |
+### [00:05 - 00:15] Core Solution: Instant Orchestration
+- **Visual:** High-resolution UI interaction pulled from Git assets showing 1-click provisioning of F2F and SaaS hybrid endpoints.
+- **VO:** "Unify SaaS platforms and face-to-face services in a single lightweight core. Deploy in seconds, not sprints."
+- **On-Screen Text:** Hybrid SaaS + F2F Integration.
+
+### [00:15 - 00:25] Proof & Feature Highlight
+- **Visual:** Real-time analytics dashboard rendering live throughput metrics at 99.99% uptime.
+- **VO:** "Cut overhead by 40% while doubling endpoint reliability."
+- **On-Screen Text:** 40% Lower Overhead | Zero Downtime.
+
+### [00:25 - 00:30] Call to Action
+- **Visual:** Minimalist closing title card with animated logo and CTA URL.
+- **VO:** "Scale smarter. Get started with Atlas Core today."
+- **On-Screen Text:** Visit itskokos.com/atlas-core
 ```
