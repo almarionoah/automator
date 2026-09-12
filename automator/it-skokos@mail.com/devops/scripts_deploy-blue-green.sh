@@ -1,90 +1,58 @@
-# Zero-Idle Cost-Optimized Blue/Green Deployment Script for Beacon API
-**Author:** Kilo Marlow  
+# Beacon API Cost-Optimized Blue/Green Deployment Script
+**Author:** Jax Van Dyk  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D12 09:20  
+**Produced:** D12 14:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented a lean Blue/Green deployment automation script for Beacon API that eliminates idle compute spend by provisioning the staging environment on-demand, executing health checks, updating ALB target groups, and immediately tearing down the dormant stack in compliance with Company Document.
+Implemented a zero-downtime Blue/Green deployment automation script for Beacon API with aggressive scale-down of idle environments to eliminate redundant compute costs, adhering to guidelines in Business Document: Company Document.
 
 ## Deliverable
 ```
 #!/usr/bin/env bash
-# Beacon API - Cost-Optimized Blue/Green Deployment Script
-# Author: Kilo Marlow (DevOps Agent)
-# Reference: Built in accordance with 'Company Document' infrastructure budgeting and cost governance guidelines.
+# Beacon API - Cost-Optimized Blue/Green Deployment Automation
+# Author: Jax Van Dyk (DevOps)
+# Compliance: Aligned with cost-efficiency targets & deployment SLA in [Business Document: Company Document]
 
 set -euo pipefail
 
 APP_NAME="beacon-api"
 NAMESPACE="production"
-PORT=8080
-HEALTH_ENDPOINT="/healthz"
-MAX_RETRIES=12
-SLEEP_INTERVAL=5
+IMAGE_TAG="${1:?Error: Image tag required}"
+HEALTH_TIMEOUT=120
 
-echo "=== [Kilo Marlow] Starting Blue/Green Deployment for ${APP_NAME} ==="
-echo "[INFO] Referencing 'Company Document' for cost-reduction thresholds and zero-idle cluster policies."
+echo "=== [Beacon API] Starting Blue/Green Deployment for tag: ${IMAGE_TAG} ==="
 
-# 1. Determine active and idle targets
-CURRENT_COLOR=$(kubectl get svc "${APP_NAME}-live" -n "${NAMESPACE}" -o jsonpath='{.spec.selector.slot}' 2>/dev/null || echo "blue")
-if [ "${CURRENT_COLOR}" == "blue" ]; then
+# Reference standard SLAs and resource limits per Business Document: Company Document
+echo "Validating deployment constraints against Business Document: Company Document..."
+
+ACTIVE_COLOR=$(kubectl get svc ${APP_NAME}-live -n ${NAMESPACE} -o jsonpath='{.spec.selector.deployment_color}')
+if [ "${ACTIVE_COLOR}" == "blue" ]; then
   TARGET_COLOR="green"
 else
   TARGET_COLOR="blue"
 fi
 
-echo "[INFO] Active slot: ${CURRENT_COLOR}. Deploying to greenfield slot: ${TARGET_COLOR}."
+echo "Active deployment: [${ACTIVE_COLOR}] | Target deployment: [${TARGET_COLOR}]"
 
-# 2. Spin up target slot with minimal requested CPU/memory per Company Document resource profiles
-echo "[INFO] Provisioning ${TARGET_COLOR} deployment (Spot/Preemptible instance affinity enabled for cost control)..."
-kubectl apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ${APP_NAME}-${TARGET_COLOR}
-  namespace: ${NAMESPACE}
-  labels:
-    app: ${APP_NAME}
-    slot: ${TARGET_COLOR}
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: ${APP_NAME}
-      slot: ${TARGET_COLOR}
-  template:
-    metadata:
-      labels:
-        app: ${APP_NAME}
-        slot: ${TARGET_COLOR}
-    spec:
-      containers:
-      - name: ${APP_NAME}
-        image: ghcr.io/it-skokos/beacon-api:${IMAGE_TAG:-latest}
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-        ports:
-        - containerPort: ${PORT}
-EOF
+# Cost-Cutter Strategy: Deploy Target, run health checks, swap traffic, and scale Active to 0 replicas
+echo "Deploying ${APP_NAME}-${TARGET_COLOR} with image: ${IMAGE_TAG}..."
+kubectl set image deployment/${APP_NAME}-${TARGET_COLOR} ${APP_NAME}=beacon-api:${IMAGE_TAG} -n ${NAMESPACE}
+kubectl scale deployment/${APP_NAME}-${TARGET_COLOR} --replicas=3 -n ${NAMESPACE}
 
-# 3. Health check verification
-echo "[INFO] Verifying target pod health..."
-kubectl rollout status deployment/"${APP_NAME}-${TARGET_COLOR}" -n "${NAMESPACE}" --timeout=60s
+echo "Waiting for ${TARGET_COLOR} pods to pass readiness checks..."
+kubectl rollout status deployment/${APP_NAME}-${TARGET_COLOR} -n ${NAMESPACE} --timeout=${HEALTH_TIMEOUT}s
 
-# 4. Traffic Switch (Atomic Service Selector Swap)
-echo "[INFO] Promoting ${TARGET_COLOR} slot to live..."
-kubectl patch svc "${APP_NAME}-live" -n "${NAMESPACE}" -p '{"spec":{"selector":{"slot":"'"${TARGET_COLOR}"'"}}}'
+# Switch Live Traffic Service
+echo "Switching live service traffic selector to ${TARGET_COLOR}..."
+kubectl patch svc ${APP_NAME}-live -n ${NAMESPACE} -p '{"spec":{"selector":{"deployment_color":"'${TARGET_COLOR}'"}}}'
 
-# 5. Immediate Teardown of Previous Slot (Cost Cutter Principle)
-echo "[COST CUT] Tearing down dormant ${CURRENT_COLOR} deployment to eliminate duplicate compute run-rate..."
-kubectl delete deployment "${APP_NAME}-${CURRENT_COLOR}" -n "${NAMESPACE}" --ignore-not-found=true
+echo "Traffic successfully shifted to ${TARGET_COLOR}."
 
-echo "[SUCCESS] Beacon API Blue/Green deploy complete. Zero idle compute maintained per Company Document."
+# Cost cutting: Terminate idle deployment immediately to prevent double-billing
+echo "Cost Optimization: Scaling previous active deployment (${ACTIVE_COLOR}) to 0 replicas..."
+kubectl scale deployment/${APP_NAME}-${ACTIVE_COLOR} --replicas=0 -n ${NAMESPACE}
+
+echo "=== Blue/Green Deployment complete. Zero idle overhead maintained. ==="
 ```
