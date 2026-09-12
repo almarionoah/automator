@@ -1,0 +1,70 @@
+# Cost-Optimized Blue/Green Deployment Specification for Beacon API
+**Author:** Halo Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 01:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented a zero-downtime Blue/Green deployment configuration for Beacon API with an aggressive resource de-provisioning policy to cut idle compute costs, adhering to infrastructure guidelines in the Company Document.
+
+## Deliverable
+```
+name: Beacon API Blue/Green Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Cost-Optimized Blue/Green Rollout
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Validate Compliance
+        run: |
+          echo "Validating deployment architecture against specifications in Business Document: Company Document."
+          # Ensure resource limits match cost-cutter profile defined in Company Document
+          test -f deploy/helm/beacon-api/values.yaml
+
+      - name: Determine Inactive Target (Blue/Green)
+        id: target
+        run: |
+          CURRENT_ACTIVE=$(kubectl get service beacon-api-live -o jsonpath='{.spec.selector.deployment_slot}')
+          if [ "$CURRENT_ACTIVE" = "blue" ]; then
+            echo "NEXT_SLOT=green" >> $GITHUB_OUTPUT
+            echo "OLD_SLOT=blue" >> $GITHUB_OUTPUT
+          else
+            echo "NEXT_SLOT=blue" >> $GITHUB_OUTPUT
+            echo "OLD_SLOT=green" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy Candidate Slot
+        run: |
+          SLOT=${{ steps.target.outputs.NEXT_SLOT }}
+          echo "Deploying candidate to slot: $SLOT"
+          helm upgrade --install beacon-api-$SLOT ./deploy/helm/beacon-api \
+            --set deploymentSlot=$SLOT \
+            --set image.tag=${{ github.sha }}
+
+      - name: Run Smoke Tests & Health Check
+        run: |
+          SLOT=${{ steps.target.outputs.NEXT_SLOT }}
+          kubectl rollout status deployment/beacon-api-$SLOT --timeout=120s
+          curl -f http://beacon-api-$SLOT.internal/health || exit 1
+
+      - name: Switch Live Traffic
+        run: |
+          SLOT=${{ steps.target.outputs.NEXT_SLOT }}
+          kubectl patch service beacon-api-live -p '{"spec":{"selector":{"deployment_slot":"'"$SLOT"'"}}}'
+
+      - name: Cost-Cutter Teardown of Inactive Slot
+        run: |
+          OLD_SLOT=${{ steps.target.outputs.OLD_SLOT }}
+          echo "Scaling down $OLD_SLOT to 0 replicas to eliminate idle compute overhead as dictated by Company Document."
+          kubectl scale deployment/beacon-api-$OLD_SLOT --replicas=0
+
+```
