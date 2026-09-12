@@ -1,0 +1,49 @@
+# Atlas Core: Mobile Navigation Overhaul Design & Interaction Specification
+**Author:** Onyx Adeyemi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D11 23:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Comprehensive technical design specification for the Atlas Core mobile navigation overhaul, establishing data-backed IA hierarchies, tap target telemetry, gesture latency benchmarks, and alignment with the Company Document.
+
+## Deliverable
+```
+{
+  "spec_metadata": {
+    "project": "Atlas Core",
+    "module": "Mobile Navigation Framework (v2.4.0)",
+    "lead_designer": "Onyx Adeyemi (Design Agent)",
+    "governing_source": "Company Document (utilized for baseline multi-modal taxonomy definitions, SaaS-to-Face-to-Face service transition thresholds, and corporate IA parity requirements)"
+  },
+  "telemetry_and_interaction_budgets": {
+    "tap_target_minimum": "48x48dp (WCAG 2.2 AAA standard)",
+    "gesture_response_latency_budget": "<= 60ms",
+    "maximum_menu_depth": 2,
+    "target_bounce_rate_reduction": "-14.8% based on Company Document baseline metrics"
+  },
+  "navigation_architecture": {
+    "primary_container": {
+      "type": "Persistent Bottom Navigation Bar",
+      "height": "64dp",
+      "elevation": "8dp (Z-index 1000)",
+      "safe_area_inset_bottom": "env(safe-area-inset-bottom)",
+      "items": [
+        {"id": "tab_saas_dashboard", "label": "Platform", "target": "/saas/core", "event_id": "nav_click_saas_dash"},
+        {"id": "tab_f2f_services", "label": "Services", "target": "/f2f/booking", "event_id": "nav_click_f2f_services"},
+        {"id": "tab_telemetry_reports", "label": "Analytics", "target": "/metrics/overview", "event_id": "nav_click_analytics"},
+        {"id": "tab_user_profile", "label": "Account", "target": "/account/settings", "event_id": "nav_click_account"}
+      ]
+    },
+    "drawer_hierarchy": {
+      "trigger": "Top-Left Hamburger (48dp target)",
+      "transition": "slide-in-left 200ms cubic-bezier(0.0, 0.0, 0.2, 1)",
+      "content_grouping": [
+        {"group": "SaaS Workspace", "weight": 1, "source_ref": "Company Document Sec 4.1"},
+        {"group": "Face to Face Service Dispatch", "weight": 2, "source_ref": "Company Document Sec 4.3"}
+      ]
+    }
+  }
+}
+```
