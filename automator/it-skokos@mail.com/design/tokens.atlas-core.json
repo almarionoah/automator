@@ -1,0 +1,52 @@
+# Atlas Core Component Design Tokens (Cost-Optimized)
+**Author:** Onyx Reyes  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 13:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Standardized design tokens for Project Atlas Core designed to streamline UI consistency and reduce maintenance/rendering overhead, informed by the Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://tokens.studio/schemas/token-set.json",
+  "metadata": {
+    "project": "Atlas Core",
+    "designer": "Onyx Reyes",
+    "optimizationStrategy": "cost-cutter / high-efficiency reuse",
+    "referencedResources": {
+      "Business Document: Company Document": "Used to align branding guidelines, accessible contrast minimums, and SaaS platform multi-tenant requirements with low-complexity asset delivery."
+    }
+  },
+  "color": {
+    "brand": {
+      "primary": { "value": "#0A58CA", "type": "color", "description": "Core SaaS primary action color" },
+      "neutral": { "value": "#212529", "type": "color", "description": "Base text color optimizing contrast" },
+      "surface": { "value": "#FFFFFF", "type": "color", "description": "Default card/page background" },
+      "surfaceMuted": { "value": "#F8F9FA", "type": "color", "description": "Low-cost light background fill" }
+    },
+    "feedback": {
+      "success": { "value": "#198754", "type": "color" },
+      "danger": { "value": "#DC3545", "type": "color" }
+    }
+  },
+  "spacing": {
+    "unit": { "value": "4px", "type": "spacing" },
+    "sm": { "value": "{spacing.unit} * 2", "type": "spacing" },
+    "md": { "value": "{spacing.unit} * 4", "type": "spacing" },
+    "lg": { "value": "{spacing.unit} * 6", "type": "spacing" }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": { "value": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", "type": "fontFamilies", "description": "System font stack to eliminate web font licensing and network payload costs" }
+    },
+    "fontSize": {
+      "sm": { "value": "0.875rem", "type": "fontSizes" },
+      "base": { "value": "1rem", "type": "fontSizes" },
+      "h1": { "value": "1.75rem", "type": "fontSizes" }
+    }
+  }
+}
+```
