@@ -1,0 +1,85 @@
+# Atlas Core - Component Design Tokens Specification (Route-Optimized DTCG Architecture)
+**Author:** Supply Chain & Logistics Manager  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D1 10:00  
+## Summary
+
+Defines the standardized component token tier for Atlas Core, mapping semantic transit paths to UI primitives with zero redundant references across SaaS dashboards and F2F handheld logistics interfaces. Includes assumptions regarding DTCG schema compliance and multi-channel rendering constraints.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "project": "Atlas Core",
+    "module": "component-tokens",
+    "pipeline": "route-optimized-distribution",
+    "assumptions": [
+      "Adopted DTCG specification standard ($value, $type, $extensions).",
+      "Assumed 3-tier token topology: Primitives -> Semantic Routes -> Component Endpoints to eliminate circular resolution overhead.",
+      "Assumed hybrid deployment: High-density SaaS web consoles and high-contrast field/handheld devices for F2F logistics services."
+    ]
+  },
+  "component": {
+    "dispatchCard": {
+      "surface": {
+        "background": {
+          "$value": "{semantic.surface.route.default}",
+          "$type": "color",
+          "$description": "Optimized payload background for manifest views"
+        },
+        "border": {
+          "$value": "{semantic.border.route.active}",
+          "$type": "color"
+        },
+        "radius": {
+          "$value": "{primitive.dimension.radius.sm}",
+          "$type": "dimension"
+        }
+      },
+      "padding": {
+        "compact": {
+          "$value": "{primitive.spacing.200}",
+          "$type": "dimension"
+        },
+        "standard": {
+          "$value": "{primitive.spacing.300}",
+          "$type": "dimension"
+        }
+      }
+    },
+    "waybillBadge": {
+      "transit": {
+        "fill": {
+          "$value": "{semantic.status.inTransit.subtle}",
+          "$type": "color"
+        },
+        "text": {
+          "$value": "{semantic.status.inTransit.contrast}",
+          "$type": "color"
+        }
+      },
+      "delivered": {
+        "fill": {
+          "$value": "{semantic.status.completed.subtle}",
+          "$type": "color"
+        },
+        "text": {
+          "$value": "{semantic.status.completed.contrast}",
+          "$type": "color"
+        }
+      }
+    },
+    "actionButton": {
+      "touchTarget": {
+        "minHeight": {
+          "$value": "48px",
+          "$type": "dimension",
+          "$description": "F2F field ergonomics compliance minimum"
+        }
+      }
+    }
+  }
+}
+```
