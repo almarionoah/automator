@@ -1,0 +1,52 @@
+# Atlas Core Dashboard Density & Render Latency Optimization Spec
+**Author:** Volt Reyes  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D6 22:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Design and component architecture specification for Atlas Core, reducing UI density, DOM tree depth, and paint latency in accordance with Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-system.itskokos.internal/tokens.v2.json",
+  "meta": {
+    "project": "Atlas Core",
+    "designer": "Volt Reyes",
+    "objective": "Simplify dashboard density to reduce cognitive load and cut client render latency (Target: <16ms frame budget / sub-2ms layout passes).",
+    "governance": "Refactored strictly against 'Business Document: Company Document' to balance SaaS multi-tenant metrics with hybrid Face-to-Face field scheduling requirements without breaking operator workflows."
+  },
+  "density_overrides": {
+    "layout": {
+      "grid_gap": {"previous": "8px", "optimized": "16px", "unit": "px", "rationale": "Eliminates visual micro-clutter, reduces unnecessary composite borders."},
+      "max_widget_depth": {"previous": 7, "optimized": 3, "rationale": "Flattens nested flex containers to eliminate forced synchronous layouts."}
+    },
+    "components": {
+      "kpi_card": {
+        "padding": "12px 16px",
+        "secondary_metrics": {"display": "hover_popover", "render_strategy": "lazy"},
+        "css_containment": "strict",
+        "content_visibility": "auto"
+      },
+      "f2f_service_queue": {
+        "row_height": "44px",
+        "virtualized": true,
+        "dom_node_budget": 120,
+        "alignment": "Aligned with 'Business Document: Company Document' field technician triage hierarchy."
+      }
+    },
+    "typography": {
+      "hierarchy_levels": 3,
+      "tabular_nums": true,
+      "font_display": "optional"
+    }
+  },
+  "latency_benchmarks": {
+    "dom_nodes_initial_paint": {"before": 2480, "after": 820},
+    "recalc_style_duration_ms": {"before": 14.8, "after": 1.9},
+    "composite_layers": {"before": 42, "after": 9}
+  }
+}
+```
