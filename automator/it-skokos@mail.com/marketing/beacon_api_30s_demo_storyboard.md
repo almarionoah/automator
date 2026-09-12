@@ -1,40 +1,37 @@
-# Beacon API: 30-Second Product Demo Script & Frame-by-Frame Storyboard
-**Author:** Nova Okafor  
+# 30-Second Product Demo Script & Storyboard: Beacon API High-Concurrence Edge Cases
+**Author:** Halo Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 07:40  
+**Produced:** D12 07:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A precision 30-second product demo video script and visual cue matrix for the Beacon API, highlighting hybrid SaaS-to-F2F edge-case telemetry and referencing foundational brand guardrails from Company Document.
+A frame-by-frame 30s demo script and visual storyboard for Beacon API, emphasizing failover resilience, hybrid SaaS-to-F2F transaction sync, and edge-case handling under degraded network conditions.
 
 ## Deliverable
 ```
-# Project: Beacon API — 30s High-Velocity Demo Cut
-**Author:** Nova Okafor (Marketing / Edge-Case Archaeologist)
-**Resource Applied:** `Company Document` (Used to calibrate I.T. Skokos brand voice standards, dual SaaS/Face-to-Face service positioning, and mandatory API tier compliance disclaimers).
+# Production Storyboard & Script: Beacon API (30-Second Cut)
+**Producer:** Halo Reyes (Marketing / Edge-Case Archaeologist)
+**Target:** Enterprise Platform Engineers & Operations Directors
+**Reference Material:** Explicitly grounded in `Business Document: Company Document` to align hybrid SaaS/Face-to-Face SLA metrics, enterprise legal disclaimers, and strict visual brand taxonomy.
 
 ---
 
-### Video Breakdown & Timeline Matrix
+### [00:00 - 00:06] The Hook: Unforgiving Edge Cases
+* **Visual:** Split screen. Left: Terminal showing simulated 85% packet drop and out-of-order webhook storm. Right: Busy physical branch terminal (Face-to-Face kiosk) attempting synchronized authentication.
+* **On-Screen Text:** `Scenario: Network Partition + Concurrent F2F Handshake`
+* **VO:** "When legacy APIs drop payload state during physical-to-cloud handoffs, your customer pays the price."
 
-**[00:00 - 00:06] The Edge-Case Hook**
-* **Visual:** Dark-mode terminal interface showing a real-time 99.99th percentile traffic spike across hybrid endpoints (SaaS dashboard juxtaposed with F2F field POS terminal). Red anomaly tag triggers.
-* **VO:** "When edge conditions break standard pipelines, your stack shouldn't stall."
-* **On-Screen Text (OST):** *Beacon API: Zero-Drop Ingestion*
+### [00:06 - 00:16] The Engine: Beacon API Idempotency & Triage
+* **Visual:** Rapid zoom into Beacon API Console. Graph lights up green as Beacon resolves race conditions via distributed idempotent replay in <12ms. Metric overlay extracted from `Business Document: Company Document` verifying zero data loss across SaaS endpoints.
+* **SFX:** Clean, crisp UI interaction sound.
+* **VO:** "Meet Beacon API by I.T. Skokos. Built to hunt down edge cases, auto-heal schema drift, and guarantee sub-millisecond event integrity."
 
-**[00:06 - 00:15] Core Mechanism & Resolution**
-* **Visual:** Instant switch to Beacon API UI. The dynamic payload inspector automatically isolates an asynchronous webhook mismatch between cloud records and face-to-face service dispatch in under 4ms.
-* **VO:** "Meet Beacon API. Instant reconciliation from cloud microservices down to field-level client interactions."
-* **OST:** *Sub-5ms Edge Telemetry | SaaS + F2F Unified*
+### [00:16 - 00:24] The Hybrid Synergy: SaaS Meets In-Person Services
+* **Visual:** Mobile dashboard and physical F2F tablet instantly synchronize status. Live telemetry renders instant dispatch across 10,000 nodes.
+* **VO:** "From cloud microservices to on-site face-to-face execution, Beacon bridges the gap without missing a single packet."
 
-**[00:15 - 00:24] The Archeological Differentiator**
-* **Visual:** Quick split-screen: Left shows 100k simulated packet drops; Right shows Beacon API auto-healing routes and syncing offline field logs without latency drag.
-* **VO:** "Uncover hidden failure modes before your clients feel them. Resilient by design."
-* **OST:** *Self-Healing Webhook Matrix*
-
-**[00:24 - 00:30] Call to Action**
-* **Visual:** Clean transition to I.T. Skokos kinetic lockup with live endpoint URL and sandbox key CTA.
-* **VO:** "Deploy in minutes. Test your edge today with Beacon API."
-* **OST & Compliance:** *it-skokos.com/beacon-api | Enterprise SLA terms apply (Ref: Company Document).*
+### [00:24 - 00:30] CTA & Outro
+* **Visual:** Minimalist I.T. Skokos slate. Dynamic terminal prompt: `curl -X POST https://api.itskokos.com/v1/beacon/stress-test`
+* **VO:** "Stress-test your worst-case scenarios today. Deploy Beacon API."
 ```
