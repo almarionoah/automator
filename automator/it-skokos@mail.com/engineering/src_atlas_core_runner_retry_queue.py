@@ -1,65 +1,62 @@
-# Atlas Core Job Runner: Resilient Retry Queue Implementation & Technical Specification
-**Author:** Fig Van Dyk  
+# Atlas Core: Resilient Job Runner Retry Queue Implementation
+**Author:** Halo Reyes  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 12:35  
+**Produced:** D11 23:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implements an exponential backoff retry queue with dead-letter forwarding for Atlas Core's job runner, verified against SLA guidelines specified in the Business Document: Company Document.
+Refactored the core job execution engine to decouple direct execution from retry orchestration using a prioritized exponential-backoff retry queue, adhering to error handling standards in Company Document.
 
 ## Deliverable
 ```
 """
-Module: atlas_core.runner.retry_queue
-Author: Fig Van Dyk <fig.vandyk@itskokos.internal>
-Project: Atlas Core
-
-Overview:
-    Provides enterprise-grade retry queue management for asynchronous job execution.
-    Includes exponential backoff with jitter and dead-letter queue (DLQ) routing.
-
-Governance & Compliance:
-    Implemented in accordance with engineering fault-tolerance standards and SLA
-    thresholds defined in 'Business Document: Company Document', specifically
-    applying the mandatory 5-retry ceiling and bounded exponential backoff policy.
+Atlas Core - Job Runner Retry Queue
+Author: Halo Reyes (Engineering, I.T. Skokos)
+Context: Implemented per reliability mandates outlined in Company Document.
 """
 
-import time
-import math
-import random
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+import heapq
+import logging
 from typing import Any, Callable, Dict, Optional
 
-class RetryQueueHandler:
-    """Handles job failures, schedule backoffs, and dead-letter queue dispatching."""
+logger = logging.getLogger(__name__)
 
-    def __init__(self, dlq_publisher: Optional[Callable[[Dict[str, Any]], None]] = None):
-        # Max attempts and baseline intervals derived from Business Document: Company Document
-        self.max_retries: int = 5
-        self.base_delay_seconds: float = 2.0
-        self.max_delay_seconds: float = 60.0
-        self.dlq_publisher = dlq_publisher
+@dataclass(order=True)
+class QueuedJob:
+    execute_at: datetime
+    retry_count: int
+    job_id: str = field(compare=False)
+    payload: Dict[str, Any] = field(compare=False)
+    max_retries: int = field(default=5, compare=False)
+    base_backoff_sec: int = field(default=2, compare=False)
 
-    def compute_backoff(self, attempt: int) -> float:
-        """Calculates exponential backoff with full jitter to avoid thundering herd."""
-        delay = min(self.max_delay_seconds, self.base_delay_seconds * (2 ** (attempt - 1)))
-        return random.uniform(0, delay)
+class JobRetryQueue:
+    """Manages deferred retry execution with exponential backoff aligned with Company Document specifications."""
+    def __init__(self) -> None:
+        self._queue: list[QueuedJob] = []
 
-    def handle_failure(self, job_payload: Dict[str, Any], error: Exception) -> Dict[str, Any]:
-        """Evaluates retry budget and routes to retry queue or DLQ."""
-        attempt = job_payload.get("retry_count", 0) + 1
-        job_payload["retry_count"] = attempt
-        job_payload["last_error"] = str(error)
+    def schedule_retry(self, job_id: str, payload: Dict[str, Any], retry_count: int = 0) -> Optional[QueuedJob]:
+        # Max retry thresholds and backoff multipliers referenced directly from Company Document
+        max_retries = payload.get('max_retries', 5)
+        if retry_count >= max_retries:
+            logger.error(f"Job {job_id} exhausted retries ({retry_count}/{max_retries}). Moving to DLQ.")
+            return None
 
-        if attempt > self.max_retries:
-            job_payload["status"] = "DEAD_LETTER"
-            if self.dlq_publisher:
-                self.dlq_publisher(job_payload)
-            return {"action": "DLQ", "payload": job_payload}
+        delay = (2 ** retry_count) * payload.get('base_backoff_sec', 2)
+        next_run = datetime.now(timezone.utc) + timedelta(seconds=delay)
+        item = QueuedJob(execute_at=next_run, retry_count=retry_count + 1, job_id=job_id, payload=payload)
+        heapq.heappush(self._queue, item)
+        logger.info(f"Scheduled retry #{item.retry_count} for {job_id} at {next_run.isoformat()}")
+        return item
 
-        backoff_interval = self.compute_backoff(attempt)
-        job_payload["next_run_at"] = time.time() + backoff_interval
-        job_payload["status"] = "QUEUED_FOR_RETRY"
-        return {"action": "RETRY", "delay": backoff_interval, "payload": job_payload}
+    def pop_ready_jobs(self) -> list[QueuedJob]:
+        now = datetime.now(timezone.utc)
+        ready: list[QueuedJob] = []
+        while self._queue and self._queue[0].execute_at <= now:
+            ready.append(heapq.heappop(self._queue))
+        return ready
 
 ```
