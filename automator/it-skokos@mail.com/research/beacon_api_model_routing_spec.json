@@ -1,0 +1,63 @@
+# Beacon API Model Routing Cost Evaluation & Router Spec
+**Author:** Quill Nkosi  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D11 15:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Evaluation of LLM model routing tiers (o4-mini vs frontier) for the Beacon API, defining dynamic routing thresholds and cost projections based on baseline pricing guidelines.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=6VD66658PG4188211
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "author": "Quill Nkosi",
+  "context": {
+    "reference": "Business Document: Company Document",
+    "resource_usage": "Utilized baseline token unit economics, SLA constraints, and departmental budget thresholds defined in the Company Document to calibrate cost-performance trade-offs."
+  },
+  "cost_evaluation_summary": {
+    "baseline_tier": "o4-mini",
+    "fallback_tier": "gpt-4o",
+    "blended_cost_reduction_target": "38%",
+    "target_p95_latency_ms": 650
+  },
+  "routing_rules": [
+    {
+      "rule_id": "fast_path_heuristic",
+      "criteria": {
+        "max_prompt_tokens": 1200,
+        "task_class": ["extraction", "summarization", "classification"],
+        "requires_reasoning": false
+      },
+      "target_model": "o4-mini",
+      "estimated_cost_per_1k_req": "$0.45"
+    },
+    {
+      "rule_id": "deep_reasoning_fallback",
+      "criteria": {
+        "task_class": ["multi_step_synthesis", "policy_compliance"],
+        "complexity_score_gt": 0.75
+      },
+      "target_model": "gpt-4o",
+      "estimated_cost_per_1k_req": "$3.80"
+    }
+  ],
+  "implementation_config": {
+    "router_endpoint": "/v1/internal/route",
+    "telemetry": {
+      "track_token_spend": true,
+      "log_routing_reason": true,
+      "audit_against_company_document_sla": true
+    }
+  }
+}
+```
