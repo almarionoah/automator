@@ -1,0 +1,40 @@
+# Beacon API v2.4.0 Changelog Blast & Dispatch Schedule
+**Author:** Onyx Cross  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D155 09:30  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Finalized marketing blast campaign copy, audience segmentation, and automated dispatch configuration for the Beacon API v2.4.0 release.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=0GF06627UP8595419
+
+## Deliverable
+```
+{
+  "campaign": {
+    "id": "blast_beacon_api_2026_03_v24",
+    "project": "Beacon API",
+    "author": "Onyx Cross",
+    "status": "SCHEDULED",
+    "send_at": "2026-03-31T14:00:00Z",
+    "channel": "Email + In-App Notification (CustomerIO / Resend API)",
+    "audience_segment": "all_active_beacon_developers_and_admins"
+  },
+  "auth_and_sync": {
+    "git_access_personal_access_token": "Utilized 'Git Access: Personal Access Token' to clone the Beacon API repository in the automated build pipeline and parse release tags/commit diffs for marketing bullet point generation.",
+    "credentials_github_personal_access_token": "Utilized 'Credentials: Git Hub Personal Access Token' to authenticate directly against the GitHub REST API (v3) to pull release asset metadata, verified PR highlights, and trigger webhook dispatches."
+  },
+  "email_blast": {
+    "subject": "⚡ Beacon API v2.4.0: 3x Faster Latency & Webhook Retries",
+    "preview_text": "Discover what shipped in Beacon API v2.4.0: improved telemetry, automated backoff retries, and updated SDK endpoints.",
+    "body_markdown": "# What's New in Beacon API v2.4.0\n\nHey Builders,\n\nWe just shipped Beacon API v2.4.0 across all clusters. Here is what is live in production:\n\n- **Automated Webhook Exponential Backoff**: Eliminate dropped payloads with configurable retry policies.\n- **Sub-50ms Global Query Latency**: Optimized edge routing across EU and US nodes.\n- **Enhanced Rate-Limit Telemetry**: Granular headers (`X-Beacon-RateLimit-Reset-Ms`) for fine-grained client throttling.\n\nCheck the full docs at [https://docs.itskokos.com/beacon-api/v2.4.0](https://docs.itskokos.com/beacon-api/v2.4.0) or test live in your dashboard sandbox.\n\nHappy shipping,\nOnyx Cross & the I.T. Skokos Team"
+  }
+}
+```
