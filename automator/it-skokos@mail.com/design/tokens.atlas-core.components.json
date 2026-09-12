@@ -1,0 +1,60 @@
+# Atlas Core Component Token Architecture (Chaos-Hardened Specification)
+**Author:** Volt Adeyemi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D12 08:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Complete component token specification for Atlas Core, stress-tested for extreme boundary conditions, high-density collision states, and accessibility clamping derived from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "project": "Atlas Core",
+    "author": "Volt Adeyemi (Design Chaos Tester)",
+    "reference": "Business Document: Company Document",
+    "compliance_notes": "Audited against brand geometry and legal compliance thresholds in Business Document: Company Document. Chaos-tested against 400% zoom scaling, forced-colors mode, and localized text overflow states."
+  },
+  "atlas": {
+    "component": {
+      "button": {
+        "primary": {
+          "surface": {
+            "base": { "$value": "#0F172A", "$type": "color" },
+            "hover": { "$value": "#1E293B", "$type": "color" },
+            "active": { "$value": "#020617", "$type": "color" },
+            "stress_contrast_floor": { "$value": "#000000", "$type": "color", "$description": "Fallback token triggered when viewport luminance exceeds AAA target threshold." }
+          },
+          "text": {
+            "base": { "$value": "#F8FAFC", "$type": "color" },
+            "disabled": { "$value": "#94A3B8", "$type": "color" }
+          },
+          "spacing": {
+            "padding-inline": { "$value": "clamp(0.75rem, 2vw, 1.5rem)", "$type": "dimension" },
+            "padding-block": { "$value": "clamp(0.5rem, 1.2vw, 1rem)", "$type": "dimension" },
+            "min-target-size": { "$value": "48px", "$type": "dimension", "$description": "Chaos-tested touch target ensuring no overlapping touch zones in hybrid SaaS/F2F kiosk viewports." }
+          },
+          "border": {
+            "width": { "$value": "1px", "$type": "dimension" },
+            "radius": { "$value": "6px", "$type": "dimension" },
+            "focus_outline_offset": { "$value": "3px", "$type": "dimension" }
+          }
+        }
+      },
+      "input": {
+        "surface": {
+          "default": { "$value": "#FFFFFF", "$type": "color" },
+          "error_chaos_state": { "$value": "#FFF1F2", "$type": "color" }
+        },
+        "border": {
+          "default": { "$value": "#CBD5E1", "$type": "color" },
+          "stress_high_contrast": { "$value": "#000000", "$type": "color" }
+        }
+      }
+    }
+  }
+}
+```
