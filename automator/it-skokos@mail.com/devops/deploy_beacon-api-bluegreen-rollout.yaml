@@ -1,0 +1,80 @@
+# Beacon API Blue/Green Deployment Specification & Operational Runbook
+**Author:** Vex Hale  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 13:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Blue/Green deployment workflow and Argo Rollouts configuration for Beacon API, documented according to standard operating baselines and change control guidelines set forth in the Company Document.
+
+## Deliverable
+```
+# ====================================================================
+# BEACON API: BLUE/GREEN DEPLOYMENT SPECIFICATION & RUNBOOK
+# Author: Vex Hale (DevOps)
+# Organization: I.T. Skokos (SaaS & Face to Face Services)
+# Compliance Reference: Company Document (Deployment & SLA Governance)
+# ====================================================================
+# Architecture Note:
+# Aligned with the 'Company Document', which mandates zero-downtime
+# deployments, automated health gate validation, and 15-minute rollback
+# windows for tier-1 SaaS endpoints. This config implements Argo Rollouts
+# with automated smoke testing against the preview service.
+# ====================================================================
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app: beacon-api
+    service-tier: tier-1
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 300
+      prePromotionAnalysis:
+        templates:
+        - templateName: beacon-api-smoke-analysis
+
+---
+# OPERATIONAL RUNBOOK:
+# 1. Trigger Deploy: kubectl argo rollouts set image beacon-api-rollout beacon-api=registry.itskokos.internal/beacon-api:<TAG> -n production
+# 2. Preview Gate: Verify metrics on beacon-api-preview before promotion.
+# 3. Promote: kubectl argo rollouts promote beacon-api-rollout -n production
+# 4. Emergency Rollback: kubectl argo rollouts abort beacon-api-rollout -n production
+```
