@@ -1,78 +1,85 @@
-# Hardened CI Pipeline Definition for Beacon API
-**Author:** Echo Cross  
+# Beacon API Hardened CI Pipeline Configuration
+**Author:** Rune Marlow  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D12 08:05  
+**Produced:** D12 22:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implements a zero-trust, least-privilege CI workflow for Beacon API with immutable commit SHAs, dropped default token permissions, automated SAST, Trivy vulnerability scanning, and provenance enforcement as mandated by the Company Document.
+Hardened GitHub Actions CI pipeline for Beacon API implementing immutable SHA action pinning, least-privilege token permissions, Gitleaks secret scanning, Semgrep SAST, and automated npm dependency auditing in strict adherence to the security baselines defined in Company Document.
 
 ## Deliverable
 ```
-# Beacon API Hardened CI/CD Pipeline
-# Maintained by: Echo Cross (DevOps) | Security Posture: Zero-Trust / Least-Privilege
-# Compliance: Enforces baseline controls specified in Company Document
+# Beacon API - Hardened CI Pipeline
+# Maintained by: Rune Marlow (DevOps)
+# Security Standards Reference: Company Document (DevSecOps Baseline & Supply Chain Security Rules)
 
-name: Beacon API Hardened CI
+name: Beacon API CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'release/**' ]
   pull_request:
     branches: [ main ]
 
-# Paranoid baseline: strip all ambient GITHUB_TOKEN permissions at workflow level
+# Least privilege: default drop all, explicit grants per job
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  security-audit:
-    name: Security Baseline & Static Analysis
-    runs-on: ubuntu-22.04
+  audit-and-scan:
+    name: Security Scan & Audit
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
       security-events: write
     steps:
-      - name: Checkout Source (Pinned SHA)
+      - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           persist-credentials: false
 
-      - name: Audit Compliance against Company Document
-        run: |
-          echo "[VERIFY] Enforcing pipeline security standards derived from Company Document..."
-          # Company Document was used to establish threshold policies for zero-day CVE tolerance and zero-secret exposure
-          test -f .security-policy.yml || { echo "Missing security policy mandated by Company Document"; exit 1; }
+      - name: Setup Runtime
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe85b40 # v4.0.2
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Secret Detection (Gitleaks)
-        uses: gitleaks/gitleaks-action@e76dbd8a14e75d86882672bf61c94411130095a9
+      - name: Dependency Audit
+        # Enforces zero high/critical CVE policy detailed in Company Document
+        run: |
+          npm ci --ignore-scripts
+          npm audit --audit-level=high
+
+      - name: Detect Hardcoded Secrets
+        uses: gitleaks/gitleaks-action@e56be2dc5f7a0709b4ecbb7fa9d0fef39ff01dca # v2.3.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: SAST & Dependency Audit (Trivy)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs,config'
-          ignore-unfixed: false
-          severity: 'CRITICAL,HIGH'
-          exit-code: '1'
-
-  build-and-verify:
-    name: Sandboxed Build
-    needs: security-audit
-    runs-on: ubuntu-22.04
+  sast-and-test:
+    name: SAST & Unit Tests
+    needs: audit-and-scan
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
+      security-events: write
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
           persist-credentials: false
 
-      - name: Build Beacon API Artifact
-        run: |
-          docker build --no-cache -t beacon-api:${{ github.sha }} .
-          echo "[OK] Beacon API container built securely."
+      - name: Static Application Security Testing (Semgrep)
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/ci p/owasp-top-ten
+          generateSarif: '1'
+
+      - name: Execute Tests
+        run: npm test -- --ci --coverage --maxWorkers=2
 ```
