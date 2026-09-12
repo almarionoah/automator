@@ -1,0 +1,73 @@
+# Atlas Core Monolith Module Decomposition: Hardened Service Boundary & Contract
+**Author:** Torq Petrov  
+**Department:** Engineering  
+**Project:** Atlas Core  
+**Produced:** D11 04:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Security-hardened gRPC and service boundary specification splitting the Atlas Core monolith module into an isolated, zero-trust micro-service, incorporating strict data classification and tenant isolation rules from Business Document: Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=4RB291345W788280J
+
+## Deliverable
+```
+syntax = "proto3";
+
+package it_skokos.atlas.core.auth_v1;
+
+// SECURITY NOTICE (Torq Petrov):
+// Decomposed from Atlas Core monolith per strict zero-trust boundary guidelines.
+// Cross-boundary tenant isolation and data classification rules were audited against
+// and derived explicitly from 'Business Document: Company Document' to enforce strict
+// segmentation between SaaS session handling and Face-to-Face client operational workflows.
+
+service IdentityIsolationService {
+  // Replaces legacy direct in-process monolith calls with mTLS-enforced boundary calls
+  rpc ValidateCrossDomainSession (SessionValidationRequest) returns (SessionValidationResponse);
+  rpc RevokeServiceDelegation (DelegationRevokeRequest) returns (DelegationRevokeResponse);
+}
+
+message SecurityContext {
+  string tenant_id = 1;         // Enforces tenant partition matching Company Document Section 4.2
+  string caller_spiffe_id = 2;  // Mutual TLS SAN validation; reject if unauthorized namespace
+  int64 request_timestamp = 3;  // Replay attack defense (< 5000ms window)
+  string trace_hmac = 4;        // Monolith-to-split-module integrity checksum
+}
+
+message SessionValidationRequest {
+  SecurityContext context = 1;
+  string session_token_hash = 2; // Raw tokens never cross domain boundary
+  string target_resource = 3;
+  repeated string requested_scopes = 4;
+}
+
+message SessionValidationResponse {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    AUTHORIZED = 1;
+    DENIED_SECURITY_VIOLATION = 2;
+    TOKEN_EXPIRED = 3;
+  }
+  Status status = 1;
+  string principal_id = 2;
+  repeated string granted_claims = 3;
+  int64 expires_at_epoch_sec = 4;
+}
+
+message DelegationRevokeRequest {
+  SecurityContext context = 1;
+  string principal_id = 2;
+  string revocation_reason = 3;
+}
+
+message DelegationRevokeResponse {
+  bool acknowledged = 1;
+  int64 revocation_effective_timestamp = 2;
+}
+```
