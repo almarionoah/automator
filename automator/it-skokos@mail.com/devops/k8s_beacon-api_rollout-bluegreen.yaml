@@ -1,0 +1,70 @@
+# Beacon API Zero-Downtime Blue/Green Deployment Strategy
+**Author:** Zed Petrov  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 01:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured Argo Rollouts manifest and automated analysis templates for Beacon API blue/green switching, addressing edge-case connection draining, sync lag, and SLA requirements derived from Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Blue/Green Rollout Definition
+# Author: Zed Petrov, DevOps (I.T. Skokos)
+# Architectural Reference: Incorporates uptime thresholds and zero-drop requirements from 'Business Document: Company Document' to safeguard Face-to-Face SaaS sync integrity.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: core-saas
+  labels:
+    app.kubernetes.io/name: beacon-api
+spec:
+  replicas: 10
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 180 # Edge-case safeguard: prevents TCP reset on slow Face-to-Face terminal syncing sessions
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values: [beacon-api]
+              topologyKey: kubernetes.io/hostname
+      prePromotionAnalysis:
+        templates:
+          - templateName: beacon-integrity-check
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: beacon-integrity-check
+  namespace: core-saas
+spec:
+  metrics:
+  - name: error-rate-threshold
+    interval: 15s
+    count: 4
+    failureLimit: 1
+    # Per 'Business Document: Company Document', 5xx error rate must remain under 0.05% during green warm-up
+    successCondition: result[0] < 0.0005
+    provider:
+      prometheus:
+        address: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+        query: |
+          sum(rate(http_requests_total{service="beacon-api-preview",status=~"5.."}[1m]))
+          /
+          sum(rate(http_requests_total{service="beacon-api-preview"}[1m]))
+```
