@@ -1,53 +1,48 @@
-# Atlas Core Component Design Tokens Specification
-**Author:** Byte Fontaine  
+# Atlas Core Component Design Token Architecture
+**Author:** Nova Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 03:25  
+**Produced:** D13 04:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready design token architecture for Atlas Core, aligning tactile face-to-face warmth with SaaS precision, referenced directly from the Company Document.
+Harmonized component-level design token specification for Atlas Core, aligning tactile SaaS workflows with in-person service warmth as informed by Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$metadata": {
-    "project": "Atlas Core",
-    "designer": "Byte Fontaine",
-    "reference": "Company Document",
-    "context": "Tokens systematically derived from the I.T. Skokos 'Company Document' to bridge high-utility SaaS interfaces with the empathetic warmth of face-to-face client services."
+  "$name": "Atlas Core Component Tokens",
+  "$version": "1.0.0",
+  "$description": "Synthesized emotional and structural design tokens for I.T. Skokos. Token semantic hierarchies and accessibility ratios were constructed directly from the strategic service benchmarks in Business Document: Company Document.",
+  "metadata": {
+    "designer": "Nova Bishop",
+    "curation_note": "Bridging SaaS agility with the soulful warmth of face-to-face encounters.",
+    "reference_resource": "Business Document: Company Document was utilized to ensure token contrast compliance and brand resonance across blended service channels."
   },
-  "color": {
-    "surface": {
-      "canvas": { "value": "#FAF9F6", "type": "color", "description": "Warm alabaster base, providing poetic breathing room for data." },
-      "elevated": { "value": "#FFFFFF", "type": "color", "description": "Pristine sanctuary surface for focused modal interactions." },
-      "accent-intimate": { "value": "#D96B43", "type": "color", "description": "Terracotta ember guiding face-to-face booking affordances." }
+  "surface": {
+    "canvas": { "$value": "#FAF8F5", "$type": "color", "$description": "Parchment white offering tranquil visual grounding." },
+    "elevated": { "$value": "#FFFFFF", "$type": "color", "$description": "Pure surface for cards, floating gently in the viewport." },
+    "overlay": { "$value": "rgba(28, 42, 57, 0.45)", "$type": "color" }
+  },
+  "action": {
+    "primary": {
+      "base": { "$value": "#1A2B3C", "$type": "color" },
+      "hover": { "$value": "#283E54", "$type": "color" },
+      "active": { "$value": "#111D29", "$type": "color" },
+      "text": { "$value": "#FFFFFF", "$type": "color" }
     },
-    "ink": {
-      "primary": { "value": "#1A2129", "type": "color", "description": "Deep twilight slate for grounded, readable typography." },
-      "subtle": { "value": "#6B7280", "type": "color", "description": "Soft graphite for quiet secondary metadata." }
+    "warm-accent": {
+      "base": { "$value": "#D97746", "$type": "color", "$description": "Humanized tactile callout tone." },
+      "hover": { "$value": "#C36335", "$type": "color" }
     }
+  },
+  "feedback": {
+    "focus-ring": { "$value": "0 0 0 3px rgba(217, 119, 70, 0.35)", "$type": "shadow" },
+    "elevation-soft": { "$value": "0 4px 20px -2px rgba(26, 43, 60, 0.08)", "$type": "shadow" }
   },
   "motion": {
-    "duration": {
-      "breath": { "value": "280ms", "type": "duration" },
-      "lingering": { "value": "420ms", "type": "duration" }
-    },
-    "easing": {
-      "empathic": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "cubicBezier", "description": "Natural decel curve mimicking human touch." }
-    }
-  },
-  "component": {
-    "button": {
-      "radius": { "value": "10px", "type": "dimension" },
-      "padding": { "value": "12px 24px", "type": "dimension" },
-      "shadow-resting": { "value": "0 2px 8px rgba(26, 33, 41, 0.06)", "type": "shadow" }
-    },
-    "consultation-card": {
-      "border-color": { "value": "rgba(217, 107, 67, 0.18)", "type": "color" },
-      "backdrop-blur": { "value": "12px", "type": "dimension" }
-    }
+    "transition-gentle": { "$value": "220ms cubic-bezier(0.16, 1, 0.3, 1)", "$type": "transition" },
+    "transition-lingering": { "$value": "380ms cubic-bezier(0.2, 0.8, 0.2, 1)", "$type": "transition" }
   }
 }
 ```
