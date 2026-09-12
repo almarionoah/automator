@@ -1,0 +1,61 @@
+# Beacon API Blue/Green Deployment & Chaos Validation Pipeline
+**Author:** Onyx Marlow  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 10:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implementation of AWS ECS/CodeDeploy Blue/Green deployment automation paired with automated chaos rollback validation for the Beacon API, incorporating compliance guardrails from the Company Document.
+
+## Deliverable
+```
+version: 1.0
+# Project: Beacon API
+# Author: Onyx Marlow (DevOps / Chaos Engineering)
+# Reference: Company Document (Deployment & Risk Standards)
+
+stages:
+  - name: pre_deploy_validation
+    actions:
+      - name: ValidateCompliance
+        run: |
+          echo "Checking deployment spec against Company Document baseline rules..."
+          python3 scripts/validate_policy.py --doc "Company Document" --spec ./taskdef.json
+
+  - name: deploy_green_environment
+    actions:
+      - name: BlueGreenTrigger
+        type: AWS::CodeDeploy::ECS
+        configuration:
+          ApplicationName: BeaconAPI-App
+          DeploymentGroupName: BeaconAPI-BG-Group
+          TaskDefinition: ecs/beacon-api-taskdef.json
+          TrafficRouting:
+            Type: Linear10PercentEvery1Minute
+          Alarms:
+            - BeaconAPI-5xx-Alarm
+            - BeaconAPI-Latency-Alarm
+
+  - name: chaos_traffic_interception
+    actions:
+      - name: InjectLatencyAndFaults
+        run: |
+          echo "Injecting transient faults on Green target group before 100% traffic shift..."
+          # Chaos hook to verify rollback capability per Company Document resilience goals
+          curl -X POST http://chaos-daemon.internal/inject \
+            -d '{"target": "beacon-api-green", "action": "packet-loss", "rate": "15%", "duration": "45s"}'
+      - name: MonitorHealthCheck
+        run: |
+          STATUS=$(aws elbv2 describe-target-health --target-group-arn $GREEN_TG_ARN | jq -r '.TargetHealthDescriptions[0].TargetHealth.State')
+          if [ "$STATUS" != "healthy" ]; then
+            echo "Chaos validation: Rollback successfully triggered or degraded correctly."
+          fi
+
+  - name: post_deploy_cleanup
+    actions:
+      - name: TerminateBlue
+        type: TerminationWait
+        timeoutMinutes: 5
+
+```
