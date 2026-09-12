@@ -1,58 +1,36 @@
-# Atlas Core: Mobile Navigation Design Specification & Token Refactor
-**Author:** Pixel Hale  
+# Atlas Core: Mobile Navigation Design Specification & Tactile Architecture
+**Author:** Pixel Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 15:35  
+**Produced:** D12 18:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive design spec and token architecture for the Atlas Core mobile navigation overhaul. Consolidates legacy drawer trees, eliminates redundant layout wrappers, and aligns SaaS vs Face-to-Face service routing per the Company Document.
+A human-centered mobile navigation design specification and interaction blueprint for Atlas Core, aligning tactile ergonomics with operational workflows established in the Company Document.
 
 ## Deliverable
 ```
-# Design Spec: Atlas Core Mobile Navigation Overhaul (v2.4.0)
-**Author:** Pixel Hale, Design Agent (GPT-5.6) | **Working Style:** Obsessive Refactorer
+# ATLAS CORE — MOBILE NAVIGATION SPECIFICATION
+**Author:** Pixel Cross, Lead UX Romantic
+**Scope:** Navigation Overhaul (SaaS Engine & In-Person Touchpoints)
 
-## 1. Executive Summary & Refactoring Audit
-Re-architected the Atlas Core mobile navigation from the ground up. Pruned 14 redundant wrapper nodes, eliminated 22 legacy hardcoded color values, and consolidated 3 disparate drawer variants into a single unified polymorphic bottom-sheet pattern.
+---
 
-## 2. Resource Integration
-* **Company Document**: Analyzed to establish the exact split-hierarchy between I.T. Skokos SaaS platform navigation (analytics, workspace switcher, API settings) and Face-to-Face services (on-site dispatch, technician booking calendar). All touch targets adhere strictly to the compliance metrics outlined in this document.
+### 1. The Design Philosophy & Reference Framing
+Navigation is not a mere utility; it is the soft, continuous handshake between human intent and system intelligence. Grounded in the foundational standards of our **Company Document**, this overhaul bridges Atlas Core’s hybrid identity: harmonizing complex digital SaaS analytics with high-touch Face-to-Face service scheduling into a single, intuitive thumb-arc.
 
-## 3. Semantic Token Mappings
-```json
-{
-  "nav.mobile.surface": "var(--color-surface-elevated-1)",
-  "nav.mobile.scrim": "rgba(15, 23, 42, 0.64)",
-  "nav.mobile.touch-target.min": "48px",
-  "nav.mobile.spring.easing": "cubic-bezier(0.16, 1, 0.3, 1)",
-  "nav.mobile.spring.duration": "240ms"
-}
-```
+*Reference Application:* The **Company Document** provided the service taxonomy matrix and dual-persona requirements used to balance high-frequency SaaS telemetry monitors with frictionless in-person consultant dispatching.
 
-## 4. Component Structure & DOM Simplification
-- **Pre-refactor**: 18 nested DOM nodes, inline style overrides, mixed routing handlers.
-- **Post-refactor**: 5 semantic nodes (`<nav>`, `<dialog>`, `<header>`, `<ul>`, `<footer>`).
+### 2. Ergonomic Architecture (The Thumb Sanctuary)
+* **Floating Dock (`#atlas-dock`):** Fixed 16px above viewport bottom. 64px height, 12px pill radius. Frosted acrylic surface (`backdrop-filter: blur(20px); rgba(255,255,255,0.82)`).
+* **Primary Anchor Points (4 Nodes):**
+  1. `Workspace` (SaaS Core Viewports)
+  2. `Sessions` (Face-to-Face Booking & Logs via Company Document workflows)
+  3. `Quick-Pulse` (Central Action Trigger: 56px circular elevated node)
+  4. `Profile & Concierge`
 
-```tsx
-export const MobileNavDrawer = ({ isOpen, activeService }: MobileNavProps) => {
-  return (
-    <nav aria-label="Mobile Primary" className="fixed inset-0 z-50 pointer-events-none data-[open=true]:pointer-events-auto">
-      <div className="fixed inset-0 bg-scrim transition-opacity duration-240" aria-hidden="true" />
-      <aside role="dialog" aria-modal="true" className="fixed bottom-0 w-full rounded-t-2xl bg-surface p-4 shadow-xl">
-        <header className="flex justify-between items-center mb-4">
-          <ServiceContextBadge service={activeService} />
-          <CloseTrigger aria-label="Dismiss navigation" />
-        </header>
-        <NavigationList items={activeService === 'saas' ? SaaSNavRoutes : F2FNavRoutes} />
-      </aside>
-    </nav>
-  );
-};
-```
-
-## 5. Accessibility & Interaction Specs
-- Focus-trap bounded to drawer content.
-- Auto-locks body scroll via `overflow: hidden` on root container.
-- WCAG 2.1 AAA contrast compliance achieved across both Light and Dark themes.
+### 3. Motion & Micro-Interactions
+* **Spring Dynamics:** `stiffness: 320`, `damping: 28`, `mass: 1`.
+* **Haptic Choreography:** On node selection, invoke `UIFeedbackType.lightImpact` (15ms). Long-press on `Quick-Pulse` invokes soft expansion drawer with `UIFeedbackType.mediumImpact`.
+* **Drawer Gesture Sheet:** Bottom-anchored sheet expands to 85vh with velocity-based snapping (<0.4m/s snaps to half-sheet, >0.4m/s snaps to full view).
 ```
