@@ -1,41 +1,31 @@
 # Atlas Core: Mobile Navigation Overhaul Design Specification
-**Author:** Prism Bishop  
+**Author:** Nova Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 18:50  
+**Produced:** D13 03:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Complete design specification and architecture documentation for the Atlas Core mobile navigation overhaul, incorporating account hierarchy and face-to-face service standards.
+A UX romantic design specification detailing the tactile architecture, choreography, and emotional resonance of the Atlas Core mobile navigation system, aligning digital SaaS workflows with face-to-face services.
 
 ## Deliverable
 ```
-# Atlas Core — Mobile Navigation Overhaul (v2.0)
-**Author:** Prism Bishop (Design) | **Project:** Atlas Core
+# Design Specification: Atlas Core Mobile Navigation Overhaul
+*Lead Designer: Nova Bishop | Style: UX Romantic | Project: Atlas Core*
 
-## 1. Governance & Strategic Alignment
-As part of our documentation-first methodology, this overhaul establishes a standardized mobile navigation pattern across SaaS tooling and Face-to-Face service modules.
-- **Referenced Resource:** `Business Document: Company Document` was utilized to map tiered account permission matrices and align mobile user flows with our omnichannel service level agreements.
+## 1. Vision & Emotional Architecture
+Mobile navigation should feel like an intuitive extension of physical touch—a serene transition between SaaS productivity and warm, face-to-face service facilitation. This overhaul replaces rigid drawers with a floating, thumb-ergonomic glass bar that responds harmoniously to user intent.
 
-## 2. Navigation Architecture
-Replaced legacy drawer navigation with a persistent 4-tab bottom bar and contextual quick-action sheet:
-- `Tab 1: Overview` (`/m/overview`) — SaaS analytics and real-time platform telemetry.
-- `Tab 2: Services & F2F` (`/m/services`) — On-site dispatch tracking, face-to-face appointment management.
-- `Tab 3: Feeds` (`/m/activity`) — System alerts, notifications, audit logs.
-- `Tab 4: Settings/Org` (`/m/org`) — Organization profile, docs, switch context.
+## 2. Institutional Alignment
+- **Business Document: Company Document**: Directly referenced to restructure primary information architecture. We mapped the foundational service taxonomy and hybrid delivery models defined in the Company Document into a unified 4-node mobile continuum: Dashboard (SaaS), Engagements (F2F Booking & Status), Intelligence (Atlas Insights), and Atelier (Account & Profile).
 
-## 3. Design Tokens & Ergonomics
-- **Container Height:** `64px` + `env(safe-area-inset-bottom)`
-- **Touch Target:** `48x48px` minimum bounding area per tab
-- **Iconography:** 24px stroke geometry (`1.75px` default, `2.0px` active fill)
-- **Tokens:**
-  - Surface: `var(--nav-bg-glass: rgba(15, 23, 42, 0.88))`
-  - Active: `var(--nav-item-active: #0EA5E9)`
-  - Inactive: `var(--nav-item-idle: #64748B)`
-  - Elevation: `0 -1px 3px 0 rgba(0, 0, 0, 0.1)`
+## 3. Interaction Choreography & Motion Design
+- **Bottom Floating Dock**: Height: 64dp, Margin: 16dp float from base. Background: `rgba(255, 255, 255, 0.85)` with `backdrop-filter: blur(20px)` and gentle border glow `rgba(45, 55, 72, 0.08)`.
+- **Active Node Indicator**: Spring physics with organic damping (`stiffness: 320, damping: 28`). A soft pill of light glides under the selected icon.
+- **Haptic Feedback**: Micro-impact (`light_tick`, 15ms) on touch down; soft release on state confirmation.
+- **Sheet Transitions**: Upward velocity translates to an ease-out cubic curve (`cubic-bezier(0.16, 1, 0.3, 1)`), opening face-to-face schedule modals without jarring the context.
 
-## 4. Accessibility & Interaction Specs
-- **Haptics:** Selection feedback via `UIImpactFeedbackGenerator(light)` on tab switch.
-- **Accessibility (WCAG 2.1 AA):** Dynamic type scaling up to 200%; `aria-label` and `aria-current="page"` declared on all navigation items.
-- **Handoff:** Tokens and component state maps exported directly to the Atlas Core Design System repo.
+## 4. Accessibility & Human Ergonomics
+- Thumb-zone optimized: 92% of critical interactive targets sit inside the natural sweeping arc.
+- Dynamic Type scaled: Base 11pt captions scale up to 14pt without clipping dock geometry.
 ```
