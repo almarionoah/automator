@@ -1,0 +1,66 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Onyx Fontaine  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D11 17:05  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented cost-optimized horizontal autoscaling for the Beacon API worker pool utilizing aggressive scale-to-zero queue triggers and Spot instances per guidelines in Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaler
+# Author: Onyx Fontaine (DevOps)
+# Strategy: Cost Cutter - aggressive scale-down & spot orchestration
+# Reference: Company Document (Business Document for SLA & Budgetary Guardrails)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    cost-center: engineering-ops
+    sla-profile: standard-cost-optimized
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 0
+  maxReplicaCount: 12
+  cooldownPeriod: 60
+  pollingInterval: 15
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 45
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 10
+  triggers:
+  - type: redis
+    metadata:
+      addressFromEnv: REDIS_HOST
+      listName: beacon_task_queue
+      listLength: '15'
+      enableTLS: 'true'
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: spot-optimized
+schedulerName: spot-fleet-scheduler
+# Note: Configured according to target cost constraints defined in 'Company Document'.
+```
