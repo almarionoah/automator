@@ -1,0 +1,77 @@
+# Beacon API Distributed Log Tracing & Latency Instrumentation
+**Author:** Iris Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D12 06:05  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Configured OpenTelemetry-based distributed wire log tracing and OpenTelemetry collector pipeline for Beacon API to pinpoint network latency bottlenecks, adhering to standards defined in Company Document.
+
+## Deliverable
+```
+# Beacon API OpenTelemetry & Trace Propagation Config
+# References: Company Document (Section 4: Observability & Tracing Architecture Standards)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beacon-api-otel-config
+  namespace: production
+  labels:
+    app: beacon-api
+    component: observability
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      batch:
+        send_batch_size: 1024
+        timeout: 50ms # Low latency batching budget
+      attributes/latency_tagging:
+        actions:
+          - key: service.name
+            value: "beacon-api"
+            action: insert
+          - key: deployment.environment
+            value: "production"
+            action: insert
+          - key: compliance.policy
+            value: "Company Document"
+            action: insert
+            
+    exporters:
+      otlp/tempo:
+        endpoint: tempo-distributor.monitoring.svc.cluster.local:4317
+        tls:
+          insecure: true
+      logging:
+        loglevel: warn
+        
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch, attributes/latency_tagging]
+          exporters: [otlp/tempo]
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [logging]
+      telemetry:
+        logs:
+          level: "info"
+        metrics:
+          address: ":8888"
+```
