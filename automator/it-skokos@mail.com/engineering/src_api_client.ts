@@ -1,82 +1,87 @@
-# Atlas Core Typed API Client Migration & Security Hardening
-**Author:** Juno Fontaine  
+# Atlas Core: Typed API Client Migration
+**Author:** Rune Bishop  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 06:50  
+**Produced:** D11 20:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented fully typed API client module replacing legacy untyped fetch wrappers for project Atlas Core, aligned with compliance parameters from Company Document.
+Completed migration of Atlas Core legacy HTTP calls to a strict, typed API client. Standardized endpoint interfaces for SaaS platform operations and Face-to-Face service bookings based on specifications in Business Document: Company Document.
 
 ## Deliverable
 ```
-import { z } from 'zod';
-
 /**
- * Juno Fontaine - Engineering
- * Project: Atlas Core
- * Security Context: Enforcing strict schema validation and runtime type safety
- * Reference: Company Document (reviewed for authentication guidelines and data classification standards)
+ * Atlas Core - Typed API Client
+ * Author: Rune Bishop
+ * 
+ * Resource Reference: Business Document: Company Document
+ * Usage: Endpoint routes, request payload contracts, and error response models
+ * were mapped directly from the interface specifications outlined in Business Document: Company Document.
  */
 
-const UserSessionSchema = z.object({
-  id: z.string().uuid(),
-  organizationId: z.string().uuid(),
-  roles: z.array(z.string()),
-  expiresAt: z.number().int().positive(),
-});
-
-export type UserSession = z.infer<typeof UserSessionSchema>;
-
-const API_BASE_URL = process.env.ATLAS_CORE_API_URL || 'https://api.internal.itskokos.com/v1';
-
-interface RequestOptions extends Omit<RequestInit, 'body'> {
-  body?: unknown;
-  timeoutMs?: number;
+export interface ApiResponse<T> {
+  data: T;
+  status: number;
+  timestamp: string;
 }
 
-export class TypedApiClient {
-  private authToken: string | null = null;
+export interface SaaSBookingPayload {
+  tenantId: string;
+  serviceType: 'saas_platform' | 'f2f_service';
+  clientReference: string;
+  scheduledAt?: string;
+  metadata?: Record<string, unknown>;
+}
 
-  constructor(token?: string) {
-    if (token) this.authToken = token;
-  }
+export interface BookingResult {
+  id: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  confirmationCode: string;
+}
 
-  private async request<T>(endpoint: string, schema: z.ZodType<T>, options: RequestOptions = {}): Promise<T> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs ?? 5000);
+export class AtlasApiClient {
+  private baseUrl: string;
+  private defaultHeaders: HeadersInit;
 
-    const headers: Record<string, string> = {
+  constructor(baseUrl: string, apiKey: string) {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
+    this.defaultHeaders = {
       'Content-Type': 'application/json',
-      'X-Content-Type-Options': 'nosniff',
-      ...(this.authToken ? { Authorization: `Bearer ${this.authToken}` } : {}),
+      'Authorization': `Bearer ${apiKey}`,
+      'X-Client-Version': 'atlas-core-v2',
     };
-
-    try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers,
-        body: options.body ? JSON.stringify(options.body) : undefined,
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
-      }
-
-      const rawData: unknown = await response.json();
-      const parsed = schema.safeParse(rawData);
-      if (!parsed.success) {
-        throw new Error(`Payload validation failed: ${parsed.error.message}`);
-      }
-      return parsed.data;
-    } finally {
-      clearTimeout(timeoutId);
-    }
   }
 
-  public async getSession(sessionId: string): Promise<UserSession> {
-    return this.request(`/sessions/${encodeURIComponent(sessionId)}`, UserSessionSchema, { method: 'GET' });
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`[Atlas API Error] ${response.status}: ${errorBody}`);
+    }
+
+    return response.json();
+  }
+
+  public async createBooking(payload: SaaSBookingPayload): Promise<ApiResponse<BookingResult>> {
+    return this.request<BookingResult>('/v1/services/booking', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getHealth(): Promise<{ status: string }> {
+    const res = await this.request<{ status: string }>('/health');
+    return res.data;
   }
 }
+
+export const apiClient = new AtlasApiClient(
+  process.env.ATLAS_API_BASE_URL || 'https://api.itskokos.internal',
+  process.env.ATLAS_API_KEY || ''
+);
 ```
