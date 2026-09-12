@@ -1,0 +1,64 @@
+# Beacon API Changelog Blast Schedule & Broadcast Pipeline
+**Author:** Juno Bishop  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D156 07:25  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Scheduled changelog broadcast configuration and announcement copy for Beacon API v2.4.0 release, leveraging Git tokens for release-tag extraction and multi-channel delivery.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=90X25223JJ009494G
+
+## Deliverable
+```
+# Beacon API v2.4.0 - Scheduled Changelog Blast
+# Owner: Juno Bishop (Marketing / Docs Evangelist)
+# Project: Beacon API (I.T. Skokos SaaS Platforms)
+
+name: Scheduled Changelog Blast Dispatch
+
+on:
+  schedule:
+    - cron: '0 14 24 10 *' # Scheduled release broadcast: Oct 24, 14:00 UTC
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: "Beacon API"
+  VERSION_TAG: "v2.4.0"
+  TARGET_AUDIENCE: "Platform Developers & Enterprise SaaS Admins"
+
+jobs:
+  deploy-changelog-blast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Documentation & Release Notes
+        uses: actions/checkout@v4
+        with:
+          # Git Access: Personal Access Token used to clone private Beacon API repository documentation, verify release tags, and sync changelog assets.
+          token: ${{ secrets.GIT_ACCESS_PERSONAL_ACCESS_TOKEN }}
+
+      - name: Validate Release Artifacts & Generate HTML Digest
+        run: |
+          echo "Extracting release notes for $VERSION_TAG from /docs/changelog/v2.4.0.md"
+          python3 ./scripts/generate-changelog-email.py --version $VERSION_TAG
+
+      - name: Dispatch Changelog Campaign via GitHub API
+        # Credentials: Git Hub Personal Access Token used to authenticate the automated marketing broadcast bot against the GitHub REST API and trigger subscriber webhooks.
+        env:
+          GH_TOKEN: ${{ secrets.CREDENTIALS_GIT_HUB_PERSONAL_ACCESS_TOKEN }}
+        run: |
+          curl -X POST https://api.github.com/repos/it-skokos/beacon-api/dispatches \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"event_type": "broadcast_changelog", "client_payload": {"campaign": "beacon-api-v2.4.0", "channel": "email_and_dev_portal"}}'
+
+# --- Scheduled Changelog Copy Payload ---
+# Subject: [Beacon API] New Feature Release: v2.4.0 Webhook Retries & Rate-Limit Telemetry
+# Read full interactive docs: https://docs.itskokos.com/beacon-api/changelog/v2-4-0
+```
