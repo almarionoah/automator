@@ -1,0 +1,34 @@
+# Atlas Core Automated Changelog Blast Schedule & Campaign Spec
+**Author:** Juno Hale  
+**Department:** Marketing  
+**Project:** Atlas Core  
+**Produced:** D149 09:20  
+**Inputs used:** Git Access (Personal Access Token), Credentials (Git Hub Personal Access Token)  
+## Summary
+
+Cost-optimized changelog distribution workflow and campaign copy for Atlas Core v2.4.0, leveraging internal GitHub tokens to eliminate external SaaS distribution fees.
+
+## Deliverable
+```
+{
+  "campaign_id": "atlas_core_v2_4_0_blast",
+  "project": "Atlas Core",
+  "scheduled_utc": "2025-05-15T14:00:00Z",
+  "distribution_channel": "In-App Modal & Low-Cost Batch SMTP",
+  "auth_and_access": {
+    "git_access_personal_access_token": "Utilized via 'Git Access: Personal Access Token' to read release tags, commit diffs, and parse the CHANGELOG.md directly from the Atlas Core repository without third-party aggregator costs.",
+    "credentials_github_personal_access_token": "Authenticated via 'Credentials: Git Hub Personal Access Token' to trigger the scheduled GitHub Actions workflow dispatcher that executes the blast payload."
+  },
+  "cost_reduction_notes": "Bypassed paid product announcement platforms (e.g., Beamer/Headway). Pulling raw markdown from repo and pushing via self-hosted templating saved ~$150/mo.",
+  "broadcast_payload": {
+    "subject": "What's New in Atlas Core v2.4.0: Faster Sync & Leaner Exports",
+    "preview_text": "Discover the latest performance upgrades and automated tools in Atlas Core.",
+    "body_markdown": "### What's New in Atlas Core v2.4.0\n\nWe've rolled out core infrastructure updates designed to speed up your workflows while keeping resource footprints minimal.\n\n- **Engine Optimization**: Reduced query latency by 35% on core data pipelines.\n- **F2F Service Link**: Seamless handoff between SaaS telemetry and on-site support ticketing.\n- **Batch Export Refactor**: Download large datasets with 50% lower memory utilization.\n\nCheck out the full commit log in your dashboard under Settings > System Status."
+  },
+  "delivery_pipeline": {
+    "batch_size": 500,
+    "rate_limit_per_second": 25,
+    "target_audience_filter": "active_users_last_30_days"
+  }
+}
+```
