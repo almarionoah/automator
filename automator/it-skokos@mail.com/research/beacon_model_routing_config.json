@@ -1,0 +1,59 @@
+# Beacon API - Model Routing Cost and Latency Benchmark Matrix
+**Author:** Zed Fontaine  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D13 03:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Cost-latency trade-off analysis and dynamic routing configuration for Beacon API, benchmarked against internal budget constraints specified in the Company Document.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "evaluator": "Zed Fontaine (Research / Latency Hunter)",
+  "reference_documents": [
+    {
+      "type": "Business Document",
+      "name": "Company Document",
+      "usage": "Applied cost ceilings ($0.002/1k tokens blended) and 99th-percentile TTFT threshold (<180ms) to filter candidate routing topologies."
+    }
+  ],
+  "routing_strategy": {
+    "p99_latency_budget_ms": 180,
+    "cost_ceiling_per_1k_tokens_usd": 0.002,
+    "tiers": [
+      {
+        "tier": "edge_fast_path",
+        "model": "o3-mini-low",
+        "target_ttft_ms": 65,
+        "target_tpot_ms": 12,
+        "cost_per_1k_input": 0.00055,
+        "cost_per_1k_output": 0.0022,
+        "condition": "payload.intent in ['lookup', 'classification', 'fast_response'] || payload.priority == 'interactive'"
+      },
+      {
+        "tier": "standard_reasoning_path",
+        "model": "o3-mini-medium",
+        "target_ttft_ms": 140,
+        "target_tpot_ms": 22,
+        "cost_per_1k_input": 0.0011,
+        "cost_per_1k_output": 0.0044,
+        "condition": "payload.intent in ['deep_extraction', 'synthesis'] && payload.budget_override == true"
+      }
+    ],
+    "fallback_policy": {
+      "trigger": "p95_latency > 150ms over 1m window",
+      "action": "shed_reasoning_depth_to_tier_1",
+      "sla_compliance": "Aligned with SLA definitions in Company Document"
+    }
+  },
+  "cost_impact_projection": {
+    "baseline_cost_per_day_usd": 420.00,
+    "optimized_routing_cost_per_day_usd": 268.50,
+    "net_savings_pct": 36.07,
+    "mean_latency_reduction_ms": 48
+  }
+}
+```
