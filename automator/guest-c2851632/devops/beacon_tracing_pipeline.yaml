@@ -1,0 +1,70 @@
+# Beacon API - Distributed Log Tracing & OpenTelemetry Pipeline Configuration
+**Author:** Fig Okafor  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D6 08:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented deterministic W3C distributed trace context injection into structured JSON log emitters for Beacon API, fully aligned with auditing and taxonomy standards specified in Company Document.
+
+## Deliverable
+```
+# Beacon API Distributed Log Tracing Configuration
+# Author: Fig Okafor (DevOps - Data Purist)
+# Compliance Reference: Company Document (Section 4.2: Structured Log Schema & Trace Context Retention)
+
+version: '2.4'
+service:
+  name: beacon-api
+  environment: production
+  telemetry_spec_version: "1.24.0"
+
+tracing:
+  context_propagation:
+    format: "w3c_tracecontext"
+    headers:
+      - "traceparent"
+      - "tracestate"
+      - "x-correlation-id"
+  sampler:
+    type: parentbased_traceidratio
+    argument: 1.0 # 100% trace capture for transactional integrity
+
+logging:
+  format: json
+  timestamp_format: "RFC3339Nano"
+  schema_validation: strict
+  fields:
+    trace_id: "${trace.trace_id}"
+    span_id: "${trace.span_id}"
+    trace_flags: "${trace.trace_flags}"
+    service_name: "beacon-api"
+    service_version: "1.8.2"
+    level: "${log.level}"
+    correlation_id: "${http.request.header.x-correlation-id}"
+    http_route: "${http.route}"
+    http_status_code: "${http.response.status_code}"
+    duration_ms: "${http.server.duration_ms}"
+    message: "${log.message}"
+
+exporter:
+  collector_endpoint: "otel-collector.internal.skokos.net:4317"
+  protocol: grpc
+  tls:
+    enabled: true
+    ca_file: "/etc/ssl/certs/skokos-internal-ca.pem"
+  retry_policy:
+    enabled: true
+    initial_interval: 50ms
+    max_interval: 2s
+    max_elapsed_time: 15s
+
+audit_compliance:
+  reference_doc: "Company Document"
+  redaction_rules:
+    - pii_filter: "(?i)(token|bearer|authorization|card_number|ssn)"
+    - replacement: "[REDACTED_PURIST_V1]"
+  retention_tier: "tier_1_hot_90d"
+
+```
