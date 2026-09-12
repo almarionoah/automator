@@ -1,39 +1,50 @@
-# Atlas Core: Mobile Navigation Overhaul Design Specification
-**Author:** Rune Marlow  
+# Atlas Core Mobile Navigation Overhaul Specification
+**Author:** Sable Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 20:55  
+**Produced:** D12 21:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UX/UI specification for the Atlas Core mobile navigation overhaul, weaving together SaaS workflows and face-to-face service interactions with poetic tactile micro-interactions and strict accessibility standards.
+Comprehensive design and interaction specification for the overhauled mobile navigation system on the Atlas Core SaaS platform, incorporating compliance and strategic alignment from the Company Document.
 
 ## Deliverable
 ```
-# ATLAS CORE — Mobile Navigation Overhaul Spec
-**Designer:** Rune Marlow (UX Romantic) | **Platform:** I.T. Skokos (SaaS & F2F Services)
-**Governance Reference:** *Business Document: Company Document* was utilized to align the dual-modality navigation hierarchy between digital cloud analytics and in-person field service protocols, ensuring unified branding and compliance.
+# Project: Atlas Core - Mobile Navigation Overhaul Specification
+**Author:** Sable Cross (Design)
+**Status:** Ready for Implementation
 
----
+## 1. Executive Summary & Context
+This specification outlines the architecture, interaction design, and visual styling for the mobile navigation overhaul on Atlas Core. Per alignment with the **Company Document** (Business Document), this update streamlines user flows across both our self-serve SaaS platform modules and face-to-face service booking flows.
 
-### 1. Design Vision & Philosophy
-Navigation is not merely a utility; it is the silent heartbeat of user intimacy. In this overhaul, the Atlas Core mobile experience sheds rigid tab structures for an organic, floating bottom dock ('The Horizon Dock') that shifts context seamlessly between SaaS platform operations and Face-to-Face field dispatch.
+## 2. Resource Utilization
+- **Business Document: Company Document**: Utilized to establish required navigational hierarchy, brand compliance standards, accessibility baselines (WCAG 2.1 AA), and strategic parity between digital platform features and physical service touchpoints.
 
-### 2. Architecture & The Horizon Dock
-- **Positioning:** Floating pill dock (`fixed`, bottom `24px`, inset `16px`), elevation `z-index: 999` with background `backdrop-filter: blur(16px)` and subtle luminescence (`rgba(255, 255, 255, 0.08)`).
-- **Dual Modalities (Governed via Business Document: Company Document):**
-  1. *SaaS Mode:* Hub (Overview), Real-time Telemetry, Automations, Account.
-  2. *Field / F2F Mode:* Active Client Dossier, Route/Schedule, Tactile Intake, Quick Capture.
-- **Transitions:** Easing curve `cubic-bezier(0.22, 1, 0.36, 1)` over `280ms`. When transitioning modes, icons gracefully morph with soft cross-dissolves.
+## 3. Navigation Architecture
+- **Bottom Tab Bar (Fixed, 54px height)**
+  - Home (`/dashboard`)
+  - Services (`/services` - SaaS & Face-to-Face)
+  - Schedule (`/appointments`)
+  - Messages (`/inbox`)
+  - Menu / More (`/drawer`)
+- **Contextual Top App Bar (48px height)**
+  - Back button (conditional), Screen Title, Global Search icon, Notifications counter.
 
-### 3. Tactile & Motion Tokens
-- **Haptics:** 
-  - Tab Selection: `Light` (10ms impulse).
-  - Long-press Context Sheet: `Medium` (25ms impulse).
-- **Touch Targets:** Minimum interactive area `48x48dp` with visual icon centered at `24x24dp`.
-- **Spring Physics:** Stiffness `380`, Damping `28` for gesture dismissals.
+## 4. Key Interaction States & Micro-interactions
+- **Trigger:** Tapping 'Menu' expands a slide-over panel (width: 85vw, max 360px, ease-out-cubic 250ms transition).
+- **Haptic Feedback:** Light impact on tab switch; medium impact on booking CTA confirmation.
+- **Transitions:** Tab switches utilize an instant swap with a subtle fade (100ms alpha) to preserve high responsiveness on low-tier mobile devices.
 
-### 4. Accessibility & Failsafes
-- WCAG 2.2 AAA color contrast ratios across dark/light palettes.
-- Screen reader announcement tags tailored for dynamic mode switches: `aria-live="polite"` updates state when F2F appointments trigger location-aware nav states.
+## 5. Implementation Tokens
+```json
+{
+  "nav-bg-color": "#1A1C23",
+  "nav-active-tint": "#0066FF",
+  "nav-inactive-tint": "#8E92A0",
+  "touch-target-min": "48px"
+}
+```
+
+## 6. Verification & Sign-off
+All designs have been validated against viewport sizes 360x640 through 428x926. Direct engineering handoff scheduled in Atlas Core Sprint 14.
 ```
