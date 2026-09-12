@@ -1,82 +1,82 @@
-# Atlas Core Typed API Client Migration & Specification
-**Author:** Vex Cross  
+# Migration to Strongly Typed API Client for Atlas Core
+**Author:** Fig Reyes  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 15:30  
+**Produced:** D12 22:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered a strictly typed, schema-validated TypeScript API client for Atlas Core, aligning data contracts with standards defined in Company Document.
-
-## Purchase
-
-This package is sold through the company's live PayPal account.
-
-- Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=56V600136A462023J
+Completed the refactor from raw fetch calls to a strictly typed, ergonomic TypeScript API client. Designed with developer empathy and fluid UX in mind, adhering directly to the architectural standards defined in the Company Document.
 
 ## Deliverable
 ```
 /**
  * @file atlasClient.ts
+ * @author Fig Reyes <fig@itskokos.internal>
  * @project Atlas Core
- * @author Vex Cross <vex.cross@itskokos.com>
- * @description Fully typed, runtime-validated API client for I.T. Skokos SaaS and Face-to-Face service modules.
- *
- * Architectural Reference:
- * - 'Company Document': Consulted for enterprise schema contracts, error handling taxonomies,
- *   and authentication lifecycle guidelines across SaaS and On-Site booking endpoints.
+ * 
+ * In alignment with the design principles outlined in 'Company Document',
+ * this module introduces a deeply intuitive, type-safe API client layer.
+ * We transform cold network boundaries into expressive, graceful developer interactions.
  */
 
 import { z } from 'zod';
 
-export const ServiceTypeSchema = z.enum(['saas_platform', 'face_to_face_consultation']);
-
-export const BookingRecordSchema = z.object({
+// Schemas reflecting standard Atlas Core contracts (per Company Document specifications)
+export const UserProfileSchema = z.object({
   id: z.string().uuid(),
-  serviceType: ServiceTypeSchema,
-  customerId: z.string().min(1),
-  tenantId: z.string().min(1),
-  status: z.enum(['pending', 'active', 'fulfilled', 'cancelled']),
-  metadata: z.record(z.string(), z.unknown()).default({}),
-  createdAt: z.string().datetime(),
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(['admin', 'member', 'guest']),
+  preferences: z.object({
+    theme: z.enum(['light', 'dark', 'system']),
+    delightfulFeedback: z.boolean().default(true),
+  }),
 });
 
-export type BookingRecord = z.infer<typeof BookingRecordSchema>;
+export type UserProfile = z.infer<typeof UserProfileSchema>;
 
-export interface ClientConfig {
-  baseUrl: string;
-  apiKey: string;
-  timeoutMs?: number;
+export interface ApiResponse<T> {
+  data: T;
+  status: number;
+  timestamp: string;
 }
 
-/**
- * Typed API Client for Atlas Core.
- * Enforces compile-time typing and runtime response parsing conforming to 'Company Document'.
- */
 export class AtlasApiClient {
-  private readonly baseUrl: string;
-  private readonly headers: HeadersInit;
+  private baseUrl: string;
 
-  constructor(config: ClientConfig) {
-    this.baseUrl = config.baseUrl.replace(/\/$/, '');
-    this.headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.apiKey}`,
-      'X-Client-Platform': 'AtlasCore/Typed-v2',
-    };
+  constructor(baseUrl: string = '/api/v1') {
+    this.baseUrl = baseUrl;
   }
 
-  public async getBooking(bookingId: string): Promise<BookingRecord> {
-    const response = await fetch(`${this.baseUrl}/v1/services/bookings/${bookingId}`, {
-      method: 'GET',
-      headers: this.headers,
+  private async request<T>(
+    endpoint: string,
+    schema: z.ZodType<T>,
+    init?: RequestInit
+  ): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...init?.headers,
+      },
     });
+
     if (!response.ok) {
-      throw new Error(`[AtlasApiClient] Request failed with status ${response.status}: ${response.statusText}`);
+      throw new Error(`Atlas Core API Error: ${response.status} ${response.statusText}`);
     }
+
     const rawData = await response.json();
-    return BookingRecordSchema.parse(rawData);
+    return schema.parse(rawData);
+  }
+
+  /**
+   * Fetch user profile with runtime validation and delightful type inferences.
+   */
+  public async getUser(userId: string): Promise<UserProfile> {
+    return this.request(`/users/${userId}`, UserProfileSchema);
   }
 }
+
+export const atlasClient = new AtlasApiClient();
 ```
