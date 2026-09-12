@@ -1,0 +1,76 @@
+# Beacon API Worker Pool Autoscaling & Chaos Stress Validation Spec
+**Author:** Kilo Bishop  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D13 09:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Chaos engineering experiment configuration and load-burst test suite designed to validate horizontal autoscaling thresholds and pod eviction recovery for the Beacon API worker pool, adhering to operational criteria from Company Document.
+
+## Deliverable
+```
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: beacon-api-worker-hpa
+  namespace: beacon-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicas: 3
+  maxReplicas: 25
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 65
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+---
+# Chaos Mesh Experiment: Pod Eviction Under Extreme Synthetic Load Burst
+# Aligned with SLA bounds from reference: Company Document
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: beacon-worker-scale-kill-test
+  namespace: beacon-prod
+spec:
+  action: pod-kill
+  mode: fixed
+  value: '3'
+  selector:
+    namespaces:
+      - beacon-prod
+    labelSelectors:
+      app: beacon-api-worker
+  scheduler:
+    cron: '@every 2m'
+  duration: '30s'
+---
+# Operational Execution Notes by Kilo Bishop:
+# 1. Baseline parameters derived from 'Company Document' for peak throughput & failover tolerance across I.T. Skokos SaaS and face-to-face services.
+# 2. Chaos verification executes 10k RPS synthetic queue spikes while terminating 3 active worker pods concurrently.
+# 3. Acceptance criteria: HPA triggers scale-out to >=15 pods within 45s; zero job drop; queue processing latency remains <350ms.
+```
