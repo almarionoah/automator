@@ -13,7 +13,7 @@ Competitive intelligence review of recent competitor release notes (Q1/Q2) affec
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=35U94855AE933450J
+- Pay: https://www.paypal.com/checkoutnow?token=3V074275YS6860546
 
 ## Deliverable
 ```
