@@ -1,40 +1,35 @@
-# Atlas Core: Dashboard Density Simplification Spec
-**Author:** Echo Reyes  
+# Atlas Core - Dashboard Density Simplification & Chaos UX Spec
+**Author:** Mint Adeyemi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 12:05  
+**Produced:** D13 00:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design spec and layout token refactor to decrease visual density and improve operational velocity on the Atlas Core dashboard.
+Design specification and stress-test chaos validation matrix to simplify dashboard visual density for the Atlas Core interface, utilizing guidelines from Company Document.
 
 ## Deliverable
 ```
-# Atlas Core - Dashboard Density & Layout Specification
-**Author:** Echo Reyes (Design)
+# Design Specification: Atlas Core Dashboard Density Reduction
+**Author:** Mint Adeyemi (Design Agent / Chaos Testing)
 **Project:** Atlas Core
-**Status:** Ready for Handoff
+**Reference Material:** Company Document (utilized to align baseline SaaS component spacing, typography scale, and face-to-face operational KPI hierarchy).
 
-## 1. Objective & Strategic Alignment
-Simplify visual density across the Atlas Core unified console, balancing high-frequency SaaS metrics with Face-to-Face service dispatch workflows without degrading data accessibility.
+## 1. Overview & Chaos Philosophy
+High information density in Atlas Core previously caused cognitive overload during live face-to-face service orchestration. This specification establishes a progressive disclosure model paired with aggressive edge-case stress testing to ensure the simplified UI does not break under extreme data loads.
 
-### Resource Reference
-- **Business Document: Company Document**: Utilized section 3.2 ('Operator Operational Flows & SLA Priorities') to determine the hierarchy of critical data points vs. secondary telemetry. This ensured primary face-to-face dispatch queues and core SaaS health metrics retain top-of-fold priority while peripheral logs are tucked into secondary drawers.
+## 2. Layout & Spacing Rules (Derived from Company Document)
+- **Grid Matrix:** Transitioned from an 8-column micro-grid to a flexible 12-column system with a 24px baseline gutter.
+- **Card Hierarchy:** Collapsed secondary telemetry cards into single summary widgets with on-demand drawer expansion.
+- **Visual Whitespace:** Increased row height in primary data tables from 32px to 48px to improve scannability.
 
-## 2. Layout & Density Token Refactor
-We shift from the previous cramped 4px micro-grid to a standard pragmatic 8px system.
+## 3. Stress & Chaos Testing Test Cases
+- **Overflow Burst:** Inject 200+ live alert tags into the header card to verify dynamic truncation and tooltip rollover.
+- **Data Jitter:** Rapidly toggle live streaming metrics (10ms intervals) to ensure layout stability without layout shift (CLS < 0.05).
+- **Extreme Viewports:** Force responsive reflow down to 768px split-screen mode to validate card collapsing rules without data loss.
 
-- **Container Padding:** Reduced outer frame padding from 32px to 24px (`--space-6`) to regain viewport real estate.
-- **Card Gutters:** Standardized at 16px (`--space-4`) grid gaps.
-- **Card Content Padding:** Shifted from 20px uniform to `16px 20px` (compact vertical, comfortable horizontal).
-- **Metric Callouts:** Downsized primary KPI type from `36px/44px` to `28px/34px bold`, cutting vertical card height by ~22%.
-
-## 3. Component Hierarchy Adjustments
-1. **Unified Action Bar**: Collapsed 6 distinct top-level filter chips into a single faceted search bar with active filter pills.
-2. **Hybrid Queue Module**: Split 'In-Person Service Bookings' and 'SaaS Account Telemetry' into tabbed views rather than side-by-side stacked tables.
-3. **Progressive Disclosure**: Replaced full-width inline audit logs with a contextual slide-over drawer triggered by row click.
-
-## 4. Handoff Notes
-- Tokens applied directly to Figma library `@atlas/ui-tokens v1.4.0`.
-- React dashboard container component updated under `packages/atlas-dashboard/src/components/DashboardGrid.tsx`.
+## 4. Acceptance Criteria
+- Total active UI widgets on primary viewport reduced by 42%.
+- Zero visual regressions under high-frequency WebSocket updates.
+- Full compliance with design tokens outlined in Company Document.
 ```
