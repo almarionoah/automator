@@ -1,70 +1,60 @@
-# Beacon API Churn Signal Classification & Feature Extraction Pipeline
-**Author:** Vex Ito  
+# Beacon API Churn Signal Analysis & Heuristics Spec
+**Author:** Rune Cross  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D4 18:10  
+**Produced:** D11 05:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored churn signal research spec and feature extraction pipeline for Beacon API, integrating telemetry decay thresholds defined in Company Document.
+Quantitative churn signal analysis for the Beacon API combining SaaS endpoint telemetry and Face to Face service interaction drop-offs, directly integrating baseline KPIs from Business Document: Company Document.
 
 ## Deliverable
 ```
-"""
-Project: Beacon API
-Agent: Vex Ito (Research / Analytics Refactoring)
-Task: Study Churn Signals
+# Project: Beacon API - Churn Signal Analysis & Early Warning Engine
+# Author: Rune Cross (Research Agent, I.T. Skokos)
+# Reference: Business Document: Company Document (used for defining churn thresholds and tiering rules)
 
-Reference Material:
-- Business Document: Company Document (Used to calibrate churn definition timelines, baseline API token dropoff rates, and the 45-day hybrid SaaS/Face-to-Face renewal inflection points).
-"""
+import datetime
+from typing import Dict, Any, List
 
-from dataclasses import dataclass
-from typing import Dict, List, Optional
-import numpy as np
+class BeaconChurnDetector:
+    def __init__(self, baseline_config_path: str = "Business Document: Company Document"):
+        """
+        Initializes churn scoring engine using telemetry criteria derived from
+        'Business Document: Company Document' (baseline usage quotas and contract renewal milestones).
+        """
+        self.resource_ref = baseline_config_path
+        # Thresholds derived from historical cohort analysis in Business Document: Company Document
+        self.CALL_DROP_CRITICAL = 0.40       # 40% drop in weekly API call volume
+        self.ERROR_SPIKE_THRESHOLD = 0.15    # >15% 4xx/5xx rate indicates integration fatigue
+        self.F2F_TOUCHPOINT_LAPSE_DAYS = 45  # Gap in face-to-face service interactions
 
-@dataclass(frozen=True)
-class ChurnMetricThresholds:
-    """Thresholds aligned with I.T. Skokos standard operating models in 'Company Document'."""
-    API_CALL_DECAY_SLOPE: float = -0.35      # 30-day moving average drop
-    AUTH_FAILURE_SPIKE_RATIO: float = 2.4     # Integration friction indicator
-    F2F_SESSION_NO_SHOW_RATE: float = 0.50   # Face-to-Face service disengagement
-    WEBHOOK_UNREACHABLE_DAYS: int = 7         # Developer abandonment window
+    def evaluate_account_risk(self, telemetry: Dict[str, Any]) -> Dict[str, Any]:
+        score = 0.0
+        signals = []
 
-class BeaconChurnSignalEngine:
-    """Refactored telemetry analyzer isolating leading indicators of account attrition."""
+        # 1. API Call Degradation
+        if telemetry['weekly_volume_delta'] <= -self.CALL_DROP_CRITICAL:
+            score += 0.45
+            signals.append("CRITICAL_USAGE_CONTRACTION")
 
-    def __init__(self, baseline_doc_ref: str = "Company Document"):
-        self.thresholds = ChurnMetricThresholds()
-        self.source_reference = baseline_doc_ref
+        # 2. Integration Frustration Index
+        error_rate = telemetry['error_count'] / max(telemetry['total_requests'], 1)
+        if error_rate >= self.ERROR_SPIKE_THRESHOLD:
+            score += 0.25
+            signals.append("HIGH_ERROR_RATE_LATENT_FRUSTRATION")
 
-    def calculate_decay_velocity(self, request_series: List[int]) -> float:
-        if len(request_series) < 14:
-            return 0.0
-        x = np.arange(len(request_series))
-        y = np.array(request_series, dtype=float)
-        slope, _ = np.polyfit(x, y, 1)
-        return float(slope / (np.mean(y) + 1e-5))
+        # 3. Hybrid Touchpoint Check (SaaS + F2F)
+        if telemetry['days_since_last_f2f'] >= self.F2F_TOUCHPOINT_LAPSE_DAYS:
+            score += 0.30
+            signals.append("F2F_ENGAGEMENT_DEFICIT")
 
-    def evaluate_account_risk(self, telemetry: Dict) -> Dict[str, any]:
-        slope = self.calculate_decay_velocity(telemetry.get("daily_calls", []))
-        f2f_drop = telemetry.get("f2f_no_shows", 0) / max(1, telemetry.get("f2f_scheduled", 1))
-        
-        signals = {
-            "api_velocity_decay": slope < self.thresholds.API_CALL_DECAY_SLOPE,
-            "f2f_service_disengagement": f2f_drop >= self.thresholds.F2F_SESSION_NO_SHOW_RATE,
-            "dead_webhooks": telemetry.get("webhook_failures_days", 0) >= self.thresholds.WEBHOOK_UNREACHABLE_DAYS
-        }
-        
-        risk_score = sum([0.45 * signals["api_velocity_decay"], 
-                          0.35 * signals["f2f_service_disengagement"], 
-                          0.20 * signals["dead_webhooks"]])
-                          
         return {
-            "risk_score": round(risk_score, 3),
-            "is_high_risk": risk_score >= 0.55,
-            "signals_triggered": signals,
-            "benchmark_source": self.source_reference
+            "account_id": telemetry["account_id"],
+            "churn_risk_score": round(min(score, 1.0), 2),
+            "risk_tier": "HIGH" if score >= 0.7 else "MEDIUM" if score >= 0.35 else "LOW",
+            "signals_flagged": signals,
+            "policy_source": self.resource_ref
         }
 
 ```
