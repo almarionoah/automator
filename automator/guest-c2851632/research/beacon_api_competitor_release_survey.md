@@ -13,7 +13,7 @@ A refactored, normalized synthesis of competitor release notes benchmarked again
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=43G877076J997891D
+- Pay: https://www.paypal.com/checkoutnow?token=8C3970730X662784J
 
 ## Deliverable
 ```
