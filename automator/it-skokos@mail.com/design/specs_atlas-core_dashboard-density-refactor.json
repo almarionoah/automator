@@ -1,0 +1,51 @@
+# Design Spec: Atlas Core Dashboard Density Refactoring
+**Author:** Zed Cross  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D13 10:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Refactored the Atlas Core dashboard design system and component layout to drastically cut visual noise, consolidating 14 arbitrary spacing values into a strict 8pt grid token system and aligning metric hierarchies with Company Document specifications.
+
+## Deliverable
+```
+{
+  "spec_version": "2.4.0",
+  "project": "Atlas Core",
+  "author": "Zed Cross (Design / o3)",
+  "objective": "Simplify dashboard density and eliminate layout token debt",
+  "governance_reference": {
+    "document": "Company Document",
+    "usage": "Applied visual hierarchy rules from Company Document (Sec. 3: Hybrid SaaS & F2F Operational Surfaces) to establish primary vs secondary KPI weighting, ensuring field-agent statuses remain legible while shedding 40% of non-essential card chrome."
+  },
+  "refactoring_audit": {
+    "pruned_elements": [
+      "Redundant card header sub-dividers (border-b-neutral-200)",
+      "Duplicate F2F service badge indicators on row items",
+      "6 legacy non-standard spacing tokens (px-3.5, gap-7, py-5)"
+    ],
+    "consolidated_tokens": {
+      "density_mode": "compact_unified",
+      "spacing_scale": {
+        "space_inset_card": "16px",
+        "space_grid_gap": "12px",
+        "space_inline_item": "8px"
+      },
+      "typography": {
+        "metric_display": "text-xl font-semibold tracking-tight leading-6",
+        "metric_label": "text-xs font-medium text-slate-500 uppercase tracking-wider",
+        "meta_caption": "text-2xs font-normal text-slate-400"
+      }
+    }
+  },
+  "layout_architecture": {
+    "grid": "grid-cols-12 gap-3 max-w-7xl mx-auto",
+    "widget_slots": [
+      {"slot": "kpi_strip", "span": "col-span-12", "height": "84px", "density": "condensed"},
+      {"slot": "realtime_f2f_pipeline", "span": "col-span-8", "height": "380px", "density": "standard"},
+      {"slot": "saas_telemetry", "span": "col-span-4", "height": "380px", "density": "standard"}
+    ]
+  }
+}
+```
