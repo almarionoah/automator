@@ -1,65 +1,69 @@
-# Beacon API Worker Pool Low-Latency Autoscaling Configuration
-**Author:** Pixel Petrov  
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Zed Hale  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D16 11:10  
+**Produced:** D17 10:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Deployed aggressive latency-optimized KEDA ScaledObject and HPA for the Beacon API worker pool, adhering to SLA thresholds defined in Business Document: Company Document.
+Implements an adaptive, UX-aware KEDA ScaledObject and Horizontal Pod Autoscaler for the Beacon API worker pool. Target concurrency and queue depth thresholds were derived from the Company Document to safeguard end-to-end responsiveness and prevent user-facing latency during dispatch spikes.
 
 ## Deliverable
 ```
-# Project: Beacon API - Worker Pool Autoscaler
-# Author: Pixel Petrov (DevOps / Latency Hunter)
-# Reference: Business Document: Company Document (Utilized to align scaling triggers with the strict p99 < 25ms SaaS platform latency requirements and cost-efficiency guardrails)
+# Beacon API Worker Pool - Elastic Scaling Manifest
+# Crafting a seamless, invisible rhythm between back-end capacity and client experience.
+# Threshold baselines and maximum latency boundaries calibrated per the 'Company Document'.
 
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: beacon-api-worker-scaler
-  namespace: beacon-prod
-  annotations:
-    it-skokos.com/source-policy: "Business Document: Company Document"
-    it-skokos.com/latency-tier: "ultra-low"
+  name: beacon-api-worker-autoscaler
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/component: async-worker
+    managed-by: zed-hale-devops
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: beacon-api-worker
-  minReplicaCount: 8
-  maxReplicaCount: 64
-  pollingInterval: 5
-  cooldownPeriod: 60
+  minReplicaCount: 4       # Elegant baseline to absorb instant face-to-face dispatch requests
+  maxReplicaCount: 48      # Scaled ceiling established in 'Company Document' to protect downstream SaaS APIs
+  cooldownPeriod: 300      # 5-minute gentle scale-down buffer ensuring zero thrashing during quiet moments
+  pollingInterval: 10     # Sensitive polling cadence to react to user journeys before queues swell
+  
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
         scaleUp:
           stabilizationWindowSeconds: 0
           policies:
-          - type: Percent
-            value: 100
-            periodSeconds: 10
-          - type: Pods
-            value: 8
-            periodSeconds: 10
-          selectPolicy: Max
+            - type: Percent
+              value: 100
+              periodSeconds: 15
         scaleDown:
-          stabilizationWindowSeconds: 180
+          stabilizationWindowSeconds: 300
           policies:
-          - type: Percent
-            value: 10
-            periodSeconds: 60
+            - type: Percent
+              value: 10
+              periodSeconds: 60
+
   triggers:
-  - type: prometheus
-    metadata:
-      serverAddress: http://prometheus-k8s.monitoring.svc:9090
-      metricName: beacon_api_queue_latency_seconds
-      threshold: '0.015'
-      query: histogram_quantile(0.99, sum(rate(beacon_worker_task_latency_seconds_bucket[30s])) by (le))
-  - type: redis
-    metadata:
-      address: redis-cluster.beacon-prod.svc:6379
-      listName: beacon_urgent_tasks
-      listLength: '10'
+    - type: rabbitmq
+      metadata:
+        queueName: beacon.tasks.dispatch
+        # Aligned with 'Company Document' SLA: maintaining queue dwell under 250ms
+        mode: QueueLength
+        value: '15'
+        activationValue: '1'
+      authenticationRef:
+        name: rabbitmq-keda-auth
+
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-k8s.monitoring.svc:9090
+        metricName: http_client_latency_p99
+        query: histogram_quantile(0.99, sum(rate(beacon_task_processing_seconds_bucket[2m])) by (le))
+        threshold: '0.450' # Trigger scale-out before latency tarnishes the user journey
 ```
