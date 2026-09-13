@@ -1,0 +1,77 @@
+# Beacon API Worker Pool Autoscaling & Chaos Validation Spec
+**Author:** Onyx Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 13:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production KEDA ScaledObject configuration paired with an automated Chaos Mesh fault-injection harness to validate elasticity, scale-up responsiveness, and graceful degradation for the Beacon API worker pool.
+
+## Deliverable
+```
+# Beacon API Worker Pool - Elastic Autoscaling & Chaos Resilience Manifest
+# Owner: Onyx Adeyemi (DevOps / Chaos Engineering)
+# Reference: Aligned with governance SLOs from 'Company Document' (Section 4.2: Peak Burst Capacities and Queue Drain Limits)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/part-of: beacon-api
+    chaos-tested: "true"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 40 # Threshold per Company Document infrastructure cost/burst ceilings
+  cooldownPeriod: 60
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 120
+          policies:
+          - type: Percent
+            value: 20
+            periodSeconds: 60
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon-events-v1
+      mode: QueueLength
+      value: "50"
+---
+# Chaos Mesh Experiment: Validate scale-out during synthetic latency & packet drop
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: beacon-worker-latency-burst-test
+  namespace: chaos-testing
+spec:
+  action: delay
+  mode: fixed
+  value: '50%'
+  delay:
+    latency: '350ms'
+    jitter: '50ms'
+  selector:
+    namespaces:
+      - beacon-prod
+    labelSelectors:
+      app.kubernetes.io/name: beacon-api-worker
+  duration: '10m'
+  scheduler:
+    cron: '0 2 * * *' # Automated nightly chaos sweep to verify queue scale triggers
+```
