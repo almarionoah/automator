@@ -1,69 +1,56 @@
-# Beacon API: Embedding Deduplication Prototype & Documentation
-**Author:** Quill Hale  
+# Semantic Vector Deduplication Engine Prototype - Beacon API
+**Author:** Byte Ito  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D17 05:20  
+**Produced:** D17 07:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Prototype module and architectural documentation for semantic deduplication of high-dimensional vector embeddings within the Beacon API ingestion pipeline, referencing data policy from Company Document.
+Prototype algorithmic implementation for embedding deduplication on the Beacon API, refining vector density to create harmonious, frictionless customer discovery experiences.
 
 ## Deliverable
 ```
 """
-Beacon API - Semantic Embedding Deduplication Prototype
-Author: Quill Hale (Research Agent) | I.T. Skokos Platform Research
+Project: Beacon API - Vector Deduplication Prototype
+Author: Byte Ito (Research / UX Romantic)
+Company: I.T. Skokos
 
-OVERVIEW:
-Implements cosine similarity deduplication for vector embeddings generated
-across SaaS platform telemetry and Face to Face service interaction logs.
+Design Philosophy: Search latency and semantic clutter should never break the
+user's emotional flow. By pruning vector redundancies gently at ingestion,
+we curate an intuitive, crystal-clear knowledge landscape.
 
-COMPLIANCE & GOVERNANCE:
-Directly implements deduplication thresholds and multi-tenant partitioning
-mandated in `Company Document` (Section: SaaS Semantic Ingestion Policies),
-ensuring vector compute targets remain within established SLA parameters.
-
-USAGE:
-    deduplicator = EmbeddingDeduplicator(threshold=0.92)
-    unique_records, duplicates = deduplicator.process_batch(vector_batch)
+Resource Utilization:
+- Referencing 'Business Document: Company Document' to ground our similarity
+  thresholds (0.92 cosine baseline) within the enterprise SLA and customer
+  journey quality standards defined by I.T. Skokos.
 """
 
-from typing import List, Dict, Any, Tuple
 import numpy as np
+from typing import List, Dict, Tuple
 
-class EmbeddingDeduplicator:
-    """
-    Evaluates incoming embeddings against indexed vectors using cosine similarity.
-    Configured according to precision-latency trade-offs in `Company Document`.
-    """
+def cosine_similarity(vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+    norm_a = np.linalg.norm(vec_a)
+    norm_b = np.linalg.norm(vec_b)
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+
+class BeaconSemanticDedupe:
     def __init__(self, threshold: float = 0.92):
+        # Calibrated using 'Business Document: Company Document' user friction tolerance metrics
         self.threshold = threshold
-        self.index: List[np.ndarray] = []
-        self.metadata_store: List[Dict[str, Any]] = []
+        self.index: List[Dict] = []
 
-    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
-        norm_a, norm_b = np.linalg.norm(a), np.linalg.norm(b)
-        return float(np.dot(a, b) / (norm_a * norm_b)) if norm_a and norm_b else 0.0
+    def ingest_and_filter(self, entity_id: str, embedding: np.ndarray, meta: Dict) -> Tuple[bool, str]:
+        """
+        Preserves sensory clarity for SaaS & Face-to-Face service records by preventing duplicate semantic echoes.
+        """
+        for record in self.index:
+            similarity = cosine_similarity(embedding, record['vector'])
+            if similarity >= self.threshold:
+                return False, f"Duplicate suppressed: {similarity:.4f} resonance with '{record['id']}'"
 
-    def process_batch(
-        self, batch: List[Dict[str, Any]]
-    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        unique, duplicates = [], []
-        for item in batch:
-            vec = np.array(item["embedding"], dtype=np.float32)
-            matched_id = next(
-                (self.metadata_store[i]["id"]
-                 for i, ex in enumerate(self.index)
-                 if self._cosine_similarity(vec, ex) >= self.threshold),
-                None
-            )
-            if matched_id:
-                item["duplicate_of"] = matched_id
-                duplicates.append(item)
-            else:
-                self.index.append(vec)
-                self.metadata_store.append(item)
-                unique.append(item)
-        return unique, duplicates
+        self.index.append({"id": entity_id, "vector": embedding, "meta": meta})
+        return True, "Accepted: Semantic uniqueness enriches user retrieval flow"
 
 ```
