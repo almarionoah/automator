@@ -1,40 +1,37 @@
-# Chaos Test Matrix & UI Stress Spec: Atlas Core Mobile Nav Overhaul
-**Author:** Nova Bishop  
+# Atlas Core - Mobile Nav Overhaul: Stress & Chaos Design Validation Matrix
+**Author:** Zed Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 23:50  
+**Produced:** D15 08:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive edge-case stress specification and breakdown testing protocol for the Atlas Core mobile navigation overhaul, focusing on layout breakages, gesture conflicts, and state resilience.
+Aggressive edge-case and chaos testing design specification for Atlas Core's mobile navigation overhaul, incorporating compliance guidelines from Company Document.
 
 ## Deliverable
 ```
-# ATLAS CORE: Mobile Navigation Overhaul - Chaos UI/UX Stress Spec
-**Author:** Nova Bishop (Design / Chaos Testing)
-**Project:** Atlas Core | I.T. Skokos SaaS & Face-to-Face Services Platform
+# Atlas Core: Mobile Navigation Overhaul — Chaos & Edge-Case Design Specification
+**Author:** Zed Nkosi (Design / Chaos Testing)
+**Project:** Atlas Core
+**Reference Material:** `Company Document` (Used to validate cross-tier role accessibility constraints, SLA-critical menu pathing, and brand design guidelines under degraded network states).
 
-## 1. Context & Resource Utilization
-- **Business Document: Company Document**: Leveraged as the baseline structural reference to extract required dual-domain routing (SaaS tenant tools vs. F2F on-site dispatch services). Used to identify critical navigation paths and ensure high-stress failure modes still preserve baseline brand compliance and mandatory compliance disclosures.
+---
 
-## 2. Chaos Scenarios & Boundary Stress Matrix
+### 1. Overview & Chaos Testing Objectives
+The Mobile Nav Overhaul transitions Atlas Core to a dynamic bottom-sheet drawer with adaptive gestures. This document defines failure-mode resilience, gesture collision rules, and layout degradation limits.
 
-### Scenario A: Rapid Gesture Collisions & Drawer Thrashing
-- **Vector**: Simultaneous 3-finger horizontal pan, rapid toggle of hamburger menu icon (15 clicks/sec), and OS-level swipe-back gesture.
-- **Expected Failure**: Sheet backdrop desync, layout freeze in half-open state, double backdrop alpha compounding.
-- **Required Guardrail**: Hard-lock animation state with strict debouncing (200ms) and enforce CSS `pointer-events: none` on transitioning parent drawers.
+### 2. Failure Scenarios & Chaos Test Matrix
 
-### Scenario B: Viewport & Dynamic Font Scaling Destruction
-- **Vector**: Set viewport width to 280px (extreme foldables/legacy), OS dynamic text scaling to 300% (Accessibility XXL), device rotated mid-render.
-- **Expected Failure**: Nav labels truncating into ellipses without tooltips, F2F scheduling CTA overlapping SaaS workspace switcher.
-- **Required Guardrail**: Implement flex-wrap fallbacks, vertical stacking sub-menus with strict max-heights, and auto-scrolling container overflows with custom snap indicators.
+| Test Vector | Chaos Condition | Expected Behavioral Threshold |
+|---|---|---|
+| Rapid Gesture Cycling | 10+ swipe/tap toggles per second | Drawer state machine locks to binary state; no half-open DOM freezing or backdrop opacity leaks. |
+| Viewport Distortion | Rapid orientation flip + dynamic software keyboard pop | Nav retains fixed anchor; z-index stays locked above input overlays without layout re-flow clipping. |
+| Multi-Tier Role Flood | User assigned 45+ permission nodes (per `Company Document`) | Nav switches to virtualized sub-grouping with instant debounce filter; zero scroll jank (<16ms frame budget). |
+| Network Throttling / Offline | Switching between Face-to-Face check-in mode & Offline | Offline badge injects dynamically without shifting drawer trigger coordinates. |
+| Text & Accessibility Extreme | 200% font scaling (Large Text) + German localization (long strings) | Text wraps cleanly or truncates with accessible tooltips; no horizontal overflow breach of viewport width. |
 
-### Scenario C: Deep Tenant Hierarchy & Dirty State Multi-Tenant Switching
-- **Vector**: Tenant switcher carrying 50+ localized team names with special/Unicode characters (e.g., RTL strings, zero-width spaces, emoji spam).
-- **Expected Failure**: DOM node explosion inside sticky header, text overflow escaping container bounds.
-- **Required Guardrail**: Virtualized list rendering for tenant selector, strict `overflow: hidden` + CSS text truncation, auto-detection of RTL text direction per list item.
-
-## 3. Chaos Verification Checklist
-- [ ] Nav drawer survives offline drop while executing sub-menu fetch.
-- [ ] F2F Service Dispatch shortcut remains interactive under 90% CPU throttling.
+### 3. Implementation Guardrails
+- **Gesture Dismissal:** Hard threshold at 40% vertical displacement or >300px/s velocity.
+- **Fallback Mode:** Fall back to native select list if WebGL/hardware acceleration crashes during rendering.
+- **Auditing:** Verified against enterprise compliance standards outlined in `Company Document`.
 ```
