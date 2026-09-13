@@ -1,47 +1,37 @@
-# Design Specification: Atlas Core Dashboard Density Optimization
-**Author:** Zed Nkosi  
+# Atlas Core: Dashboard Density Simplification Specification
+**Author:** Jax Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 11:05  
+**Produced:** D17 11:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX design spec simplifying widget layout, hierarchy, and information density on the Atlas Core dashboard while maintaining security compliance.
+Design tokens and layout specification doc defining progressive disclosure, spacing scale updates, and widget hierarchy to reduce cognitive load across Atlas Core.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard Density Reduction
-Author: Zed Nkosi (Design)
-Project: Atlas Core
-Status: Ready for Review
-Security Classification: Internal Only
+# Design Specification: Atlas Core Dashboard Density Simplification
 
-## 1. Objective & Scope
-Refactor the primary Atlas Core administrative dashboard to eliminate cognitive clutter, optimize whitespace, and reduce visual density by ~35%. The update ensures zero data-leakage via over-exposed micro-widgets while maintaining rapid operational monitoring for I.T. Skokos SaaS and face-to-face services.
+**Author:** Jax Petrov, Design Systems
+**Project:** Atlas Core
+**Status:** Approved for Engineering Handoff
 
-## 2. Document References
-- **Business Document: Company Document**: Evaluated baseline enterprise requirements, SLA display obligations, and authorized metric visibility guidelines to determine which secondary telemetry items could be nested inside secondary drill-down modals rather than occupying primary grid real estate.
+## 1. Context & Business Alignment
+To eliminate cognitive overload in the Atlas Core interface, this specification documents the transition from legacy high-density views to a balanced, modular hierarchy for hybrid SaaS and Face-to-Face operations.
 
-## 3. Key Design Adjustments
-### 3.1 Grid & Layout Hierarchy
-- Transition from 16-column dense widget layout to an adaptive 12-column CSS Grid with 24px baseline gutters.
-- Group related operational statuses into contextual collapsible cards with encrypted visual state indicators.
-- High-risk audit logs relocated to an on-demand slide-over panel with strict access verification.
+### Referenced Resources
+- **Business Document: Company Document**: Extensively analyzed to determine executive data requirements, user journey prioritization, and compliance reporting baselines. This guided our restructuring of KPI cards—ensuring core SaaS health and service metrics maintain primary visibility while operational telemetry is tiered.
 
-### 3.2 Visual Cleanliness & Component Pruning
-- Replaced raw JSON stream visualizers with high-level health badges (Healthy, Degraded, Critical).
-- Condensed metric cards: limited primary metric displays to 3 key indicators (Active Sessions, Node Health, Error Rate).
-- Implemented sanitized tooltips with masked identifier previews.
+## 2. Layout Grid & Structural Density
+- **Container Grid**: Replaced 6-column micro-grid with a flexible 3-column container system (`max-width: 1440px`).
+- **Progressive Disclosure**: Secondary audit metrics migrated to flyout inspection panels rather than baseline viewport clutter.
 
-## 4. Implementation Tokens
-```css
-:root {
-  --grid-gap: 24px;
-  --card-padding: 20px;
-  --card-radius: 8px;
-  --font-size-base: 14px;
-  --font-size-stat: 28px;
-  --security-badge-bg: #1e293b;
-}
-```
+## 3. Design Token Standardization
+- `space-widget-gap`: Updated from `8px` (`spacing.xs`) to `20px` (`spacing.lg`).
+- `card-padding`: Standardized to `24px` (`spacing.xl`) for metric modules.
+- `table-row-height`: Increased default from `32px` (dense) to `48px` (comfortable), with a client-side toggle reserved for high-volume logs.
+- `text-display-kpi`: Set to `24px/32px` Semibold (`font-size.2xl`), reducing visual weight across high-frequency dashboard panels.
+
+## 4. Migration & Compliance
+All front-end implementations must reference `@it-skokos/design-tokens` v2.4. Hardcoded pixel margins in `DashboardGrid.tsx` are deprecated.
 ```
