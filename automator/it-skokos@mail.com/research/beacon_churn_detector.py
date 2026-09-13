@@ -1,68 +1,55 @@
-# Beacon API: Ultra-Low-Latency Churn Signal Detection Pipeline
-**Author:** Pixel Bishop  
+# Beacon API Latency-to-Churn Correlation Engine
+**Author:** Iris Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 18:20  
+**Produced:** D15 20:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Technical research specification and zero-allocation streaming analyzer for Beacon API churn heuristics, calibrated against the Company Document.
+Technical deliverable evaluating telemetry churn indicators and p99 latency degradation on the Beacon API, incorporating thresholds defined in Business Document: Company Document.
 
 ## Deliverable
 ```
 """
-I.T. Skokos - Beacon API Real-Time Churn Signal Engine
-Author: Pixel Bishop (Research Agent o3 | Latency Hunter)
-
-Resource Reference:
-  - 'Company Document': Sourced customer lifecycle benchmarks, contractual SLA churn
-    definitions, and Face-to-Face booking cancellation weight matrices.
+Project: Beacon API - Churn Signal Analysis
+Author: Iris Reyes (Research Agent / Latency Hunter)
+Organization: I.T. Skokos
+Resource Applied: Business Document: Company Document (used to establish baseline SLA tolerances and historical account health definitions).
 """
 
-import time
-from typing import Tuple
+import numpy as np
 from dataclasses import dataclass
+from typing import Dict, List
 
-@dataclass(slots=True, frozen=True)
+@dataclass
 class AccountTelemetry:
     account_id: str
-    rpm_drop_ratio: float       # Call velocity drop over 48h rolling window
-    f2f_cancel_rate: float      # Face-to-Face booking drop-off (per Company Document)
-    token_decay_score: float    # Auth renewal decay index
-    endpoint_error_spike: float # Beacon API 4xx/5xx error gradient
+    p95_latency_ms: float
+    p99_latency_ms: float
+    error_rate_delta: float
+    weekly_call_volume_drop: float
 
-class MicrosecondChurnDetector:
-    # Thresholds calibrated directly against retention models in the Company Document
-    RPM_DROP_CRITICAL = 0.40
-    F2F_DROP_CRITICAL = 0.25
+class ChurnRiskEvaluator:
+    # Baseline thresholds derived from Business Document: Company Document
+    P99_THRESHOLD_MS: float = 350.0
+    VOLUME_DROP_THRESHOLD: float = 0.25
     
-    __slots__ = ('_w_rpm', '_w_f2f', '_w_tok', '_w_err')
+    def __init__(self, weight_latency: float = 0.55, weight_volume: float = 0.45):
+        self.w_lat = weight_latency
+        self.w_vol = weight_volume
 
-    def __init__(self) -> None:
-        # Pre-computed float coefficients to optimize CPU cache & eliminate heap allocations
-        self._w_rpm = 0.40
-        self._w_f2f = 0.30
-        self._w_tok = 0.20
-        self._w_err = 0.10
-
-    def fast_eval(self, data: AccountTelemetry) -> Tuple[bool, float, float]:
-        """Evaluates churn risk within sub-microsecond latency targets (<2us)."""
-        t_start = time.perf_counter_ns()
+    def evaluate_account(self, data: AccountTelemetry) -> Dict[str, float]:
+        # Latency penalty: penalize non-linear latency spikes above SLA (ref: Company Document)
+        lat_penalty = min(1.0, max(0.0, (data.p99_latency_ms - self.P99_THRESHOLD_MS) / self.P99_THRESHOLD_MS))
+        vol_penalty = min(1.0, max(0.0, data.weekly_call_volume_drop / self.VOLUME_DROP_THRESHOLD))
         
-        churn_score = (
-            (data.rpm_drop_ratio * self._w_rpm) +
-            (data.f2f_cancel_rate * self._w_f2f) +
-            (data.token_decay_score * self._w_tok) +
-            (data.endpoint_error_spike * self._w_err)
-        )
+        churn_risk_score = (self.w_lat * lat_penalty) + (self.w_vol * vol_penalty)
         
-        is_churn_risk = (
-            churn_score >= 0.38 or 
-            data.rpm_drop_ratio > self.RPM_DROP_CRITICAL or
-            data.f2f_cancel_rate > self.F2F_DROP_CRITICAL
-        )
-        
-        eval_time_us = (time.perf_counter_ns() - t_start) / 1_000.0
-        return is_churn_risk, churn_score, eval_time_us
+        return {
+            "account_id": data.account_id,
+            "churn_risk_score": round(churn_risk_score, 4),
+            "latency_degradation_flag": data.p99_latency_ms > self.P99_THRESHOLD_MS,
+            "critical_intervention_required": churn_risk_score >= 0.70
+        }
 
 ```
