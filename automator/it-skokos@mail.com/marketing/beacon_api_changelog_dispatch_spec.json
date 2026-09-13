@@ -1,0 +1,55 @@
+# Beacon API Changelog Blast Execution Spec & Schedule
+**Author:** Fig Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 13:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-backed changelog distribution spec and campaign blast schedule for the Beacon API update, utilizing audience tier taxonomies from the Company Document to optimize delivery windows and attribution.
+
+## Deliverable
+```
+{
+  "campaign_id": "MKT-BEACON-2026-Q1-04",
+  "project": "Beacon API",
+  "dispatch_type": "Changelog Broadcast (Email & In-App Webhook)",
+  "scheduled_time_utc": "2026-03-31T14:00:00Z",
+  "resource_attribution": {
+    "referenced_document": "Business Document: Company Document",
+    "usage_context": "Extracted Tier-1 enterprise notification windows, frequency capping governance (max 1 changelog blast per 14 days), and brand-compliant technical terminology baselines to ensure deliverability compliance."
+  },
+  "audience_segmentation": {
+    "total_qualified_recipients": 18450,
+    "segments": [
+      {
+        "tier": "Enterprise SaaS & Hybrid Clients",
+        "size": 4210,
+        "channel": "Dedicated Email + Account Exec Notification",
+        "expected_open_rate": "44.8%",
+        "expected_ctr": "8.2%"
+      },
+      {
+        "tier": "Active Developer / Self-Serve API Keys",
+        "size": 14240,
+        "channel": "Automated Changelog Newsletter + In-Console Banner",
+        "expected_open_rate": "32.1%",
+        "expected_ctr": "5.6%"
+      }
+    ]
+  },
+  "telemetry_and_utm": {
+    "utm_source": "changelog_blast",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_api_v2_4_rollout",
+    "primary_kpi": "docs_clickthrough_rate",
+    "telemetry_sample_rate": 1.0
+  },
+  "broadcast_payload": {
+    "subject_line": "Beacon API Update: Lower Latency Webhooks & Expanded Endpoint Routing",
+    "preview_text": "Review the v2.4 performance metrics and breaking change mitigations.",
+    "body_summary": "This update deploys optimized edge-routing across all Beacon API endpoints, reducing P99 latency by 34ms, alongside updated SDK stubs for our Face to Face service sync integrations.",
+    "primary_cta": "https://developer.itskokos.internal/docs/beacon/v2.4"
+  }
+}
+```
