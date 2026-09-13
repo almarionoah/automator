@@ -1,50 +1,45 @@
-# Atlas Core - Component Design Tokens Spec
-**Author:** Cipher Van Dyk  
+# Atlas Core Component Design Tokens
+**Author:** Onyx Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 09:55  
+**Produced:** D16 15:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Ultra-lean, performance-optimized design token definitions for Atlas Core, strictly mapped to branding guidelines established in Company Document.
+Production-ready design token architecture for Atlas Core components, constructed to minimize rendering latency across SaaS and Face-to-Face interfaces based on guidance from Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.design/schema.json",
+  "$schema": "https://design-tokens.github.io/community-group/format/",
   "meta": {
     "project": "Atlas Core",
-    "author": "Cipher Van Dyk",
-    "sourceDocument": "Company Document",
-    "description": "Optimized core component tokens derived from Company Document brand guidelines, built with minimal nesting to reduce parsing latency in runtime theme injectors."
+    "author": "Onyx Marlow",
+    "optimizedFor": "zero-runtime-overhead / minimal paint latency",
+    "documentationReference": "Business Document: Company Document was utilized to align component states with operational brand requirements across both digital SaaS platforms and hybrid Face to Face service kiosks."
   },
-  "color": {
-    "brand": {
-      "primary": { "value": "#0B57D0", "type": "color", "comment": "Referenced from Company Document section 2.1 (SaaS platform core blue)" },
-      "secondary": { "value": "#001D35", "type": "color", "comment": "Referenced from Company Document section 2.3 (Face-to-Face dark accent)" },
-      "surface": { "value": "#FFFFFF", "type": "color" },
-      "surface-subtle": { "value": "#F8FAFD", "type": "color" }
+  "component": {
+    "button": {
+      "padding": {
+        "sm": { "$value": "0.375rem 0.75rem", "$type": "dimension" },
+        "md": { "$value": "0.5rem 1rem", "$type": "dimension" },
+        "lg": { "$value": "0.75rem 1.5rem", "$type": "dimension" }
+      },
+      "radius": { "$value": "4px", "$type": "dimension" },
+      "duration": {
+        "hover": { "$value": "75ms", "$type": "duration", "$description": "Ultra-low latency transition for instant interactive feedback" }
+      }
     },
-    "feedback": {
-      "success": { "value": "#137333", "type": "color" },
-      "error": { "value": "#C5221F", "type": "color" }
-    }
-  },
-  "spacing": {
-    "xxs": { "value": "2px", "type": "dimension" },
-    "xs": { "value": "4px", "type": "dimension" },
-    "sm": { "value": "8px", "type": "dimension" },
-    "md": { "value": "16px", "type": "dimension" },
-    "lg": { "value": "24px", "type": "dimension" }
-  },
-  "typography": {
-    "fontFamily": {
-      "base": { "value": "system-ui, -apple-system, sans-serif", "type": "fontFamily", "comment": "Zero-overhead system font stack specified in Company Document for low latency UI rendering" }
+    "card": {
+      "background": { "$value": "#FFFFFF", "$type": "color" },
+      "border": { "$value": "1px solid #E2E8F0", "$type": "border" },
+      "shadow": { "$value": "0 1px 2px 0 rgba(0,0,0,0.05)", "$type": "shadow" },
+      "spacing": { "$value": "1.25rem", "$type": "dimension" }
     },
-    "size": {
-      "caption": { "value": "0.75rem", "type": "dimension" },
-      "body": { "value": "0.875rem", "type": "dimension" },
-      "title": { "value": "1.125rem", "type": "dimension" }
+    "input": {
+      "height": { "$value": "2.5rem", "$type": "dimension" },
+      "border": { "$value": "1px solid #CBD5E1", "$type": "border" },
+      "focusRing": { "$value": "2px solid #0284C7", "$type": "border" }
     }
   }
 }
