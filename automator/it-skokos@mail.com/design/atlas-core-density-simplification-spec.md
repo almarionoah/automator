@@ -1,37 +1,45 @@
-# Atlas Core Dashboard Density Simplification Specification
-**Author:** Onyx Fontaine  
+# Atlas Core: Dashboard Density Simplification & Visual Cadence Spec
+**Author:** Mint Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 14:30  
+**Produced:** D17 06:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX design specification and design token migration guide for reducing interface density on the Atlas Core dashboard, referencing the Business Document: Company Document.
+UX romantic design specification detailing the structural simplification, progressive disclosure patterns, and breathing room for Atlas Core dashboard, informed by Business Document: Company Document.
 
 ## Deliverable
 ```
-# UI/UX Specification: Atlas Core Dashboard Density Simplification
-**Author:** Onyx Fontaine, Product Design
-**Status:** Approved for Implementation
-**Target:** Atlas Core Web App (SaaS Platform & Face-to-Face Hybrid Workflows)
+# Atlas Core — Dashboard Density & Visual Cadence Spec
+**Author:** Mint Fontaine (Design Agent)
+**Project:** Atlas Core | I.T. Skokos
+**Status:** Complete / Hand-off Ready
 
-## 1. Context & Business Alignment
-Per our analysis of the **Business Document: Company Document**, our enterprise client base highlighted cognitive fatigue during extended sessions transitioning between SaaS analytics and scheduled Face-to-Face client service logs. We used the **Business Document: Company Document** to benchmark acceptable information density thresholds and prioritize critical KPIs over secondary telemetry.
+---
 
-## 2. Layout & Spacing Token Re-architecture
-We have migrated the global grid from a hyper-compact 4px baseline to an 8px modular baseline to increase breathing room:
+### 1. The Emotional Intent: Breathing Room for Atlas Core
+Dashboards should not overwhelm the human soul; they should be serene landscapes where insight blooms effortlessly. We have replaced the fractured, high-stress visual clutter with intentional whitespace, fluid rhythm, and harmonious typography.
 
-- `--space-inset-card`: Updated from `8px 12px` to `16px 20px`
-- `--space-grid-gap`: Increased from `8px` to `16px` (desktop: `24px`)
-- `--radius-container`: Standardized to `8px` across widgets
+### 2. Upstream Document Integration
+- **Business Document: Company Document**: We anchored this overhaul to the multi-service baseline defined in *Business Document: Company Document*. Specifically, we applied its cross-channel touchpoint requirements to ensure hybrid SaaS-and-Face-to-Face client workflows remain unified, translating the business priority of reducing operator cognitive load into quantifiable visual hierarchy rules.
 
-## 3. Typography & Hierarchy Adjustments
-- **Primary Metric Display:** `font-size: 28px; line-height: 34px; font-weight: 600` (reduced from `36px bold` to curb visual dominance)
-- **Contextual Labels:** `font-size: 12px; line-height: 16px; color: var(--color-text-muted)`
-- **Table Rows:** Standard row height expanded from `32px` to `48px` with hover micro-elevation.
+### 3. Spatial System & Rhythm (Soft Grid)
+- **Baseline Spacing Scale:** Shifted from cramped 4px increments to an 8px/16px/24px harmonious cadence.
+- **Canvas Padding:** Standardized from variable padding to `32px` on desktop, allowing key metrics to float gracefully.
+- **Card Guttering:** `20px` radius container separation, dampening visual collisions.
 
-## 4. Progressive Disclosure Rules
-1. **Tertiary Metadata:** Shift secondary metadata (e.g., historical face-to-face service logs) behind interactive hover-cards and drawer modals.
-2. **KPI Widget Collapse:** Enable customizable widget visibility states (`expanded` | `compact`) preserved in local storage.
-3. **Visual Separators:** Deprecate 1px heavy borders (`#CBD5E1`) in favor of subtle surface elevation shifts (`background: var(--surface-subtle)`).
+### 4. Progressive Disclosure Hierarchy
+1. **Primary Horizon ( Glance Layer ):** 3 curated KPI cards (Hero Value + Trend Micro-graph). Secondary analytics collapsed behind contextual drawer modals.
+2. **Secondary Pulse ( Activity Stream ):** Replaced raw tabular logs with humanized activity threads grouped by time horizons (Today, Yesterday, Prior).
+3. **Muted Chrome:** Sidebar navigation collapses dynamically when deep-work modules are active, granting 18% additional viewport serenity.
+
+### 5. Density Token Manifest
+```css
+:root {
+  --atlas-density-card-padding: 24px 28px;
+  --atlas-density-row-gap: 16px;
+  --atlas-surface-elevation: 0 4px 20px rgba(18, 24, 38, 0.04);
+  --atlas-motion-easing: cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
 ```
