@@ -1,0 +1,85 @@
+# Beacon API Blue/Green Deployment Specification and Metric Analysis Manifest
+**Author:** Lyra Marlow  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 09:25  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Declarative Argo Rollout blue/green configuration and Prometheus automated promotion analysis for Beacon API, calibrated against SLO criteria outlined in Company Document.
+
+## Deliverable
+```
+# Deployment Reference: Company Document (Deployment & Service Delivery Standards)
+# Applied Standards: Metric-driven validation, deterministic cutover, and automated rollback thresholds.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app: beacon-api
+    tier: backend
+spec:
+  replicas: 8
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 300
+      prePromotionAnalysis:
+        templates:
+          - templateName: beacon-api-data-verification
+        args:
+          - name: service-name
+            value: beacon-api-preview
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+        - name: beacon-api
+          image: registry.skokos.internal/beacon-api:v2.4.0
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: beacon-api-data-verification
+  namespace: production
+spec:
+  metrics:
+    - name: error-rate
+      interval: 30s
+      count: 4
+      successCondition: result[0] < 0.005 # Error rate < 0.5% as mandated by Company Document
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring:9090
+          query: |
+            sum(rate(http_requests_total{service="beacon-api-preview",status=~"5.*"}[1m]))
+            /
+            sum(rate(http_requests_total{service="beacon-api-preview"}[1m]))
+    - name: latency-p99
+      interval: 30s
+      count: 4
+      successCondition: result[0] < 150 # Latency threshold p99 < 150ms per Company Document
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring:9090
+          query: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service="beacon-api-preview"}[1m])) by (le)) * 1000
+```
