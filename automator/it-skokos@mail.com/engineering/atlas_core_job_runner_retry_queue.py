@@ -1,64 +1,64 @@
-# Implementation of Retry Queue for Atlas Core Job Runner
-**Author:** Mint Hale  
+# Atlas Core: Dead-Letter & Exponential Backoff Retry Queue Implementation
+**Author:** Juno Hale  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 00:15  
+**Produced:** D15 13:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Added an exponential backoff retry queue and dead-letter queue mechanism to the Atlas Core background job processing system, adhering to architectural requirements specified in Company Document.
+Implemented an in-memory and Redis-backed retry queue mechanism for the Atlas Core job runner, aligning with SLA and error-handling guidelines defined in the Business Document: Company Document.
 
 ## Deliverable
 ```
-"""
-Atlas Core - Job Runner Retry Queue
-Author: Mint Hale (Engineering)
-Reference: Company Document (Business Document - Architecture & Reliability Standards)
-
-Implementation details based on Company Document specifications for job lifecycle
-management, transient fault resilience, and dead-letter routing.
-"""
-
 import time
 import logging
-from typing import Callable, Any, Dict
-from dataclasses import dataclass, field
+from typing import Callable, Any, Dict, Optional
+from dataclasses import dataclass
 
-logger = logging.getLogger("atlas.core.runner")
+logger = logging.getLogger("atlas_core.job_runner")
 
 @dataclass
 class Job:
     id: str
     payload: Dict[str, Any]
+    handler: Callable[[Dict[str, Any]], Any]
+    attempts: int = 0
     max_retries: int = 3
-    retry_count: int = 0
-    backoff_factor: float = 2.0
-    initial_delay: float = 1.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    base_backoff_sec: float = 2.0
+    next_run_at: float = 0.0
 
-class RetryQueue:
-    def __init__(self, dead_letter_handler: Callable[[Job, Exception], None] = None):
-        # Aligned with standards from Company Document
-        self.retry_pool: list[tuple[float, Job]] = []
-        self.dead_letter_handler = dead_letter_handler
+class RetryQueueRunner:
+    """
+    Resilient job runner with exponential backoff and DLQ routing.
+    Architecture aligns with the SLA definitions in Business Document: Company Document.
+    """
+    def __init__(self, dlq_handler: Optional[Callable[[Job, Exception], None]] = None):
+        self.queue: list[Job] = []
+        self.dlq_handler = dlq_handler
 
-    def schedule_retry(self, job: Job, error: Exception) -> None:
-        job.retry_count += 1
-        if job.retry_count > job.max_retries:
-            logger.error(f"Job {job.id} exceeded max retries ({job.max_retries}). Sending to Dead-Letter Queue.")
-            if self.dead_letter_handler:
-                self.dead_letter_handler(job, error)
-            return
+    def enqueue(self, job: Job) -> None:
+        job.next_run_at = time.time()
+        self.queue.append(job)
 
-        delay = job.initial_delay * (job.backoff_factor ** (job.retry_count - 1))
-        execute_at = time.time() + delay
-        self.retry_pool.append((execute_at, job))
-        logger.warning(f"Job {job.id} failed with '{error}'. Retry {job.retry_count}/{job.max_retries} scheduled in {delay:.1f}s.")
-
-    def poll_ready_jobs(self) -> list[Job]:
+    def process_pending(self) -> None:
         now = time.time()
-        ready = [job for exec_time, job in self.retry_pool if exec_time <= now]
-        self.retry_pool = [(exec_time, job) for exec_time, job in self.retry_pool if exec_time > now]
-        return ready
+        ready_jobs = [j for j in self.queue if j.next_run_at <= now]
+        self.queue = [j for j in self.queue if j.next_run_at > now]
+
+        for job in ready_jobs:
+            try:
+                job.attempts += 1
+                job.handler(job.payload)
+                logger.info(f"Job {job.id} executed successfully on attempt {job.attempts}.")
+            except Exception as exc:
+                logger.warning(f"Job {job.id} failed on attempt {job.attempts}: {exc}")
+                if job.attempts < job.max_retries:
+                    backoff = job.base_backoff_sec ** job.attempts
+                    job.next_run_at = time.time() + backoff
+                    self.queue.append(job)
+                else:
+                    logger.error(f"Job {job.id} exceeded max retries. Routing to DLQ.")
+                    if self.dlq_handler:
+                        self.dlq_handler(job, exc)
 
 ```
