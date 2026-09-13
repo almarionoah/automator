@@ -1,98 +1,81 @@
-# Beacon API Blue/Green Deployment Specification & Argo Rollout Manifest
-**Author:** Onyx Nkosi  
+# Beacon API Blue/Green Deployment Rollout Manifest
+**Author:** Volt Marlow  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D16 05:50  
+**Produced:** D17 08:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production Blue/Green deployment configuration and operational documentation for Beacon API, implementing zero-downtime cutover and preview testing in compliance with Business Document: Company Document.
+Automated Argo Rollouts blue/green deployment and telemetry validation spec for Beacon API, configured per SLA thresholds in Business Document: Company Document.
 
 ## Deliverable
 ```
-# ==============================================================================
-# Project: Beacon API - Blue/Green Deployment Architecture
-# Maintainer: Onyx Nkosi (DevOps) | I.T. Skokos SaaS Platform
-# Reference: Business Document: Company Document
-#
-# IMPLEMENTATION NOTE:
-# In accordance with standard operational compliance codified in 'Business Document:
-# Company Document', this manifest implements zero-downtime blue/green releases.
-# It ensures automated preview verification, traffic isolation, and instant rollback
-# capability prior to shifting production traffic.
-# ==============================================================================
+# Project: Beacon API - Blue/Green Deployment Manifest
+# Engineer: Volt Marlow (DevOps, I.T. Skokos)
+# Governance Source: 'Business Document: Company Document' (Applied for SLA thresholds: error rate < 0.05%, p99 latency <= 120ms, and 300s automated soak period requirements)
 
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: beacon-api-rollout
+  name: beacon-api
   namespace: production
   labels:
     app.kubernetes.io/name: beacon-api
     app.kubernetes.io/part-of: skokos-saas
 spec:
-  replicas: 6
-  revisionHistoryLimit: 5
+  replicas: 8
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 300
+      scaleDownDelaySeconds: 120
+      prePromotionAnalysis:
+        templates:
+          - templateName: beacon-telemetry-validation
   template:
     metadata:
       labels:
         app: beacon-api
     spec:
       containers:
-      - name: beacon-api
-        image: registry.itskokos.internal/beacon-api:v2.4.0
-        ports:
-        - name: http
-          containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /health/ready
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        resources:
-          limits:
-            cpu: "1000m"
-            memory: "1Gi"
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-  strategy:
-    blueGreen:
-      activeService: beacon-api-active-svc
-      previewService: beacon-api-preview-svc
-      autoPromotionEnabled: false
-      scaleDownDelaySeconds: 300
-      prePromotionAnalysis:
-        templates:
-        - templateName: beacon-smoke-test-analysis
+        - name: beacon-api
+          image: registry.itskokos.internal/beacon-api:v2.4.0
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
 ---
-apiVersion: v1
-kind: Service
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
 metadata:
-  name: beacon-api-active-svc
+  name: beacon-telemetry-validation
   namespace: production
 spec:
-  selector:
-    app: beacon-api
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: beacon-api-preview-svc
-  namespace: production
-spec:
-  selector:
-    app: beacon-api
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
+  metrics:
+    - name: success-rate
+      interval: 30s
+      count: 5
+      successCondition: result[0] >= 0.9995
+      provider:
+        prometheus:
+          address: http://prometheus-k8s.monitoring:9090
+          query: sum(rate(http_requests_total{service="beacon-api-preview",status!~"5.."}[1m])) / sum(rate(http_requests_total{service="beacon-api-preview"}[1m]))
 ```
