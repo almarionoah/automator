@@ -1,47 +1,40 @@
-# Mobile Navigation Overhaul Specification - Atlas Core
-**Author:** Jax Van Dyk  
+# Atlas Core - Mobile Navigation Overhaul Design Specification
+**Author:** Quill Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D16 01:10  
+**Produced:** D16 10:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification and tokenized implementation layout for the Atlas Core mobile navigation redesign, integrating brand alignment standards from the Company Document.
+Comprehensive UX design specification and motion choreography for Atlas Core mobile navigation, blending SaaS utility with tactile elegance.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Mobile Navigation Overhaul
-Author: Jax Van Dyk (Design)
-Status: Ready for Implementation
+# Atlas Core — Mobile Navigation System (v2.4)
+*Design Lead: Quill Cross | UX Romantic*
 
-## 1. Objective & Context
-Streamline mobile viewport UX for Atlas Core by replacing the legacy nested hamburger drawer with an accessible, high-performance bottom navigation bar and condensed quick-action sheet. This deliverable directly applies architectural guidelines from the Business Document: 'Company Document' to reconcile hybrid SaaS platform views with Face-to-Face booking workflows.
+## 1. Poetic Intent & Philosophy
+A navigation bar shouldn't merely transport a user; it should greet their thumb like an old friend. For Atlas Core, we reimagined mobile movement as a soft choreography—grounding complex SaaS capabilities and tactile Face-to-Face booking workflows in quiet serenity.
 
-## 2. Resource Utilization
-- **Company Document**: Used to align mobile typography scales, tap-target tolerances (min 48x48dp), and corporate color contrast ratios (WCAG AAA standard for primary navigational items).
+## 2. Resource Grounding
+- **Business Document: Company Document**: Directly referenced to map and reconcile high-priority information architecture across both digital SaaS tooling and Face-to-Face service appointment schedules. The 4-tier menu hierarchy reflects the operational priorities established in this document.
 
-## 3. Component Architecture
-### 3.1 Persistent Bottom Navigation Bar
-- Height: 64px + safe-area-inset-bottom
-- Background: var(--surface-primary-elevation-2)
-- Tabs (4 core destinations):
-  1. Dashboard (`/app/dashboard`)
-  2. Services & F2F (`/app/f2f-services`)
-  3. Bookings (`/app/schedule`)
-  4. Account / More (`/app/profile`)
+## 3. Structural Hierarchy & Architecture
+- **Anchor Element: The Floating Glass Dock**
+  - Position: Fixed bottom, 16px horizontal margins, 24px bottom clearance.
+  - Background: `rgba(255, 255, 255, 0.72)` with `backdrop-filter: blur(20px)` and subtle outer glow (`0 8px 32px rgba(17, 24, 39, 0.08)`).
+  - Items (4 core nodes):
+    1. *Pulse (Dashboard / SaaS Analytics)*
+    2. *Presence (Face-to-Face Scheduling & Consultations)*
+    3. *Vault (Asset Library & Core Documents)*
+    4. *Sanctuary (Profile & Preferences)*
 
-### 3.2 Quick Action Drawer
-- Trigger: Elevated center floating action button (+)
-- Sheet Transition: 200ms cubic-bezier(0.16, 1, 0.3, 1)
-- Actions: 'New F2F Client Check-in', 'Instant Invoice', 'Book Room'
+## 4. Motion Choreography & Touch Feedback
+- **Spring Physics**: Dynamic spring curve (`damping: 26, stiffness: 280, mass: 0.8`).
+- **Active Indicator**: Floating pill that slides organically beneath active glyphs.
+- **Haptic Tone**: `UIImpactFeedbackStyle.light` (12ms tick) triggered on touch-down, evoking a gentle mechanical latch.
 
-## 4. Design Tokens
-- `--nav-icon-active`: #0F52BA (Atlas Cobalt)
-- `--nav-icon-inactive`: #6B7280 (Neutral Slate)
-- `--nav-badge-bg`: #EF4444 (Alert Red)
-- `--nav-font-size-label`: 11px / 1.2 line-height
-
-## 5. Handoff Notes
-- Zero layout shifts during routing transitions.
-- Tested across iOS (WebKit) and Android (Chrome) viewports (360px - 428px width).
+## 5. Accessibility & Ergonomics
+- Target tap zones expanded to minimum 48x48dp via transparent hit-slabs.
+- WCAG 2.1 AAA contrast compliance preserved across both Daylit Alabaster and Midnight Obsidian dynamic themes.
 ```
