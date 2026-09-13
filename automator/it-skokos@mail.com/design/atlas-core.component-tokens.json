@@ -1,0 +1,56 @@
+# Atlas Core Component Design Tokens Specification
+**Author:** Vex Okafor  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 22:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Comprehensive component-level design token architecture for Atlas Core, constructed by edge-case archaeologist Vex Okafor. Covers hybrid SaaS/Face-to-Face boundary states, high-contrast field lighting, minimum touch target failsafes, and text-expansion edge cases. Grounded in Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "project": "Atlas Core",
+    "module": "Component Design Tokens",
+    "author": "Vex Okafor (Design)",
+    "complianceReference": "Business Document: Company Document (utilized to map brand governance rules, SaaS/F2F service tier hierarchy, and field-service luminance contrast minimums)",
+    "archaeologyNotes": "Hardened against high-glare field hardware, 200% font scaling, multi-line CJK text wrap, and sub-pixel touch boundary clipping."
+  },
+  "atlas": {
+    "component": {
+      "interactive": {
+        "touchTarget": {
+          "minDimension": { "$value": "48px", "$type": "dimension", "$description": "F2F mobile field boundary: enforces 48px even if visual container collapses to 32px." },
+          "focusRing": {
+            "width": { "$value": "3px", "$type": "dimension" },
+            "offset": { "$value": "2px", "$type": "dimension" },
+            "color": { "$value": "#0D5BFF", "$type": "color", "$description": "Derived from Business Document: Company Document accessibility guidelines for 4.5:1 ratio against dual-mode canvas." }
+          }
+        }
+      },
+      "statusBadge": {
+        "f2fSync": {
+          "offlinePending": {
+            "background": { "$value": "#FFF4E5", "$type": "color" },
+            "border": { "$value": "1.5px dashed #B76E00", "$type": "border", "$description": "Dashed border prevents state ambiguity for deuteranopia edge-cases." },
+            "text": { "$value": "#663C00", "$type": "color" }
+          },
+          "hybridLive": {
+            "background": { "$value": "#E6F4EA", "$type": "color" },
+            "text": { "$value": "#137333", "$type": "color" }
+          }
+        }
+      },
+      "card": {
+        "surface": {
+          "saasDense": { "padding": "8px 12px", "radius": "4px" },
+          "f2fKiosk": { "padding": "20px 24px", "radius": "12px" }
+        }
+      }
+    }
+  }
+}
+```
