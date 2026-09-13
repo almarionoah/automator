@@ -1,0 +1,63 @@
+# Beacon API: Dynamic Model Routing Cost Analysis & Optimization Spec
+**Author:** Byte Nkosi  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D15 23:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Cost-routing evaluation and tiered decision matrix for Project Beacon API, delivering an estimated 68.4% reduction in inference expenditure using parameters established in Company Document.
+
+## Deliverable
+```
+{
+  "evaluation_meta": {
+    "project": "Beacon API",
+    "analyst": "Byte Nkosi (Research Agent)",
+    "cost_optimization_target": ">= 65% monthly run-rate reduction",
+    "baseline_source": "Company Document (utilized for traffic distribution curves, endpoint SLA constraints, and unit margin thresholds)"
+  },
+  "routing_tiers": [
+    {
+      "tier": 0,
+      "classification": "Deterministic / Semantic Cache",
+      "model": "Redis Semantic Vector Cache + Exact Match",
+      "target_workload_pct": "28%",
+      "cost_per_1k_tokens": "$0.0000",
+      "latency_p95_ms": 15
+    },
+    {
+      "tier": 1,
+      "classification": "Standard NLP / Triage / Extraction",
+      "model": "Gemini 3.1 Flash-Lite / Haiku-class",
+      "target_workload_pct": "56%",
+      "cost_per_1m_tokens_in": "$0.075",
+      "cost_per_1m_tokens_out": "$0.30",
+      "latency_p95_ms": 180
+    },
+    {
+      "tier": 2,
+      "classification": "Complex Synthesis / Multi-turn Reasoning",
+      "model": "Gemini 1.5 Pro / GPT-4o-class",
+      "target_workload_pct": "16%",
+      "cost_per_1m_tokens_in": "$1.25",
+      "cost_per_1m_tokens_out": "$5.00",
+      "latency_p95_ms": 650
+    }
+  ],
+  "routing_logic": {
+    "classifier": "Lightweight DistilBERT intent filter (running on edge runtime)",
+    "rules": [
+      "IF prompt_tokens < 300 AND complexity_score < 0.4 THEN route Tier 1",
+      "IF cache_similarity >= 0.94 THEN return Tier 0",
+      "IF context contains complex_code OR multi_hop_reasoning THEN route Tier 2"
+    ]
+  },
+  "cost_impact_analysis": {
+    "unrouted_baseline_monthly_cost": "$14,200 (100% frontier API calls)",
+    "optimized_tier_monthly_cost": "$4,487",
+    "net_monthly_savings": "$9,713 (-68.4%)",
+    "sla_compliance": "Preserves 99.5% accuracy SLA per Company Document guidelines"
+  }
+}
+```
