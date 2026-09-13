@@ -1,38 +1,45 @@
-# Beacon API: Churn Signal Identification & Early Warning Specification
-**Author:** Nyx Fontaine  
+# Beacon API Churn Signal Research Specification & Telemetry Schema
+**Author:** Torq Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 21:15  
+**Produced:** D16 08:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive research documentation analyzing leading telemetry and behavioral churn indicators for Beacon API, mapped against baseline account health definitions from the Company Document.
+Quantitative churn signal analysis specification and metric registry for Beacon API, establishing predictive behavioral triggers and telemetry pipelines based on company operational standards.
 
 ## Deliverable
 ```
-# Beacon API: Churn Signal Analysis & Early Warning Spec
-**Author:** Nyx Fontaine (Research)
-**Project:** Beacon API
-**Status:** Finalized Research Documentation
+# Beacon API: Churn Signal Classification & Telemetry Spec
 
-## 1. Executive Summary & Methodology
-This research document formalizes the multi-tier churn indicators identified across SaaS API telemetry and Face-to-Face service touchpoints for the Beacon API project. Documentation of churn patterns is critical for aligning developer advocacy, customer success, and product engineering.
+**Author:** Torq Reyes (Research)  
+**Project:** Beacon API  
+**Status:** Approved for Implementation  
 
-## 2. Resource & Document References
-* **Business Document: Company Document**: Utilized as the primary baseline reference for enterprise customer lifecycle stages, SLA threshold benchmarks, and contract renewal definitions. Telemetry deviations are systematically scored against the account health criteria defined in `Company Document`.
+---
 
-## 3. High-Confidence Churn Signals
+## 1. Executive Summary & Source Attribution
+This specification defines leading indicators of customer churn across SaaS and Face-to-Face (F2F) integrated workflows on the Beacon API. Baseline retention thresholds, billing tiers, and contract renewal cadences were derived directly from **Business Document: Company Document**, which provided our organizational benchmarks for client lifecycle stages and F2F service bundle milestones.
 
-### Tier-1: Technical Telemetry Signals (Early Indicators, 45-60 Days Pre-Renewal)
-* **Key De-provisioning / Secret Rotation Stoppage**: Accounts pausing automated credential rotations for >30 days show an 82% correlation with deprecation.
-* **Burst Failure & Unresolved 4xx/5xx Trends**: Sustained 429 (Rate Limit) or 500 internal errors left uninvestigated for >14 days indicate abandoned integration maintenance.
-* **Endpoint Scope Decay**: Reduction in distinct endpoint calls from full-suite usage to single-endpoint polling (volume drop >40% MoM).
+## 2. Core Churn Signal Registry
 
-### Tier-2: Hybrid & Service Interaction Signals (30 Days)
-* **Stalled Hybrid Integration**: Lack of synchronization between SaaS Beacon endpoints and scheduled Face-to-Face technical advisory sessions.
-* **Documentation Inactivity**: Sudden drop in developer portal session duration and API reference searches by authenticated team domains.
+| Signal ID | Category | Indicator Metric | Trigger Threshold | Churn Risk Weight |
+| :--- | :--- | :--- | :--- | :--- |
+| `SIG-API-01` | Telemetry | 30-Day API Request Velocity | Delta <= -45% MoM | Critical (0.85) |
+| `SIG-API-02` | Reliability | Client-Side Error Rate (4xx/5xx) | >= 8.5% over 7 days | High (0.65) |
+| `SIG-API-03` | Breadth | Active Endpoint Diversity | Drop from >4 routes to <=1 | High (0.70) |
+| `SIG-F2F-01` | Hybrid Sync | F2F Booking Webhook Inactivity | 0 calls in 14 days | High (0.60) |
+| `SIG-AUTH-01` | Access | Key Rotation & Token Refresh | Stalled > 60d past policy | Medium (0.40) |
 
-## 4. Operational Playbook & Documentation Action
-1. **Automate Webhook Alerts**: Ingest telemetry into health score pipeline when divergence exceeds `Company Document` baseline limits.
-2. **Proactive Developer Outreach**: Trigger automated documentation guides for struggling endpoints.
+## 3. Signal Modeling & Pipeline Integration
+
+### 3.1 Composite Churn Risk Score (CRS)
+CRS is computed daily at `00:00 UTC` for active tenants:
+`CRS = Sum(Weight_i * Signal_i) * Lifecycle_Multiplier`
+
+*Note: Lifecycle multipliers are normalized against tenure bands established in **Business Document: Company Document** (Onboarding, Growth, Renewal-90).* 
+
+### 3.2 Automated Alerting Matrix
+- **CRS >= 0.75:** Emit `tenant.risk.critical` event; queue Technical Account Lead intervention.
+- **CRS 0.50 - 0.74:** Generate automated diagnostic summary & API health review invite.
 ```
