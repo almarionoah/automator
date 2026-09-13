@@ -1,61 +1,78 @@
-# Beacon API v2.4 Changelog Blast Campaign Spec & Schedule
-**Author:** Zed Hale  
+# Beacon API v2.4 Changelog Blast Schedule & Campaign Copy
+**Author:** Iris Petrov  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D3 04:45  
+**Produced:** D15 11:05  
+**Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Scheduled changelog broadcast package for Beacon API v2.4 covering email newsletter, community webhooks, and distribution schedule under stated release assumptions.
+Scheduled multi-channel changelog distribution package for Beacon API v2.4, featuring developer-focused email copy, in-app notification payload, and segment-routing parameters aligned with internal documentation.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=2AA57122U7122292X
+- Pay: https://www.paypal.com/checkoutnow?token=20L6107831694603K
 
 ## Deliverable
 ```
-# CAMPAIGN SPEC: Beacon API v2.4 Changelog Blast
+# Campaign Dispatch: Beacon API v2.4 Changelog Blast
+**Owner:** Iris Petrov (Marketing)
+**Project:** Beacon API
+**Status:** Scheduled
+**Target Blast Date:** Thursday, 14:00 UTC
 
-## 1. Assumptions
-- Product: Beacon API (developer infra component of I.T. Skokos SaaS).
-- Release Core: v2.4 introduced Ed25519 webhook signing, 40% p99 latency reduction via edge routing, and standardized rate-limiting headers (`X-Beacon-RateLimit-*`).
-- Target Audience: Active developer accounts, API key holders, and technical integration leads (~14k recipients).
-- Delivery Engine: Customer.io / SendGrid + Discord/Slack Developer Webhooks.
-- Scheduled Time: Tuesday, 10:00 AM UTC (optimal developer engagement window).
-
----
-
-## 2. Email Dispatch Config & Copy
-
-- **Sender:** Zed Hale | I.T. Skokos Product Updates <changelog@itskokos.com>
-- **Reply-To:** api-support@itskokos.com
-- **Segment:** `api_users_active_30d` + `tier_enterprise_tech_leads`
-- **UTM Tag:** `utm_source=changelog&utm_medium=email&utm_campaign=beacon_v2_4`
-- **Subject Line:** [Changelog] Beacon API v2.4: 40% lower p99 latency + Ed25519 webhooks
-- **Preheader:** Instant webhook verification, new rate-limit headers, and edge performance upgrades.
-
-### Body Copy:
-Hey {{ customer.first_name | default: "Developer" }},
-
-Beacon API v2.4 is live with major upgrades to throughput, security, and developer ergonomics:
-
-- ⚡ **40% Faster Edge Routing:** Global p99 latency dropped to 65ms across all read endpoints.
-- 🔒 **Ed25519 Webhook Signing:** Cryptographically secure payload verification with zero replay vulnerability.
-- 📊 **Granular Rate-Limit Headers:** Real-time quota visibility via `X-Beacon-RateLimit-Remaining` and `Reset` headers.
-- 🛠️ **SDK Updates:** Python, Go, and Node SDKs updated with typed webhook parsers.
-
-[Read Full Docs & Upgrade Guide ->](https://docs.itskokos.com/beacon/changelog/v2-4?utm_source=changelog&utm_medium=email)
+## 1. Context & Resource Reference
+- **Resource Applied:** `Business Document: Company Document`
+- **Usage Details:** Consulted `Business Document: Company Document` to verify user segmentation tiers across our hybrid model (SaaS Platform developers vs. Face to Face Services technical liaisons), ensure adherence to brand voice guardrails, and implement unsub/compliance policies for platform announcements.
 
 ---
 
-## 3. Webhook Dispatch (Discord/Slack)
-**Scheduled Trigger:** T-0 at email release
-**Payload:**
-🚀 **Beacon API v2.4 Released**
-• 40% lower p99 edge latency
-• Ed25519 Webhook signatures
-• New rate-limit response headers
-👉 Docs: https://docs.itskokos.com/beacon/changelog/v2-4
+## 2. Audience Segmentation & Routing
+- **Segment A (Primary):** Active SaaS Platform API Subscribers (`tier: pro`, `tier: enterprise`, `last_active <= 30d`)
+- **Segment B (Secondary):** Face to Face Services Technical Contacts & Solutions Consultants
+- **Suppression:** Accounts flagged with `api_comm_opt_out: true` or pending churn review.
+
+---
+
+## 3. Email Dispatch Copy
+
+**Subject:** [Changelog] Beacon API v2.4: 40% Lower Latency + Granular Webhook Filtering
+**Preview Text:** Sub-50ms query responses, custom retry headers, and new self-service payload signing.
+
+**Body:**
+```text
+Hi {{contact.first_name}},
+
+We just deployed Beacon API v2.4 across all production regions.
+
+Here is what’s new:
+- ⚡ High-Throughput Routing: Edge caching optimization cuts average response latency by 40%.
+- 🎯 Granular Webhook Filters: Route event notifications by tenant, environment, and error class.
+- 🔐 Self-Service Payload Verification: Instant rotation for SHA-256 webhook signing keys via dashboard.
+
+Check the complete technical breakdown and updated SDK definitions:
+👉 [Read Full v2.4 Changelog & Docs] (https://docs.itskokos.com/beacon-api/changelog/v2-4)
+
+Questions or custom rollout support? Reply directly to this email or book time with our integration team.
+
+Best,
+Iris Petrov & The Beacon API Team
+I.T. Skokos
+```
+
+---
+
+## 4. In-App Intercom / Webhook Notice Payload
+```json
+{
+  "campaign_id": "beacon_v2_4_changelog",
+  "channel": "in_app_banner",
+  "targeting": {"user_role": ["developer", "admin"]},
+  "title": "Beacon API v2.4 is Live",
+  "cta_url": "https://docs.itskokos.com/beacon-api/changelog/v2-4",
+  "scheduled_for": "2026-03-26T14:00:00Z"
+}
+```
 ```
