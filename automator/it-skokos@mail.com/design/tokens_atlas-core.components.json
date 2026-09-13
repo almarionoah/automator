@@ -1,0 +1,49 @@
+# Atlas Core Component Tokens Specification
+**Author:** Pixel Nkosi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D16 14:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Comprehensive W3C-compliant component design token definitions for Atlas Core, mapping SaaS and Face to Face interface tokens with explicit documentation grounded in company strategy.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "project": "Atlas Core",
+    "module": "component-tokens",
+    "version": "1.0.0",
+    "author": "Pixel Nkosi",
+    "docsEvangelism": "All tokens must be consumed through semantic component aliases rather than primitive scales to enforce strict theme portability between SaaS Platform UI and Face to Face Service kiosks.",
+    "governance": {
+      "referenceDocument": "Business Document: Company Document",
+      "usageDescription": "Referenced Business Document: Company Document to align touch target sizing, high-visibility contrast ratios, and physical service-point compliance requirements across both digital SaaS dashboards and Face to Face physical service terminals."
+    }
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "$value": "{color.brand.primary.600}", "$type": "color", "$description": "Default button fill satisfying AA compliance on light surface." },
+          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
+          "pressed": { "$value": "{color.brand.primary.800}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.200}", "$type": "color" }
+        },
+        "text": {
+          "default": { "$value": "{color.neutral.0}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.500}", "$type": "color" }
+        },
+        "spacing": {
+          "paddingX": { "$value": "{space.4}", "$type": "dimension" },
+          "paddingY": { "$value": "{space.3}", "$type": "dimension" },
+          "minHeight": { "$value": "{size.touchTarget.min}", "$type": "dimension", "$description": "Guarantees 44px min touch target for Face to Face terminals." }
+        },
+        "radius": { "$value": "{radius.md}", "$type": "dimension" }
+      }
+    }
+  }
+}
+```
