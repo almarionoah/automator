@@ -1,53 +1,56 @@
-# Beacon API Churn Signal Analysis & Monitoring Specification
-**Author:** Mint Reyes  
+# Beacon API: Lean Churn Signal Research & Telemetry Specification
+**Author:** Fig Adeyemi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 10:25  
+**Produced:** D16 02:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive research report and telemetry specification outlining early churn indicators for Beacon API consumers, utilizing insights from internal company documentation.
+Cost-optimized churn signal analysis and SQL telemetry specification for Beacon API, identifying early drop-off indicators without third-party analytics overhead.
 
 ## Deliverable
 ```
-# Research Specification: Beacon API Early Churn Signals
+# Beacon API: Lean Churn Signal Analysis & Alert Spec
+**Author:** Fig Adeyemi (Research)
+**Project:** Beacon API | I.T. Skokos
+**Optimization Focus:** Zero-vendor-cost analytics using existing DB infrastructure
 
-**Author:** Mint Reyes (Research)
-**Project:** Beacon API
-**Organization:** I.T. Skokos
+## 1. Resource Integration & Benchmarks
+- **Business Document: Company Document**: Utilized to align churn threshold definitions (Contractual Grace Period vs. Active Decay) against tier pricing and SLA commitments. Benchmarked account decay against customer success tier definitions extracted directly from the Company Document.
 
-## 1. Executive Summary
-This document outlines early telemetry signals predictive of customer churn on the Beacon API platform. By identifying API consumption degradation patterns prior to formal contract non-renewal, our customer success and engineering teams can proactively intervene.
+## 2. Core Churn Signals Identified
+1. **API Call Velocity Drop:** >35% drop in 7-day rolling request volume vs. 30-day baseline.
+2. **Authentication / 401 Ratio Spike:** Sustained 401/403 rates (>15% of traffic) indicating abandoned client integration or unmanaged key rotations.
+3. **Developer Console Dormancy:** Zero developer login events for >14 days prior to billing cycle renewal.
 
-## 2. Resource Utilization
-- **Business Document: Company Document**: Utilized as the primary baseline for historical client retention benchmarks, service tier definitions, and account lifecycle milestones. Cross-referenced API volume trends against the standard churn definitions established in this document.
-
-## 3. Key Churn Indicators (Telemetry)
-1. **API Error Spike & Inactivity (Integration Fatigue):**
-   - *Signal:* A >40% increase in 4xx/5xx status codes over 72 hours followed by a >60% drop in total request volume.
-   - *Root Cause:* Integration hurdles during onboarding or breaking client-side changes.
-2. **Endpoint Breadth Contraction:**
-   - *Signal:* Client reduces active endpoints called from 5+ distinct endpoints down to ≤2 core endpoints.
-   - *Root Cause:* De-scoping integration depth; migration to alternative vendor modules.
-3. **Token Invalidation / Key Inactivity:**
-   - *Signal:* Primary production API key has no traffic for >14 days while sandbox remains active.
-
-## 4. Proposed Monitoring & Action Triggers
-```json
-{
-  "alert_rule": "churn_risk_high",
-  "conditions": {
-    "rolling_7d_request_drop_pct": "> 50%",
-    "consecutive_zero_traffic_days": "> 5"
-  },
-  "actions": [
-    "notify_account_owner",
-    "flag_in_crm_health_dashboard"
-  ]
-}
+## 3. Lean Detection Query (PostgreSQL / Internal Warehouse)
+```sql
+WITH usage_trends AS (
+  SELECT 
+    account_id,
+    COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '7 days' THEN 1 END) AS calls_l7d,
+    COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '30 days' THEN 1 END) / 4.28 AS calls_baseline_7d,
+    SUM(CASE WHEN status_code IN (401, 403, 500) AND timestamp >= NOW() - INTERVAL '7 days' THEN 1 ELSE 0 END)::FLOAT 
+      / NULLIF(COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '7 days' THEN 1 END), 0) AS err_rate_l7d
+  FROM beacon_api_gateway_logs
+  WHERE timestamp >= NOW() - INTERVAL '30 days'
+  GROUP BY account_id
+)
+SELECT 
+  account_id,
+  calls_l7d,
+  calls_baseline_7d,
+  err_rate_l7d,
+  CASE 
+    WHEN calls_baseline_7d > 500 AND calls_l7d < (calls_baseline_7d * 0.65) THEN 'HIGH_RISK_USAGE_DROP'
+    WHEN err_rate_l7d > 0.15 THEN 'HIGH_RISK_AUTH_FAILURE'
+    ELSE 'HEALTHY'
+  END AS churn_risk_status
+FROM usage_trends
+WHERE calls_baseline_7d > 100;
 ```
 
-## 5. Documentation & Next Steps
-- Update API docs with self-serve troubleshooting guides to resolve common 4xx errors before abandonment.
-- Automate metric exports into CS dashboards.
+## 4. Cost-Saving Execution Plan
+- Run daily via existing cron worker instead of provisioning dedicated ML churn prediction tooling ($0 SaaS add-on cost).
+- High-risk flags pipe directly into internal webhook for automated face-to-face account manager outreach.
 ```
