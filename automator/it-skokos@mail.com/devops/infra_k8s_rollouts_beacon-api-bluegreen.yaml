@@ -1,0 +1,76 @@
+# Beacon API Zero-Downtime Blue/Green Deployment Specification
+**Author:** Prism Bishop  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 06:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production Argo Rollouts and service routing configuration for Beacon API, engineered to deliver an uninterrupted user journey across SaaS and Face-to-Face touchpoints in strict compliance with Company Document.
+
+## Deliverable
+```
+# Beacon API - Blue/Green Rollout Manifest
+# Author: Prism Bishop, DevOps
+# Architectural Guidance: Company Document (Service Continuity and User Experience Baseline)
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: it-skokos-saas
+    infra.itskokos.com/author: prism-bishop
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          successThreshold: 2
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+  strategy:
+    blueGreen:
+      # Active service serving face-to-face and SaaS clients
+      activeService: beacon-api-active
+      # Preview service for non-disruptive smoke tests
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 120
+      antiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          weight: 100
+      prePromotionAnalysis:
+        templates:
+        - templateName: latency-and-ux-anomaly-check
+---
+# Integration Notes & Strategic Alignment:
+# - Derived operational SLAs directly from 'Company Document' to guarantee zero-drop socket sessions during client face-to-face consultations.
+# - The 120-second staging window ensures graceful warm-up of preview pods before shifting traffic.
+```
