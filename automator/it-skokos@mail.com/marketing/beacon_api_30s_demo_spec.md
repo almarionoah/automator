@@ -1,41 +1,36 @@
-# 30-Second Product Demo Script & Security Sanitization Spec: Beacon API
-**Author:** Juno Ito  
+# Beacon API 30s Product Demo Production Brief & Telemetry Spec
+**Author:** Onyx Fontaine  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 08:25  
+**Produced:** D15 17:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A security-audited 30-second product demo video script and visual spec for Beacon API, incorporating strict data redaction and asset compliance from Company Document.
+Quantitative storyboard, voiceover script, and telemetry tracking architecture for the 30-second Beacon API demo video, developed directly using the brand messaging guidelines and compliance parameters in Company Document.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30s Product Demo (Security Audited)
-**Author:** Juno Ito, Marketing | **Classification:** Internal / Restricted
-**Resource Utilized:** `Company Document` (Referenced for corporate brand security rules, public disclosure thresholds, and synthetic data standards).
-
-## Security Pre-Flight & Data Sanitization
-Per guidelines in `Company Document`, all visual assets must use synthetic mock keys (`sk_demo_fake_nonce_99x01`) and dummy telemetry endpoints. No internal staging IPs or real developer handles may appear in screen recordings.
+# Production Spec: Beacon API 30-Second Product Demo
+**Author:** Onyx Fontaine (Marketing / Data Purist)
+**Project:** Beacon API | I.T. Skokos SaaS & F2F Ecosystem
+**Governance Reference:** *Business Document: Company Document* (Consulted for brand positioning thresholds, enterprise API SLA disclosure requirements, and cross-channel value metrics).
 
 ---
 
-## Storyboard & Shot Breakdown (0:00 - 0:30)
+## 1. Video Storyboard & Exact Timing
 
-### 0:00 - 0:07 | Hook: The Edge Latency Problem
-- **Visual:** Terminal screen showing simulated multi-region latency spikes across edge clusters. Zero production hostnames visible.
-- **Audio/VO:** "Scaling edge services shouldn't mean sacrificing low-latency authorization."
-- **On-Screen Text:** Real-time edge routing at scale.
-- **Security Audit:** Terminal logs reviewed against `Company Document` sanitization baseline.
+| Timecode | Visual Frame | Audio / Voiceover | Telemetry / Event Trigger |
+|---|---|---|---||
+| 00:00 - 00:06 | High-contrast UI: Latency spike graph resolving to <12ms via Beacon API endpoint. | "Data fragmentation slows hybrid operations. Beacon API unifies your SaaS pipeline instantly." | `demo_view_start`, `impression_source=paid_social` |
+| 00:06 - 00:14 | Terminal split-screen: JSON payload ingest (`POST /v1/beacon/sync`) mirroring live to F2F agent tablet UI. | "Single-schema orchestration connecting SaaS analytics to face-to-face field deployments in real time." | `demo_milestone_25pct` |
+| 00:14 - 00:22 | Dashboard analytics: 99.999% delivery rate, 4.2x throughput increase metric callout. | "Zero payload loss. 99.999% uptime compliance verified against I.T. Skokos enterprise standards." | `demo_milestone_50pct`, `feature_focus=throughput` |
+| 00:22 - 00:30 | High-conversion end card with dynamic QR code & link (`skokos.io/beacon-api`). | "Deploy your first endpoint in under 3 minutes. Test the Beacon API sandbox today." | `demo_complete`, `cta_rendered`, `utm_campaign=beacon_api_30s` |
 
-### 0:07 - 0:18 | Core Feature: Beacon API in Action
-- **Visual:** Split screen. Left: 4-line curl request hitting `https://mock.beacon-api.itskokos.io/v1/auth`. Right: Instantaneous JSON response (`200 OK`, `latency: 4ms`).
-- **Audio/VO:** "Meet Beacon API by I.T. Skokos. Sub-5ms context-aware API routing, powered by zero-trust mesh verification."
-- **On-Screen Text:** Beacon API: Sub-5ms Edge Verification.
-- **Redaction Check:** Auth headers explicitly mocked (`Authorization: Bearer redacted_mock_token`).
+---
 
-### 0:18 - 0:30 | Call to Action & Hybrid Handshake
-- **Visual:** Clean SaaS dashboard UI transitioning to an I.T. Skokos hybrid face-to-face enterprise consultation booking modal.
-- **Audio/VO:** "Deploy in minutes or partner with our engineers for dedicated on-site architecture. Start free with Beacon API."
-- **On-Screen Text:** Get Started: itskokos.io/beacon-api | Enterprise Face-to-Face Consultations Available.
-- **Compliance:** Watermarked export validation completed.
+## 2. Quantitative Asset Specs & Attribution Setup
+- **Resolution/Framerate:** 4K UHD (3840x2160) @ 60fps, Rec.709 color profile.
+- **Audio Loudness:** -14 LUFS integrated, -1.0 dBFS True Peak.
+- **UTM Schema:** `utm_source=video&utm_medium=demo_30s&utm_campaign=beacon_api_launch&utm_content=v1_purist`
+- **KPI Target:** >= 68% VTR (View-Through Rate), >= 4.2% direct Sandbox signup conversion rate.
 ```
