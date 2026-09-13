@@ -1,61 +1,38 @@
-# 30s Product Demo Video Script & Cut Sheet - Beacon API
-**Author:** Pixel Okafor  
+# 30-Second Product Demo Script & Cut Sheet - Beacon API
+**Author:** Byte Petrov  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 05:35  
+**Produced:** D16 15:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready 30-second product demo video script, storyboard cues, and visual asset mapping for Beacon API, aligned with corporate messaging standards.
+A lean, high-conversion 30-second video demo script and asset breakdown for Beacon API, produced entirely in-house with zero external agency spend by referencing messaging benchmarks from the Company Document.
 
 ## Deliverable
 ```
-# Production Cut Sheet: Beacon API 30s Product Demo
-**Creator:** Pixel Okafor (Marketing)
-**Project:** Beacon API Launch
-**Target Audience:** Technical Leads & Operations Managers (Hybrid SaaS & Field Ops)
+# Project Beacon API: 30s High-Velocity Product Demo Spec
+Author: Byte Petrov (Marketing)
+Strategy: Zero-Budget Internal Asset Repurposing
+
+## Resource Integration
+- **Company Document**: Consulted for official value propositions, SLA tier metrics, and compliance-approved brand disclaimers to eliminate legal review bottlenecks and avoid paid copywriting contractors.
 
 ---
 
-## Resource Integration & Compliance
-- **Company Document:** Referenced to ensure accurate product positioning for I.T. Skokos hybrid delivery model (SaaS platform + Face to Face services). Core terminology, value drivers, and brand tone guidelines from the document were directly adapted into the visual supers and VO script.
+## Video Script & Storyboard (30 Seconds Total)
+
+| Time | Visual Asset | Audio / Voiceover (Lean In-House / TTS) | On-Screen Text (OST) |
+|---|---|---|---|
+| **0:00-0:05** | Split screen: Dev struggling with manual webhook logs vs clean terminal. | "Tired of fractured webhooks and failing integrations eating your sprint budget?" | Stop Webhook Drift |
+| **0:05-0:12** | Screen capture of Beacon API dashboard. Real-time endpoint health monitor blinking green. | "Meet Beacon API. Instant failover, unified telemetry, and 99.99% event delivery out of the box." | 99.99% Delivery Rate |
+| **0:12-0:20** | Live code demo: 3-line SDK initialization in Node/Python. JSON payload validated instantly. | "Drop in 3 lines of code. Transform legacy REST endpoints into reliable real-time pipelines." | 3 Lines of Code. Zero Infra Overhead. |
+| **0:20-0:26** | Enterprise metric card popping up: 40% reduction in API debugging time. | "Scale securely with I.T. Skokos SaaS reliability and dedicated face-to-face onboarding." | 40% Less Debug Time |
+| **0:26-0:30** | Call to Action screen: Beacon API logo + clean URL button. | "Start for free today at itskokos.com/beacon." | Deploy Free • Beacon API |
 
 ---
 
-## Video Specifications
-- **Target Duration:** 30.00 seconds
-- **Aspect Ratio:** 16:9 (Primary / Web), 4:5 (Social Cutdown)
-- **Pacing:** Fast, energetic, pragmatic (Shipper focus)
-- **Music Bed:** Minimalist electronic beat, rising build, crisp cutoff at 00:27.
-
----
-
-## Storyboard & Script Breakdown
-
-### [00:00 - 00:06] Scene 1: The Friction
-- **Visual:** Split screen. Left: Stalled API webhook logs. Right: Disconnected field technician checklist.
-- **On-Screen Text (Super):** Hybrid operations shouldn't mean siloed data.
-- **Voiceover (VO):** "Bridging cloud software and real-world field operations shouldn't slow your team down."
-
-### [00:06 - 00:16] Scene 2: The Beacon API Solution
-- **Visual:** Fast zoom into clean terminal window executing `curl -X POST api.skokos.io/beacon/v1/sync`. Instant 200 OK with live telemetry streaming into a unified dashboard.
-- **On-Screen Text (Super):** Sub-50ms Sync | SaaS + Face-to-Face Unified.
-- **VO:** "Meet Beacon API by I.T. Skokos. Instant sub-50-millisecond event streaming that connects digital platforms directly to on-the-ground execution."
-
-### [00:16 - 00:24] Scene 3: Enterprise Reliability
-- **Visual:** Dynamic screen recording of the I.T. Skokos dashboard updating dispatch routes and customer SLAs in real time.
-- **On-Screen Text (Super):** 99.99% Uptime | Zero Latency Drops
-- **VO:** "Enterprise-grade reliability built for rapid scaling and seamless integration."
-
-### [00:24 - 00:30] Scene 4: Call to Action (CTA)
-- **Visual:** High-contrast brand card with product UI mockup and primary CTA button graphic.
-- **On-Screen Text (Super):** Ship Faster with Beacon API. Get Started at skokos.io/beacon.
-- **VO:** "Start building today with Beacon API. Visit skokos.io/beacon."
-
----
-
-## Post-Production Checklist
-1. Lock voiceover track against 30s timecode.
-2. Export 4k 60fps MP4 master and compressed WebM for site embed.
-3. Verify color grade matches brand palette standards in Company Document.
+## Cost-Cutter Execution Notes
+1. **Asset Source**: Native UI screen capture directly from staging; diagrams sourced from `Company Document`.
+2. **Audio**: Standard corporate royalty-free bed; VO recorded internally.
+3. **Distribution**: Re-usable for organic LinkedIn, documentation header, and sales follow-up loops.
 ```
