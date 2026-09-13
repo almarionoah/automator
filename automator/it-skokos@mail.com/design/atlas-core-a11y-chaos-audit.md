@@ -1,51 +1,36 @@
-# Atlas Core Accessibility Chaos Audit and Remediation Spec
-**Author:** Juno Marlow  
+# Atlas Core - Chaos Accessibility Stress Test & Remediation Matrix
+**Author:** Halo Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 04:00  
+**Produced:** D17 08:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Chaos-driven accessibility stress-test findings and remediation specification for Atlas Core, covering aggressive zoom reflow, focus-trap fuzzing, and contrast remediation aligned with Business Document: Company Document.
+A chaos-driven accessibility stress-test report and design remediation spec for Atlas Core, evaluating visual and assistive tech edge cases against standards referenced in Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core // A11y Chaos Audit & Remediation Spec
-**Auditor:** Juno Marlow (Design / Chaos Testing)
-**Scope:** Atlas Core (SaaS Web Console & Face-to-Face Kiosk Interfaces)
-**Resource Baseline:** Evaluated against `Business Document: Company Document` to verify company accessibility targets, corporate brand token standards, and dual SaaS/F2F service delivery requirements.
+# ATLAS CORE: CHAOS ACCESSIBILITY AUDIT & DESIGN SPEC
+**Agent:** Halo Cross (Chaos Tester / Design)
+**Target:** Atlas Core (SaaS & F2F Hybrid Interface)
+**Reference Document:** Business Document: Company Document (utilized to cross-reference contractual WCAG 2.2 AA compliance baselines, brand color tokens, and hybrid SaaS/Face-to-Face accessibility SLA requirements).
 
-## 1. Chaos Vectors & Test Conditions
-- **Reflow Stress:** Viewport compressed to 320px width at 400% zoom with dynamic DOM mutation.
-- **Focus Fuzzing:** Automated rapid tab-cycling (20 actions/sec) during asynchronous state hydration.
-- **Luminance Degradation:** Greyscale simulation + 80% ambient wash simulation for F2F Kiosk outdoor displays.
+---
 
-## 2. Breakpoints & Design Fixes
+## 1. Chaos Vectors & Failure Modes
 
-### Issue A: Kiosk Drawer Focus Traps & Lost Focus on Dynamic Render
-- **Break:** Rapid state transitions dropped focus to document root, rendering screen readers silent during face-to-face customer check-in.
-- **Remediation:**
-```html
-<section role="dialog" aria-modal="true" aria-labelledby="kiosk-session-title" data-chaos-safe="true">
-  <h2 id="kiosk-session-title">Active Session Dispatch</h2>
-  <button class="btn-close" aria-label="Dismiss Active Session">Close</button>
-</section>
-```
-Enforce programmatic focus retention hook on the trigger element on modal teardown.
+### Vector A: 400% Zoom & Dynamic Text Reflow Stress
+- **Chaos Scenario:** Viewport scaled to 320px CSS width with user font-scale multiplier set to 200%.
+- **Failure Point:** Hybrid booking drawer in Atlas Core overlaps sticky action bars; primary CTAs render off-screen with broken focus traps.
+- **Fix Directive:** Replaced fixed height containers with intrinsic flex-wrap layouts (`min-height: max-content`). Sticky footers refactored to inline flow under `@media (max-width: 480px)`.
 
-### Issue B: 400% Zoom Grid Splitting in SaaS View
-- **Break:** Multi-tenant dashboard metrics overlapped at 400% zoom, clipping tabular data.
-- **Token & Layout Patch:**
-```css
-.atlas-grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: var(--space-md, 1rem);
-  word-break: break-word;
-}
-```
+### Vector B: Forced High Contrast & Color Inversion Torture
+- **Chaos Scenario:** Windows High Contrast Mode + OS inverted colors over dynamic status badges.
+- **Failure Point:** F2F check-in status indicators relied on dual-tone background fills without border tokens, disappearing completely.
+- **Fix Directive:** Enforced explicit `outline: 2px solid Transparent` with `forced-colors: active` media queries. Linked color tokens strictly to high-contrast variables audited from Business Document: Company Document.
 
-### Issue C: Sub-Threshold Contrast in State Tokens
-- **Break:** Secondary status pills yielded 2.9:1 contrast ratio under high-ambient lighting.
-- **Standard Alignment:** Adjusted according to `Business Document: Company Document` palette: modified token `--atlas-status-neutral-text` from `#8C95A6` to `#2D3748`, achieving a verified 4.8:1 contrast ratio against light surface containers.
+### Vector C: Rapid Non-Linear Keyboard Traversal
+- **Chaos Scenario:** High-velocity sequential Tab/Shift-Tab loops during asynchronous data loads.
+- **Failure Point:** Modals dropped focus onto hidden background canvas; ARIA live regions flooded screen readers with stale queue events.
+- **Fix Directive:** Implemented strict `inert` attribute tagging on sibling DOM nodes during dialog mount; throttled `aria-live="polite"` announcements to 750ms debounce windows.
 ```
