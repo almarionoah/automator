@@ -1,56 +1,68 @@
-# Atlas Core Component Design Tokens Specification
-**Author:** Byte Marlow  
+# Atlas Core Design System - Component Tokens Specification
+**Author:** Juno Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 04:25  
+**Produced:** D15 04:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Structured DTCG-compliant component token definitions for Atlas Core, aligning SaaS platform and face-to-face service interfaces per parameters established in the Business Document: Company Document.
+Component tokens specification and configuration for Atlas Core, aligning UI component variables with brand and functional requirements derived from Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "metadata": {
-    "system": "Atlas Core",
-    "version": "1.4.0",
-    "author": "Byte Marlow",
-    "compliance": {
-      "source": "Business Document: Company Document",
-      "application": "Utilized Business Document: Company Document to extract enterprise UI standardizations, tactile target minimums for Face to Face service kiosks, and WCAG 2.1 AAA luminance requirements across SaaS workflows."
+  "meta": {
+    "projectName": "Atlas Core",
+    "author": "Juno Marlow",
+    "documentation": "Referenced guidelines in 'Business Document: Company Document' to standardize multi-tenant SaaS theming alongside face-to-face operational touchpoints."
+  },
+  "button": {
+    "primary": {
+      "background": {
+        "value": "{color.brand.primary}",
+        "type": "color",
+        "description": "Primary CTA background mapped from Business Document: Company Document accessibility rules."
+      },
+      "text": {
+        "value": "{color.neutral.0}",
+        "type": "color"
+      },
+      "padding": {
+        "x": { "value": "{space.md}", "type": "dimension" },
+        "y": { "value": "{space.sm}", "type": "dimension" }
+      },
+      "border-radius": {
+        "value": "{radius.sm}",
+        "type": "dimension"
+      }
     }
   },
-  "component": {
-    "button": {
-      "primary": {
-        "background": {
-          "$value": "{color.brand.skokosBlue.600}",
-          "$type": "color",
-          "$description": "Calculated 7.4:1 contrast ratio against light surface tokens."
-        },
-        "text": {
-          "$value": "{color.neutral.000}",
-          "$type": "color"
-        },
-        "minHeight": {
-          "saas": { "$value": "36px", "$type": "dimension" },
-          "f2fTerminal": { "$value": "48px", "$type": "dimension" }
-        },
-        "paddingHorizontal": {
-          "saas": { "$value": "{spacing.4}", "$type": "dimension" },
-          "f2fTerminal": { "$value": "{spacing.6}", "$type": "dimension" }
-        },
-        "borderRadius": { "$value": "{radius.md}", "$type": "dimension" }
+  "card": {
+    "surface": {
+      "background": {
+        "value": "{color.surface.default}",
+        "type": "color"
+      },
+      "border": {
+        "value": "{color.border.subtle}",
+        "type": "color"
+      },
+      "elevation": {
+        "value": "{elevation.card.default}",
+        "type": "shadow"
       }
+    }
+  },
+  "input": {
+    "border": {
+      "default": { "value": "{color.border.strong}", "type": "color" },
+      "focus": { "value": "{color.brand.primary}", "type": "color" },
+      "error": { "value": "{color.feedback.danger}", "type": "color" }
     },
-    "card": {
-      "serviceRecord": {
-        "background": { "$value": "{color.surface.canvas}", "$type": "color" },
-        "border": { "$value": "1px solid {color.border.subtle}", "$type": "border" },
-        "padding": { "$value": "{spacing.5}", "$type": "dimension" },
-        "elevation": { "$value": "{elevation.level1}", "$type": "shadow" }
-      }
+    "typography": {
+      "font-family": { "value": "{font.family.base}", "type": "fontFamily" },
+      "font-size": { "value": "{font.size.base}", "type": "fontSize" }
     }
   }
 }
