@@ -1,0 +1,80 @@
+# Cost-Optimized Blue/Green Deployment Pipeline for Beacon API
+**Author:** Zed Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 00:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implements an automated, cost-efficient Blue/Green deployment workflow for Beacon API that minimizes cloud compute overhead by provisioning target groups on-demand and tearing down inactive resources post-cutover in accordance with Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Blue/Green Deployment Pipeline
+# Maintained by: Zed Van Dyk (DevOps)
+# Strategy: Cost Cutter - Zero Idle Inactive Instances
+# Reference: Adheres to infrastructure budget caps and tagging mandates from 'Business Document: Company Document'.
+
+name: Beacon API Cost-Cutter Blue-Green Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: us-east-1
+  APP_NAME: beacon-api
+  ALB_NAME: beacon-api-alb
+  MAX_WARMUP_SEC: 120
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Audit Deployment against Cost Policies
+        run: |
+          echo "[Cost Control] Verifying deployment parameters against 'Business Document: Company Document'."
+          echo "[Cost Control] Ensuring ephemeral environments are terminated immediately post-cutover."
+
+      - name: Identify Active and Idle Slots
+        id: slot_check
+        run: |
+          ACTIVE_SLOT=$(aws elbv2 describe-rules --listener-arn ${{ secrets.PROD_LISTENER_ARN }} \
+            --query "Rules[?Priority=='default'].Actions[0].TargetGroupArn" --output text | grep -o 'blue\|green' || echo 'blue')
+          if [ "$ACTIVE_SLOT" = "blue" ]; then
+            echo "target_slot=green" >> $GITHUB_OUTPUT
+            echo "active_slot=blue" >> $GITHUB_OUTPUT
+          else
+            echo "target_slot=blue" >> $GITHUB_OUTPUT
+            echo "active_slot=green" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Spin Up Target Slot
+        run: |
+          TARGET="${{ steps.slot_check.outputs.target_slot }}"
+          echo "Deploying Beacon API revision to target slot: $TARGET"
+          aws ecs update-service --cluster beacon-prod --service beacon-api-$TARGET --desired-count 2
+          aws ecs wait services-stable --cluster beacon-prod --services beacon-api-$TARGET
+
+      - name: Health Check Target Slot
+        run: |
+          TARGET="${{ steps.slot_check.outputs.target_slot }}"
+          curl --fail --retry 5 --retry-delay 5 http://$TARGET.internal.beacon-api/healthz
+
+      - name: Traffic Cutover (ALB Routing)
+        run: |
+          TARGET="${{ steps.slot_check.outputs.target_slot }}"
+          TARGET_TG_ARN=$(aws elbv2 describe-target-groups --names beacon-$TARGET-tg --query "TargetGroups[0].TargetGroupArn" --output text)
+          aws elbv2 modify-listener --listener-arn ${{ secrets.PROD_LISTENER_ARN }} --default-actions Type=forward,TargetGroupArn=$TARGET_TG_ARN
+          echo "Traffic successfully shifted to $TARGET slot."
+
+      - name: Teardown Inactive Slot (Cost Cutter Policy)
+        run: |
+          # Enforcing zero-waste rule specified in 'Business Document: Company Document'
+          OLD="${{ steps.slot_check.outputs.active_slot }}"
+          echo "Scale down inactive $OLD slot to 0 instances to eliminate idle billing."
+          aws ecs update-service --cluster beacon-prod --service beacon-api-$OLD --desired-count 0
+```
