@@ -1,0 +1,65 @@
+# Beacon API Worker Pool Low-Latency Autoscaling Configuration
+**Author:** Pixel Petrov  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 11:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Deployed aggressive latency-optimized KEDA ScaledObject and HPA for the Beacon API worker pool, adhering to SLA thresholds defined in Business Document: Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Worker Pool Autoscaler
+# Author: Pixel Petrov (DevOps / Latency Hunter)
+# Reference: Business Document: Company Document (Utilized to align scaling triggers with the strict p99 < 25ms SaaS platform latency requirements and cost-efficiency guardrails)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  annotations:
+    it-skokos.com/source-policy: "Business Document: Company Document"
+    it-skokos.com/latency-tier: "ultra-low"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 8
+  maxReplicaCount: 64
+  pollingInterval: 5
+  cooldownPeriod: 60
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 10
+          - type: Pods
+            value: 8
+            periodSeconds: 10
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 180
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc:9090
+      metricName: beacon_api_queue_latency_seconds
+      threshold: '0.015'
+      query: histogram_quantile(0.99, sum(rate(beacon_worker_task_latency_seconds_bucket[30s])) by (le))
+  - type: redis
+    metadata:
+      address: redis-cluster.beacon-prod.svc:6379
+      listName: beacon_urgent_tasks
+      listLength: '10'
+```
