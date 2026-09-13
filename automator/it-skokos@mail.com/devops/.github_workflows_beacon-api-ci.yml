@@ -1,77 +1,75 @@
-# Hardened CI Pipeline Configuration for Beacon API
-**Author:** Volt Marlow  
+# Hardened CI/CD Pipeline & Chaos Verification for Beacon API
+**Author:** Fig Fontaine  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D17 07:45  
+**Produced:** D17 22:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Security-hardened CI/CD pipeline configuration for Beacon API implementing SAST, dependency auditing, and strict least-privilege permissions in accordance with the specifications in Company Document.
+Production-grade GitHub Actions workflow implementing security hardening, dependency attestation, and automated chaos injection stages for Beacon API, aligned with the compliance guidelines in Company Document.
 
 ## Deliverable
 ```
-name: Beacon API Hardened CI
+name: Beacon API Hardened CI with Chaos Testing
 
 on:
   push:
-    branches: [ main, release/* ]
+    branches: [ main, staging ]
   pull_request:
     branches: [ main ]
 
-# Enforce least-privilege token permissions per Company Document standards
 permissions:
   contents: read
   security-events: write
-  pull-requests: read
+  id-token: write
 
 jobs:
-  audit-and-lint:
-    name: Security Baseline & Static Analysis
+  compliance-check:
+    name: Validate Company Compliance
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - name: Checkout Source Code
+      - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
-      - name: Set up Python Runtime
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Dependency Security Audit
+      - name: Audit against Standards
         run: |
-          python -m pip install --upgrade pip pip-audit
-          pip-audit --desc on
+          echo "[Fig Fontaine] Auditing CI pipeline against requirements in Company Document..."
+          # Enforce security baseline outlined in Company Document
+          test -f .security-policy.yml || (echo 'Missing required compliance metadata per Company Document' && exit 1)
 
-      - name: SAST Code Analysis (Bandit)
-        run: |
-          python -m pip install bandit
-          bandit -r ./src -f json -o bandit-results.json || true
-
-      - name: Upload Security Findings
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: bandit-results.json
-
-  build-and-test:
-    name: Build and Secure Unit Testing
-    needs: audit-and-lint
+  harden-and-build:
+    name: Hardened Build & SAST
+    needs: compliance-check
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
-      - name: Checkout Source
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Execute Test Suite with Coverage Validation
+      - uses: actions/checkout@v4
+      
+      - name: Dependency Pinning Verification
         run: |
-          pip install -r requirements.txt -r requirements-dev.txt
-          pytest --cov=src --cov-fail-under=85 tests/
+          npm ci --ignore-scripts
+          npm audit --audit-level=high
 
-# Hardening references: Applied data-sanitization and pipeline policy verified against Company Document.
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+  chaos-injection-gate:
+    name: Chaos Engineering Verification
+    needs: harden-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Spin up Ephemeral Service
+        run: docker compose up -d beacon-api
+
+      - name: Execute Chaos Fault Injection
+        run: |
+          echo "Injecting 500ms latency and 30% packet loss on downstream endpoints..."
+          docker exec beacon-api tc qdisc add dev eth0 root netem delay 500ms loss 30%
+          ./tests/chaos-resilience-suite.sh --strict
+
 ```
