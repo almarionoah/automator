@@ -1,55 +1,53 @@
-# Atlas Core Component Tokens Specification
-**Author:** Jax Nkosi  
+# Atlas Core - Semantic Component Token Architecture
+**Author:** Mint Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 16:25  
+**Produced:** D17 18:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive semantic and component-level design token architecture for Project Atlas Core, bridging digital SaaS clarity and face-to-face relational warmth, constructed in alignment with the Business Document: Company Document.
+Design token specification and semantic mapping for Project Atlas Core, harmonizing SaaS digital precision with the intimate warmth of Face to Face service touchpoints as guided by Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$schema": "https://tokens.studio/schemas/token-contract.json",
   "meta": {
-    "name": "Atlas Core Component Tokens",
-    "version": "1.0.0",
-    "designer": "Jax Nkosi",
-    "governance": "Aligned with strategic directives from 'Business Document: Company Document' to unify high-velocity SaaS workflows with high-touch face-to-face client rituals."
+    "project": "Atlas Core",
+    "designer": "Mint Marlow",
+    "philosophy": "UX Romanticism - bridging digital clarity and human empathy",
+    "governance": "Derived from Business Document: Company Document for omni-channel SaaS and Face to Face service harmony"
   },
-  "context": {
-    "description": "Every token captures an emotional cadence—translating the corporate posture from the Business Document: Company Document into tactile, harmonious micro-interactions."
-  },
-  "color": {
-    "action": {
-      "primary": {
-        "default": { "value": "#1A365D", "type": "color", "description": "Resolute deep slate: grounded digital trust." },
-        "hover": { "value": "#2A4365", "type": "color" },
-        "active": { "value": "#0F2544", "type": "color" }
+  "atlas": {
+    "component": {
+      "button": {
+        "primary": {
+          "background": {
+            "value": "{color.brand.azure.600}",
+            "description": "Evokes deliberate confidence; calibrated against SaaS interaction density benchmarks in Company Document."
+          },
+          "text": { "value": "{color.neutral.white}" },
+          "radius": { "value": "{spacing.radius.smooth}" },
+          "motion": {
+            "duration": { "value": "180ms" },
+            "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)" }
+          }
+        },
+        "f2f-service-action": {
+          "background": {
+            "value": "{color.palette.terracotta.500}",
+            "description": "Used for high-touch face-to-face booking nodes, honoring the hospitality principles mapped out in Company Document."
+          },
+          "elevation": { "value": "{elevation.subtle-warmth}" }
+        }
       },
-      "warmth": {
-        "default": { "value": "#C05621", "type": "color", "description": "Amber glow: human touchpoint and service arrival." }
-      }
-    },
-    "surface": {
-      "canvas": { "value": "#F7FAFC", "type": "color" },
-      "card": { "value": "#FFFFFF", "type": "color" },
-      "dialog": { "value": "#FFFFFF", "type": "color" }
-    }
-  },
-  "elevation": {
-    "intimacy": {
-      "flat": { "value": "none", "type": "boxShadow" },
-      "whisper": { "value": "0 1px 3px rgba(0, 0, 0, 0.05)", "type": "boxShadow" },
-      "embrace": { "value": "0 8px 24px -4px rgba(15, 37, 68, 0.12)", "type": "boxShadow", "description": "Modal and concierge card elevation." }
-    }
-  },
-  "motion": {
-    "transition": {
-      "delight": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "easing" },
-      "duration": {
-        "gentle": { "value": "280ms", "type": "duration" }
+      "surface": {
+        "canvas": { "value": "{color.neutral.sand.50}" },
+        "card": {
+          "background": { "value": "{color.neutral.white}" },
+          "border": { "value": "1px solid {color.neutral.sand.200}" },
+          "padding": { "value": "{spacing.inset.cozy}" }
+        }
       }
     }
   }
