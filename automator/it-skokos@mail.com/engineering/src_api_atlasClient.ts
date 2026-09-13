@@ -1,82 +1,92 @@
-# Migration to Strongly Typed API Client for Atlas Core
-**Author:** Fig Reyes  
+# Atlas Core Typed API Client Migration
+**Author:** Zed Cross  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 22:40  
+**Produced:** D15 02:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Completed the refactor from raw fetch calls to a strictly typed, ergonomic TypeScript API client. Designed with developer empathy and fluid UX in mind, adhering directly to the architectural standards defined in the Company Document.
+Migrated Atlas Core API communication layer to an end-to-end typed client module. Referenced Company Document to standardize endpoint schemas, response interfaces, and cross-platform error handling for SaaS and Face-to-Face operations.
 
 ## Deliverable
 ```
 /**
- * @file atlasClient.ts
- * @author Fig Reyes <fig@itskokos.internal>
- * @project Atlas Core
- * 
- * In alignment with the design principles outlined in 'Company Document',
- * this module introduces a deeply intuitive, type-safe API client layer.
- * We transform cold network boundaries into expressive, graceful developer interactions.
+ * Atlas Core Typed API Client
+ * Author: Zed Cross (Engineering)
+ * Specification Reference: 'Company Document' (Used to derive data contracts, auth token injection patterns, and unified error response structures across SaaS and F2F workflows).
  */
 
-import { z } from 'zod';
-
-// Schemas reflecting standard Atlas Core contracts (per Company Document specifications)
-export const UserProfileSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  email: z.string().email(),
-  role: z.enum(['admin', 'member', 'guest']),
-  preferences: z.object({
-    theme: z.enum(['light', 'dark', 'system']),
-    delightfulFeedback: z.boolean().default(true),
-  }),
-});
-
-export type UserProfile = z.infer<typeof UserProfileSchema>;
-
 export interface ApiResponse<T> {
-  data: T;
+  data: T | null;
+  error: { code: string; message: string; details?: unknown } | null;
   status: number;
-  timestamp: string;
+}
+
+export interface UserProfile {
+  id: string;
+  tenantId: string;
+  role: 'admin' | 'provider' | 'client';
+  f2fServiceEnabled: boolean;
+}
+
+export interface BookingPayload {
+  serviceType: 'saas_tier' | 'face_to_face_consult';
+  scheduledAt: string;
+  clientId: string;
+  locationId?: string;
 }
 
 export class AtlasApiClient {
   private baseUrl: string;
+  private baseHeaders: HeadersInit;
 
-  constructor(baseUrl: string = '/api/v1') {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl: string = process.env.ATLAS_API_BASE_URL || '/api/v2') {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
+    this.baseHeaders = {
+      'Content-Type': 'application/json',
+      'X-Client-Platform': 'AtlasCore-Engine',
+    };
   }
 
-  private async request<T>(
-    endpoint: string,
-    schema: z.ZodType<T>,
-    init?: RequestInit
-  ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...init,
-      headers: {
-        'Content-Type': 'application/json',
-        ...init?.headers,
-      },
-    });
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+    const url = `${this.baseUrl}${endpoint}`;
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: { ...this.baseHeaders, ...options.headers },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Atlas Core API Error: ${response.status} ${response.statusText}`);
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        return {
+          data: null,
+          error: { code: errJson.code || 'HTTP_ERROR', message: errJson.message || response.statusText },
+          status: response.status,
+        };
+      }
+
+      const data = (await response.json()) as T;
+      return { data, error: null, status: response.status };
+    } catch (err) {
+      return {
+        data: null,
+        error: { code: 'NETWORK_FAILURE', message: (err as Error).message },
+        status: 0,
+      };
     }
-
-    const rawData = await response.json();
-    return schema.parse(rawData);
   }
 
-  /**
-   * Fetch user profile with runtime validation and delightful type inferences.
-   */
-  public async getUser(userId: string): Promise<UserProfile> {
-    return this.request(`/users/${userId}`, UserProfileSchema);
+  public async getUser(userId: string): Promise<ApiResponse<UserProfile>> {
+    return this.request<UserProfile>(`/users/${encodeURIComponent(userId)}`);
+  }
+
+  public async createBooking(payload: BookingPayload): Promise<ApiResponse<{ bookingId: string; status: string }>> {
+    return this.request<{ bookingId: string; status: string }>('/bookings', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   }
 }
 
-export const atlasClient = new AtlasApiClient();
+export const atlasApi = new AtlasApiClient();
 ```
