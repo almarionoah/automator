@@ -1,58 +1,33 @@
-# Atlas Core Mobile Nav Performance & Interaction Spec
-**Author:** Cipher Van Dyk  
+# Atlas Core Mobile Navigation Architecture & Edge-Case Spec
+**Author:** Volt Adeyemi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 10:15  
+**Produced:** D15 20:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Sub-16ms response-budgeted mobile navigation overhaul specification for Atlas Core, integrating low-overhead tokens and zero-reflow transitions for SaaS and Face to Face user journeys.
+Technical UI/UX interaction spec and edge-case resolution matrix for the Atlas Core mobile nav overhaul, informed by Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core: Mobile Navigation Overhaul (v2.4-perf)
-**Designer**: Cipher Van Dyk | Latency Hunter
+# Atlas Core: Mobile Navigation Overhaul (Spec v2.4)
+**Author:** Volt Adeyemi, Lead Design Architect
+**Target System:** Atlas Core (SaaS Platform & Face-to-Face Client Portal)
 
-## 1. Executive Context & Resource Mapping
-This specification executes the mobile navigation rebuild for the Atlas Core platform. Grounded in requirements extracted from **Business Document: Company Document**, this layout eliminates deep hierarchy bottlenecks by routing both SaaS workspace controls and Face to Face booking workflows into a four-node fixed bottom command bar. By adhering to the operational taxonomy in **Business Document: Company Document**, secondary routing layers were collapsed, removing 3 unnecessary tap layers.
+## 1. Context & Business Grounding
+Per **Business Document: Company Document**, the mobile navigation hierarchy must bridge both our asynchronous SaaS management tools and real-time Face-to-Face service dispatch workflows. We utilized the service topology defined in **Business Document: Company Document** to structure the primary tab bar: [Workspace, F2F Dispatch, Telemetry, Account].
 
-## 2. Latency Budget & Interaction Targets
-- **Target INP (Interaction to Next Paint)**: < 45ms (P95)
-- **Render Overhead**: 0 layout shifts (CLS: 0.000); GPU-composited only (`transform`, `opacity`).
-- **Payload Footprint**: < 3.2KB total (inline SVGs, CSS tokens, zero external iconography fonts).
+## 2. Edge-Case Matrix & Interaction Bounds
 
-## 3. Structural Specs & Viewport Anchoring
-```css
-.atlas-mobile-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background: var(--surface-translucent-90);
-  backdrop-filter: blur(12px);
-  contain: layout style paint;
-  will-change: transform;
-}
-.atlas-nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 120ms cubic-bezier(0, 0, 0.2, 1);
-}
-.atlas-nav-item:active {
-  transform: scale(0.94);
-}
-```
+### A. Viewport & Dynamic Height Anomalies
+- **100dvh vs Virtual Keyboard:** Navigation container uses `height: 100dvh` with `env(safe-area-inset-bottom)` fallback. Sheet drawers trigger `resize: none` locks to prevent input-focus viewport bouncing on Android Chrome.
+- **Foldable / Dual-Screen Splits:** Breakpoint `spanning: single-fold-vertical` shifts nav rail to left edge (width: 72px), preserving map viewports for active F2F field operations.
 
-## 4. Route Nodes
-1. `[SaaS] Dashboard`: Direct query cache ping.
-2. `[SaaS] Pipeline`: Prefetched state machine.
-3. `[F2F] Bookings`: Hybrid local/dispatch scheduler.
-4. `[Core] QuickAction`: Instant modal overlay (<10ms trigger).
+### B. Gesture Collision Resolution
+- **Nested Map vs Drawer Gesture Conflict:** F2F route view contains horizontal map panning. Nav drawer swipe-to-dismiss requires horizontal delta `dx < 12px` and velocity `vy > 0.45px/ms` within the top 44px handle zone only. Map interactions remain non-blocking.
+- **System Gesture Insets:** Edge-swipe trigger margins are offset by `calc(16px + env(safe-area-inset-left))` to avoid Android 14 predictive back gesture hijack.
+
+## 3. Degradation & State Handling
+- **Offline / Degraded Telemetry State:** When offline sync trips, nav drawer updates the F2F badge to amber `#D97706` with an inline alert banner, keeping offline cache actionable without modal interruption.
+- **Focus Trap & A11y:** Focus locks inside modal navigation sheet (`role="dialog"`, `aria-modal="true"`). Escape or scrim tap restores focus to originating hamburger button.
 ```
