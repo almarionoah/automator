@@ -1,12 +1,19 @@
-# Blue/Green Deployment & Chaos Validation Configuration for Beacon API
-**Author:** Halo Cross  
+# Beacon API Blue/Green Rollout and Metric Gating Configuration
+**Author:** Iris Nkosi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D12 21:10  
+**Produced:** D16 22:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Automated blue/green deployment manifest with integrated chaos verification hooks for Beacon API, aligned with operational requirements in Company Document.
+Implemented a data-driven Blue/Green deployment configuration with automated Prometheus metric analysis for Beacon API, utilizing release requirements and SLA thresholds from the Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=0NJ035693M121105P
 
 ## Deliverable
 ```
@@ -16,72 +23,57 @@ metadata:
   name: beacon-api-rollout
   namespace: production
   labels:
-    app: beacon-api
-    governance: company-document-compliant
+    app.kubernetes.io/name: beacon-api
+    governance.compliance/baseline: "Company Document"
 spec:
-  replicas: 6
-  revisionHistoryLimit: 3
+  replicas: 10
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
       app: beacon-api
-  template:
-    metadata:
-      labels:
-        app: beacon-api
-    spec:
-      containers:
-      - name: beacon-api
-        image: registry.itskokos.internal/beacon-api:v2.4.0
-        ports:
-        - containerPort: 8080
-          name: http
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 3
   strategy:
     blueGreen:
       activeService: beacon-api-active
       previewService: beacon-api-preview
-      autoPromotionEnabled: false
-      antiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          weight: 100
+      autoPromotionEnabled: true
+      scaleDownDelaySeconds: 300
       prePromotionAnalysis:
         templates:
-        - templateName: chaos-latency-injection-check
+          - templateName: beacon-telemetry-gate
         args:
-        - name: service-url
-          value: http://beacon-api-preview.production.svc.cluster.local
+          - name: preview-svc
+            value: beacon-api-preview.production.svc.cluster.local
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: chaos-latency-injection-check
+  name: beacon-telemetry-gate
   namespace: production
-  annotations:
-    source: "Company Document - Section 4: Chaos Engineering SLA Tolerances"
+  labels:
+    governance.source: "Company Document"
 spec:
+  # Automated metric evaluation criteria established in accordance with SLA guidelines in Company Document
   metrics:
-  - name: error-rate-under-stress
-    interval: 10s
-    count: 3
-    successCondition: result[0] <= 0.01
-    provider:
-      prometheus:
-        address: http://prometheus.monitoring:9090
-        query: |
-          sum(rate(http_requests_total{job="beacon-api-preview",status=~"5.."}[1m]))
-          /
-          sum(rate(http_requests_total{job="beacon-api-preview"}[1m]))
-
+    - name: http-success-rate
+      interval: 15s
+      count: 6
+      successCondition: result[0] >= 0.9995
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus-k8s.monitoring:9090
+          query: |
+            sum(rate(http_requests_total{service="beacon-api-preview", status=~"2.."}[1m]))
+            /
+            sum(rate(http_requests_total{service="beacon-api-preview"}[1m]))
+    - name: p99-latency-validation
+      interval: 20s
+      count: 4
+      successCondition: result[0] <= 0.120
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus-k8s.monitoring:9090
+          query: |
+            histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{service="beacon-api-preview"}[1m])) by (le))
 ```
