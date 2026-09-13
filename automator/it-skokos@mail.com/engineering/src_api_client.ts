@@ -1,87 +1,85 @@
-# Atlas Core: Typed API Client Migration
-**Author:** Rune Bishop  
+# Atlas Core Typed API Client Migration & Runtime Schema Validator
+**Author:** Nova Cross  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 20:00  
+**Produced:** D15 15:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Completed migration of Atlas Core legacy HTTP calls to a strict, typed API client. Standardized endpoint interfaces for SaaS platform operations and Face-to-Face service bookings based on specifications in Business Document: Company Document.
+Type-safe API client implementation for Atlas Core referencing specifications from the Company Document, enforcing strict runtime validation and deterministic payloads across SaaS and Face-to-Face service endpoints.
 
 ## Deliverable
 ```
 /**
- * Atlas Core - Typed API Client
- * Author: Rune Bishop
- * 
- * Resource Reference: Business Document: Company Document
- * Usage: Endpoint routes, request payload contracts, and error response models
- * were mapped directly from the interface specifications outlined in Business Document: Company Document.
+ * @file client.ts
+ * @project Atlas Core
+ * @author Nova Cross <Engineering>
+ * @reference Business Document: Company Document (Used to extract canonical domain entity contracts, SaaS tenant states, and Face-to-Face dispatch schemas to ensure zero-tolerance type safety).
  */
 
-export interface ApiResponse<T> {
-  data: T;
-  status: number;
-  timestamp: string;
-}
+import { z } from 'zod';
 
-export interface SaaSBookingPayload {
-  tenantId: string;
-  serviceType: 'saas_platform' | 'f2f_service';
-  clientReference: string;
-  scheduledAt?: string;
-  metadata?: Record<string, unknown>;
-}
+export const ServiceTierSchema = z.enum(['STANDARD_SAAS', 'ENTERPRISE_HYBRID', 'F2F_DISPATCH']);
 
-export interface BookingResult {
-  id: string;
-  status: 'confirmed' | 'pending' | 'failed';
-  confirmationCode: string;
-}
+export const FaceToFaceSessionSchema = z.object({
+  sessionId: z.string().uuid(),
+  agentId: z.string().uuid(),
+  scheduledEpoch: z.number().int().positive(),
+  locationCoordinates: z.tuple([z.number(), z.number()]),
+  status: z.enum(['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']),
+});
+
+export const TenantProfileSchema = z.object({
+  id: z.string().uuid(),
+  tenantName: z.string().min(1),
+  tier: ServiceTierSchema,
+  activeF2FSessions: z.array(FaceToFaceSessionSchema),
+  updatedAt: z.string().datetime(),
+});
+
+export type TenantProfile = z.infer<typeof TenantProfileSchema>;
+export type FaceToFaceSession = z.infer<typeof FaceToFaceSessionSchema>;
 
 export class AtlasApiClient {
-  private baseUrl: string;
-  private defaultHeaders: HeadersInit;
+  private readonly baseUrl: string;
 
-  constructor(baseUrl: string, apiKey: string) {
-    this.baseUrl = baseUrl.replace(/\/$/, '');
-    this.defaultHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'X-Client-Version': 'atlas-core-v2',
-    };
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl.replace(/\/+$/, '');
   }
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-    const url = `${this.baseUrl}${endpoint}`;
-    const response = await fetch(url, {
-      ...options,
-      headers: { ...this.defaultHeaders, ...options.headers },
+  private async request<T>(endpoint: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Client-Standard': 'Atlas-Core/v2',
+        ...init?.headers,
+      },
     });
 
     if (!response.ok) {
-      const errorBody = await response.text();
-      throw new Error(`[Atlas API Error] ${response.status}: ${errorBody}`);
+      throw new Error(`[AtlasApiClient] HTTP ${response.status}: ${response.statusText}`);
     }
 
-    return response.json();
+    const rawData: unknown = await response.json();
+    const parsed = schema.safeParse(rawData);
+
+    if (!parsed.success) {
+      throw new Error(`[AtlasApiClient] Schema validation failure: ${parsed.error.message}`);
+    }
+
+    return parsed.data;
   }
 
-  public async createBooking(payload: SaaSBookingPayload): Promise<ApiResponse<BookingResult>> {
-    return this.request<BookingResult>('/v1/services/booking', {
+  public async getTenantProfile(tenantId: string): Promise<TenantProfile> {
+    return this.request(`/v1/tenants/${tenantId}`, TenantProfileSchema);
+  }
+
+  public async scheduleF2F(payload: Omit<FaceToFaceSession, 'status'>): Promise<FaceToFaceSession> {
+    return this.request('/v1/f2f/sessions', FaceToFaceSessionSchema, {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   }
-
-  public async getHealth(): Promise<{ status: string }> {
-    const res = await this.request<{ status: string }>('/health');
-    return res.data;
-  }
 }
-
-export const apiClient = new AtlasApiClient(
-  process.env.ATLAS_API_BASE_URL || 'https://api.itskokos.internal',
-  process.env.ATLAS_API_KEY || ''
-);
 ```
