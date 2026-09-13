@@ -1,109 +1,87 @@
-# Atlas Core Typed API Client Migration & Schema Specification
-**Author:** Onyx Cross  
+# Atlas Core: Typed API Client Migration & Contract Layer
+**Author:** Halo Cross  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D13 11:10  
+**Produced:** D17 17:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored Atlas Core legacy untyped HTTP calls into an immutable, type-safe API client adhering to API contract and error handling standards established in the Company Document.
+Migrated Atlas Core to a fully typed, resilient API client utilizing runtime schema validation. Service structures and hybrid SaaS/Face-to-Face workflows were modeled in alignment with the Business Document: Company Document to provide effortless developer ergonomics and fail-safe type guarantees.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=2X457655B6449440W
+- Pay: https://www.paypal.com/checkoutnow?token=2KC1931965048521H
 
 ## Deliverable
 ```
 /**
- * Atlas Core - Typed API Client Layer
- * Author: Onyx Cross (Engineering)
- * 
- * Migration Note: Refactored legacy untyped Axios/fetch invocations into a strictly
- * typed, zero-overhead API client. Endpoints and data schemas align directly with
- * specifications outlined in the 'Company Document' for hybrid SaaS and Face-to-Face operations.
+ * @file atlasClient.ts
+ * @module @skokos/atlas-core/api
+ * @author Halo Cross <halo.cross@itskokos.com>
+ * @description Strongly-typed client interface for Atlas Core.
+ * Domain entities and service interaction boundaries were referenced directly from
+ * the 'Company Document' (Business Document) to harmonize SaaS telemetry with
+ * Face-to-Face appointment and consultation workflows.
  */
 
-export interface ApiResponse<T> {
-  readonly data: T;
-  readonly status: number;
-  readonly timestamp: string;
-}
+import { z } from 'zod';
 
-export interface SaaSTenantMetric {
-  tenantId: string;
-  activeWorkflows: number;
-  quotaUtilization: number;
-}
+export const ServiceTierSchema = z.enum([
+  'DIGITAL_SAAS',
+  'FACE_TO_FACE_CONSULT',
+  'HYBRID_ENTERPRISE'
+]);
 
-export interface FaceToFaceBooking {
-  bookingId: string;
-  specialistId: string;
-  clientIdentifier: string;
-  serviceLocation: 'corporate_hq' | 'field_branch' | 'client_site';
-  scheduledStart: string;
-  status: 'confirmed' | 'dispatched' | 'completed' | 'cancelled';
-}
+export const ClientSessionSchema = z.object({
+  sessionId: z.string().uuid(),
+  tenantId: z.string().min(1),
+  serviceTier: ServiceTierSchema,
+  scheduledAt: z.string().datetime(),
+  attendeeMetadata: z.record(z.string(), z.unknown()),
+  status: z.enum(['pending', 'confirmed', 'completed', 'cancelled']),
+});
 
-export interface EndpointMap {
-  'GET /api/v1/saas/metrics': { response: SaaSTenantMetric[] };
-  'POST /api/v1/f2f/bookings': { 
-    request: Omit<FaceToFaceBooking, 'bookingId' | 'status'>; 
-    response: FaceToFaceBooking; 
-  };
-  'PATCH /api/v1/f2f/bookings/:id': { 
-    request: Partial<Pick<FaceToFaceBooking, 'serviceLocation' | 'scheduledStart' | 'status'>>; 
-    response: FaceToFaceBooking; 
-  };
+export type ClientSession = z.infer<typeof ClientSessionSchema>;
+
+export interface ApiClientConfig {
+  baseUrl: string;
+  apiKey: string;
+  timeoutMs?: number;
 }
 
 export class AtlasApiClient {
-  private readonly baseUrl: string;
-  private readonly defaultHeaders: Readonly<Record<string, string>>;
+  constructor(private readonly config: ApiClientConfig) {}
 
-  constructor(baseUrl: string, customHeaders: Record<string, string> = {}) {
-    this.baseUrl = baseUrl.replace(/\/+$/, '');
-    this.defaultHeaders = Object.freeze({
-      'Content-Type': 'application/json',
-      'X-Client-Spec': 'Company Document', // Referenced API governance standard
-      ...customHeaders,
-    });
-  }
-
-  public async call<E extends keyof EndpointMap>(
-    endpoint: E,
-    options?: {
-      pathParams?: Record<string, string>;
-      body?: EndpointMap[E] extends { request: infer R } ? R : never;
-    }
-  ): Promise<ApiResponse<EndpointMap[E]['response']>> {
-    const [method, rawPath] = endpoint.split(' ') as [string, string];
-    let resolvedPath = rawPath;
-
-    if (options?.pathParams) {
-      for (const [key, val] of Object.entries(options.pathParams)) {
-        resolvedPath = resolvedPath.replace(`:${key}`, encodeURIComponent(val));
-      }
-    }
-
-    const response = await fetch(`${this.baseUrl}${resolvedPath}`, {
-      method,
-      headers: this.defaultHeaders,
-      body: options?.body ? JSON.stringify(options.body) : undefined,
+  private async request<T>(path: string, options: RequestInit, schema: z.ZodType<T>): Promise<T> {
+    const response = await fetch(`${this.config.baseUrl}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.config.apiKey}`,
+        ...options.headers,
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`[AtlasApiClient] ${method} ${resolvedPath} returned HTTP ${response.status}`);
+      throw new Error(`Atlas API Error [${response.status}]: ${response.statusText}`);
     }
 
-    const data: EndpointMap[E]['response'] = await response.json();
-    return Object.freeze({
-      data,
-      status: response.status,
-      timestamp: new Date().toISOString(),
-    });
+    const rawData = await response.json();
+    const parsed = schema.safeParse(rawData);
+    if (!parsed.success) {
+      throw new Error(`Schema contract validation failed: ${parsed.error.message}`);
+    }
+    return parsed.data;
   }
+
+  public sessions = {
+    getById: (id: string): Promise<ClientSession> =>
+      this.request(`/v1/sessions/${id}`, { method: 'GET' }, ClientSessionSchema),
+    create: (payload: Omit<ClientSession, 'sessionId' | 'status'>): Promise<ClientSession> =>
+      this.request('/v1/sessions', { method: 'POST', body: JSON.stringify(payload) }, ClientSessionSchema),
+  };
 }
 ```
