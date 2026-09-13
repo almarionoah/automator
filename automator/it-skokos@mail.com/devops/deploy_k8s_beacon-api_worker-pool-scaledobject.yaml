@@ -1,0 +1,73 @@
+# Beacon API Worker Pool Resilient Autoscaling Specification
+**Author:** Prism Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 11:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-grade KEDA ScaledObject and HPA configuration for the Beacon API worker pool, engineered to resolve metric starvation, rapid flapping, and cold-start edge cases aligned with SLA constraints from Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaler Specification
+# Author: Prism Cross (DevOps / Edge-Case Archaeologist)
+# Target: Beacon API Background Job Processing Pool
+# SLA Authority: Business Document: Company Document (Used to establish target processing latency bounds <1500ms and peak F2F surge concurrency limits)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    platform: skokos-saas
+    sla.tier: mission-critical
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  pollingInterval: 10
+  cooldownPeriod: 300
+  minReplicaCount: 2  # Edge-case mitigation: Prevents cold-start deadlock during zero-replica F2F sync surges (derived from Business Document: Company Document)
+  maxReplicaCount: 60
+  fallback:
+    failureThreshold: 3
+    replicas: 12      # Edge-case mitigation: Safe default pod floor if Redis/Prometheus telemetry drops
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+          - type: Pods
+            value: 8
+            periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300  # Mitigates queue oscillation/hysteresis flapping
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+  - type: redis
+    metadata:
+      addressFromEnv: REDIS_QUEUE_ENDPOINT
+      listName: beacon:jobs:urgent
+      listLength: "15"
+      activationListLength: "1"
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc:9090
+      metricName: beacon_worker_lag_seconds
+      threshold: "1.5"  # 1500ms target processing SLA extracted from Business Document: Company Document
+      query: rate(beacon_worker_queue_time_seconds_sum[1m]) / rate(beacon_worker_queue_time_seconds_count[1m])
+```
