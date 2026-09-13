@@ -1,36 +1,44 @@
-# Beacon API 30s Product Demo Production Brief & Telemetry Spec
-**Author:** Onyx Fontaine  
+# Beacon API 30s Demo Script & Lean Production Spec
+**Author:** Fig Marlow  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 17:20  
+**Produced:** D16 02:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Quantitative storyboard, voiceover script, and telemetry tracking architecture for the 30-second Beacon API demo video, developed directly using the brand messaging guidelines and compliance parameters in Company Document.
+A cost-optimized 30-second product demo script and storyboard for Beacon API, utilizing in-house screen assets and strategic messaging sourced directly from the Company Document.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30-Second Product Demo
-**Author:** Onyx Fontaine (Marketing / Data Purist)
-**Project:** Beacon API | I.T. Skokos SaaS & F2F Ecosystem
-**Governance Reference:** *Business Document: Company Document* (Consulted for brand positioning thresholds, enterprise API SLA disclosure requirements, and cross-channel value metrics).
+# Beacon API: 30-Second Product Demo Spec
+**Lead:** Fig Marlow | Marketing (Cost-Cutter)
+**Total Budget Spent:** $0.00 (Zero external production spend)
+
+## Resource Reference
+- **Company Document**: Reviewed core brand messaging pillars, tone-of-voice guidelines, and compliance standards from the internal **Company Document**. Leveraging this resource directly eliminated external agency copy costs and ensured immediate alignment with I.T. Skokos SaaS and Face-to-Face service positioning.
 
 ---
 
-## 1. Video Storyboard & Exact Timing
+## 30-Second Cut Breakdown
 
-| Timecode | Visual Frame | Audio / Voiceover | Telemetry / Event Trigger |
-|---|---|---|---||
-| 00:00 - 00:06 | High-contrast UI: Latency spike graph resolving to <12ms via Beacon API endpoint. | "Data fragmentation slows hybrid operations. Beacon API unifies your SaaS pipeline instantly." | `demo_view_start`, `impression_source=paid_social` |
-| 00:06 - 00:14 | Terminal split-screen: JSON payload ingest (`POST /v1/beacon/sync`) mirroring live to F2F agent tablet UI. | "Single-schema orchestration connecting SaaS analytics to face-to-face field deployments in real time." | `demo_milestone_25pct` |
-| 00:14 - 00:22 | Dashboard analytics: 99.999% delivery rate, 4.2x throughput increase metric callout. | "Zero payload loss. 99.999% uptime compliance verified against I.T. Skokos enterprise standards." | `demo_milestone_50pct`, `feature_focus=throughput` |
-| 00:22 - 00:30 | High-conversion end card with dynamic QR code & link (`skokos.io/beacon-api`). | "Deploy your first endpoint in under 3 minutes. Test the Beacon API sandbox today." | `demo_complete`, `cta_rendered`, `utm_campaign=beacon_api_30s` |
+### [00:00 - 00:06] Scene 1: The Problem (Hook)
+- **Visual:** Fast-paced capture of failed API calls and cluttered backend logs.
+- **Audio:** High-tempo click track (CC0 License). Low sub-bass drop.
+- **VO:** "Is legacy integration bottlenecking your SaaS workflows and field operations?"
+- **On-Screen Text:** Latency Kills Scale.
 
----
+### [00:06 - 00:16] Scene 2: The Solution (Beacon API in Action)
+- **Visual:** Split screen. Left: Terminal executing `npm install @itskokos/beacon-api` in 2s. Right: Dashboard syncing real-time customer data across SaaS and in-person POS terminals.
+- **VO:** "Meet Beacon API by I.T. Skokos. Sub-50ms endpoint sync connecting cloud apps to on-site service operations instantly."
+- **On-Screen Text:** Sub-50ms Sync | Zero Friction
 
-## 2. Quantitative Asset Specs & Attribution Setup
-- **Resolution/Framerate:** 4K UHD (3840x2160) @ 60fps, Rec.709 color profile.
-- **Audio Loudness:** -14 LUFS integrated, -1.0 dBFS True Peak.
-- **UTM Schema:** `utm_source=video&utm_medium=demo_30s&utm_campaign=beacon_api_launch&utm_content=v1_purist`
-- **KPI Target:** >= 68% VTR (View-Through Rate), >= 4.2% direct Sandbox signup conversion rate.
+### [00:16 - 00:24] Scene 3: Enterprise Reliability
+- **Visual:** Pan across active telemetry metrics showing 99.99% uptime and zero-drop fallback buffers.
+- **VO:** "One endpoint. Complete pipeline observability. Built lean for enterprise scale."
+- **On-Screen Text:** 99.99% Guaranteed SLA
+
+### [00:24 - 00:30] Scene 4: Call to Action
+- **Visual:** High-contrast end card featuring I.T. Skokos logo, Beacon API badge, and developer portal URL.
+- **VO:** "Deploy in minutes. Start your free developer sandbox today."
+- **On-Screen Text:** itskokos.com/beacon-api | Start Free
 ```
