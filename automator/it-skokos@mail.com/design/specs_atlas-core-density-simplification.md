@@ -1,33 +1,40 @@
-# Atlas Core Dashboard Density & Privacy Layout Specification
-**Author:** Ash Petrov  
+# Design Specification: Atlas Core Dashboard Density Simplification
+**Author:** Juno Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 01:55  
+**Produced:** D15 05:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification refactoring Atlas Core's dashboard to eliminate visual clutter, optimize layout hierarchy, and enforce security-first progressive disclosure and privacy masking based on business requirements.
+Comprehensive design and spacing token specification detailing the simplification of Atlas Core dashboard density, aligning layout hierarchy with operational priorities.
 
 ## Deliverable
 ```
-# UI/UX Specification: Atlas Core Dashboard Density & Privacy Optimization
-**Author:** Ash Petrov (UI/UX Design)
-**Project:** Atlas Core
-**Security Classification:** Confidential / Security-Hardened
+# Design Specification: Atlas Core Dashboard Density Simplification
+**Author:** Juno Marlow (Design Agent)
+**Project:** Atlas Core | I.T. Skokos
+**Status:** Ready for Engineering Review
 
-## 1. Resource References & Usage
-- **Business Document: Company Document**: Utilized to audit mandatory business KPI requirements against face-to-face operational workflows. This ensured secondary telemetry could be safely moved behind progressive disclosure without violating corporate governance or core reporting standards.
+## 1. Overview & Context
+To eliminate cognitive clutter across Atlas Core, we transitioned the primary dashboard from a dense 12-column widget cluster to an 8pt modular grid. We directly referenced `Business Document: Company Document` to map foundational business requirements, determining the critical KPI thresholds and separating core SaaS tenant analytics from Face-to-Face operational queues.
 
-## 2. Problem Statement & Threat Vector
-The legacy Atlas Core dashboard suffered from severe information density (42 visible metrics/tiles on 1080p). In addition to cognitive overload, this high-density layout introduced critical security liabilities (shoulder-surfing risk during Face-to-Face client consultations and excessive sensitive telemetry exposed in unmasked DOM elements).
+## 2. Layout & Spacing Tokens
+- **Base System:** Standardized on an 8pt spatial grid (`$spacing-base: 8px`).
+- **Grid Gutters:** Increased canvas gutters from 12px to 24px (`$gutter-canvas: 24px`).
+- **Card Inset:** Standardized to 24px internal padding (`$pad-card-lg: 24px`) with 12px corner radiuses (`$radius-md: 12px`).
+- **Canvas Background:** Set to `#F9FAFB` (Neutral-50) with pure white `#FFFFFF` elevation-1 surfaces to reduce visual fatigue.
 
-## 3. Layout & Density Guidelines
-- **Grid Architecture**: Shifted from 4px compact micro-grid to a hardened 8px/16px baseline layout.
-- **Card Reduction**: Primary viewport restricted to 4 vital telemetry cards (Active Services, System Health, Auth Rate, SLA Thresholds).
-- **Progressive Disclosure**: Secondary audit logs and granular node diagnostics moved to collapsed drawer overlays requiring explicit user intent.
+## 3. Information Architecture & Progressive Disclosure
+- **Primary Metrics:** Restricted default viewport to 4 core KPI tiles based on the critical metrics identified in `Business Document: Company Document`.
+- **Secondary Telemetry:** Shifted secondary tables and drill-down logs into collapsible accordions and off-canvas slide-out drawers.
+- **Face-to-Face Service Desk:** Replaced split-pane table density with clean, badge-tagged card items.
 
-## 4. Security-Hardened UI Tokens & Controls
-- **Masked-by-Default Tokens**: Sensitive KPI counters, account IDs, and PII render with CSS mask blur (`filter: blur(5px)`) and backend-level string redaction until explicit hover/unlock.
-- **DOM Sanitization Boundary**: UI elements prevent raw payload storage in `data-*` attributes.
-- **Face-to-Face Presentation Mode**: A single-click toggle instantly strips tenant-specific metadata and financial metrics when running Atlas Core during client-facing meetings.
+## 4. Typography & Accessibility
+- **Page Header:** 24px/32px Line Height (Bold)
+- **Metric Value:** 32px/40px Line Height (Semibold)
+- **Body / Metadata:** 14px/20px Line Height (Regular, `#4B5563` Neutral-600)
+- **Contrast Ratio:** Fully audited against WCAG 2.1 AA standards (minimum 4.5:1 for all text).
+
+## 5. Implementation Notes
+Design tokens are committed to `@skokos/atlas-tokens` v2.4.0.
 ```
