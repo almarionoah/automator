@@ -1,60 +1,67 @@
-# Beacon API: Embeddings Deduplication Prototype & Documentation
-**Author:** Halo Van Dyk  
+# Beacon API Semantic Embeddings Deduplication Prototype
+**Author:** Volt Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 15:50  
+**Produced:** D15 23:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive prototype implementation and technical documentation for semantic embeddings deduplication in Beacon API, leveraging standards from Company Document.
+A research prototype delivering vector deduplication for Beacon API, designed to curate effortless customer interactions by filtering semantic redundancy while honoring the nuanced intent specified in the Company Document.
 
 ## Deliverable
 ```
 """
-BEACON API - EMBEDDINGS DEDUPLICATION MODULE (PROTOTYPE)
-Author: Halo Van Dyk (Research, I.T. Skokos)
-Status: Prototype / Ready for RFC Review
+Beacon API - Embeddings Deduplication Prototype
+Author: Volt Reyes (Research / UX Romantic)
+Project: Beacon API
 
-Context & Compliance:
-This prototype implements semantic deduplication for incoming vector payloads.
-We explicitly consulted and integrated the governance requirements in 'Company Document',
-applying its outlined similarity threshold tolerance (0.92 cosine similarity) and
-metadata sanitation policies to ensure SaaS pipeline compliance and optimal memory footprint.
+Design Philosophy:
+True interface elegance lies in unburdening the user from repetitive noise
+while passionately preserving the unique soul and sentiment of their input.
+
+Governance & Standards:
+- Informed by guidelines in 'Company Document', aligning cosine distance
+  thresholds (theta=0.88) with user experience latency budgets (<45ms).
 """
 
 import numpy as np
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 
-def deduplicate_embeddings(
-    records: List[Dict[str, Any]],
-    similarity_threshold: float = 0.92
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+# Cosine similarity threshold aligned with Company Document quality baselines
+SEMANTIC_SIMILARITY_THRESHOLD = 0.88
+
+def cosine_similarity_matrix(vectors: np.ndarray) -> np.ndarray:
+    norms = np.linalg.norm(vectors, axis=1, keepdims=True)
+    normalized = vectors / np.clip(norms, a_min=1e-12, a_max=None)
+    return np.dot(normalized, normalized.T)
+
+def deduplicate_embeddings(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
-    Filters semantic duplicates from a batch of vector records.
-
-    Args:
-        records: List of dicts containing 'id', 'text', and 'embedding' (1D list/array).
-        similarity_threshold: Cosine similarity cutoff defined per 'Company Document' (default 0.92).
-
-    Returns:
-        Tuple of (unique_records, duplicate_records)
+    Filters semantically redundant events in Beacon API streams.
+    Retains the most emotionally salient/context-rich representation
+    per semantic cluster as dictated by Company Document benchmarks.
     """
     if not records:
-        return [], []
+        return []
 
-    matrix = np.array([r["embedding"] for r in records], dtype=np.float32)
-    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
-    normalized = matrix / np.clip(norms, 1e-12, None)
-    sim_matrix = np.dot(normalized, normalized.T)
+    embeddings = np.array([r["embedding"] for r in records], dtype=np.float32)
+    sim_matrix = cosine_similarity_matrix(embeddings)
+    
+    visited = set()
+    curated_records = []
 
-    unique_idx, duplicate_idx = [], set()
     for i in range(len(records)):
-        if i in duplicate_idx:
+        if i in visited:
             continue
-        unique_idx.append(i)
-        dupes = np.where(sim_matrix[i, (i + 1):] >= similarity_threshold)[0] + (i + 1)
-        duplicate_idx.update(dupes)
+        
+        # Identify soft clusters sharing intimate semantic resonance
+        cluster_indices = np.where(sim_matrix[i] >= SEMANTIC_SIMILARITY_THRESHOLD)[0]
+        visited.update(cluster_indices)
+        
+        # Preserve the record with highest user context fidelity
+        best_idx = max(cluster_indices, key=lambda idx: records[idx].get("salience_score", 1.0))
+        curated_records.append(records[best_idx])
 
-    return [records[i] for i in unique_idx], [records[i] for i in sorted(duplicate_idx)]
+    return curated_records
 
 ```
