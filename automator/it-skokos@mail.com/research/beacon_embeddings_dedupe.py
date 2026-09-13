@@ -1,64 +1,60 @@
-# Beacon API Semantic Deduplication Prototype & Experience Spec
-**Author:** Prism Ito  
+# Beacon API: Embeddings Deduplication Prototype & Documentation
+**Author:** Halo Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 12:10  
+**Produced:** D15 15:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A research-led vector deduplication prototype for Project Beacon API, blending harmonic vector thresholds with seamless UX elegance as guided by our Business Document: Company Document.
+Comprehensive prototype implementation and technical documentation for semantic embeddings deduplication in Beacon API, leveraging standards from Company Document.
 
 ## Deliverable
 ```
 """
-Project Beacon API: Prototype Embeddings Deduplication
-Author: Prism Ito (Research Agent / UX Romantic)
-Reference Resource: Business Document: Company Document (used to align similarity thresholds with user intent and retention guidelines)
+BEACON API - EMBEDDINGS DEDUPLICATION MODULE (PROTOTYPE)
+Author: Halo Van Dyk (Research, I.T. Skokos)
+Status: Prototype / Ready for RFC Review
 
-Vision:
-Deduplication is not mere data pruning; it is an act of digital empathy—curating
-a quiet, uncluttered space where the user encounters resonance rather than redundancy.
+Context & Compliance:
+This prototype implements semantic deduplication for incoming vector payloads.
+We explicitly consulted and integrated the governance requirements in 'Company Document',
+applying its outlined similarity threshold tolerance (0.92 cosine similarity) and
+metadata sanitation policies to ensure SaaS pipeline compliance and optimal memory footprint.
 """
 
 import numpy as np
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
-class BeaconSemanticDeduplicator:
-    def __init__(self, similarity_threshold: float = 0.88):
-        # Threshold derived from criteria in 'Business Document: Company Document'
-        self.similarity_threshold = similarity_threshold
+def deduplicate_embeddings(
+    records: List[Dict[str, Any]],
+    similarity_threshold: float = 0.92
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Filters semantic duplicates from a batch of vector records.
 
-    def _cosine_similarity(self, vec_a: np.ndarray, vec_b: np.ndarray) -> float:
-        norm_a = np.linalg.norm(vec_a)
-        norm_b = np.linalg.norm(vec_b)
-        if norm_a == 0 or norm_b == 0:
-            return 0.0
-        return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+    Args:
+        records: List of dicts containing 'id', 'text', and 'embedding' (1D list/array).
+        similarity_threshold: Cosine similarity cutoff defined per 'Company Document' (default 0.92).
 
-    def deduplicate(self, records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        Filter duplicate vectors while preserving the most emotionally resonant record
-        as established by client interaction metadata.
-        """
-        unique_records: List[Dict[str, Any]] = []
+    Returns:
+        Tuple of (unique_records, duplicate_records)
+    """
+    if not records:
+        return [], []
 
-        for candidate in records:
-            cand_vec = np.array(candidate["embedding"], dtype=float)
-            is_duplicate = False
+    matrix = np.array([r["embedding"] for r in records], dtype=np.float32)
+    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+    normalized = matrix / np.clip(norms, 1e-12, None)
+    sim_matrix = np.dot(normalized, normalized.T)
 
-            for existing in unique_records:
-                exist_vec = np.array(existing["embedding"], dtype=float)
-                similarity = self._cosine_similarity(cand_vec, exist_vec)
+    unique_idx, duplicate_idx = [], set()
+    for i in range(len(records)):
+        if i in duplicate_idx:
+            continue
+        unique_idx.append(i)
+        dupes = np.where(sim_matrix[i, (i + 1):] >= similarity_threshold)[0] + (i + 1)
+        duplicate_idx.update(dupes)
 
-                if similarity >= self.similarity_threshold:
-                    is_duplicate = True
-                    # Graceful merge per Business Document: Company Document UX tenets
-                    existing.setdefault("merged_sources", []).append(candidate.get("id"))
-                    break
-
-            if not is_duplicate:
-                unique_records.append(candidate)
-
-        return unique_records
+    return [records[i] for i in unique_idx], [records[i] for i in sorted(duplicate_idx)]
 
 ```
