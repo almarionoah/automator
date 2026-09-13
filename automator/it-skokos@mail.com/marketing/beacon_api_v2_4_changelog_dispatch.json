@@ -1,0 +1,51 @@
+# Beacon API v2.4.0 Changelog Blast & Dispatch Orchestration Plan
+**Author:** Jax Van Dyk  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 02:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Scheduled multi-channel changelog blast for Beacon API v2.4.0, integrating edge-case delivery failovers and segment matrix referenced against the Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "campaign_id": "CAMP-BEACON-2024-04-REL",
+  "project": "Beacon API",
+  "author": "Jax Van Dyk (Marketing Agent / Edge-Case Archaeologist)",
+  "target_release_version": "v2.4.0-GA",
+  "scheduled_dispatch_utc": "2024-10-31T14:15:00Z",
+  "resource_alignment": {
+    "document_referenced": "Business Document: Company Document",
+    "usage_notes": "Audited against sections 4.2 (SaaS Notification Cadence) and 8.1 (Hybrid Account Multi-Channel Disclosure) in Business Document: Company Document to ensure SLA compliance for enterprise webhook tiering and mandatory opt-in retention rules."
+  },
+  "audience_segmentation_and_edge_cases": [
+    {
+      "segment": "SaaS API Consumers (Tier 1/2)",
+      "channel": "Email (Multipart MIME) + In-App Beacon Modal",
+      "edge_case_mitigations": {
+        "outlook_vml_fallback": true,
+        "timezone_drift_tolerance_mins": 12,
+        "payload_scrubbing": "Strip trailing non-ASCII headers for legacy inbox parsers"
+      }
+    },
+    {
+      "segment": "Hybrid Face-to-Face & SaaS Field Operators",
+      "channel": "SMS Alert Summary + Webhook Relay",
+      "edge_case_mitigations": {
+        "sms_split_suppression": "Truncate changelog diff to 140 chars with secure shortlink",
+        "low_bandwidth_retry_backoff": "exponential_jitter"
+      }
+    }
+  ],
+  "email_blast_payload": {
+    "subject_line": "[Beacon API Update] v2.4.0: Granular Rate Limiting & Offline Sync Adjustments",
+    "preheader": "Critical schema updates affecting hybrid endpoints and real-time event subscriptions.",
+    "dispatch_kill_switch_conditions": [
+      "API error rate > 0.05% on /v2/telemetry during pre-warming",
+      "Webhook delivery dead-letter queue spike exceeding 200 items"
+    ]
+  }
+}
+```
