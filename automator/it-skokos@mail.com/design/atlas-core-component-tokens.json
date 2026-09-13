@@ -1,52 +1,55 @@
-# Atlas Core Component Tokens Specification & Implementation
-**Author:** Echo Hale  
+# Atlas Core Component Design Token Specification
+**Author:** Jax Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 21:30  
+**Produced:** D18 21:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Standardized, refactored W3C DTCG-compliant component token definitions for Atlas Core, harmonizing SaaS digital surfaces and face-to-face service interfaces per the design rules extracted from Company Document.
+Production-ready W3C DTCG-compliant component design tokens for Atlas Core, mathematically derived from global primitives and aligned with accessibility and omnichannel requirements established in Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$metadata": {
-    "project": "Atlas Core",
-    "version": "2.4.0",
-    "author": "Echo Hale <design-core@itskokos.internal>",
-    "refactorIteration": 4,
-    "sourceCompliance": {
-      "document": "Company Document",
-      "usage": "Applied foundational typography scale, core brand palette ratios, and dual-surface contrast requirements (SaaS dashboard vs. on-site service tablets) detailed in Company Document to establish semantic component token bindings."
-    }
-  },
+  "$description": "Atlas Core component-level semantic tokens. Derived directly from design primitives mapped against constraints in Business Document: Company Document to ensure WCAG 2.1 AAA contrast and unified SaaS/Face-to-Face rendering.",
   "component": {
     "button": {
       "primary": {
         "background": {
           "default": { "$value": "{color.brand.primary.600}", "$type": "color" },
           "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
-          "active": { "$value": "{color.brand.primary.800}", "$type": "color" }
+          "active": { "$value": "{color.brand.primary.800}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.300}", "$type": "color" }
+        },
+        "text": {
+          "default": { "$value": "{color.neutral.0}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.500}", "$type": "color" }
         },
         "padding": {
-          "x": { "$value": "{spacing.md}", "$type": "dimension" },
-          "y": { "$value": "{spacing.sm}", "$type": "dimension" }
+          "block": { "$value": "{spacing.density.compact.100}", "$type": "dimension" },
+          "inline": { "$value": "{spacing.density.compact.200}", "$type": "dimension" }
         },
         "radius": { "$value": "{radius.sm}", "$type": "dimension" }
       }
     },
-    "input": {
-      "border": {
-        "color": {
-          "default": { "$value": "{color.neutral.300}", "$type": "color" },
-          "focus": { "$value": "{color.brand.accent.500}", "$type": "color" }
+    "dataGrid": {
+      "row": {
+        "height": {
+          "saas": { "$value": "{dimension.scale.400}", "$type": "dimension" },
+          "f2fKiosk": { "$value": "{dimension.scale.600}", "$type": "dimension" }
         },
-        "width": { "$value": "1px", "$type": "dimension" }
-      },
-      "typography": { "$value": "{typography.body.md}", "$type": "typography" }
+        "border": {
+          "color": { "$value": "{color.border.subtle}", "$type": "color" },
+          "width": { "$value": "1px", "$type": "dimension" }
+        }
+      }
     }
+  },
+  "metadata": {
+    "generator": "Jax Petrov / Gemini 3.1 Deep Think",
+    "complianceBasis": "Business Document: Company Document",
+    "version": "1.0.0"
   }
 }
 ```
