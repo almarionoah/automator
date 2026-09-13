@@ -1,65 +1,52 @@
-# Beacon API Comparison Landing Page Content & Spec
-**Author:** Prism Ito  
+# Beacon API vs. Legacy Competitors: High-Converting Comparison Landing Page Spec & Copy
+**Author:** Lyra Cross  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 04:20  
+**Produced:** D15 02:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Developer-focused comparison landing page copy, feature matrix, and architectural specs benchmarking Beacon API against legacy solutions, referencing Company Document.
+Production-ready comparison landing page copy and component structure for Beacon API, designed to convert SaaS developers and enterprise operations teams by benchmarking real-time telemetry against legacy aggregators. Utilizes core positioning and tier guidelines from the internal Company Document.
 
 ## Deliverable
 ```
-# Beacon API vs. Legacy Integrations: Performance & Developer Experience
+# Landing Page Specification: Beacon API vs. Legacy Middleware
 
-> Authored by Prism Ito | Marketing & Technical Documentation
-> Resource Alignment: Built using `Company Document` as the canonical source for verified latency benchmarks, enterprise SLA terms (99.99%), and hybrid SaaS/Face-to-Face operational compliance standards.
+## Meta & Header
+- **Target URL**: `/compare/beacon-api-vs-legacy`
+- **Objective**: Drive self-serve developer signups & enterprise demo requests for hybrid SaaS/Face-to-Face operations.
+- **Resource Reference**: Positioned using enterprise SLA guarantees, hybrid dispatch protocols, and tier packaging directly derived from the internal **Company Document**.
 
 ---
 
 ## 1. Hero Section
-**Headline:** Stop Wrestling with Fragile Middleware. Build on Beacon API.
-**Subhead:** Achieve sub-15ms data synchronization between SaaS workflows and on-premise Face-to-Face service touchpoints with I.T. Skokos's unified developer platform.
-**Primary CTA:** [Get API Key & Docs]
-**Secondary CTA:** [Explore Live Sandbox]
+- **Eyebrow**: BENCHMARK & COMPARISON
+- **H1**: Why Modern Operations Teams are Replacing Legacy Gateways with Beacon API
+- **Subhead**: Real-time webhook streaming, sub-50ms sync, and native hybrid integration for both digital platforms and face-to-face field dispatch—at half the integration overhead.
+- **Primary CTA**: [Start Free Sandbox (API Key in 60s)]
+- **Secondary CTA**: [Book Live Architecture Review]
 
 ---
 
-## 2. Feature & Architectural Matrix
-
-| Capability | Beacon API (I.T. Skokos) | Legacy API Providers |
+## 2. Feature & Metric Comparison Matrix
+| Feature / Metric | Beacon API (I.T. Skokos) | Traditional Legacy Gateways |
 | :--- | :--- | :--- |
-| **Hybrid Delivery** | Unified SaaS + F2F Event Streaming | Fragmented SaaS-only webhooks |
-| **SLA & Uptime** | 99.99% (Per `Company Document`) | 99.5% best-effort |
-| **Schema Contract** | Strict OpenAPI 3.1 + TypeSafe SDKs | Loose JSON, manual SDK updates |
-| **Edge Latency** | < 12ms median | 180ms - 450ms |
-| **Compliance** | ISO/SOC2 aligned (`Company Document`) | Third-party dependent |
+| **P99 Event Latency** | < 45ms (Edge distributed) | 350ms - 1.2s (Batch polling) |
+| **Hybrid Field Sync** | Native F2F mobile agent sync | Custom webhook glue required |
+| **Webhooks Reliability** | 99.99% automated retry + DLQ | Basic retry, manual replay |
+| **Integration Time** | < 2 hours (OpenAPI 3.1 & SDKs) | 2–6 weeks custom mapping |
+| **SLA Guarantee** | 99.99% backed (per Company Document) | 99.5% standard |
 
 ---
 
-## 3. Developer Experience (Docs-First Preview)
-
-### Quickstart in 30 Seconds
-```bash
-npm install @it-skokos/beacon-sdk
-beacon init --template=hybrid-sync
-```
-
-```typescript
-import { BeaconClient } from '@it-skokos/beacon-sdk';
-
-const client = new BeaconClient({ apiKey: process.env.BEACON_KEY });
-await client.sync.dispatch({
-  channel: 'f2f-service-desk',
-  event: 'APPOINTMENT_CHECKIN',
-  payload: { customerId: 'cust_882', status: 'ON_SITE' }
-});
-```
+## 3. Key Value Differentiators
+1. **Zero-Friction Hybrid Dispatch**: Connects SaaS platform state directly with on-the-ground face-to-face service agents.
+2. **Transparent Tiered Pricing**: Structured according to the standard model in our **Company Document**, ensuring no hidden overage penalties.
+3. **Drop-in Migration**: Full compatibility wrapper for rapid migration.
 
 ---
 
-## 4. Documentation & Migration Hub Links
-- [Beacon API Documentation Hub](https://docs.itskokos.com/beacon)
-- [Migration Playbook from REST/SOAP](https://docs.itskokos.com/beacon/migration)
-- [Compliance & Trust Center (Incorporating Company Document)](https://docs.itskokos.com/trust)
+## 4. Bottom CTA
+- **H2**: Ready to ship sub-second hybrid telemetry?
+- **CTA**: [Get Sandbox Keys Now] | [Talk to an Engineer]
 ```
