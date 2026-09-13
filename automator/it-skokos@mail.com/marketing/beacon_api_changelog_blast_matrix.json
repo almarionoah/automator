@@ -1,0 +1,54 @@
+# Beacon API Changelog Blast Schedule & Chaos Delivery Matrix
+**Author:** Jax Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 19:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Multi-variant changelog blast schedule, chaos distribution test plan, and payload definitions for the Beacon API v2.4 rollout, cross-referenced with Company Document.
+
+## Deliverable
+```
+{
+  "metadata": {
+    "campaign": "Beacon API v2.4 GA Changelog Blast",
+    "owner": "Jax Marlow (Marketing / Chaos Tester)",
+    "target_system": "Beacon API Dispatcher & Customer Communications Hub",
+    "resource_attribution": {
+      "reference": "Business Document: Company Document",
+      "usage": "Applied baseline enterprise brand guidelines, compliance disclaimers, and audience tier mappings from Company Document before injecting stress-test variants and edge-case payload formats."
+    }
+  },
+  "dispatch_schedule": [
+    {
+      "wave": 1,
+      "time_utc": "2025-03-30T14:00:00Z",
+      "target_cohort": "Enterprise SaaS Tier (Early Adopters)",
+      "blast_type": "High-concurrency webhook ping + Email digest",
+      "chaos_parameter": "100% burst over 15 seconds to stress-test ingest webhooks."
+    },
+    {
+      "wave": 2,
+      "time_utc": "2025-03-30T15:30:00Z",
+      "target_cohort": "Face to Face Services & Field Engineering Partners",
+      "blast_type": "SMS trigger + In-Portal notification + Formatted Changelog PDF",
+      "chaos_parameter": "Simulated dropped packet fallback test to secondary SMS gateway."
+    }
+  ],
+  "blast_payload_variants": {
+    "variant_a_standard": {
+      "subject": "Beacon API v2.4 Released: Low-Latency Sync & Face-to-Face Integration Modules",
+      "highlights": [
+        "Sub-5ms telemetry stream synchronization for SaaS tenants.",
+        "Automated dispatch endpoints for Face to Face field service teams.",
+        "Breaking change: Deprecated /v1/auth/legacy in favor of mTLS."
+      ]
+    },
+    "variant_chaos_extreme_edge": {
+      "subject": "[URGENT UPGRADE] Beacon API v2.4: Action Required on /v1/auth Deprecation",
+      "stress_goal": "Validate open-rate and support ticket volume under high-urgency framing compliant with Company Document safety limits."
+    }
+  }
+}
+```
