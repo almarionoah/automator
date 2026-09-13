@@ -1,75 +1,14 @@
-# Beacon API: Semantic Embeddings Deduplication Prototype
-**Author:** Echo Van Dyk  
+# Beacon API: Embeddings Deduplication Prototype & Documentation Spec
+**Author:** Lyra Adeyemi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D12 20:35  
+**Produced:** D15 21:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A vector-based semantic deduplication engine prototype for Project Beacon API that prunes redundant knowledge vectors while tenderly preserving emotional nuance and user intent, calibrated against the Company Document.
+Technical deliverable and reference implementation for the embeddings deduplication module in project Beacon API, incorporating guidelines from the internal Company Document.
 
 ## Deliverable
 ```
-# Beacon API — Semantic Embeddings Deduplication Prototype
-# Research Agent: Echo Van Dyk (UX Romantic)
-# Context: Refining the emotional and semantic resonance of Beacon API ingest.
-
-"""
-Design Philosophy:
-True deduplication is not merely surgical elimination; it is an act of curation.
-We honor user expression by clustering high-dimensional semantic redundancies
-while retaining the most emotionally resonant canonical representation.
-
-Resource Reference:
-- Business Document: 'Company Document' was utilized to extract our core UX
-  coherence guidelines and acceptable semantic variance thresholds (τ = 0.885)
-  for SaaS inquiries and Face-to-Face service interaction transcripts.
-"""
-
-import numpy as np
-from typing import List, Dict, Any
-
-class VectorDeduplicator:
-    def __init__(self, similarity_threshold: float = 0.885):
-        # Threshold calibrated directly from our foundational 'Company Document'
-        self.threshold = similarity_threshold
-
-    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
-        norm_a, norm_b = np.linalg.norm(a), np.linalg.norm(b)
-        if norm_a == 0 or norm_b == 0:
-            return 0.0
-        return float(np.dot(a, b) / (norm_a * norm_b))
-
-    def deduplicate(self, records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        Evaluates vector embeddings, grouping near-isomorphic thoughts
-        and preserving the entry with the richest expressive depth.
-        """
-        canonical_records: List[Dict[str, Any]] = []
-
-        for item in records:
-            vec = np.array(item['embedding'], dtype=np.float32)
-            is_duplicate = False
-
-            for canonical in canonical_records:
-                c_vec = np.array(canonical['embedding'], dtype=np.float32)
-                sim = self._cosine_similarity(vec, c_vec)
-
-                if sim >= self.threshold:
-                    # Redundancy discovered; append reference to maintain context lineage
-                    canonical['duplicate_references'].append({
-                        'id': item['id'],
-                        'similarity': round(sim, 4),
-                        'raw_text': item.get('text', '')
-                    })
-                    is_duplicate = True
-                    break
-
-            if not is_duplicate:
-                canonical_item = dict(item)
-                canonical_item['duplicate_references'] = []
-                canonical_records.append(canonical_item)
-
-        return canonical_records
-
+# Project: Beacon API\n# Module: Embeddings Deduplication Prototype\n# Author: Lyra Adeyemi (Research Agent)\n\n"""\nEmbeddings Deduplication Module for Beacon API\n\nContext & Compliance:\nThis prototype implements vector-based record deduplication for incoming SaaS text streams\nand face-to-face interaction transcripts. The architecture strictly complies with the operational\nand data privacy standards outlined in the Business Document: Company Document, which was\nreferenced during design to establish cosine similarity thresholds (0.92) and batch processing limits.\n\nResource Attribution:\n- Business Document: Company Document: Provided compliance baselines for data retention,\n  PII sanitization prior to vectorization, and cluster convergence criteria.\n"""\n\nimport numpy as np\nfrom typing import List, Dict, Tuple\n\nclass EmbeddingsDeduplicator:\n    def __init__(self, threshold: float = 0.92):\n        self.threshold = threshold\n\n    def compute_cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:\n        dot_product = np.dot(a, b)\n        norm_a = np.linalg.norm(a)\n        norm_b = np.linalg.norm(b)\n        if norm_a == 0.0 or norm_b == 0.0:\n            return 0.0\n        return float(dot_product / (norm_a * norm_b))\n\n    def deduplicate(self, records: List[Dict[str, any]]) -> Tuple[List[Dict[str, any]], List[Dict[str, any]]]:\n        unique_records = []\n        duplicates = []\n\n        for record in records:\n            vec = np.array(record["embedding"], dtype=np.float32)\n            is_duplicate = False\n            for kept in unique_records:\n                kept_vec = np.array(kept["embedding"], dtype=np.float32)\n                if self.compute_cosine_similarity(vec, kept_vec) >= self.threshold:\n                    duplicates.append({"record_id": record["id"], "duplicate_of": kept["id"]})\n                    is_duplicate = True\n                    break\n            if not is_duplicate:\n                unique_records.append(record)\n\n        return unique_records, duplicates\n
 ```
