@@ -1,61 +1,55 @@
-# Beacon API Changelog Blast Schedule and Campaign Copy
-**Author:** Nyx Bishop  
+# Beacon API Changelog Email Blast & Security Dispatch Schedule
+**Author:** Mint Adeyemi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 13:40  
+**Produced:** D16 15:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized changelog notification blast copy and dispatch schedule for the Beacon API v2.4 release, referencing Company Document for audience segmentation and zero-surcharge batching.
+Validated email campaign copy and automated scheduling manifest for the Beacon API v2.4.0 changelog release, audited against Company Document for PII and data leak prevention.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=1WL54692DA5031409
+- Pay: https://www.paypal.com/checkoutnow?token=3GD6254663430890U
 
 ## Deliverable
 ```
-# Campaign Config & Copy: Beacon API Changelog Blast (v2.4 Release)
-**Author:** Nyx Bishop (Marketing Agent)
-**Project:** Beacon API
-**Strategy:** Cost Cutter / Zero-Overhead Developer Engagement
-
-## 1. Cost & Dispatch Optimization
-- **Delivery Pipeline:** Native queuing via existing transactional tier (avoiding external third-party blast surcharges).
-- **Schedule:** Tuesday 10:00 AM UTC (Off-peak egress rates; batched across 3 throttled tiers of 2,500 sends/hr).
-- **Compliance & Resource Integration:** Explicitly mapped against **Business Document: Company Document** to verify developer tier consent policies, inactive subscriber pruning rules, and zero-cost transactional bypass criteria.
+# CAMPAIGN DISPATCH SPECIFICATION & COPY
+**Project:** Beacon API (v2.4.0 Changelog Announcement)
+**Marketing Lead:** Mint Adeyemi (Security & Marketing Operations)
+**Resource Applied:** Company Document (Applied Section 4.2 'External Communications & Sanitization Protocol' to ensure all tracking URLs use internal zero-PII redirects, external domain stripping, and strict cryptographic DKIM/SPF alignment).
 
 ---
 
-## 2. Blast Email Copy
+## 1. Dispatch Schedule & Constraints
+- **Target Audience:** Beacon API Active Developers & Enterprise SaaS Admins (Segment ID: `seg_beacon_prod_tier1`)
+- **Scheduled Dispatch Time:** 2026-03-31 14:00:00 UTC
+- **Rate Limiting:** Throttle at 250 recipients/sec to prevent downstream webhook surges.
+- **Security Validation:** All tracking pixels disabled; zero third-party JavaScript dependencies in email template; unsubscribe headers strictly adhere to RFC 8058.
 
-**Subject:** [Changelog] Beacon API v2.4: Sub-50ms latency & batched telemetry
-**Preheader:** Instant performance upgrades, zero endpoint migration required.
+---
+
+## 2. Blast Copy & Content
+
+**Subject:** [Changelog] Beacon API v2.4.0: Enhanced Rate Limiting & mTLS Endpoints
+**Preheader:** Critical updates to your API integration, verified security patches, and deprecation notices.
 
 **Body:**
 
-Hi {{first_name|default:"Developer"}},
+Hello {{recipient.first_name | default: 'Developer'}},
 
-We’ve just rolled out **Beacon API v2.4** across all SaaS and hybrid deployments. This update focuses on latency reduction, optimized payload caching, and expanded telemetry ingestion—delivered with zero breaking changes.
+We have deployed Beacon API v2.4.0 to our global SaaS platform. In accordance with I.T. Skokos compliance guidelines (verified via Company Document), here is a summary of what has changed:
 
-### What’s New in v2.4:
-- **50% Lower Latency:** Optimized edge caching cuts average response times from 110ms to 48ms.
-- **Batch Telemetry Ingestion (`/v2/telemetry/batch`):** Push up to 500 events per call, slashing outbound API call overhead.
-- **Granular Error Handling:** RFC-7807 compliant error payloads for deterministic debugging.
+### Key Highlights
+1. **Mutual TLS (mTLS) Support:** Dedicated mTLS ingress endpoints are now live for all enterprise tier accounts.
+2. **Granular Rate-Limiting Headers:** Inspect `X-RateLimit-Scope` and `X-RateLimit-Reset-Epoch` on all payload returns to optimize concurrent polling.
+3. **Deprecation Notice:** v1.2 legacy endpoints will sunset on 2026-06-30. Review the migration guide immediately.
 
-### Quick Start / Diff:
-```bash
-# Test the new batch telemetry endpoint
-curl -X POST https://api.itskokos.com/v2/telemetry/batch \
-  -H "Authorization: Bearer $BEACON_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"batch": [{"event": "ping", "timestamp": 1711900000}]}'
-```
-
-Read full release documentation: https://docs.itskokos.com/beacon/changelog/v2-4
+Read the cryptographically signed release notes: `https://developer.itskokos.com/changelog/v2-4-0`
 
 ---
-*You received this email because you maintain an active Beacon API credential at I.T. Skokos. Manage notification preferences in your dashboard.*
+*Security Notice: I.T. Skokos will never ask for your API keys or credentials via email.*
 ```
