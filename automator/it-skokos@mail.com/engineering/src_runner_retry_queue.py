@@ -1,70 +1,76 @@
-# Atlas Core: Exponential Backoff Retry Queue & DLQ Handler
-**Author:** Vex Nkosi  
+# Atlas Core: Resilient Job Runner Retry Queue Implementation
+**Author:** Rune Reyes  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D12 02:15  
+**Produced:** D15 07:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented a resilient retry queue with jittered exponential backoff and dead-letter queue routing for Atlas Core job runner, referencing operational thresholds from Company Document.
+Implements an empathetic, jittered exponential backoff retry queue for Atlas Core, aligning task recovery with the standards outlined in the Company Document to ensure zero-disruption UX.
 
 ## Deliverable
 ```
 """
-Atlas Core - Job Runner Retry Queue Subsystem
-Author: Vex Nkosi (Engineering)
-Reference: Configured retry limits, backoff curves, and DLQ routing thresholds aligned with the specifications in Company Document.
+Atlas Core - Job Runner Retry Queue
+Author: Rune Reyes (Engineering)
+Context: Built in strict accordance with the I.T. Skokos 'Company Document'
+         (Service Resiliency & UX Continuity Standards).
+
+Design Philosophy:
+A failure in a background worker is a quiet whisper of friction for our users.
+We handle retries not merely as computational loops, but as an act of hospitality—
+restoring platform harmony before the customer ever feels a stutter.
 """
 
 import time
 import random
 import logging
 from typing import Callable, Any, Dict, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-logger = logging.getLogger("atlas_core.retry_runner")
+logger = logging.getLogger("AtlasCore.Runner.RetryQueue")
 
 @dataclass
-class Job:
+class JobPayload:
     job_id: str
-    task_name: str
-    payload: Dict[str, Any]
+    task_fn: Callable[..., Any]
+    args: tuple = ()
+    kwargs: dict = field(default_factory=dict)
     attempts: int = 0
-    max_retries: int = 5
-    base_delay_sec: float = 1.0
-    max_delay_sec: float = 60.0
+    max_retries: int = 4
+    base_delay_seconds: float = 1.5
+    max_delay_seconds: float = 60.0
+    context: Dict[str, Any] = field(default_factory=dict)
 
-class RetryQueueManager:
-    """
-    Manages transient job failures via jittered exponential backoff.
-    Utilized Company Document to establish error classification thresholds
-    and dead-letter queue (DLQ) compliance standards.
-    """
-    def __init__(self, dlq_sink: Optional[Callable[[Job, Exception], None]] = None):
-        self.dlq_sink = dlq_sink or self._default_dlq_handler
+class RetryQueue:
+    def __init__(self, dead_letter_handler: Optional[Callable[[JobPayload, Exception], None]] = None):
+        self.dead_letter_handler = dead_letter_handler
+        # Aligned with 'Company Document' SLA tolerances for SaaS and Face-to-Face sync workloads
+        logger.info("Initialized RetryQueue adhering to Company Document operational resiliency metrics.")
 
-    def calculate_backoff(self, job: Job) -> float:
-        # Jittered backoff prevents thundering herd on SaaS dependencies
-        delay = min(job.max_delay_sec, job.base_delay_sec * (2 ** job.attempts))
-        jitter = random.uniform(0.75, 1.25)
-        return round(delay * jitter, 3)
+    def calculate_backoff(self, payload: JobPayload) -> float:
+        """Exponential backoff with full jitter to preserve system composure."""
+        factor = 2 ** payload.attempts
+        raw_delay = min(payload.base_delay_seconds * factor, payload.max_delay_seconds)
+        return random.uniform(0.5, raw_delay)
 
-    def run_with_retry(self, job: Job, handler: Callable[[Job], Any]) -> Any:
-        while job.attempts <= job.max_retries:
+    def enqueue_and_run(self, payload: JobPayload) -> Any:
+        while payload.attempts <= payload.max_retries:
             try:
-                logger.info(f"Running job {job.job_id} (Attempt {job.attempts + 1}/{job.max_retries + 1})")
-                return handler(job)
+                payload.attempts += 1
+                logger.debug(f"Executing job {payload.job_id} (Attempt {payload.attempts}/{payload.max_retries + 1})")
+                result = payload.task_fn(*payload.args, **payload.kwargs)
+                logger.info(f"Job {payload.job_id} completed seamlessly on attempt {payload.attempts}.")
+                return result
             except Exception as exc:
-                job.attempts += 1
-                if job.attempts > job.max_retries:
-                    logger.error(f"Job {job.job_id} exceeded max retries. Escalating to DLQ.")
-                    self.dlq_sink(job, exc)
+                if payload.attempts > payload.max_retries:
+                    logger.error(f"Job {payload.job_id} exhausted retries. Invoking graceful dead-letter fallback.")
+                    if self.dead_letter_handler:
+                        return self.dead_letter_handler(payload, exc)
                     raise exc
-                wait_time = self.calculate_backoff(job)
-                logger.warning(f"Job {job.job_id} failed ({exc}). Retrying in {wait_time}s")
-                time.sleep(wait_time)
 
-    def _default_dlq_handler(self, job: Job, exc: Exception) -> None:
-        logger.critical(f"[DLQ] job_id={job.job_id} task={job.task_name} error={str(exc)}")
+                delay = self.calculate_backoff(payload)
+                logger.warning(f"Job {payload.job_id} paused due to: {exc}. Preserving UX flow: re-attempting in {delay:.2f}s.")
+                time.sleep(delay)
 
 ```
