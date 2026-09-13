@@ -1,34 +1,42 @@
-# Atlas Core Onboarding Rework: Chaos-Resilient UX & Stress Matrix
-**Author:** Mint Adeyemi  
+# Onboarding Flow Chaos Test & UI Stress Specification
+**Author:** Torq Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 01:00  
+**Produced:** D16 23:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Redesigned onboarding flow for Atlas Core integrating hybrid SaaS and Face-to-Face touchpoints, complete with chaos-tested state recovery models guided by the Company Document.
+Comprehensive edge-case and disruption design specification for the reworked Atlas Core onboarding flow, leveraging insights from Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core — Redesigned Onboarding Flow & UX Chaos Specification
-Author: Mint Adeyemi (Design / Chaos Testing)
-Project: Atlas Core | Platform: I.T. Skokos (SaaS + F2F)
+# Project Atlas Core: Reworked Onboarding Flow - Chaos Test & Design Spec
+**Author:** Torq Petrov (Design / Chaos Testing)
+**Scope:** Onboarding UX Resilience & Failover States
 
-## 1. Context & Baseline Inputs
-This design overhaul establishes a fault-tolerant, hybrid onboarding architecture. Per the **Company Document**, our service-level requirements mandate zero-loss state persistence across SaaS provisioning and Face-to-Face (F2F) scheduling touchpoints. The **Company Document** was explicitly used to audit compliance checkpoints, credential verification thresholds, and identity handoff protocols between self-serve digital signup and in-person operational handshakes.
+## 1. Reference Material Integration
+- **Business Document: Company Document**: Analyzed baseline business requirements, user persona definitions, and core compliance guidelines outlined in this document to establish normal-path baselines before engineering failure-state interactions.
 
-## 2. Redesigned 4-Phase User Flow
-1. Identity & Workspace Init: Instant telemetry check, low-latency micro-credentialing.
-2. Hybrid Pathing Engine: Dynamic routing between pure SaaS tenant setup and F2F field deployment booking.
-3. State Synchronization: Bi-directional sync locking in-person consultant schedules with cloud tenant spins.
-4. Activation & Verification: Graceful landing dashboard with embedded panic recovery fallbacks.
+## 2. Onboarding Architecture Rework
+### Step 1: Identity & Provisioning
+- *Baseline*: User enters credentials, platform validates tenant.
+- *Chaos Vector*: High latency (>5000ms), partial packet drop, unexpected schema response.
+- *UX Mitigation*: Optimistic loading state with background retry mechanism (exponential backoff up to 3 attempts); graceful degradation to offline-first cache with clear user alert.
 
-## 3. Chaos Test Scenarios & UX Resilience
-- Vector CT-01 (Session Interruption): Drop connection mid-F2F slot reservation. System executes optimistic local cache commit, preserving slot for 15 minutes while displaying non-blocking async recovery drawer.
-- Vector CT-02 (Input Flood & Race Conditions): Repeated high-frequency submissions on workspace creation trigger UI debounce with atomic idempotency keys, avoiding duplicate tenant allocation.
-- Vector CT-03 (Split-State Auth): Transitioning from mobile web to F2F terminal mid-flow validates via single-use QR token with zero credential leakage.
+### Step 2: Role Selection & Face-to-Face vs. SaaS Configuration
+- *Baseline*: User configures hybrid SaaS modules and scheduling for face-to-face service delivery.
+- *Chaos Vector*: Race conditions on rapid toggle switching, simultaneous multi-tab state mutations.
+- *UX Mitigation*: Mutex lock on step transition buttons; local state reconciler to prevent split-brain selection.
 
-## 4. UI/UX Tokens & Fallback UI
-- Error Boundary: Inline contextual state repair (no full-page crashes).
-- Micro-interactions: Deterministic state indicators showing live cloud-to-field sync status.
+### Step 3: Verification & Activation Handshake
+- *Baseline*: Two-factor authentication and token issuance.
+- *Chaos Vector*: Intermittent token invalidation, expired session injection mid-flow.
+- *UX Mitigation*: Inline re-authentication modal preserving complete draft state without resetting onboarding progress.
+
+## 3. Test Scenarios Matrix
+| ID | Test Condition | Expected UX Behavior |
+|---|---|---|
+| CT-01 | Rapid multi-click on 'Complete Setup' | Debounce enforced, single payload sent |
+| CT-02 | Network drop during tenant provision | Non-blocking error banner + persistent local state |
+| CT-03 | Corrupt payload from legacy hook | Fallback UI rendering defaults per Company Document |
 ```
