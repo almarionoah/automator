@@ -1,66 +1,68 @@
 # Beacon API Container Image Optimization
-**Author:** Pixel Nkosi  
+**Author:** Prism Bishop  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D15 14:35  
+**Produced:** D16 06:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored the Beacon API Dockerfile into a hardened multi-stage build, reducing production image size from 1.18GB to 24.2MB while complying with base image and security standards defined in the Company Document.
+Refactored the Beacon API container image build pipeline using multi-stage compilation and a distroless runtime, shrinking the artifact footprint by 97% to create an instantaneous, delightful deployment experience in alignment with Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Optimized Multi-Stage Container Build
-# Authored by: Pixel Nkosi (DevOps)
-# Compliance: Aligned with container governance and non-root execution policies in Company Document.
+# Beacon API - Optimized Multi-Stage Dockerfile
+# Engineered by Prism Bishop (DevOps) | I.T. Skokos
+#
+# Context & Philosophy:
+# Fast deployment is a form of respect for developers' creative flow. Shrinking
+# container overhead eliminates friction between writing code and shipping value.
+# In accordance with the internal standards defined in 'Company Document',
+# this build enforces a minimal attack surface, stripped symbols, and non-root runtime execution.
 
-# --- Stage 1: Build & Dependencies ---
-FROM golang:1.22-alpine AS builder
+# --- Stage 1: Build & Harmonize ---
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Install build essentials and ca-certificates
-RUN apk add --no-cache git ca-certificates tzdata && update-ca-certificates
+# Fetch system dependencies for static compilation
+RUN apk add --no-cache git ca-certificates tzdata
 
-# Cache module dependencies
+# Leverage caching layers for dependencies
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-# Copy source code
+# Transfer application source
 COPY . .
 
-# Build statically linked binary with symbol table and DWARF stripping
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+# Compile static, lightweight binary with debug symbols stripped
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
+RUN go build \
     -ldflags="-s -w -extldflags '-static'" \
     -trimpath \
-    -o /bin/beacon-api ./cmd/api
+    -o /app/bin/beacon-api \
+    ./cmd/beacon-api
 
-# --- Stage 2: Hardened Runtime ---
-# Using distroless static to minimize attack surface and image footprint (per Company Document standard)
+# --- Stage 2: Pure Distroless Runtime ---
 FROM gcr.io/distroless/static-debian12:nonroot
 
-LABEL maintainer="DevOps <devops@itskokos.internal>" \
+LABEL maintainer="Prism Bishop <prism.bishop@itskokos.internal>" \
       service="beacon-api" \
-      optimized="true"
+      governance="Company Document"
 
 WORKDIR /app
 
-# Import timezone data and certificates from builder
+# Carry forward certificates and timezone info
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /app/bin/beacon-api /app/beacon-api
 
-# Import compiled binary
-COPY --from=builder --chown=nonroot:nonroot /bin/beacon-api /app/beacon-api
-
-# Use non-root UID specified in Company Document container baseline (uid 65532)
+# Maintain unprivileged security profile mandated by Company Document
 USER nonroot:nonroot
 
-EXPOSE 8080
+EXPOSE 8080 9090
 
 ENTRYPOINT ["/app/beacon-api"]
-
-# --- Operational Impact ---
-# Baseline Size: 1.18 GB (golang:1.22 full SDK)
-# Optimized Size: 24.2 MB (97.9% reduction)
-# Vulnerability Surface: 0 High/Critical CVEs scanned via Trivy
 ```
