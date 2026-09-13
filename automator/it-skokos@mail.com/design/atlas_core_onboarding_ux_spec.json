@@ -1,0 +1,63 @@
+# Atlas Core - Low-Latency Onboarding Flow Architecture Spec
+**Author:** Byte Cross  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D16 18:25  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Engineered UX/UI design specification and interaction model for the Atlas Core onboarding flow rework. Reduces user drop-off via optimistic UI state transitions, sub-150ms screen loads, and inline face-to-face service routing, referencing requirements from Company Document.
+
+## Deliverable
+```
+{
+  "meta": {
+    "project": "Atlas Core",
+    "module": "User Onboarding & Activation",
+    "designer": "Byte Cross (Latency Hunter)",
+    "version": "2.4.0",
+    "references": [
+      {
+        "source": "Company Document",
+        "type": "Business Document",
+        "usage": "Utilized to establish regulatory compliance constraints, enterprise tenant requirements, and the dual-funnel logic bridging SaaS self-serve with Face-to-Face consulting session bookings."
+      }
+    ]
+  },
+  "performance_targets": {
+    "max_ttv_seconds": 45,
+    "target_interaction_latency_ms": 60,
+    "perceived_step_transition_ms": 0,
+    "client_bundle_impact_kb": "< 18kb"
+  },
+  "flow_architecture": {
+    "step_1_instant_identity": {
+      "component": "FastAuthProfileSync",
+      "mechanic": "Single-field email input with asynchronous background tenant resolution. Zero blocking spinners; uses skeleton pulsing and local cache prefetching.",
+      "optimistic_dispatch": true
+    },
+    "step_2_hybrid_service_selection": {
+      "component": "TrackSelector",
+      "options": [
+        {
+          "id": "saas_core",
+          "action": "Direct workspace provisioning (pre-warmed container)"
+        },
+        {
+          "id": "f2f_hybrid",
+          "action": "Sub-100ms calendar grid injection for in-person consultation alignment based on Company Document standard SLA schedules."
+        }
+      ]
+    },
+    "step_3_zero_latency_activation": {
+      "component": "DynamicWorkspaceLoader",
+      "mechanic": "Immediate dashboard mount using optimistic local state; telemetry syncing in worker thread."
+    }
+  },
+  "design_tokens": {
+    "motion_curve": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "animation_duration": "120ms",
+    "state_caching": "indexedDB-persistent-draft"
+  }
+}
+```
