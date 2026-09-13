@@ -1,0 +1,72 @@
+# Atlas Core Mobile Navigation Overhaul Specification & Interaction Matrix
+**Author:** Byte Petrov  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D18 03:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Quantitative design specification and interaction model for the Atlas Core mobile navigation redesign, integrating SaaS module switching and Face-to-Face booking flows calibrated against the Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "meta": {
+    "project": "Atlas Core",
+    "task": "mobile nav overhaul",
+    "author": "Byte Petrov (Design / Data Purist)",
+    "version": "2.1.0-telemetry"
+  },
+  "resource_traceability": {
+    "document": "Business Document: Company Document",
+    "usage": "Applied to enforce dual-offering taxonomy (SaaS Platform telemetry vs. Face to Face Services dispatch routing), subscription tier access matrices, and corporate accessibility token compliance across viewport widths 320px-430px."
+  },
+  "quantitative_targets": {
+    "thumb_zone_reachability_index": ">= 94.2%",
+    "fitts_law_target_min_diameter": "48px (tap target padded)",
+    "p95_interaction_latency": "< 45ms",
+    "f2f_service_booking_dropoff_target": "<= 8.5%"
+  },
+  "nav_architecture": {
+    "bottom_bar_nodes": [
+      {
+        "id": "nav_saas_dashboard",
+        "label": "Platform",
+        "route": "/core/saas",
+        "priority_weight": 0.38,
+        "hit_area": { "w": 80, "h": 56 }
+      },
+      {
+        "id": "nav_f2f_services",
+        "label": "F2F Services",
+        "route": "/core/services/booking",
+        "priority_weight": 0.31,
+        "hit_area": { "w": 80, "h": 56 }
+      },
+      {
+        "id": "nav_telemetry",
+        "label": "Metrics",
+        "route": "/core/telemetry",
+        "priority_weight": 0.18,
+        "hit_area": { "w": 80, "h": 56 }
+      },
+      {
+        "id": "nav_menu_overflow",
+        "label": "More",
+        "route": "/core/drawer",
+        "priority_weight": 0.13,
+        "hit_area": { "w": 80, "h": 56 }
+      }
+    ],
+    "drawer_hierarchy": {
+      "group_1": "SaaS Subscriptions & Tooling",
+      "group_2": "Face to Face Field Operations",
+      "group_3": "Account & Compliance Audits"
+    }
+  },
+  "telemetry_schema": {
+    "event_tap": "atlas.nav.tap_event",
+    "payload": ["node_id", "touch_offset_x", "touch_offset_y", "dwell_ms", "device_viewport"]
+  }
+}
+```
