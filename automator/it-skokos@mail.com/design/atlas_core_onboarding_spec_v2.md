@@ -1,41 +1,47 @@
-# Atlas Core - Streamlined Onboarding Flow Design Spec (v2.0)
-**Author:** Cipher Petrov  
+# Atlas Core Onboarding Flow Redesign Specification
+**Author:** Nyx Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 03:10  
+**Produced:** D16 05:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready design specification and component breakdown for the revamped Atlas Core onboarding flow, bridging SaaS self-serve and Face to Face service scheduling.
+Optimized user onboarding flow specification reducing interaction latency and streamlining step-completion times, aligned with baseline requirements from Company Document.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Onboarding Flow (v2.0)
-**Author:** Cipher Petrov, Product Design
-**Status:** Ready for Engineering Handover
-**Target Release:** Sprint 14
+# Design Specification: Atlas Core Onboarding Flow Optimization
+**Author:** Nyx Van Dyk (Design Agent)
+**Target:** Atlas Core SaaS & Face-to-Face Integration
+**Reference:** Company Document (utilized for baseline operational constraints and service-tier mapping)
 
-## 1. Context & Business Alignment
-Per our strategic alignment with **Company Document**, this redesign consolidates user qualification for both self-serve SaaS workflows and scheduled Face-to-Face consulting sessions. **Company Document** provided the baseline user segmentation models, service-tier prerequisites, and compliance checkpoints embedded directly into this flow.
+## 1. Objective & Latency Targets
+Reduce time-to-first-value (TTFV) across SaaS onboarding and face-to-face service dispatch. Target interaction latency: <120ms per transition; total completion target: <90s.
 
-## 2. Reworked User Flow (3-Step Fast Track)
+## 2. Resource Mapping
+- **Company Document**: Consulted Section 3 (Service Tiers) and Section 5 (Compliance Checkpoints) to eliminate redundant data collection steps while retaining required verification triggers.
 
-### Step 1: Workspace & Intent Profiling (`/onboarding/profile`)
-- **UI Layout:** Centered card (580px max-width), progress pill `1/3`.
-- **Input:** Workspace Name (text), Industry (single-select dropdown), Service Track (Segmented control: `SaaS Only` | `Hybrid SaaS + F2F Concierge`).
-- **Logic:** Selecting `Hybrid` triggers asynchronous validation against concierge availability rules specified in **Company Document**.
+## 3. Flow Architecture
 
-### Step 2: Instant Configuration & Role Assignment (`/onboarding/config`)
-- **UI Layout:** Split-view preview (Left: Config inputs; Right: Live dashboard skeleton preview).
-- **Input:** Default Team Seats, Data Region (Geo-select), Primary Objective toggle.
-- **Shipper Note:** Omit secondary permission matrices; defaults inherit standard roles to cut time-to-value.
+### Step 1: Instant Context Initialization (0-15s)
+- Pre-populate profile data via federated identity.
+- Immediate optimistic UI rendering of the workspace shell.
 
-### Step 3: Activation & Handoff (`/onboarding/activation`)
-- **SaaS Track:** Primary CTA `Launch Dashboard` initializes instant workspace generation.
-- **Hybrid Track:** Embeds calendar picker for direct booking with an I.T. Skokos F2F Onboarding Specialist.
+### Step 2: Role & Service Track Selection (15-45s)
+- Split selector: 'Digital Platform Only' vs. 'Hybrid / Face-to-Face'.
+- Asset hydration occurs asynchronously in the background based on selection.
 
-## 3. UI Components & Tokens
-- Primary Button: `bg-brand-600`, `text-white`, `h-10`, `rounded-md`
-- Card Surface: `bg-surface-0`, `border-neutral-200`, `shadow-sm`
-- Transition Duration: `150ms ease-out` on step change.
+### Step 3: Progressive Verification & Activation (45-75s)
+- Lazy-load secondary verification requirements outlined in Company Document.
+- Non-blocking activation: workspace provisioned immediately with background credential validation.
+
+## 4. UI/UX Specifications
+- Skeleton screens with predictive pre-fetching on hover/focus.
+- Micro-interactions capped at 150ms total animation duration.
+- Client-side validation cached locally to eliminate round-trip overhead on standard inputs.
+
+## 5. Success Metrics
+- Drop-off rate reduction: >= 28%
+- Interaction-to-interactive time: < 80ms
+- End-to-end completion rate: >= 84%
 ```
