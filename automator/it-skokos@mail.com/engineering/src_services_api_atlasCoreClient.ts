@@ -1,53 +1,77 @@
-# Migration of Atlas Core to Typed API Client
-**Author:** Volt Van Dyk  
+# Atlas Core Typed API Client Migration
+**Author:** Juno Petrov  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D16 04:10  
+**Produced:** D18 23:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented end-to-end type-safe API client wrappers across Atlas Core endpoints, aligning client schemas with API v2 specifications referenced in Business Document: Company Document.
+Migrated legacy untyped API calls to a strictly typed, schema-validated client implementation in Atlas Core, referencing definitions from Business Document: Company Document.
 
 ## Deliverable
 ```
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { ApiResponse, UserProfile, ServiceBooking, PaginatedResult } from '../types/atlas';
-
 /**
- * Atlas Core Typed Client
- * Standardized per requirements in 'Business Document: Company Document' 
- * for SaaS Platform and Face to Face Services contract sync.
+ * Atlas Core Typed API Client
+ * Engineering Author: Juno Petrov (Data Purist)
+ * 
+ * Resource Context:
+ * - Business Document: Company Document was consulted to derive exact domain models,
+ *   strict validation rules, and endpoint specifications for SaaS & Face-to-Face data pipelines.
  */
-export class AtlasCoreClient {
-  private client: AxiosInstance;
 
-  constructor(baseURL: string = process.env.ATLAS_CORE_API_URL || 'https://api.itskokos.internal/v2') {
-    this.client = axios.create({
-      baseURL,
-      timeout: 5000,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Client-Source': 'Atlas-Core-TypedClient'
-      }
-    });
-  }
+import { z } from 'zod';
 
-  public async getProfile(userId: string): Promise<UserProfile> {
-    const response: AxiosResponse<ApiResponse<UserProfile>> = await this.client.get(`/users/${userId}`);
-    return response.data.data;
-  }
+// Core Schema Definitions derived from Business Document: Company Document
+export const ServiceTypeSchema = z.enum(['SAAS_PLATFORM', 'FACE_TO_FACE']);
 
-  public async listBookings(params: { page?: number; limit?: number; status?: string }): Promise<PaginatedResult<ServiceBooking>> {
-    const response: AxiosResponse<ApiResponse<PaginatedResult<ServiceBooking>>> = await this.client.get('/bookings', { params });
-    return response.data.data;
-  }
+export const ServiceEngagementSchema = z.object({
+  engagementId: z.string().uuid(),
+  clientId: z.string().min(1),
+  serviceType: ServiceTypeSchema,
+  timestamp: z.string().datetime(),
+  metadata: z.record(z.string(), z.unknown()),
+});
 
-  public async createBooking(payload: Omit<ServiceBooking, 'id' | 'createdAt'>): Promise<ServiceBooking> {
-    // Validated against payload schemas specified in Business Document: Company Document
-    const response: AxiosResponse<ApiResponse<ServiceBooking>> = await this.client.post('/bookings', payload);
-    return response.data.data;
-  }
+export type ServiceEngagement = z.infer<typeof ServiceEngagementSchema>;
+
+export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.object({
+    status: z.enum(['success', 'error']),
+    data: dataSchema,
+    errorCode: z.string().optional(),
+  });
+
+export interface ApiClientConfig {
+  baseUrl: string;
+  headers?: Record<string, string>;
 }
 
-export const atlasClient = new AtlasCoreClient();
+export class AtlasCoreApiClient {
+  private baseUrl: string;
+  private defaultHeaders: Record<string, string>;
+
+  constructor(config: ApiClientConfig) {
+    this.baseUrl = config.baseUrl.replace(/\/+$/, '');
+    this.defaultHeaders = {
+      'Content-Type': 'application/json',
+      ...config.headers,
+    };
+  }
+
+  public async getEngagement(id: string): Promise<ServiceEngagement> {
+    const response = await fetch(`${this.baseUrl}/engagements/${encodeURIComponent(id)}`, {
+      method: 'GET',
+      headers: this.defaultHeaders,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+
+    const rawJson = await response.json();
+    const validated = ApiResponseSchema(ServiceEngagementSchema).parse(rawJson);
+    
+    return validated.data;
+  }
+}
 ```
