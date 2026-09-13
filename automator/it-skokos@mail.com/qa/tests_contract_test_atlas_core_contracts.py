@@ -1,77 +1,85 @@
-# Chaos-Driven Contract Test Suite for Atlas Core
-**Author:** Fig Ito  
+# Contract Verification Suite - Atlas Core API Boundaries
+**Author:** Nyx Marlow  
 **Department:** QA  
 **Project:** Atlas Core  
-**Produced:** D16 21:45  
+**Produced:** D17 19:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Delivered consumer-driven contract testing suite integrating chaos injection vectors for Atlas Core, referencing baseline API constraints from Company Document.
+Automated contract tests enforcing strict schema boundaries, zero-trust header verification, and input constraints for Atlas Core based on specifications in Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=2M371379B2196082W
+- Pay: https://www.paypal.com/checkoutnow?token=2JD59519N28119728
 
 ## Deliverable
 ```
 """
-Project: Atlas Core
-Author: Fig Ito (QA / Chaos Testing Specialist)
-Context: Consumer-Driven Contract & Resiliency Tests
-Reference: Company Document (Business Document) was used to define the SLA thresholds, payload schemas, and acceptable degradation states under partial network/state failure.
+Atlas Core Contract Verification Suite
+Author: Nyx Marlow, QA
+Context: Verified against boundaries specified in 'Company Document'.
+Security Policy: Strict validation; reject undefined fields, enforce zero-trust headers.
 """
 
 import pytest
-import requests
 from pact import Consumer, Provider
+import requests
 
-pact = Consumer('AtlasCoreConsumer').has_pact_with(
-    Provider('AtlasCoreProvider'),
-    pact_dir='./pacts'
-)
+PACT_MOCK_HOST = 'http://localhost:1234'
 
 @pytest.fixture(scope='session')
-def pact_setup():
+def pact():
+    # Reference: Company Document - Inter-Service Protocol & Auth Compliance
+    pact = Consumer('AtlasUI').has_pact_with(
+        Provider('AtlasCore'),
+        host_name='localhost',
+        port=1234
+    )
     pact.start_service()
-    yield
+    yield pact
     pact.stop_service()
 
-def test_customer_f2f_service_contract_chaos_edge_cases(pact_setup):
+def test_get_identity_contract_strict_schema(pact):
     """
-    Validates consumer contract for SaaS/F2F hybrid booking endpoint.
-    Schema definitions and failure modes derived directly from Company Document.
+    Validates identity endpoint contract per 'Company Document' specifications.
+    Enforces strict token validation and denies schema drift.
     """
-    expected_response = {
-        "status": "DEGRADED_CONFIRMED",
-        "booking_id": "BK-90210",
-        "service_type": "FACE_TO_FACE",
-        "contingency_route": True
+    expected_body = {
+        'account_id': 'ACC-99281',
+        'status': 'ACTIVE',
+        'security_clearance': 'TIER_3',
+        'mfa_authenticated': True
     }
 
     (pact
-     .given('Atlas Core is under high latency and partial data synchronization')
-     .upon_receiving('a request for an expedited hybrid booking under chaos conditions')
+     .given('Account ACC-99281 exists with valid session')
+     .upon_receiving('A validated request for account profile')
      .with_request(
-         method='POST',
-         path='/api/v1/services/provision',
-         headers={'Content-Type': 'application/json', 'X-Chaos-Inject': 'jitter'},
-         body={'service': 'F2F_CONSULT', 'priority': 'CRITICAL'}
+         method='GET',
+         path='/api/v1/identity/ACC-99281',
+         headers={
+             'Authorization': 'Bearer test-token-secure',
+             'X-Security-Origin': 'Atlas-Gateway'
+         }
      )
      .will_respond_with(
          status=200,
-         body=expected_response
+         headers={'Content-Type': 'application/json; charset=utf-8'},
+         body=expected_body
      ))
 
     with pact:
-        result = requests.post(
-            'http://localhost:1234/api/v1/services/provision',
-            json={'service': 'F2F_CONSULT', 'priority': 'CRITICAL'},
-            headers={'Content-Type': 'application/json', 'X-Chaos-Inject': 'jitter'}
+        res = requests.get(
+            f'{PACT_MOCK_HOST}/api/v1/identity/ACC-99281',
+            headers={
+                'Authorization': 'Bearer test-token-secure',
+                'X-Security-Origin': 'Atlas-Gateway'
+            }
         )
-        assert result.status_code == 200
-        assert result.json()['status'] == 'DEGRADED_CONFIRMED'
+        assert res.status_code == 200
+        assert res.json() == expected_body
 
 ```
