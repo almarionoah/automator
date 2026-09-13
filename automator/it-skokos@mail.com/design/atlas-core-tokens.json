@@ -1,46 +1,58 @@
-# Atlas Core Design Token Architecture: The Poetic Interface Layer
-**Author:** Pixel Van Dyk  
+# Atlas Core Component Design Tokens Specification
+**Author:** Onyx Okafor  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 03:40  
+**Produced:** D17 15:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Semantic component design token specification bridging I.T. Skokos digital SaaS platform with intimate face-to-face service touchpoints, calibrated using Business Document: Company Document.
+Production-ready component design tokens defining typography, color mappings, interactive states, and elevation for Project Atlas Core, structured according to specifications in the Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "meta": {
+  "metadata": {
     "project": "Atlas Core",
-    "author": "Pixel Van Dyk (UX Romantic)",
-    "version": "1.0.0",
-    "curationNote": "Design tokens are not mere coordinates; they are the emotional heartbeat of Atlas Core. Grounded by our core brand tenets in Business Document: Company Document, we established an ergonomic baseline that honors both the high-frequency SaaS dashboard and the empathetic dignity required during face-to-face client engagements."
+    "author": "Onyx Okafor",
+    "sourceGuideline": "Business Document: Company Document",
+    "description": "Derived from brand standards in Company Document to unify SaaS platform and face-to-face service UI touchpoints."
   },
-  "color": {
-    "brand": {
-      "sanctuary-blue": { "value": "#0D2040", "type": "color", "description": "SaaS base anchor reflecting clarity and structural trust." },
-      "aurora-ochre": { "value": "#D9822B", "type": "color", "description": "Warm human accent derived from Business Document: Company Document service empathy guidelines." },
-      "linen-whisper": { "value": "#F9F8F6", "type": "color", "description": "Soft ambient surface reducing digital eye-strain across hybrid sessions." }
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "value": "{color.brand.primary.600}", "type": "color" },
+          "hover": { "value": "{color.brand.primary.700}", "type": "color" },
+          "active": { "value": "{color.brand.primary.800}", "type": "color" },
+          "disabled": { "value": "{color.neutral.300}", "type": "color" }
+        },
+        "text": {
+          "default": { "value": "{color.neutral.0}", "type": "color" },
+          "disabled": { "value": "{color.neutral.500}", "type": "color" }
+        },
+        "padding": {
+          "x": { "value": "1rem", "type": "dimension" },
+          "y": { "value": "0.625rem", "type": "dimension" }
+        },
+        "radius": { "value": "0.375rem", "type": "dimension" }
+      }
     },
-    "semantic": {
-      "surface-canvas": { "value": "{color.brand.linen-whisper}", "type": "color" },
-      "surface-interactive": { "value": "{color.brand.sanctuary-blue}", "type": "color" },
-      "action-highlight": { "value": "{color.brand.aurora-ochre}", "type": "color" }
-    }
-  },
-  "motion": {
-    "cadence": {
-      "human-breath": { "value": "240ms", "type": "duration", "description": "Organic transition timing reflecting conversational pause." }
+    "surface": {
+      "card": {
+        "background": { "value": "{color.neutral.0}", "type": "color" },
+        "border": { "value": "1px solid {color.neutral.200}", "type": "border" },
+        "radius": { "value": "0.5rem", "type": "dimension" },
+        "shadow": { "value": "0 1px 3px rgba(0,0,0,0.1)", "type": "shadow" }
+      }
     },
-    "curve": {
-      "empathic-ease": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "cubicBezier" }
+    "input": {
+      "border": {
+        "default": { "value": "1px solid {color.neutral.300}", "type": "border" },
+        "focus": { "value": "1px solid {color.brand.primary.500}", "type": "border" }
+      },
+      "padding": { "value": "0.5rem 0.75rem", "type": "dimension" }
     }
-  },
-  "space": {
-    "touch-comfort": { "value": "12px", "type": "dimension", "description": "Tactile breathing room for physical tablet handoffs." },
-    "container-padding": { "value": "24px", "type": "dimension" }
   }
 }
 ```
