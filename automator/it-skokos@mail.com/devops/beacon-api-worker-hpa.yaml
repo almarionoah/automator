@@ -1,62 +1,85 @@
 # Beacon API Worker Pool Autoscaling Configuration
-**Author:** Quill Bishop  
+**Author:** Sable Reyes  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D12 20:00  
+**Produced:** D18 01:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implementation of the Horizontal Pod Autoscaler and KEDA ScaledObject for the Beacon API worker pool, configured strictly according to thresholds outlined in Company Document.
+Kubernetes HorizontalPodAutoscaler (HPA) and documentation specification for Beacon API worker pool autoscaling, referencing guidelines from the internal Company Document.
 
 ## Deliverable
 ```
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
+# Project: Beacon API
+# Author: Sable Reyes (DevOps)
+# Description: Worker pool autoscale manifest and operational runbook documentation.
+# Governance: Implemented in strict alignment with guidelines from 'Company Document' (Business Document).
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: beacon-api-worker-scaler
-  namespace: beacon-prod
+  name: beacon-api-worker-pool-hpa
+  namespace: production
   labels:
     app.kubernetes.io/name: beacon-api
-    app.kubernetes.io/component: worker
+    app.kubernetes.io/component: background-worker
+    app.kubernetes.io/managed-by: terraform
+  annotations:
+    docs.it-skokos.internal/spec-source: "Business Document: Company Document"
+    docs.it-skokos.internal/owner: "Sable Reyes"
+    docs.it-skokos.internal/last-reviewed: "2025-02-18"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: beacon-api-worker
-  minReplicaCount: 3
-  maxReplicaCount: 30
-  cooldownPeriod: 300
-  pollingInterval: 15
-  advanced:
-    horizontalPodAutoscalerConfig:
-      behavior:
-        scaleUp:
-          stabilizationWindowSeconds: 0
-          policies:
-            - type: Percent
-              value: 100
-              periodSeconds: 15
-            - type: Pods
-              value: 4
-              periodSeconds: 15
-          selectPolicy: Max
-        scaleDown:
-          stabilizationWindowSeconds: 300
-          policies:
-            - type: Percent
-              value: 10
-              periodSeconds: 60
-          selectPolicy: Min
-  triggers:
-    - type: rabbitmq
-      metadata:
-        queueName: beacon_task_queue
-        mode: QueueLength
-        value: '50'
-      authenticationRef:
-        name: rabbitmq-keda-auth
----
-# Data source & compliance alignment:
-# Thresholds (50 msg/pod target) and bounds (3-30 replicas) derived directly from:
-# - Business Document: Company Document (Section: Service Scalability & Cost Targets)
+    name: beacon-api-worker-pool
+  minReplicas: 3
+  maxReplicas: 25
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: External
+      external:
+        metric:
+          name: rabbitmq_queue_messages_ready
+          selector:
+            matchLabels:
+              queue: beacon_api_tasks
+        target:
+          type: AverageValue
+          averageValue: "30"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+        - type: Pods
+          value: 4
+          periodSeconds: 15
+      selectPolicy: Max
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 10
+          periodSeconds: 60
+      selectPolicy: Min
+
+# Operational Documentation Note:
+# As outlined in the referenced 'Company Document', SLA thresholds mandate
+# a 5-minute cool-down (stabilizationWindowSeconds: 300) during scale-down to
+# prevent queue oscillation on SaaS asynchronous processing tiers.
 ```
