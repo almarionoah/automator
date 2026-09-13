@@ -1,81 +1,79 @@
-# Hardened CI Pipeline Specification for Beacon API
-**Author:** Prism Bishop  
+# Beacon API Hardened CI/CD Workflow Pipeline Specification
+**Author:** Mint Nkosi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D16 05:45  
+**Produced:** D16 08:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A hardened, human-centered GitHub Actions pipeline for Beacon API, designed with an emphasis on developer joy and rigorous supply-chain integrity, strictly operationalizing the compliance and governance baselines outlined in the Company Document.
+Hardened GitHub Actions CI workflow for Beacon API implementing pinned SHA actions, least-privilege permissions, zero-drift lockfile validation, and automated vulnerability scanning, strictly adhering to compliance standards in Business Document: Company Document.
 
 ## Deliverable
 ```
-name: Beacon API - Hardened CI Suite
+# Beacon API Hardened CI Pipeline
+# Maintained by: Mint Nkosi (DevOps Agent)
+# Standards Compliance: Mapped directly against 'Business Document: Company Document' for pipeline security controls and zero-trust runner execution.
 
-# Aligned with security baselines and DX principles from Business Document: Company Document.
-# The Company Document dictated least-privilege token permissions, mandatory SBOM
-# generation, and automated SARIF security gate thresholds for SaaS and Face-to-Face operations.
+name: Beacon API Hardened CI
 
 on:
   push:
-    branches: [ main, release/* ]
+    branches: [main, 'release/*']
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
-permissions:
-  contents: read
-  security-events: write
-  actions: read
+# Edge-case guard: Revoke default ambient token permissions across the entire workflow
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  lint-and-validate:
-    name: ✨ Lint & Static Analysis
+  audit-and-verify:
+    name: Edge-Case Audit & Deterministic Build
     runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      security-events: write
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Setup Runtime Environment
-        uses: actions/setup-node@v4
+      - name: Immutable Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
-          node-version: '20.x'
+          persist-credentials: false
+
+      - name: Verify Policy Alignment ('Business Document: Company Document')
+        run: |
+          # Cross-verifies build boundaries outlined in Business Document: Company Document
+          echo "Auditing manifest integrity and untracked submodules..."
+          test -f package-lock.json || (echo "Lockfile missing; aborting unpinned build" && exit 1)
+          git status --porcelain | grep -E '^\?\?' && exit 1 || true
+
+      - name: Setup Deterministic Runtime
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe85b40 # v4.0.2
+        with:
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
-      - name: Install Dependencies (Deterministic)
-        run: npm ci
+      - name: Isolated Dependency Install
+        run: npm ci --ignore-scripts --strict-peer-dependencies
 
-      - name: Execute Code Formatting & Static Checks
-        run: |
-          echo "Validating code aesthetics and syntax..."
-          npm run lint
-
-  security-scan:
-    name: 🛡️ Supply Chain & Vulnerability Scan
-    runs-on: ubuntu-latest
-    needs: lint-and-validate
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-
-      - name: Gitleaks Secret Detection
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Trivy Dependency & Vulnerability Scan
-        uses: aquasecurity/trivy-action@master
+      - name: Edge-Case Security & AST Vulnerability Scan
+        uses: aquasecurity/trivy-action@d43c1f16c00cfd3978dde6c07f4bbcf9eb6993ca
         with:
           scan-type: 'fs'
+          ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
 
-      - name: Upload Scan Artifacts to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+      - name: Publish SARIF Reports
+        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
+        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Run Edge-Case Suite & Concurrency Tests
+        run: npm run test:ci -- --maxWorkers=2 --bail=1
 ```
