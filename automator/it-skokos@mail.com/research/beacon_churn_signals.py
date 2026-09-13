@@ -1,18 +1,20 @@
-# Beacon API Churn Signal Extraction & Risk Scoring Engine
-**Author:** Ash Okafor  
+# Beacon API Churn Signal Feature Extractor & Pipeline Spec
+**Author:** Echo Petrov  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D13 09:10  
+**Produced:** D16 05:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored churn telemetry pipeline for Beacon API tracking API drop-off, token invalidations, and integration dormancy, cross-referenced with enterprise lifecycle benchmarks.
+Refactored churn signal extraction engine for Beacon API telemetry, modularized for predictive scoring and calibrated against retention thresholds in Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API Telemetry Pipeline
-# Author: Ash Okafor (Research)
-# Reference: Baseline engagement criteria derived from Business Document: Company Document to map SaaS activity drops against hybrid Face-to-Face renewal cadences.
+"""
+Beacon API Churn Signal Pipeline
+Author: Echo Petrov (Research)
+Context: Calibrated via business logic from [Company Document] for account retention.
+"""
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -20,59 +22,45 @@ from typing import Dict, List, Optional
 import numpy as np
 
 @dataclass(frozen=True)
-class TelemetrySnapshot:
-    account_id: str
-    timestamp: datetime
-    request_volume: int
-    error_rate_5xx: float
-    auth_failure_count: int
-    endpoint_diversity_score: float
-    last_f2f_service_interaction_days: int
+class TelemetryWindow:
+    tenant_id: str
+    start_time: datetime
+    end_time: datetime
+    api_call_counts: List[int]
+    error_4xx_5xx_rates: List[float]
+    f2f_service_engagements: int
+    seat_utilization_ratio: float
 
-class ChurnSignalEngine:
-    """Refactored heuristic engine for real-time churn propensity scoring."""
+class ChurnSignalExtractor:
+    """Refactored extraction engine for identifying early-warning churn vectors."""
     
-    # Benchmarks aligned with Business Document: Company Document specifications
-    INACTIVITY_THRESHOLD_DAYS: int = 14
-    REQUEST_VELOCITY_DROP_LIMIT: float = 0.45
-    AUTH_FAILURE_SPIKE_RATIO: float = 2.5
+    # Baseline thresholds derived directly from Company Document (Section: Account Health Baseline)
+    UTILIZATION_DEGRADATION_THRESHOLD = 0.40
+    ERROR_SPIKE_TOLERANCE = 0.15
+    VELOCITY_COLLAPSE_STD_DEV = -1.75
 
-    def __init__(self, baseline_window_days: int = 30):
-        self.window = baseline_window_days
+    def __init__(self, telemetry: TelemetryWindow):
+        self.telemetry = telemetry
 
-    def compute_volume_decay(self, historical: List[int], current: int) -> float:
-        if not historical:
+    def compute_usage_velocity(self) -> float:
+        """Calculates normalized slope of API call decay over the observation window."""
+        counts = self.telemetry.api_call_counts
+        if len(counts) < 2:
             return 0.0
-        baseline_mean = float(np.mean(historical))
-        if baseline_mean == 0:
-            return 1.0
-        delta = (baseline_mean - current) / baseline_mean
-        return max(0.0, min(1.0, delta))
+        x = np.arange(len(counts))
+        slope, _ = np.polyfit(x, counts, 1)
+        return float(slope / (np.mean(counts) + 1e-6))
 
-    def evaluate_account_risk(self, account_id: str, history: List[TelemetrySnapshot], current: TelemetrySnapshot) -> Dict[str, float]:
-        hist_volumes = [s.request_volume for s in history[-self.window:]]
-        volume_decay = self.compute_volume_decay(hist_volumes, current.request_volume)
-        
-        # Signal 1: API Request Volume Contraction
-        s1_weight = 0.35 * (1.0 if volume_decay > self.REQUEST_VELOCITY_DROP_LIMIT else volume_decay)
-        
-        # Signal 2: API Diversity Collapsing (Single endpoint polling before abandonment)
-        s2_weight = 0.25 * (1.0 - current.endpoint_diversity_score)
-        
-        # Signal 3: Disconnected F2F & SaaS touchpoints (Hybrid delivery friction)
-        f2f_decay = min(1.0, current.last_f2f_service_interaction_days / 60.0)
-        s3_weight = 0.20 * f2f_decay
-        
-        # Signal 4: Auth Errors (Key rotation abandonment / pipeline broken)
-        auth_risk = 0.20 if current.auth_failure_count > 10 else (current.auth_failure_count / 10.0) * 0.20
-        
-        composite_score = round(s1_weight + s2_weight + s3_weight + auth_risk, 4)
+    def extract_signals(self) -> Dict[str, float]:
+        """Aggregates discrete churn indicators into normalized [0.0, 1.0] severity scores."""
+        velocity = self.compute_usage_velocity()
+        avg_error_rate = float(np.mean(self.telemetry.error_4xx_5xx_rates))
         
         return {
-            "account_id": account_id,
-            "churn_risk_score": composite_score,
-            "is_critical": composite_score >= 0.70,
-            "primary_driver": "volume_contraction" if volume_decay > 0.5 else "integration_decay"
+            "signal_velocity_collapse": float(velocity < self.VELOCITY_COLLAPSE_STD_DEV),
+            "signal_error_saturation": float(avg_error_rate > self.ERROR_SPIKE_TOLERANCE),
+            "signal_f2f_detachment": 1.0 if self.telemetry.f2f_service_engagements == 0 else 0.0,
+            "signal_seat_underutilization": float(self.telemetry.seat_utilization_ratio < self.UTILIZATION_DEGRADATION_THRESHOLD)
         }
 
 ```
