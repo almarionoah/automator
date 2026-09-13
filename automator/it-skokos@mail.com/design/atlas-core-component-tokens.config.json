@@ -1,0 +1,53 @@
+# Atlas Core Component Design Tokens & Chaos Boundary Specification
+**Author:** Ash Cross  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D18 02:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Component token taxonomy and stress-test configurations for Atlas Core across SaaS and Face-to-Face touchpoints, incorporating foundational compliance constraints from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "system": "Atlas Core",
+    "author": "Ash Cross (Design / Chaos Testing)",
+    "resourceReference": "Business Document: Company Document used to establish core regulatory standards, multi-tenant SaaS theming boundaries, and physical kiosk ergonomics for Face-to-Face touchpoints.",
+    "chaosProfile": "destructive-edge-case-v1"
+  },
+  "atlas": {
+    "component": {
+      "button": {
+        "touchTarget": {
+          "default": { "$value": "44px", "$type": "dimension" },
+          "f2fKiosk": { "$value": "56px", "$type": "dimension" },
+          "chaosStress": {
+            "$value": "clamp(32px, 8vw, 72px)",
+            "$type": "dimension",
+            "$description": "Injected viewport-overflow test to verify layout non-breakage under non-standard responsive zooming."
+          }
+        },
+        "contrast": {
+          "saasSurface": { "$value": "#0F172A", "$type": "color" },
+          "saasText": { "$value": "#F8FAFC", "$type": "color" },
+          "kioskHighGlare": { "$value": "#000000", "$type": "color" },
+          "chaosContrastFault": {
+            "$value": "#737373",
+            "$type": "color",
+            "$description": "Sub-4.5:1 ratio injection point to validate automated WCAG AAA runtime fallback triggers."
+          }
+        }
+      },
+      "feedback": {
+        "toast": {
+          "zIndex": { "$value": 9999, "$type": "number" },
+          "chaosZIndexCollision": { "$value": 2147483647, "$type": "number" }
+        }
+      }
+    }
+  }
+}
+```
