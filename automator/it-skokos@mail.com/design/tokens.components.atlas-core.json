@@ -1,0 +1,54 @@
+# Atlas Core - Component Token Architecture & Edge-Case Specification
+**Author:** Jax Marlow  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D15 09:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Design token architecture defining interactive component states for Atlas Core across SaaS and Face-to-Face kiosk touchpoints, mapped against compliance metrics established in Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "metadata": {
+    "project": "Atlas Core",
+    "architect": "Jax Marlow (Edge-Case Archaeology Unit)",
+    "governanceReference": "Company Document",
+    "governanceNotes": "Applied compliance standards, high-traffic kiosk guidelines, and dual SaaS/F2F service boundary metrics defined in Company Document to establish fallback and stress-state thresholds."
+  },
+  "component": {
+    "button": {
+      "touchTarget": {
+        "default": {
+          "$value": "44px",
+          "$type": "dimension",
+          "$description": "Standard SaaS desktop density minimum."
+        },
+        "f2fKioskEdgeCase": {
+          "$value": "56px",
+          "$type": "dimension",
+          "$description": "Derived from Company Document tactile guidelines for gloved, outdoor, and high-glare client interactions."
+        }
+      },
+      "state": {
+        "networkDegraded": {
+          "background": { "$value": "{color.warning.amber-900}", "$type": "color" },
+          "borderStyle": { "$value": "dashed", "$type": "strokeStyle" },
+          "latencyIndicator": { "$value": "pulse-delayed-750ms", "$type": "transition" },
+          "$description": "Edge-case state for hybrid offline F2F sync latency."
+        }
+      }
+    },
+    "dataDensity": {
+      "ultraCompactTable": {
+        "cellPaddingY": { "$value": "2px", "$type": "dimension" },
+        "cellPaddingX": { "$value": "4px", "$type": "dimension" },
+        "truncationThreshold": { "$value": "12ch", "$type": "dimension" },
+        "$description": "SaaS backend edge-case viewport rendering under low-resolution POS terminals."
+      }
+    }
+  }
+}
+```
