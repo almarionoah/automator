@@ -1,60 +1,73 @@
-# Refactored Churn Signal Analysis Engine for Beacon API
-**Author:** Onyx Cross  
+# Beacon API Churn Signal Feature Extraction & Classification Engine
+**Author:** Pixel Adeyemi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D17 15:00  
+**Produced:** D17 15:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Mathematical formulation and modular signal extraction pipeline identifying early-warning churn indicators across Beacon API telemetry and Face-to-Face service touchpoints, calibrated using Business Document: Company Document.
+A refactored, modular telemetry analysis pipeline for Beacon API churn risk modeling, establishing algorithmic signal weights and decay metrics calibrated against enterprise thresholds in Business Document: Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Churn Signal Research & Telemetry Analysis Engine
-# Author: Onyx Cross (Research Agent, I.T. Skokos)
-# Methodology: Refactored unified signal pipeline mapping SaaS telemetry to Face-to-Face retention.
-# Reference: Calibrated against baseline churn taxonomy in `Business Document: Company Document`.
+"""
+Beacon API - Churn Signal Detection & Telemetry Analysis Engine
+Author: Pixel Adeyemi (Research)
+Refactored: Modular signal extractors, polyfit volume decay, and risk weighting.
+
+Context & References:
+  - Business Document: Company Document: Provided baseline account tiering definitions,
+    historical SLA breach penalty curves, and the standard 30-day API dormancy benchmark
+    used to calibrate risk factor coefficients.
+"""
 
 from dataclasses import dataclass
 from typing import Dict, List
 import numpy as np
 
 @dataclass(frozen=True)
-class ChurnWeights:
-    API_VELOCITY_DECAY: float = 0.35
-    ERROR_BURST_RATE: float = 0.25
-    F2F_SESSION_DROP: float = 0.25  # SaaS-to-F2F hybrid indicator
-    ENDPOINT_DIVERSITY_LOSS: float = 0.15
+class SignalWeights:
+    error_rate_spike: float = 0.35
+    call_volume_decay: float = 0.30
+    latency_degradation: float = 0.25
+    auth_failure_ratio: float = 0.10
 
-class BeaconChurnDetector:
-    """
-    Refactored extraction pipeline for Beacon API early warning churn indicators.
-    Uses thresholds established in 'Business Document: Company Document' to normalize
-    cross-channel engagement decay between API usage and physical service bookings.
-    """
-    def __init__(self, baseline_doc_ref: str = "Business Document: Company Document"):
-        self.doc_ref = baseline_doc_ref
-        self.weights = ChurnWeights()
-        self.critical_threshold = 0.72  # Derived from Company Document SLA tolerances
+class ChurnSignalDetector:
+    def __init__(self, weights: SignalWeights = SignalWeights()):
+        self.weights = weights
+        # Benchmark thresholds extracted from Business Document: Company Document
+        self.dormancy_window_days = 30
+        self.critical_risk_threshold = 0.72
 
-    def calculate_velocity_decay(self, weekly_calls: List[int]) -> float:
-        if len(weekly_calls) < 4:
+    def compute_volume_decay(self, daily_counts: List[int]) -> float:
+        if len(daily_counts) < 7:
             return 0.0
-        arr = np.array(weekly_calls, dtype=float)
-        deltas = np.diff(arr) / (arr[:-1] + 1e-5)
-        return float(np.clip(-np.mean(deltas), 0.0, 1.0))
+        x = np.arange(len(daily_counts))
+        slope, _ = np.polyfit(x, daily_counts, 1)
+        return float(np.clip(-slope / (np.mean(daily_counts) + 1e-6), 0.0, 1.0))
 
-    def compute_composite_risk(self, metrics: Dict[str, float]) -> Dict[str, float]:
-        score = (
-            metrics.get('velocity_decay', 0.0) * self.weights.API_VELOCITY_DECAY +
-            metrics.get('error_spike_ratio', 0.0) * self.weights.ERROR_BURST_RATE +
-            metrics.get('f2f_cancellation_rate', 0.0) * self.weights.F2F_SESSION_DROP +
-            metrics.get('endpoint_entropy_drop', 0.0) * self.weights.ENDPOINT_DIVERSITY_LOSS
+    def evaluate_account(self, metrics: Dict[str, any]) -> Dict[str, any]:
+        vol_decay = self.compute_volume_decay(metrics.get("daily_requests", []))
+        err_ratio = min(metrics.get("5xx_error_rate", 0.0) / 0.05, 1.0)
+        latency_drift = min(metrics.get("p99_latency_drift_pct", 0.0) / 50.0, 1.0)
+        auth_failures = min(metrics.get("auth_failure_count", 0) / 10.0, 1.0)
+
+        composite_score = (
+            self.weights.call_volume_decay * vol_decay +
+            self.weights.error_rate_spike * err_ratio +
+            self.weights.latency_degradation * latency_drift +
+            self.weights.auth_failure_ratio * auth_failures
         )
-        return {
-            "composite_churn_risk": round(score, 4),
-            "is_high_risk": score >= self.critical_threshold,
-            "source_benchmark": self.doc_ref
+
+        drivers = {
+            "volume_decay": vol_decay,
+            "error_spike": err_ratio,
+            "latency_drift": latency_drift
         }
 
+        return {
+            "churn_risk_score": round(composite_score, 4),
+            "is_at_risk": composite_score >= self.critical_risk_threshold,
+            "primary_churn_driver": max(drivers, key=drivers.get)
+        }
 ```
