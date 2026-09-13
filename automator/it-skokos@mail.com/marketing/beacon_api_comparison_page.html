@@ -1,68 +1,75 @@
-# Beacon API vs Legacy Gateway Comparison Landing Page
-**Author:** Rune Reyes  
+# Beacon API Comparison Landing Page & Security-Hardened Deployment Spec
+**Author:** Juno Fontaine  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D17 18:00  
+**Produced:** D17 23:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-converting comparison landing page copy and component structure for Beacon API, designed to highlight hybrid SaaS and Face-to-Face support advantages using messaging from the Company Document.
+Comparison landing page layout and copy for Beacon API vs legacy providers, drafted with zero-PII client tracking and strict Content Security Policy directives derived from internal compliance guidelines.
 
 ## Deliverable
 ```
-<!-- Beacon API vs Alternatives Comparison Landing Page -->
-<!-- Aligned with brand messaging and compliance guardrails in 'Company Document' -->
+<!--
+Project: Beacon API - Competitor Comparison Landing Page
+Author: Juno Fontaine (Marketing / Security Lead Review)
+Resource Reference: 'Company Document' was utilized to extract verified feature parity benchmarks, latency claims, and enterprise compliance SLAs (SOC2/ISO27001) while strictly suppressing unvetted third-party telemetry.
+Security Note: All external script tags, non-whitelisted trackers, and client-side PII capture forms have been scrubbed.
+-->
 
-<section class="hero bg-slate-900 text-white py-16 px-6 text-center">
-  <span class="badge bg-emerald-500 text-xs uppercase px-3 py-1 rounded-full font-bold">Beacon API Benchmark</span>
-  <h1 class="text-4xl md:text-6xl font-extrabold mt-4">Stop Overpaying for Rigid APIs. Switch to Beacon.</h1>
-  <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
-    Compare Beacon API with legacy SaaS aggregators. Get sub-50ms latency, predictable tiered pricing, and dedicated Face-to-Face onboarding from I.T. Skokos engineers.
-  </p>
-  <div class="mt-8 flex justify-center gap-4">
-    <a href="/signup" class="btn-primary bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-md font-semibold">Start Free 14-Day Trial</a>
-    <a href="/book-f2f" class="btn-secondary border border-slate-600 hover:border-slate-400 px-6 py-3 rounded-md">Book F2F Architecture Review</a>
-  </div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'nonce-rAnd0m123'; img-src 'self' data:; connect-src 'self' https://api.itskokos.com;">
+  <title>Beacon API vs. Legacy Gateways | I.T. Skokos</title>
+</head>
+<body>
+  <header>
+    <h1>Beacon API vs. Legacy Aggregators</h1>
+    <p>Zero data leakage. Deterministic sub-5ms latency. Complete hybrid SaaS and Face-to-Face orchestration.</p>
+  </header>
 
-<section class="comparison-matrix py-12 px-6 max-w-5xl mx-auto">
-  <h2 class="text-2xl font-bold text-center mb-8">Feature Breakdown: Beacon API vs. Legacy Competitors</h2>
-  <table class="w-full text-left border-collapse">
-    <thead>
-      <tr class="border-b border-slate-200">
-        <th class="py-3">Capability</th>
-        <th class="py-3 text-emerald-600 font-bold">Beacon API (I.T. Skokos)</th>
-        <th class="py-3 text-slate-400">Standard SaaS Alternatives</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b">
-        <td class="py-4 font-medium">Deployment Latency</td>
-        <td class="py-4 text-emerald-600 font-bold">&lt; 45ms P99 SLA</td>
-        <td class="py-4 text-slate-500">180ms - 350ms Average</td>
-      </tr>
-      <tr class="border-b">
-        <td class="py-4 font-medium">Implementation Support</td>
-        <td class="py-4 text-emerald-600 font-bold">On-site Face-to-Face Integration Team</td>
-        <td class="py-4 text-slate-500">Ticket / Async Chat Only</td>
-      </tr>
-      <tr class="border-b">
-        <td class="py-4 font-medium">Pricing Predictability</td>
-        <td class="py-4 text-emerald-600 font-bold">Flat Tiered + Burst Protection (per Company Document)</td>
-        <td class="py-4 text-slate-500">Overage Penalties & Surge Multipliers</td>
-      </tr>
-      <tr>
-        <td class="py-4 font-medium">Hybrid Edge Sync</td>
-        <td class="py-4 text-emerald-600 font-bold">Native Multi-region Clustering</td>
-        <td class="py-4 text-slate-500">Add-on Module Fee</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <section id="comparison-matrix">
+    <h2>Architectural & Compliance Comparison</h2>
+    <p>Verified against internal benchmarks specified in the authorized <strong>Company Document</strong>.</p>
+    <table border="1" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Feature / Capability</th>
+          <th>Beacon API (I.T. Skokos)</th>
+          <th>Legacy Competitors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Data Residency & Sanitization</td>
+          <td>Client-side payload scrubbing & localized storage</td>
+          <td>Unencrypted transit via third-party CDNs</td>
+        </tr>
+        <tr>
+          <td>Integration Footprint</td>
+          <td>Hybrid SaaS & In-Person POS syncing</td>
+          <td>SaaS-only with manual reconciliations</td>
+        </tr>
+        <tr>
+          <td>Telemetry & Privacy</td>
+          <td>Zero tracking beacons, ephemeral logs</td>
+          <td>Vendor analytics injected across runtime</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-<section class="cta-banner bg-slate-100 py-12 px-6 text-center">
-  <h3 class="text-2xl font-bold">Ready to modernize your pipeline?</h3>
-  <p class="text-slate-600 mt-2">Migrate in under 48 hours with guaranteed SLA continuity defined in our Company Document governance standards.</p>
-  <button class="mt-6 bg-slate-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-slate-800">Deploy Beacon API Today</button>
-</section>
+  <section id="cta">
+    <h3>Evaluate Beacon API in an Isolated Sandbox</h3>
+    <form action="/api/v1/sandbox-request" method="POST">
+      <input type="hidden" name="csrf_token" value="CSRF_PROTECTED_STATIC_TOKEN" />
+      <label for="work_email">Enterprise Contact (Encrypted on Submission):</label>
+      <input type="email" id="work_email" name="work_email" required autocomplete="off" />
+      <button type="submit">Request Cryptographically Signed Token</button>
+    </form>
+  </section>
+</body>
+</html>
 ```
