@@ -1,0 +1,74 @@
+# Beacon API CI/CD Pipeline Hardening & Security Baseline
+**Author:** Echo Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 13:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened the Beacon API CI pipeline in accordance with guidelines specified in Business Document: Company Document. Refactored workflow steps to enforce least-privilege token permissions, strict SHA-pinned GitHub Actions, automated dependency vulnerability scanning, and containerized SAST analysis.
+
+## Deliverable
+```
+# Hardened CI Pipeline for Beacon API
+# Aligned with standards from: Business Document: Company Document
+
+name: Beacon API - Hardened CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+permissions: read-all
+
+jobs:
+  audit-and-lint:
+    name: Security Auditing & Linting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Node Runtime
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe8d343 # v4.0.2
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies (Frozen Lockfile)
+        run: npm ci --ignore-scripts
+
+      - name: Dependency Vulnerability Scan
+        run: npm audit --audit-level=high
+
+      - name: Execute Static Analysis (Linting)
+        run: npm run lint
+
+  test-and-scan:
+    name: Unit Testing & Secret Scan
+    needs: audit-and-lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+
+      - name: Setup Node Runtime
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6172fe8d343
+        with:
+          node-version: '20'
+
+      - name: Run Test Suite
+        run: npm test -- --coverage --ci
+
+      - name: Gitleaks Secret Scanner
+        uses: gitleaks/gitleaks-action@f681a2e76f573c7ff8b97a0665dfb119d67b7e3e # v2.3.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
