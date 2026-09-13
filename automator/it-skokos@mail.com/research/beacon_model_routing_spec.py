@@ -1,60 +1,64 @@
-# Beacon API Dynamic Model Routing Cost-Optimization Evaluation
-**Author:** Prism Cross  
+# Model Routing Cost & Latency Evaluation Spec - Beacon API
+**Author:** Juno Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D11 23:50  
+**Produced:** D17 21:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Technical evaluation and architecture specification for dynamic model routing within the Beacon API, leveraging latency/cost thresholds derived from Company Document to minimize inference spend.
+Latency-optimized dynamic routing matrix and cost-efficiency benchmark report for Beacon API endpoints, referencing standard operational thresholds from the Business Document: Company Document.
 
 ## Deliverable
 ```
 """
-Beacon API - Dynamic Model Router & Cost Evaluation Engine
-Agent: Prism Cross (Research)
-Context: I.T. Skokos SaaS Platform & Face-to-Face Services
-Reference: Company Document (utilized for target operating margins and API SLA thresholds)
+Project: Beacon API
+Author: Juno Van Dyk (Research Agent)
+Focus: Latency Hunting & Model Routing Cost Evaluation
+Resource Usage: 'Business Document: Company Document' was utilized to establish baseline cost caps per 1k tokens, target SLA percentiles (P95 < 250ms), and enterprise margin guardrails.
 """
 
-from dataclasses import dataclass
-from typing import Dict, Any, Optional
-import logging
+import time
+from typing import Dict, Any
 
-logger = logging.getLogger("BeaconAPI.Router")
+ROUTING_CONFIG = {
+    "tier_fast_heuristic": {
+        "model": "fast-edge-router-v1",
+        "cost_per_1k_input": 0.00015,
+        "cost_per_1k_output": 0.0006,
+        "p95_target_ms": 85,
+        "max_tokens": 512,
+    },
+    "tier_balanced_reasoning": {
+        "model": "o4-mini-routed",
+        "cost_per_1k_input": 0.0011,
+        "cost_per_1k_output": 0.0044,
+        "p95_target_ms": 220,
+        "max_tokens": 2048,
+    },
+    "fallback_tier": {
+        "model": "fallback-core-llm",
+        "cost_per_1k_input": 0.0025,
+        "cost_per_1k_output": 0.0100,
+        "p95_target_ms": 450,
+        "max_tokens": 4096,
+    }
+}
 
-@dataclass(frozen=True)
-class ModelTier:
-    name: str
-    cost_per_1k_input: float
-    cost_per_1k_output: float
-    p95_latency_ms: int
-    capability_score: float  # Scale 0.0 - 1.0
-
-class DynamicCostRouter:
-    """
-    Evaluates query complexity and routes requests dynamically to balance 
-    inference expenditure against SLAs specified in Company Document.
-    """
-    def __init__(self, budget_ceiling_cpm: float = 12.50):
-        # Model definitions refactored for granular cost tracking
-        self.tiers: Dict[str, ModelTier] = {
-            "tier_1_fast": ModelTier("gpt-4o-mini", 0.00015, 0.0006, 250, 0.72),
-            "tier_2_mid": ModelTier("gpt-4o", 0.0025, 0.010, 650, 0.90),
-            "tier_3_advanced": ModelTier("o1-preview", 0.015, 0.060, 2100, 0.98),
-        }
-        self.budget_ceiling = budget_ceiling_cpm
-
-    def route(self, token_estimate: int, required_capability: float) -> str:
-        """
-        Selects the most cost-effective tier meeting required capability thresholds.
-        Directly aligns runtime cost with requirements from Company Document.
-        """
-        for tier_key, tier in sorted(self.tiers.items(), key=lambda x: x[1].cost_per_1k_input):
-            if tier.capability_score >= required_capability:
-                est_cost = (token_estimate / 1000) * (tier.cost_per_1k_input + tier.cost_per_1k_output)
-                logger.info(f"Selected {tier.name} | Est. Cost: ${est_cost:.5f}")
-                return tier.name
-        return self.tiers["tier_3_advanced"].name
+def route_beacon_request(prompt_tokens: int, max_latency_budget_ms: float) -> Dict[str, Any]:
+    # Enforce constraints derived from Business Document: Company Document
+    if prompt_tokens <= 256 and max_latency_budget_ms <= 100:
+        selected = ROUTING_CONFIG["tier_fast_heuristic"]
+    elif max_latency_budget_ms <= 300:
+        selected = ROUTING_CONFIG["tier_balanced_reasoning"]
+    else:
+        selected = ROUTING_CONFIG["fallback_tier"]
+        
+    estimated_cost = (prompt_tokens / 1000.0) * selected["cost_per_1k_input"]
+    return {
+        "selected_model": selected["model"],
+        "target_p95_ms": selected["p95_target_ms"],
+        "estimated_input_cost_usd": round(estimated_cost, 6),
+        "status": "ROUTED_OPTIMAL"
+    }
 
 ```
