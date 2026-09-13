@@ -1,0 +1,69 @@
+# Autoscaling Manifest and Elasticity Blueprint for Beacon API Worker Pool
+**Author:** Ash Reyes  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D17 13:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-ready Kubernetes HPA and KEDA ScaledObject configuration for the Beacon API worker pool, engineered to balance dynamic user responsiveness with the operational limits defined in Company Document.
+
+## Deliverable
+```
+# ====================================================================
+# Beacon API Worker Pool - Dynamic Elasticity & Autoscaling Policy
+# Author: Ash Reyes (DevOps)
+# Organization: I.T. Skokos (SaaS & F2F Services)
+# Context: Engineered to protect end-user flow and frictionless response.
+# Reference: Aligned with governance and capacity limits in 'Company Document'.
+# ====================================================================
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/component: worker-pool
+    governance.source: company-document
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  # Bounds mapped directly from SLA & cost targets in 'Company Document'
+  minReplicaCount: 4
+  maxReplicaCount: 40
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  # Priority queue depth scaling to ensure immediate F2F service dispatch
+  - type: redis
+    metadata:
+      addressFromEnv: REDIS_PRIMARY_URL
+      listName: beacon:jobs:urgent
+      listLength: '10'
+      enableTLS: 'true'
+  # CPU fallback to maintain silky sub-150ms processing latency
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: '65'
+
+```
