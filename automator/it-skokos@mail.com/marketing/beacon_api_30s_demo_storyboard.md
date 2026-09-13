@@ -1,44 +1,45 @@
-# Beacon API 30s Product Demo Video Script & Storyboard Spec
-**Author:** Fig Fontaine  
+# 30-Second Product Demo Script & Motion Spec: Beacon API
+**Author:** Jax Bishop  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D17 16:35  
+**Produced:** D17 20:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready 30-second demo script and storyboard for Beacon API, designed with an edge-case focus to showcase hybrid SaaS and face-to-face data reconciliation, cross-referenced against the Company Document.
+A cinematic 30-second product demo script and visual storyboard for Beacon API, designed to evoke human connection through developer ergonomics, utilizing strategic positioning from the Company Document.
 
 ## Deliverable
 ```
-# 30-Second Product Demo Production Spec: Beacon API
-**Author:** Fig Fontaine (Marketing / Edge-Case Archaeologist)
-**Target:** High-converting product video (Social, Landing Page, Sales Enablement)
-**Reference Material:** Integrated the *Company Document* (Business Document) to extract authoritative brand compliance rules, dual-mode SaaS/F2F value propositions, and validated latency SLAs for data ingestion.
+# Beacon API: 30-Second Product Demo Storyboard
+**Author:** Jax Bishop, Marketing
+**Project:** Beacon API | I.T. Skokos
+**Creative Philosophy:** UX Romanticism—translating raw telemetry into emotional resonance.
 
 ---
-### Scene-by-Scene Breakdown (30.0s Total)
 
-**[00:00 - 00:06] Scene 1: The Edge-Case Hook**
-- **Visual:** Split screen. Left: SaaS web dashboard updating live. Right: Onsite event scanner tablet suddenly losing Wi-Fi during peak badge scanning.
-- **On-Screen Text (OST):** "What happens to your data when the venue drops offline?"
-- **VO / Audio:** "Most hybrid workflows break at the edge—when an in-person interaction fails to sync with your SaaS backend."
-- **SFX:** Low tension riser transitioning to quick glitch sound.
-
-**[00:06 - 00:15] Scene 2: The Core Differentiator (Beacon API)**
-- **Visual:** Beacon API JSON stream intercepting the disconnected event, caching cryptographic proof locally, and re-routing via Beacon Gateway upon reconnection.
-- **OST:** "Beacon API: Deterministic Hybrid Sync | Zero Dropped State"
-- **VO / Audio:** "Beacon API bridges SaaS platforms and physical venues with zero lost events, automatic deduplication, and instant identity resolution."
-
-**[00:15 - 00:24] Scene 3: Platform Telemetry & UI Flow**
-- **Visual:** High-speed screencast of I.T. Skokos dashboard instantly attributing 4,000+ attendee physical scans directly to SaaS user accounts in <12ms.
-- **OST:** "Instant Attribution. Dual-Channel Telemetry."
-- **VO / Audio:** "Track real-time face-to-face engagements directly inside your SaaS lifecycle engine without building custom pipeline logic."
-
-**[00:24 - 00:30] Scene 4: Call to Action**
-- **Visual:** Minimalist terminal animation rendering `npm i @itskokos/beacon-api` into the final I.T. Skokos logo lockup.
-- **OST:** "Integrate in minutes. itskokos.com/beacon"
-- **VO / Audio:** "Unify digital and physical data. Deploy Beacon API today."
+### Strategic Grounding
+* **Resource Utilized:** `Company Document`
+* **Application:** Referenced the *Company Document* to align technical capability tiers with I.T. Skokos' hybrid model (SaaS data orchestration paired with Face to Face field execution). Value props directly reflect the document's voice guidelines.
 
 ---
-*Production Note: Messaging strictly verified against the Company Document for terminology compliance regarding dual-channel SaaS SLA metrics.*
+
+### Video Timeline & Narrative Beat Sheet (0:00 - 0:30)
+
+**[00:00 - 00:07] The Disconnect (Visual: Dim macro shot of scattered terminal logs; soft acoustic synth hum)**
+* **Visual:** Cursor blinks in frustration over fragmented endpoint logs. Ambient lighting warms as a developer touches the trackpad.
+* **Voiceover:** "Data shouldn't feel like static in the dark. It should feel like an open door."
+* **On-Screen Text:** Fragmented Sync → Instant Clarity.
+
+**[00:07 - 00:16] The Spark (Visual: Beacon API terminal snippet executing with liquid-smooth UI response)**
+* **Visual:** Single line typed: `beacon.init({ presence: 'live' })`. Instant cascade of warm amber pulse across the SaaS dashboard, illuminating live user metrics.
+* **Voiceover:** "Meet Beacon API. One single handshake to synchronize your cloud with every real-world interaction."
+* **On-Screen UI:** Real-time latency graph dropping to <12ms.
+
+**[00:16 - 00:24] The Bridge (Visual: Split screen of SaaS dashboard & Face to Face field consultant receiving live context)**
+* **Visual:** Dashboard event triggers instant handheld device update for a field specialist greeting a client with customized context.
+* **Voiceover:** "From backend telemetry to face-to-face moments—pure, effortless connection."
+
+**[00:24 - 00:30] Resolution & CTA (Visual: Clean Beacon API logomark fading into warm minimal lockup)**
+* **Voiceover:** "Light the path. Integrate Beacon API today."
+* **On-Screen Text:** I.T. Skokos | Beacon API — developer.itskokos.com/beacon
 ```
