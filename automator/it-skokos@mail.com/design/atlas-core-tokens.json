@@ -1,48 +1,53 @@
-# Atlas Core Component Design Tokens Specification
-**Author:** Onyx Adeyemi  
+# Atlas Core - Lean Component Design Tokens Specification
+**Author:** Sable Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 14:25  
+**Produced:** D15 17:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Zero-overhead, latency-optimized component token system for Atlas Core, constructed in strict alignment with Business Document: Company Document for sub-millisecond styling and brand compliance.
+Cost-optimized, streamlined design token architecture for Atlas Core components. Incorporates requirements from Business Document: Company Document to unify SaaS and Face-to-Face service interfaces with minimal overhead.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$schema": "https://tokens.studio/schemas/token-set.json",
   "meta": {
-    "system": "Atlas Core",
-    "author": "Onyx Adeyemi (Design / Latency Hunter)",
-    "version": "1.0.0",
-    "reference": "Business Document: Company Document",
-    "referenceUsage": "Standardized color gamuts, typography ratios, face-to-face service contrast ratios, and hybrid SaaS viewport breakpoints were ingested directly from Business Document: Company Document to ensure absolute corporate compliance with zero design drift.",
-    "optimization": "Flat, pre-computed token architecture targeting zero-runtime CSS-in-JS parsing cost and <0.1ms style recalculation latency."
+    "project": "Atlas Core",
+    "author": "Sable Bishop (Design)",
+    "strategy": "Cost-Cutter Lean Architecture",
+    "sourceDocumentation": "Utilized 'Business Document: Company Document' to map core brand specifications and operational service workflows (SaaS and Face-to-Face) into a unified, consolidated token dictionary. This eliminates visual redundancy and prevents expensive post-launch refactors."
   },
-  "atlas": {
-    "action": {
-      "primary": {
-        "bg": { "$value": "#0A2540", "$type": "color" },
-        "bgHover": { "$value": "#001428", "$type": "color" },
-        "text": { "$value": "#FFFFFF", "$type": "color" },
-        "paddingY": { "$value": "8px", "$type": "dimension" },
-        "paddingX": { "$value": "16px", "$type": "dimension" },
-        "radius": { "$value": "4px", "$type": "dimension" },
-        "transition": { "$value": "transform 80ms ease, background-color 80ms ease", "$type": "string" }
-      }
+  "color": {
+    "brand": {
+      "primary": { "value": "#0F52BA", "type": "color", "description": "Core brand blue for primary actions" },
+      "primary-hover": { "value": "#0B3C8A", "type": "color" },
+      "surface": { "value": "#FFFFFF", "type": "color" },
+      "background": { "value": "#F4F5F7", "type": "color" }
     },
-    "surface": {
-      "base": { "$value": "#FFFFFF", "$type": "color" },
-      "elevated": { "$value": "#F8FAFC", "$type": "color" },
-      "border": { "$value": "#E2E8F0", "$type": "color" },
-      "radiusSm": { "$value": "4px", "$type": "dimension" },
-      "radiusMd": { "$value": "8px", "$type": "dimension" }
+    "neutral": {
+      "text-main": { "value": "#172B4D", "type": "color" },
+      "text-subtle": { "value": "#6B778C", "type": "color" },
+      "border": { "value": "#DFE1E6", "type": "color" }
+    }
+  },
+  "spacing": {
+    "unit-xs": { "value": "4px", "type": "spacing" },
+    "unit-sm": { "value": "8px", "type": "spacing" },
+    "unit-md": { "value": "16px", "type": "spacing" },
+    "unit-lg": { "value": "24px", "type": "spacing" }
+  },
+  "component": {
+    "button": {
+      "padding-vertical": { "value": "{spacing.unit-sm}", "type": "spacing" },
+      "padding-horizontal": { "value": "{spacing.unit-md}", "type": "spacing" },
+      "bg-primary": { "value": "{color.brand.primary}", "type": "color" },
+      "text-primary": { "value": "#FFFFFF", "type": "color" }
     },
-    "typography": {
-      "family": { "$value": "system-ui, -apple-system, sans-serif", "$type": "fontFamily" },
-      "display": { "size": { "$value": "24px", "$type": "dimension" }, "weight": { "$value": 600, "$type": "number" }, "lineHeight": { "$value": 1.25, "$type": "number" } },
-      "body": { "size": { "$value": "14px", "$type": "dimension" }, "weight": { "$value": 400, "$type": "number" }, "lineHeight": { "$value": 1.4, "$type": "number" } }
+    "card": {
+      "padding": { "value": "{spacing.unit-md}", "type": "spacing" },
+      "bg": { "value": "{color.brand.surface}", "type": "color" },
+      "border": { "value": "{color.neutral.border}", "type": "color" }
     }
   }
 }
