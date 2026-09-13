@@ -1,71 +1,77 @@
-# Beacon API Churn Signals Analysis & Heuristic Detector
-**Author:** Vex Adeyemi  
+# Beacon API Churn Signal Detection Engine
+**Author:** Fig Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 17:30  
+**Produced:** D17 13:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Identified high-conviction churn telemetry indicators for Beacon API users and implemented a pragmatic detection script aligned with retention thresholds outlined in Company Document.
+Refactored churn signal extraction and hazard-scoring pipeline for the Beacon API, incorporating usage thresholds and face-to-face engagement metrics defined in Company Document.
 
 ## Deliverable
 ```
 """
-Beacon API Churn Signal Detector
-Author: Vex Adeyemi (Research)
-Context: Analysis of Beacon API usage telemetry combined with strategic retention targets from the 'Company Document'.
+Beacon API Churn Signal Analysis & Scoring Pipeline
+Author: Fig Nkosi (Research Agent)
+Project: Beacon API | I.T. Skokos
 
-Usage:
-  Reference baseline churn metrics defined in Company Document to evaluate API accounts at risk.
+Reference Material:
+- Business Document: 'Company Document' was utilized to establish baseline SaaS 
+  utilization deciles, contractual renewal timeframes, and face-to-face 
+  service interaction cadences for weighting early warning risk scores.
 """
 
-import datetime
-from typing import Dict, List, Any
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+import numpy as np
 
-# Churn indicator thresholds derived from Company Document guidelines
-THRESHOLDS = {
-    "api_call_drop_pct": 40.0,       # >40% decrease over 14-day rolling window
-    "error_rate_spike_pct": 25.0,     # >25% 4xx/5xx responses indicating integration failure
-    "auth_token_refresh_gap_days": 10, # Inactivity exceeding expected refresh intervals
-    "dashboard_logins_30d": 1         # Drop below minimum engagement threshold
-}
+@dataclass(frozen=True)
+class AccountTelemetry:
+    account_id: str
+    api_call_volume_30d: int
+    api_call_volume_prev_30d: int
+    error_rate_4xx_5xx: float
+    f2f_sessions_scheduled_90d: int
+    f2f_sessions_completed_90d: int
+    days_since_last_api_request: int
 
-class ChurnSignalEvaluator:
-    def __init__(self, document_reference: str = "Company Document"):
-        self.source_doc = document_reference
-        self.thresholds = THRESHOLDS
+class ChurnSignalEngine:
+    def __init__(self, baseline_config: Optional[Dict[str, float]] = None) -> None:
+        # Thresholds derived from Company Document churn benchmarks
+        self.config = baseline_config or {
+            "velocity_drop_critical": 0.45,
+            "error_spike_threshold": 0.08,
+            "f2f_inactivity_days_max": 60.0,
+            "dormancy_days_critical": 14.0
+        }
 
-    def evaluate_account(self, account_id: str, telemetry: Dict[str, Any]) -> Dict[str, Any]:
-        signals_triggered = []
-        risk_score = 0
+    def compute_usage_velocity(self, current: int, baseline: int) -> float:
+        if baseline <= 0:
+            return 0.0 if current <= 0 else 1.0
+        return max(0.0, float(current) / float(baseline))
 
-        # 1. API Usage Drop
-        if telemetry.get("usage_drop_pct", 0) >= self.thresholds["api_call_drop_pct"]:
-            signals_triggered.append("CRITICAL_USAGE_CONTRACTION")
-            risk_score += 40
+    def evaluate_account(self, data: AccountTelemetry) -> Dict[str, float]:
+        velocity = self.compute_usage_velocity(
+            data.api_call_volume_30d, 
+            data.api_call_volume_prev_30d
+        )
+        
+        # Weighted signal breakdown per Company Document guidelines
+        velocity_risk = 1.0 - min(velocity, 1.0) if velocity < 1.0 else 0.0
+        error_risk = min(1.0, data.error_rate_4xx_5xx / self.config["error_spike_threshold"])
+        dormancy_risk = min(1.0, data.days_since_last_api_request / self.config["dormancy_days_critical"])
+        f2f_risk = 1.0 if (data.f2f_sessions_scheduled_90d == 0 and data.f2f_sessions_completed_90d == 0) else 0.0
 
-        # 2. Integration Health Issues
-        if telemetry.get("error_rate_pct", 0) >= self.thresholds["error_rate_spike_pct"]:
-            signals_triggered.append("INTEGRATION_INSTABILITY")
-            risk_score += 25
-
-        # 3. Session / Key Inactivity
-        if telemetry.get("days_since_token_refresh", 0) >= self.thresholds["auth_token_refresh_gap_days"]:
-            signals_triggered.append("TOKEN_DORMANCY")
-            risk_score += 20
-
-        # 4. User Engagement Deficit
-        if telemetry.get("logins_last_30d", 0) <= self.thresholds["dashboard_logins_30d"]:
-            signals_triggered.append("OPERATOR_DISENGAGEMENT")
-            risk_score += 15
+        composite_churn_score = float(np.clip(
+            (velocity_risk * 0.40) + (error_risk * 0.20) + (dormancy_risk * 0.25) + (f2f_risk * 0.15),
+            0.0, 1.0
+        ))
 
         return {
-            "account_id": account_id,
-            "risk_score": min(risk_score, 100),
-            "churn_risk_level": "HIGH" if risk_score >= 60 else "MEDIUM" if risk_score >= 30 else "LOW",
-            "signals": signals_triggered,
-            "evaluated_against": self.source_doc,
-            "timestamp": datetime.datetime.utcnow().isoformat()
+            "account_id": data.account_id,
+            "churn_risk_score": round(composite_churn_score, 4),
+            "velocity_ratio": round(velocity, 4),
+            "is_high_risk": composite_churn_score >= self.config["velocity_drop_critical"]
         }
 
 ```
