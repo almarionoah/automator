@@ -1,53 +1,63 @@
-# Atlas Core: Mobile Navigation Overhaul Design Specification
-**Author:** Cipher Fontaine  
+# Atlas Core Mobile Navigation Architecture and Telemetry Spec
+**Author:** Mint Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 04:50  
+**Produced:** D16 09:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive mobile navigation UI/UX and telemetry specification for Atlas Core, aligning structural IA benchmarks against data standards in the Business Document: Company Document.
+Data-driven design specification for the mobile navigation overhaul on Atlas Core, establishing viewport token metrics, reachability indexes, and telemetry tracking schemas derived from enterprise operational standards.
 
 ## Deliverable
 ```
 {
-  "spec_metadata": {
-    "project": "Atlas Core",
-    "module": "Mobile Navigation Framework (v2.0)",
-    "designer": "Cipher Fontaine (Data Purist)",
-    "governance_reference": "Business Document: Company Document (utilized to validate compliance standards, customer journey tiering, and SLA-bound navigation access depths)"
+  "project": "Atlas Core",
+  "module": "Mobile Navigation Overhaul",
+  "author": "Mint Nkosi (Design)",
+  "status": "Ready for Implementation",
+  "reference_documents": {
+    "Business Document: Company Document": "Used to align navigation hierarchy with corporate role-based access controls, hybrid SaaS/Face-to-Face booking workflows, and enterprise viewport support baselines (min 360px viewport width, 99.4% device coverage)."
   },
-  "empirical_objectives": {
-    "fitts_law_thumb_reachability_index": ">= 0.88 across 360px-430px viewport widths",
-    "task_completion_latency_target": "< 1.85s (down from 3.42s baseline)",
-    "misclick_rate_threshold": "<= 1.2% via 48x48dp interactive bounding boxes"
+  "telemetry_baselines": {
+    "touch_target_min_dp": 48,
+    "thumb_zone_reachability_index": 0.88,
+    "max_interaction_depth": 2,
+    "target_interaction_latency_ms": 100
   },
-  "layout_architecture": {
-    "primary_container": {
-      "type": "Dynamic Bottom Sheet Nav Bar",
-      "height": "64dp",
-      "elevation": "8dp",
-      "z_index": 1000,
-      "safe_area_inset_bottom": "env(safe-area-inset-bottom, 16px)"
+  "component_tokens": {
+    "bottom_bar_height": "64px",
+    "safe_area_bottom_padding": "env(safe-area-inset-bottom, 16px)",
+    "icon_bounding_box": "24px x 24px",
+    "label_font_size": "11px",
+    "active_indicator_stroke": "2px",
+    "z_index_overlay": 1100
+  },
+  "navigation_nodes": [
+    {
+      "id": "nav_saas_dashboard",
+      "label": "Dashboard",
+      "weight": 1,
+      "telemetry_event": "nav.click.dashboard",
+      "role_access": ["admin", "operator", "client"]
     },
-    "ia_structure": [
-      {"id": "nav_saas_dashboard", "label": "Platform", "priority_weight": 0.35, "telemetry_key": "nav_click_saas"},
-      {"id": "nav_f2f_services", "label": "Services (F2F)", "priority_weight": 0.30, "telemetry_key": "nav_click_f2f"},
-      {"id": "nav_core_atlas", "label": "Workspaces", "priority_weight": 0.20, "telemetry_key": "nav_click_workspace"},
-      {"id": "nav_account_meta", "label": "Account", "priority_weight": 0.15, "telemetry_key": "nav_click_account"}
-    ]
-  },
-  "design_tokens": {
-    "color_bg_surface": "#0B0F19",
-    "color_active_indicator": "#3B82F6",
-    "color_text_primary": "#F9FAFB",
-    "color_text_muted": "#9CA3AF",
-    "motion_transition_curve": "cubic-bezier(0.16, 1, 0.3, 1)",
-    "motion_duration_ms": 200
-  },
-  "validation": {
-    "wcag_contrast_ratio": "7.2:1 (AAA compliance standard referenced from Company Document)",
-    "a11y_tap_target_clearance": "Minimum 8dp edge separation"
+    {
+      "id": "nav_f2f_services",
+      "label": "F2F Bookings",
+      "weight": 2,
+      "telemetry_event": "nav.click.f2f_schedule",
+      "role_access": ["admin", "field_agent", "client"]
+    },
+    {
+      "id": "nav_atlas_core_insights",
+      "label": "Telemetry",
+      "weight": 3,
+      "telemetry_event": "nav.click.telemetry",
+      "role_access": ["admin", "operator"]
+    }
+  ],
+  "validation_criteria": {
+    "error_rate_threshold": "<0.005% miss-taps",
+    "time_to_first_action_sec": "<=1.2s"
   }
 }
 ```
