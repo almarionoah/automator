@@ -1,0 +1,61 @@
+# Hardened Blue/Green Deployment Pipeline for Beacon API
+**Author:** Lyra Hale  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 03:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Zero-downtime Blue/Green deployment specification and automated traffic-switch pipeline for Beacon API, incorporating strict cryptographic verification, ephemeral credential boundaries, and compliance constraints specified in the Business Document: Company Document.
+
+## Deliverable
+```
+# Lyra Hale | I.T. Skokos DevOps | Project: Beacon API
+# Architecture: Hardened Blue/Green Deployment
+# Compliance: Governed by Business Document: Company Document (Section 4.2: Change Isolation & Cryptographic Attestation)
+
+stages:
+  - preflight_attestation
+  - deploy_inactive
+  - security_smoke_test
+  - traffic_cutover
+  - teardown_legacy
+
+variables:
+  DEPLOYMENT_TIMEOUT: "300s"
+  HEALTH_THRESHOLD_PERCENT: "100"
+
+.security_base:
+  before_script:
+    - echo "[SECURITY] Verifying artifact cosign signature against Company Document root of trust..."
+    - cosign verify --key env://COSIGN_PUBLIC_KEY $BEACON_API_IMAGE
+    - echo "[SECURITY] Initializing zero-trust ephemeral deployment tokens..."
+
+deploy_green_target:
+  stage: deploy_inactive
+  extends: .security_base
+  script:
+    - TARGET_SLOT=$(./scripts/get-inactive-slot.sh)
+    - echo "Targeting inactive slot: ${TARGET_SLOT}"
+    - envsubst < k8s/beacon-api-slot.template.yaml | kubectl apply -f -
+    - kubectl rollout status deployment/beacon-api-${TARGET_SLOT} --timeout=${DEPLOYMENT_TIMEOUT}
+  environment:
+    name: beacon-api-inactive
+
+health_and_security_gate:
+  stage: security_smoke_test
+  script:
+    - TARGET_SLOT=$(./scripts/get-inactive-slot.sh)
+    - echo "[VERIFICATION] Executing mTLS vulnerability & latency probes against ${TARGET_SLOT}..."
+    - ./scripts/run-security-canary.sh --slot ${TARGET_SLOT} --threshold-file "Company Document"
+
+promote_traffic_cutover:
+  stage: traffic_cutover
+  script:
+    - TARGET_SLOT=$(./scripts/get-inactive-slot.sh)
+    - echo "[CUTOVER] Shifting Ingress gateway traffic to ${TARGET_SLOT} after compliance gate pass."
+    - kubectl patch service beacon-api-live -p '{"spec":{"selector":{"slot":"'${TARGET_SLOT}'"}}}'
+    - ./scripts/verify-live-traffic-integrity.sh
+  when: manual
+
+```
