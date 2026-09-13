@@ -1,54 +1,53 @@
-# Atlas Core Component Design Tokens Specification (v1.0.0-SEC)
-**Author:** Fig Nkosi  
+# Atlas Core Component Design Tokens Specification (v1.0.0)
+**Author:** Sable Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 21:35  
+**Produced:** D16 00:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Hardened, injection-safe component design token schema for Atlas Core, implementing zero-trust styling parameters derived from the Company Document.
+Production-ready component token definitions for Atlas Core UI system, aligning SaaS platform interfaces and face-to-face service dashboards. Standardized using guidelines from Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.itskokos.internal/schemas/v1/secure-tokens.json",
-  "metadata": {
-    "project": "Atlas Core",
-    "module": "Component Design Tokens",
-    "maintainer": "Fig Nkosi (Design)",
-    "securityClassification": "CONFIDENTIAL - INTERNAL ONLY",
-    "referenceSource": {
-      "document": "Company Document",
-      "usage": "Extracted strict accessibility baselines (WCAG AAA contrast), sanitization guidelines, and enterprise boundary requirements from the Company Document to construct immutable token maps and prevent unauthorized CSS expression injections."
-    },
-    "integrityCheck": "SHA256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "system": "Atlas Core",
+    "version": "1.0.0",
+    "author": "Sable Van Dyk <sable.vandyk@itskokos.internal>",
+    "sourceGuidance": "Business Document: Company Document (utilized for SaaS tier branding rules, hybrid service color contrasts, and spacing scales)"
   },
-  "enforcementRules": {
-    "immutable": true,
-    "prohibitedPatterns": ["url(", "expression(", "javascript:", "<script>"],
-    "allowedUnits": ["px", "rem", "ms", "%"]
-  },
-  "tokens": {
-    "color": {
-      "interactive": {
-        "primary-default": { "value": "#0F172A", "type": "color", "sanitized": true },
-        "primary-hover": { "value": "#1E293B", "type": "color", "sanitized": true },
-        "primary-focus-ring": { "value": "#38BDF8", "type": "color", "sanitized": true }
+  "component": {
+    "button": {
+      "primary": {
+        "background": { "value": "{color.brand.primary.600}", "type": "color" },
+        "text": { "value": "{color.base.white}", "type": "color" },
+        "padding": { "value": "{spacing.md} {spacing.lg}", "type": "spacing" },
+        "borderRadius": { "value": "{radius.sm}", "type": "borderRadius" },
+        "hover": {
+          "background": { "value": "{color.brand.primary.700}", "type": "color" }
+        }
       },
-      "feedback": {
-        "critical-surface": { "value": "#FEF2F2", "type": "color", "sanitized": true },
-        "critical-border": { "value": "#DC2626", "type": "color", "sanitized": true },
-        "critical-text": { "value": "#991B1B", "type": "color", "sanitized": true }
+      "serviceAction": {
+        "background": { "value": "{color.brand.accent.500}", "type": "color", "description": "Dedicated token for in-person service check-in workflows per Company Document standard." },
+        "text": { "value": "{color.neutral.900}", "type": "color" }
       }
     },
-    "spacing": {
-      "control-padding-x": { "value": "12px", "type": "dimension" },
-      "control-padding-y": { "value": "8px", "type": "dimension" },
-      "modal-inset": { "value": "24px", "type": "dimension" }
+    "card": {
+      "surface": {
+        "background": { "value": "{color.surface.default}", "type": "color" },
+        "border": { "value": "1px solid {color.border.subtle}", "type": "border" },
+        "shadow": { "value": "{elevation.sm}", "type": "shadow" },
+        "padding": { "value": "{spacing.xl}", "type": "spacing" }
+      }
     },
-    "radius": {
-      "field": { "value": "4px", "type": "dimension" },
-      "container": { "value": "8px", "type": "dimension" }
+    "input": {
+      "base": {
+        "height": { "value": "40px", "type": "dimension" },
+        "border": { "value": "1px solid {color.border.default}", "type": "border" },
+        "focusRing": { "value": "0 0 0 2px {color.brand.primary.200}", "type": "shadow" }
+      }
     }
   }
 }
