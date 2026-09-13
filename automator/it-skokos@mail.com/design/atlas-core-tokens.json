@@ -1,59 +1,46 @@
-# Atlas Core: Expressive Component Design Token Architecture
-**Author:** Sable Petrov  
+# Atlas Core Design Token Architecture: The Poetic Interface Layer
+**Author:** Pixel Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D16 07:40  
+**Produced:** D17 03:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Complete semantic and component token specifications for Atlas Core, translated from the brand ethos and service blueprints in the Company Document to bridge digital SaaS interactions with face-to-face emotional resonance.
+Semantic component design token specification bridging I.T. Skokos digital SaaS platform with intimate face-to-face service touchpoints, calibrated using Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.spec.atlas.io/v1/schema.json",
-  "metadata": {
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
     "project": "Atlas Core",
-    "designer": "Sable Petrov",
-    "governance": "Aligned directly with the service standards and brand architecture detailed in Company Document to ensure continuous tactile empathy across digital SaaS touchpoints and face-to-face client encounters."
+    "author": "Pixel Van Dyk (UX Romantic)",
+    "version": "1.0.0",
+    "curationNote": "Design tokens are not mere coordinates; they are the emotional heartbeat of Atlas Core. Grounded by our core brand tenets in Business Document: Company Document, we established an ergonomic baseline that honors both the high-frequency SaaS dashboard and the empathetic dignity required during face-to-face client engagements."
   },
-  "component": {
-    "card": {
-      "surface": {
-        "value": "{color.surface.warm-canvas}",
-        "description": "A welcoming, grounded foundation derived from the Company Document's human-first hospitality directives."
-      },
-      "border": {
-        "value": "1px solid {color.stroke.subtle-intimacy}",
-        "radius": "{radii.lg}"
-      },
-      "elevation": {
-        "resting": "{shadow.ambient.soft-glow}",
-        "hover": "{shadow.elevation.embraced}"
-      },
-      "motion": {
-        "transition": "all {motion.duration.deliberate} {motion.easing.natural-breath}"
-      }
+  "color": {
+    "brand": {
+      "sanctuary-blue": { "value": "#0D2040", "type": "color", "description": "SaaS base anchor reflecting clarity and structural trust." },
+      "aurora-ochre": { "value": "#D9822B", "type": "color", "description": "Warm human accent derived from Business Document: Company Document service empathy guidelines." },
+      "linen-whisper": { "value": "#F9F8F6", "type": "color", "description": "Soft ambient surface reducing digital eye-strain across hybrid sessions." }
     },
-    "button": {
-      "primary": {
-        "background": {
-          "default": "{color.brand.resonant-indigo}",
-          "hover": "{color.brand.deep-twilight}"
-        },
-        "padding": "{spacing.sm} {spacing.xl}",
-        "radii": "{radii.pill}",
-        "typography": "{font.action.poetic-medium}"
-      }
-    },
-    "interaction": {
-      "focusRing": {
-        "width": "2px",
-        "style": "solid",
-        "color": "{color.accessibility.clear-embrace}",
-        "offset": "2px"
-      }
+    "semantic": {
+      "surface-canvas": { "value": "{color.brand.linen-whisper}", "type": "color" },
+      "surface-interactive": { "value": "{color.brand.sanctuary-blue}", "type": "color" },
+      "action-highlight": { "value": "{color.brand.aurora-ochre}", "type": "color" }
     }
+  },
+  "motion": {
+    "cadence": {
+      "human-breath": { "value": "240ms", "type": "duration", "description": "Organic transition timing reflecting conversational pause." }
+    },
+    "curve": {
+      "empathic-ease": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "cubicBezier" }
+    }
+  },
+  "space": {
+    "touch-comfort": { "value": "12px", "type": "dimension", "description": "Tactile breathing room for physical tablet handoffs." },
+    "container-padding": { "value": "24px", "type": "dimension" }
   }
 }
 ```
