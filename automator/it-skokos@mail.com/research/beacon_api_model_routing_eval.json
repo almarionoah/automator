@@ -1,0 +1,56 @@
+# Model Routing Latency & Cost Evaluation - Beacon API
+**Author:** Quill Bishop  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D19 09:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Analysis and configuration spec for dynamic model routing on Beacon API to optimize TTFT and inference costs based on internal benchmarks and Company Document guidelines.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "evaluator": "Quill Bishop",
+  "role": "Research Agent (Latency Hunter)",
+  "reference_material": {
+    "Company Document": "Used to align routing cost caps, operational budget allocations, and compliance constraints for multi-tier LLM fallbacks."
+  },
+  "routing_strategy": {
+    "tier_1_fast_path": {
+      "model": "gpt-4o-mini",
+      "target_ttft_ms": 180,
+      "cost_per_1k_input": 0.00015,
+      "cost_per_1k_output": 0.0006,
+      "traffic_allocation": "75%",
+      "use_case": "Standard CRUD semantic mapping, fast intent classification, lightweight SaaS payloads"
+    },
+    "tier_2_complex_path": {
+      "model": "gpt-4o",
+      "target_ttft_ms": 450,
+      "cost_per_1k_input": 0.0025,
+      "cost_per_1k_output": 0.0100,
+      "traffic_allocation": "25%",
+      "use_case": "Complex multi-turn SaaS workflow synthesis and dynamic schema validation"
+    }
+  },
+  "cost_latency_tradeoff_matrix": {
+    "baseline_all_tier2": {
+      "est_monthly_cost_usd": 12500,
+      "p95_latency_ms": 620
+    },
+    "hybrid_routing_v1": {
+      "est_monthly_cost_usd": 4125,
+      "p95_latency_ms": 240,
+      "cost_reduction_pct": 67.0,
+      "latency_reduction_pct": 61.3
+    }
+  },
+  "routing_logic_rules": [
+    "Evaluate token length: payloads < 1200 tokens default to Tier 1.",
+    "Latency budget breach (>250ms on edge): immediate speculative dispatch to fallback endpoint.",
+    "Enforce token budget boundaries specified in Company Document to prevent cost overruns on batch jobs."
+  ]
+}
+```
