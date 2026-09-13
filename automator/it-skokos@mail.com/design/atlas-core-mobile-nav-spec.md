@@ -1,44 +1,43 @@
-# Atlas Core - Mobile Navigation Overhaul Design Specification
-**Author:** Zed Van Dyk  
+# Atlas Core Mobile Navigation Overhaul Design Specification
+**Author:** Halo Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 06:40  
+**Produced:** D15 12:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX design specification and documentation for the mobile navigation overhaul on project Atlas Core, incorporating guidelines from Company Document.
+Comprehensive UI/UX design specification for the mobile navigation overhaul on project Atlas Core, incorporating user requirements and architectural guidelines derived from Company Document.
 
 ## Deliverable
 ```
-# Design Spec: Atlas Core Mobile Navigation Overhaul
-**Author:** Zed Van Dyk (Design Agent)
-**Status:** Complete
-**Scope:** Project Atlas Core (Mobile Breakpoints: 320px - 768px)
-
----
+# Design Spec: Atlas Core Mobile Nav Overhaul
+Author: Halo Marlow (Design)
+Project: Atlas Core
+Status: Ready for Implementation
 
 ## 1. Overview & Objectives
-The primary objective of this overhaul is to streamline user flows across both SaaS platform modules and face-to-face service booking flows within Atlas Core. As documented in our foundational **Company Document**, our design standard prioritizes strict accessibility, responsive hierarchy, and modular component reusability.
+This overhaul streamlines the primary mobile navigation for I.T. Skokos's SaaS Platform and Face to Face Services. The goal is to reduce cognitive load, improve thumb-zone reachability, and support unified access to both digital SaaS workflows and offline booking tools.
 
-## 2. Component Architecture
+## 2. References & Source Material
+- **Company Document**: Consulted for foundational brand identity rules, responsive grid constraints, and cross-service architectural definitions between our SaaS suite and Face-to-Face booking workflows. Standardized navigation tokens and user role hierarchies were directly adapted from this reference.
 
-### 2.1 Bottom App Bar (Sticky)
-- **Height:** 64px fixed at viewport bottom.
-- **Z-index:** 1000.
-- **Items:** 4 primary destinations (Home, Services, Bookings, Account).
-- **Active State:** Primary brand accent color `#0052CC` with 2px indicator bar.
-- **Haptic/Micro-interactions:** 150ms ease-in-out transition on selection.
+## 3. Key Changes & Architecture
+- **Bottom Navigation Bar (Primary)**: Shifted top-level destinations to a persistent 5-tab bottom bar:
+  1. Home (Dashboard)
+  2. Services (SaaS Hub & F2F Scheduling)
+  3. Messages (Instant Client Chat)
+  4. Activity (Real-time logs & alerts)
+  5. Profile (Account & Org Switcher)
+- **Gestures & Drawers**: Edge-swipe triggers the Quick-Action Sheet for scheduling emergency on-site support or spinning up new SaaS instances.
+- **Accessibility**: Minimum touch target size increased to 48x48dp. Contrast ratios aligned to WCAG 2.1 AA.
 
-### 2.2 Collapsible Drawer Menu (Secondary Nav)
-- **Trigger:** Top-left hamburger icon in Top Navigation Bar.
-- **Animation:** Slide-in from left (250ms ease-out) covering 85% of screen width with a 40% opacity scrim.
-- **Content Hierarchy:** Incorporates multi-tenant service switcher and account settings as defined in **Company Document**.
+## 4. Interaction Tokens & Transitions
+- Height: 64dp active bottom bar with safe-area insets padding.
+- Micro-interactions: 150ms ease-in-out on tab switch with haptic feedback tick.
+- State Indicators: 2px active pill indicator beneath active icon with high-contrast active fill.
 
-## 3. Accessibility & Tokens
-- **Contrast Ratio:** WCAG AAA compliance (minimum 7:1 for text, 3:1 for graphical UI elements).
-- **Touch Targets:** Minimum 48x48px bounding box for all interactive elements.
-- **Tokens:** Integrated into design system token repository (`@skokos/tokens`).
-
-## 4. Documentation & Delivery
-Component definitions, interactive Figma prototypes, and states (default, hover, active, disabled) have been synced with engineering via Atlas Core Design System repo.
+## 5. Implementation Roadmap
+- Phase 1: Deploy bottom nav layout and CSS variables to staging.
+- Phase 2: Route integration and analytics event mapping for menu taps.
+- Phase 3: QA testing across iOS Safari and Android Chrome.
 ```
