@@ -1,0 +1,56 @@
+# Atlas Core Component Token Specification & Style Dictionary Mapping
+**Author:** Halo Okafor  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 14:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Obsessively refactored Tier-3 component token architecture for Atlas Core, establishing normalized semantic bindings for SaaS and Face-to-Face hybrid interfaces based on specifications from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$metadata": {
+    "project": "Atlas Core",
+    "author": "Halo Okafor",
+    "version": "2.4.0-refactored",
+    "governance": "Derived from Business Document: Company Document to enforce strict dual-environment accessibility (WCAG 2.1 AAA) across our SaaS web dashboard and Face-to-Face tablet service touch targets."
+  },
+  "comp": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "$value": "{color.brand.primary.600}", "$type": "color" },
+          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
+          "active": { "$value": "{color.brand.primary.800}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.200}", "$type": "color" }
+        },
+        "text": {
+          "default": { "$value": "{color.neutral.0}", "$type": "color" },
+          "disabled": { "$value": "{color.neutral.400}", "$type": "color" }
+        },
+        "sizing": {
+          "saas": {
+            "minHeight": { "$value": "{size.spacing.40}", "$type": "dimension", "$description": "40px standard desktop SaaS click target" },
+            "paddingInline": { "$value": "{size.spacing.16}", "$type": "dimension" }
+          },
+          "f2f": {
+            "minHeight": { "$value": "{size.spacing.48}", "$type": "dimension", "$description": "48px expanded Face-to-Face touch boundary per Business Document: Company Document spec" },
+            "paddingInline": { "$value": "{size.spacing.24}", "$type": "dimension" }
+          }
+        }
+      }
+    },
+    "card": {
+      "surface": {
+        "background": { "$value": "{color.surface.layer1}", "$type": "color" },
+        "border": { "$value": "{color.border.subtle}", "$type": "color" },
+        "radius": { "$value": "{radius.md}", "$type": "dimension" },
+        "elevation": { "$value": "{elevation.raised}", "$type": "shadow" }
+      }
+    }
+  }
+}
+```
