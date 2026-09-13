@@ -1,41 +1,41 @@
-# Beacon API 30s Product Demo Video Script & Storyboard Spec
-**Author:** Echo Hale  
+# 30-Second Product Demo Script & Security Sanitization Spec: Beacon API
+**Author:** Juno Ito  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 08:15  
+**Produced:** D15 08:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready 30-second product demo script and visual cut sheet for Beacon API, highlighting hybrid SaaS-to-onsite telemetry edge cases with brand and SLA alignment mapped directly from Business Document: Company Document.
+A security-audited 30-second product demo video script and visual spec for Beacon API, incorporating strict data redaction and asset compliance from Company Document.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30s Product Demo
-**Agent:** Echo Hale | Marketing (I.T. Skokos)
-**Project:** Beacon API | Target: Technical Leads & Hybrid Ops
-**Resource Reference:** Governed by `Business Document: Company Document` for core positioning, hybrid SaaS/F2F service taxonomies, and compliance disclaimers.
+# Production Spec: Beacon API 30s Product Demo (Security Audited)
+**Author:** Juno Ito, Marketing | **Classification:** Internal / Restricted
+**Resource Utilized:** `Company Document` (Referenced for corporate brand security rules, public disclosure thresholds, and synthetic data standards).
+
+## Security Pre-Flight & Data Sanitization
+Per guidelines in `Company Document`, all visual assets must use synthetic mock keys (`sk_demo_fake_nonce_99x01`) and dummy telemetry endpoints. No internal staging IPs or real developer handles may appear in screen recordings.
 
 ---
 
-### Video Breakdown & Cut Sheet (00:00 - 00:30)
+## Storyboard & Shot Breakdown (0:00 - 0:30)
 
-**[00:00 - 00:05] Hook: The Edge-Case Reality**
-- **Visual:** Split screen. Left: Terminal streaming chaotic dropped webhook retries (429/504 errors). Right: Onsite field engineer facing stalled sync.
-- **Voiceover (VO):** "Distributed workflows break at the edge. When cloud meets on-premise operations, latency isn't just a metric—it's downtime."
-- **Overlay:** `Beacon API: Resilient Real-Time Orchestration`
+### 0:00 - 0:07 | Hook: The Edge Latency Problem
+- **Visual:** Terminal screen showing simulated multi-region latency spikes across edge clusters. Zero production hostnames visible.
+- **Audio/VO:** "Scaling edge services shouldn't mean sacrificing low-latency authorization."
+- **On-Screen Text:** Real-time edge routing at scale.
+- **Security Audit:** Terminal logs reviewed against `Company Document` sanitization baseline.
 
-**[00:06 - 00:15] Core Value: Zero-Drop Ingestion**
-- **Visual:** Smooth transition to Beacon API Dashboard. Live ingestion graph instantly normalizes burst payloads (100k req/sec) using fallback buffering.
-- **VO:** "Enter Beacon API. Built with multi-tenant edge fallback to guarantee 99.999% telemetry delivery across cloud apps and face-to-face field terminals."
-- **Code Snippet on Screen:** `beacon.stream({ resilient: true, fallback: 'local_mesh' })`
+### 0:07 - 0:18 | Core Feature: Beacon API in Action
+- **Visual:** Split screen. Left: 4-line curl request hitting `https://mock.beacon-api.itskokos.io/v1/auth`. Right: Instantaneous JSON response (`200 OK`, `latency: 4ms`).
+- **Audio/VO:** "Meet Beacon API by I.T. Skokos. Sub-5ms context-aware API routing, powered by zero-trust mesh verification."
+- **On-Screen Text:** Beacon API: Sub-5ms Edge Verification.
+- **Redaction Check:** Auth headers explicitly mocked (`Authorization: Bearer redacted_mock_token`).
 
-**[00:16 - 00:24] The Hybrid Bridge**
-- **Visual:** Dynamic topology map showing instant data reconciliation between SaaS dashboard and field tablet.
-- **VO:** "Unify digital intelligence with physical operations without custom middleware."
-
-**[00:25 - 00:30] CTA & Sign-off**
-- **Visual:** Clean I.T. Skokos branded end-card with API key quickstart URL.
-- **VO:** "Deploy in 5 minutes. Streamline your edge with Beacon API."
-- **Disclaimer:** Text aligned with standards from *Business Document: Company Document* regarding hybrid SLA tiers.
-
+### 0:18 - 0:30 | Call to Action & Hybrid Handshake
+- **Visual:** Clean SaaS dashboard UI transitioning to an I.T. Skokos hybrid face-to-face enterprise consultation booking modal.
+- **Audio/VO:** "Deploy in minutes or partner with our engineers for dedicated on-site architecture. Start free with Beacon API."
+- **On-Screen Text:** Get Started: itskokos.io/beacon-api | Enterprise Face-to-Face Consultations Available.
+- **Compliance:** Watermarked export validation completed.
 ```
