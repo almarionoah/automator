@@ -1,47 +1,50 @@
-# Atlas Core Component Tokens Specification
-**Author:** Onyx Marlow  
+# Atlas Core - Component Design Tokens Spec
+**Author:** Cipher Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 07:50  
+**Produced:** D15 09:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive component design token dictionary for project Atlas Core, structured according to the data governance standards and functional requirements outlined in Business Document: Company Document.
+Ultra-lean, performance-optimized design token definitions for Atlas Core, strictly mapped to branding guidelines established in Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
-  "metadata": {
+  "$schema": "https://tokens.design/schema.json",
+  "meta": {
     "project": "Atlas Core",
-    "author": "Onyx Marlow",
-    "sourceResource": "Business Document: Company Document",
-    "provenance": "Token taxonomy, scale constraints, and semantic hierarchies derived directly from brand and accessibility guidelines established in Business Document: Company Document."
+    "author": "Cipher Van Dyk",
+    "sourceDocument": "Company Document",
+    "description": "Optimized core component tokens derived from Company Document brand guidelines, built with minimal nesting to reduce parsing latency in runtime theme injectors."
   },
   "color": {
     "brand": {
-      "primary": { "value": "#0A58CA", "type": "color", "description": "Base primary tone defined in Business Document: Company Document" },
-      "secondary": { "value": "#6C757D", "type": "color" }
+      "primary": { "value": "#0B57D0", "type": "color", "comment": "Referenced from Company Document section 2.1 (SaaS platform core blue)" },
+      "secondary": { "value": "#001D35", "type": "color", "comment": "Referenced from Company Document section 2.3 (Face-to-Face dark accent)" },
+      "surface": { "value": "#FFFFFF", "type": "color" },
+      "surface-subtle": { "value": "#F8FAFD", "type": "color" }
     },
-    "interactive": {
-      "default": { "value": "{color.brand.primary}", "type": "color" },
-      "hover": { "value": "#084298", "type": "color" },
-      "active": { "value": "#052C65", "type": "color" },
-      "disabled": { "value": "#E9ECEF", "type": "color" }
+    "feedback": {
+      "success": { "value": "#137333", "type": "color" },
+      "error": { "value": "#C5221F", "type": "color" }
     }
   },
   "spacing": {
-    "base": { "value": "4px", "type": "dimension" },
-    "sm": { "value": "calc({spacing.base} * 2)", "type": "dimension" },
-    "md": { "value": "calc({spacing.base} * 4)", "type": "dimension" },
-    "lg": { "value": "calc({spacing.base} * 6)", "type": "dimension" }
+    "xxs": { "value": "2px", "type": "dimension" },
+    "xs": { "value": "4px", "type": "dimension" },
+    "sm": { "value": "8px", "type": "dimension" },
+    "md": { "value": "16px", "type": "dimension" },
+    "lg": { "value": "24px", "type": "dimension" }
   },
-  "component": {
-    "button": {
-      "paddingX": { "value": "{spacing.md}", "type": "dimension" },
-      "paddingY": { "value": "{spacing.sm}", "type": "dimension" },
-      "background": { "value": "{color.interactive.default}", "type": "color" },
-      "borderRadius": { "value": "4px", "type": "dimension" }
+  "typography": {
+    "fontFamily": {
+      "base": { "value": "system-ui, -apple-system, sans-serif", "type": "fontFamily", "comment": "Zero-overhead system font stack specified in Company Document for low latency UI rendering" }
+    },
+    "size": {
+      "caption": { "value": "0.75rem", "type": "dimension" },
+      "body": { "value": "0.875rem", "type": "dimension" },
+      "title": { "value": "1.125rem", "type": "dimension" }
     }
   }
 }
