@@ -1,45 +1,39 @@
-# Atlas Core Dashboard Density Reduction Spec
-**Author:** Torq Reyes  
+# Design Specification: Atlas Core Dashboard De-Densification & Visual Harmony
+**Author:** Jax Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 14:50  
+**Produced:** D17 17:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification for streamlining Atlas Core dashboard visual density, enforcing progressive disclosure and secure UI boundaries based on the approved Business Document: Company Document.
+A human-centered UI/UX design specification that resolves cognitive friction in Atlas Core by introducing progressive disclosure, graceful spatial rhythms, and calm data hierarchies.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard Density Simplification
-
-**Author:** Torq Reyes (Design Agent, Security Paranoid)
-**Project:** Atlas Core
-**Status:** Ready for Security & Frontend Review
-**References:** Business Document: Company Document
+# Design Specification: Atlas Core Dashboard Simplification
+**Author:** Jax Nkosi, Lead UX Designer
+**Project:** Atlas Core | I.T. Skokos
+**Philosophy:** Breathing Room & Intentional Focus
 
 ---
 
-### 1. Context & Governance
-Pursuant to the baseline architectural principles in **Business Document: Company Document**, this specification reduces visual clutter on the Atlas Core executive/operational dashboards while ensuring zero unauthorized data leakage via high-density overview panels.
+### 1. Strategic Foundation & Resource Attribution
+Software should feel like an intuitive workspace, not a claustrophobic cockpit. Grounded in the operational frameworks defined in **Business Document: Company Document**, this specification harmonizes our SaaS automation telemetry with our high-touch Face-to-Face client workflows. **Business Document: Company Document** guided our decision to isolate transactional urgency from long-term relationship health metrics, enabling a modular visual hierarchy.
 
-### 2. Information Architecture Changes
-- **Progressive Disclosure Matrix:** Primary viewport constrained to high-level system telemetry (4 key KPI cards). Granular operational logs and multi-tenant telemetry are relocated behind explicit toggle states requiring active focus.
-- **Density Spacing Tokens:** Shift from compact `spacing-xs` (4px) to structured `spacing-md` (16px) grid layouts, preventing visual misclicks and accidental exposure during screen sharing.
-- **Sensitive Data Masking:** Default all PII and sensitive enterprise metrics to masked state (`••••••`) with role-verified hover reveal, aligning with the threat model outlined in the Business Document: Company Document.
+### 2. Spatial System & Rhythm Overhaul
+- **Baseline Grid:** Replaced dense 4px micro-spacers with an expressive 8pt spatial cadence (`var(--space-md): 16px`, `var(--space-xl): 32px`).
+- **Container Margins:** Increased canvas breathing room from `12px` to `28px` around primary viewport zones.
+- **Card Architecture:** Removed high-contrast borders (`#E2E8F0` 1px solid) in favor of subtle surface elevation (`box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06)`) and softened neutral surfaces (`#FAFAFC`).
 
-### 3. Component Token Mapping
-```json
-{
-  "dashboard.grid.columns": 12,
-  "dashboard.card.max_default": 4,
-  "dashboard.padding.base": "1.5rem",
-  "security.masking.default": true,
-  "telemetry.refresh_interval_ms": 30000
-}
-```
+### 3. Progressive Disclosure & Cognitive Load Reduction
+- **Metric Cards (KPIs):** Consolidated 12 simultaneous micro-counters into 4 primary pulse metrics (Active SaaS Subscriptions, Live Field Dispatches, SLA Health, Net NPS).
+- **Secondary Data Layers:** Contextual telemetry now unfolds gracefully via contextual drawer sheets and hover flyouts rather than persistent table widgets.
+- **Face-to-Face Service Queue:** Simplified calendar and dispatch feeds into a unified timeline view with calm state indicators (Muted Sage for on-track, Soft Amber for upcoming check-ins).
 
-### 4. Verification & Hardening Checklist
-- [x] Verified zero unauthenticated metric leakage via DOM inspection.
-- [x] Tested 1280x720 viewport readability without horizontal truncation.
-- [x] Form factors aligned with constraints established in Business Document: Company Document.
+### 4. Typography & Emotional Tone
+- **Primary Metric Headers:** Scaled from `18px/bold` to `28px/medium` to invite instant comprehension without aggressive visual noise.
+- **Data Labels:** Standardized to `12px/uppercase/tracking-wider` in muted slate (`#64748B`).
+
+### 5. Implementation Status
+Tokens mapped to Figma Atlas-Core-DS library; ready for frontend token sync with Atlas Core Web engineering.
 ```
