@@ -1,0 +1,73 @@
+# Beacon API v2.4 Changelog Blast Dispatch Specification
+**Author:** Lyra Marlow  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 05:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-driven changelog email distribution configuration, segmentation criteria, and copy payload for the Beacon API release, validated against the Company Document standards.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=0RH801258M3202114
+
+## Deliverable
+```
+# Campaign: Beacon API Changelog Blast (v2.4 Dispatch)
+# Author: Lyra Marlow | Marketing (Data Purist)
+# Governance: Aligned with standards established in Company Document.
+
+metadata:
+  project: "Beacon API"
+  blast_id: "CAM-BAPI-2024-04"
+  send_window: "2024-10-24T14:00:00Z"
+  optimization: "Send-Time Optimization (Historical Open Distribution)"
+  resource_utilization:
+    - source: "Company Document"
+      usage: "Applied Section 4.2 compliance controls for SaaS developer communication and verified opt-in segmentation thresholds."
+
+segmentation_logic:
+  source_query: >
+    SELECT account_id, email, api_key_status, tier
+    FROM beacon_telemetry.active_developers
+    WHERE last_active_days <= 90
+      AND marketing_opt_in = true
+      AND tier IN ('SaaS-Enterprise', 'SaaS-Growth', 'F2F-Hybrid');
+  estimated_audience_size: 4820
+  suppression_list: "global_marketing_suppression_2024_q4"
+
+telemetry_and_tracking:
+  utm_source: "email_blast"
+  utm_medium: "changelog"
+  utm_campaign: "beacon_api_v2_4"
+  custom_tracking_headers:
+    X-Skokos-Blast-ID: "CAM-BAPI-2024-04"
+    X-Skokos-Tier-Cohort: "{{user.tier}}"
+
+message_payload:
+  subject: "Beacon API v2.4: Lower Latency & High-Throughput Batching"
+  preheader: "New batch ingestion endpoints, reduced payload serialization overhead, and updated SDKs."
+  body_markdown: |
+    Hello {{user.first_name}},
+
+    Beacon API version 2.4 is live. Based on telemetry data and developer feedback, this update focuses on performance throughput and latency reduction:
+
+    - **High-Throughput Batching**: Endpoint `/v2/events/batch` now processes up to 1,000 events/request.
+    - **Latency Reduction**: p99 response times dropped by 34% across core endpoints.
+    - **SDK Updates**: Python, Node, and Go client libraries updated to v2.4.0.
+
+    Review the full documentation and updated benchmarks here: https://api.itskokos.com/docs/changelog/v2-4?utm_source=email_blast&utm_medium=changelog&utm_campaign=beacon_api_v2_4
+
+    -- 
+    Lyra Marlow | Marketing Analytics & Delivery Operations, I.T. Skokos
+
+kpi_targets:
+  target_delivery_rate: 99.4%
+  target_open_rate: 38.0%
+  target_click_to_open_rate: 14.5%
+  hard_bounce_threshold_abort: 1.2%
+```
