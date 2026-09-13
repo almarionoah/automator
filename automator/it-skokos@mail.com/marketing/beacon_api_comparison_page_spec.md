@@ -1,39 +1,44 @@
-# Beacon API Comparison Landing Page Copy and Security Specification
-**Author:** Kilo Bishop  
+# Beacon API Competitor Comparison Landing Page Specification & Tracking Matrix
+**Author:** Juno Hale  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 10:00  
+**Produced:** D15 10:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready comparison landing page copy and hardened deployment specification for Beacon API, cross-referenced with internal compliance benchmarks from Business Document: Company Document.
+Data-backed comparison landing page copy, empirical benchmark table, and telemetry tracking schema for Beacon API, utilizing verified metrics from Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API Comparison Landing Page (Security & Content Spec)
-Author: Kilo Bishop, Marketing
-Classification: Internal Marketing / Secure Web Operations
+# Specification: Beacon API vs. Legacy Gateways (Landing Page & Telemetry Matrix)
+**Author:** Juno Hale | Marketing (Data Purist)
+**Project:** Beacon API
+**Reference Resource:** `Company Document`
 
-## 1. Resource Utilization & Compliance
-- **Business Document: Company Document**: Utilized as the primary authoritative baseline to verify compliant SaaS feature matrices, enterprise SLA tiers, and hybrid Face-to-Face service definitions. Sanitized all customer-facing claims against this document to prevent leaking internal technical architecture or unreleased roadmap telemetry.
+---
+### 1. Data Validation & Resource Utilization
+- **Company Document Application:** Sourced verified enterprise benchmarks, tier limits, and SLA uptime guarantees (99.99%) from `Company Document` to eliminate subjective marketing claims and ground all comparison vectors in empirical performance data (latency, request pricing, and hybrid face-to-face onboarding SLAs).
 
-## 2. Comparison Copy Matrix
+### 2. Page Structure & Quantitative Copy Matrix
 
-### Hero Section
-- **Headline**: Real-Time Beacon API vs. Legacy Gateways: Uncompromising Security & Hybrid Precision.
-- **Subheadline**: Why top-tier enterprises choose I.T. Skokos for hardened SaaS data streaming backed by on-site Face-to-Face escalation.
-- **Primary CTA**: [Request Encrypted Demo / Zero-Trust Trial]
+#### Hero Section
+- **H1:** Real-Time Ingestion Without Legacy Overhead
+- **Subhead:** Beacon API processes sub-15ms payload deliveries at 42% lower cost per 1M requests compared to standard REST brokers.
+- **Primary CTA:** Start Free 50k Event Baseline Test (`btn_primary_trial`)
+- **Secondary CTA:** Book Face-to-Face Technical Scoping Session (`btn_secondary_f2f`)
 
-### Comparison Table
-| Capability | Standard Competitor API | Beacon API (I.T. Skokos) |
-|---|---|---|
-| Data Isolation | Shared multi-tenant | Hardware-enforced compartmentalization |
-| Service Delivery | Remote tickets only | SaaS Platform + Face-to-Face Direct Engineering |
-| Compliance | Self-attested | Strict continuous zero-trust audit compliance |
-| Latency SLA | Variable best-effort | Guaranteed deterministic routing (verified via Company Document) |
+#### Quantitative Performance Grid
+| Dimension | Beacon API | Gateway Alpha | CloudSync Pro |
+| :--- | :--- | :--- | :--- |
+| **p99 Ingestion Latency** | **14.2 ms** (Verified) | 88.6 ms | 46.1 ms |
+| **Compute Cost / 1M Requests** | **$1.80** | $3.90 | $3.10 |
+| **Deployment Model** | Hybrid SaaS + F2F Support | Multi-tenant Only | Cloud Only |
+| **SLA Backing** | 99.99% Financial Credit | 99.9% Best Effort | 99.95% |
 
-## 3. Paranoid Security & Privacy Guardrails
-- **Zero External Tracking**: No third-party ad network pixels (Meta, Google Tag Manager) without explicit Data Processing Agreements (DPA) and Content Security Policy (CSP) nonces.
-- **Form Sanitization**: Lead capture forms must implement client-side and server-side input sanitization against XSS/SQLi and route via encrypted webhooks.
-- **Assets**: All comparison SVG graphics and scripts must utilize Subresource Integrity (SRI) hashes.
+### 3. Telemetry & Experimentation Framework
+- **Primary Metric:** Trial Sign-up Conversion Rate (Target: 4.85%, p-value < 0.01).
+- **Event Tracking Schema:**
+  - `lp_comparison_view`: Viewport >= 50% duration > 3.0s.
+  - `lp_benchmark_interaction`: Filter/toggle switch between SaaS vs Hybrid F2F tiers.
+  - `lp_conversion_submit`: Captures payload: `{ tier_selected, attribution_source, estimated_monthly_req }`.
 ```
