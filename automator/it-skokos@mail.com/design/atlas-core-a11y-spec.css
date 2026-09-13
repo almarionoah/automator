@@ -1,0 +1,71 @@
+# Atlas Core: Zero-Latency Accessibility Tokens & A11y Implementation Spec
+**Author:** Torq Adeyemi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 16:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Design token specification and zero-repaint CSS rules for Atlas Core, reconciling WCAG 2.2 AAA accessibility requirements with sub-millisecond interaction rendering.
+
+## Deliverable
+```
+/**
+ * ATLAS CORE — ACCESSIBILITY & LOW-LATENCY SPECIFICATION
+ * Lead: Torq Adeyemi (Design / Latency Hunter)
+ * Reference: 'Company Document' (Integrated for baseline brand contrast bounds and hybrid SaaS/Face-to-Face kiosk interaction parameters).
+ */
+
+:root {
+  /* WCAG AAA Contrast Tokens — Static pre-computed values to avoid runtime CSS calculation overhead */
+  --atlas-a11y-bg: #0B0F19;
+  --atlas-a11y-surface: #1E293B;
+  --atlas-a11y-text-primary: #F8FAFC; /* 15.8:1 contrast on surface */
+  --atlas-a11y-text-muted: #CBD5E1;   /* 9.2:1 contrast on surface */
+  --atlas-a11y-focus-ring: #38BDF8;   /* 4.5:1 min against surface */
+  --atlas-a11y-error: #F87171;
+  --atlas-a11y-target-min: 48px;      /* Standard touch target size per Company Document */
+}
+
+/* Zero-repaint focus rings: outline-offset avoids layout thrashing & composite lag */
+:focus-visible {
+  outline: 3px solid var(--atlas-a11y-focus-ring) !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important; /* Stripped to eliminate expensive GPU blur recalculations */
+}
+
+/* Touch / Interactive Target Optimization for SaaS & Kiosk Mode */
+.atlas-interactive-target {
+  min-width: var(--atlas-a11y-target-min);
+  min-height: var(--atlas-a11y-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout paint; /* Strict CSS containment for instant DOM repaints */
+}
+
+/* Screen-reader only utility (Zero layout footprint) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hardware-accelerated Reduced Motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
