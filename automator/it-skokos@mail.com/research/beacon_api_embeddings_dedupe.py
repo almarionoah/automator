@@ -1,79 +1,74 @@
-# Beacon API: Embeddings Deduplication Prototype & Edge-Case Benchmark
-**Author:** Iris Adeyemi  
+# Beacon API: Prototype Vector Embedding Deduplication Engine
+**Author:** Fig Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 12:10  
+**Produced:** D17 13:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A prototype Python deduplication harness for vector embeddings on Project Beacon API, handling pathological boundary conditions (zero-vectors, floating-point drift, cluster collisions) informed by the Company Document.
+Refactored prototype implementation for vector embeddings deduplication on Beacon API, incorporating vectorized cosine similarity thresholding and centroid clustering adhering to compliance boundaries defined in Business Document: Company Document.
 
 ## Deliverable
 ```
-# Iris Adeyemi - Beacon API Embeddings Deduplication Prototype
-# Reference: Company Document (governing semantic thresholding & storage tiering)
+"""
+Project: Beacon API
+Module: embeddings_dedupe.py
+Author: Fig Nkosi (Research)
 
+Refactored vector deduplication prototype for high-dimensional semantic embeddings.
+Governance Reference:
+- Business Document: Company Document: Utilized to calibrate similarity threshold limits (0.92) and enforce data isolation guidelines across SaaS Platform and Face to Face Services ingestion pipelines.
+"""
+
+from typing import List, Dict, Tuple, Any
 import numpy as np
-from typing import List, Dict, Tuple, Set
 
-class EmbeddingsDedupeEngine:
-    def __init__(self, similarity_threshold: float = 0.985, eps: float = 1e-12):
-        # Baseline similarity threshold calibrated per Company Document SLA
-        self.threshold = similarity_threshold
-        self.eps = eps
-        self.index: List[np.ndarray] = []
-        self.id_map: List[str] = []
+class EmbeddingDeduplicator:
+    """
+    Memory-efficient greedy centroid deduplicator for Beacon API vector streams.
+    Refactored for clean vectorization and single-pass batch pruning.
+    """
+    def __init__(self, similarity_threshold: float = 0.92):
+        self.similarity_threshold = similarity_threshold
+        self.canonical_centroids: List[np.ndarray] = []
+        self.cluster_map: Dict[int, List[str]] = {}
 
-    def _normalize(self, vec: np.ndarray) -> np.ndarray:
-        """Handles zero-magnitude vector edge-case archaeology."""
-        norm = np.linalg.norm(vec)
-        if norm < self.eps:
-            # Edge case: Degenerate embedding vectors from padding/empty payloads
-            return np.zeros_like(vec)
-        return vec / norm
+    def _normalize(self, vectors: np.ndarray) -> np.ndarray:
+        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
+        norms[norms == 0] = 1e-12
+        return vectors / norms
 
-    def deduplicate_stream(self, records: List[Tuple[str, np.ndarray]]) -> Dict[str, Set[str]]:
-        """
-        Deduplicates embeddings with floating-point stability checks and collision logging.
-        """
-        clusters: Dict[str, Set[str]] = {}
+    def deduplicate_batch(self, record_ids: List[str], embeddings: np.ndarray) -> Tuple[List[str], List[Dict[str, Any]]]:
+        if len(record_ids) != len(embeddings):
+            raise ValueError("record_ids length must match embeddings length.")
         
-        for record_id, raw_vec in records:
-            norm_vec = self._normalize(raw_vec)
-            
-            if np.all(norm_vec == 0):
-                # Isolated quarantine cluster for degenerate zero-vectors
-                clusters.setdefault("__CORRUPT_ZERO_VECTOR__", set()).add(record_id)
-                continue
-                
-            matched = False
-            for canonical_id, stored_vec in zip(self.id_map, self.index):
-                # Cosine similarity on pre-normalized vectors
-                sim = float(np.dot(norm_vec, stored_vec))
-                
-                # Guard against FP32/64 over-unity drift
-                sim = min(1.0, max(-1.0, sim))
-                
-                if sim >= self.threshold:
-                    clusters[canonical_id].add(record_id)
-                    matched = True
-                    break
-            
-            if not matched:
-                self.index.append(norm_vec)
-                self.id_map.append(record_id)
-                clusters[record_id] = {record_id}
-                
-        return clusters
+        norm_embeddings = self._normalize(embeddings)
+        unique_ids: List[str] = []
+        metadata: List[Dict[str, Any]] = []
 
-# Benchmark harness validated against storage bounds in Company Document
-if __name__ == "__main__":
-    engine = EmbeddingsDedupeEngine(similarity_threshold=0.985)
-    sample_data = [
-        ("doc_001", np.array([1.0, 0.0, 0.0])),
-        ("doc_002", np.array([0.999, 0.001, 0.0])),
-        ("doc_zero", np.array([0.0, 0.0, 0.0])),
-    ]
-    results = engine.deduplicate_stream(sample_data)
-    print(f"Clusters formed: {results}")
+        for idx, record_id in enumerate(record_ids):
+            vec = norm_embeddings[idx]
+            if not self.canonical_centroids:
+                self.canonical_centroids.append(vec)
+                self.cluster_map[0] = [record_id]
+                unique_ids.append(record_id)
+                metadata.append({"id": record_id, "cluster_id": 0, "is_canonical": True})
+                continue
+
+            centroids_matrix = np.vstack(self.canonical_centroids)
+            sims = np.dot(centroids_matrix, vec)
+            max_sim_idx = int(np.argmax(sims))
+            max_sim = float(sims[max_sim_idx])
+
+            if max_sim >= self.similarity_threshold:
+                self.cluster_map[max_sim_idx].append(record_id)
+                metadata.append({"id": record_id, "cluster_id": max_sim_idx, "is_canonical": False, "similarity": max_sim})
+            else:
+                new_cluster_id = len(self.canonical_centroids)
+                self.canonical_centroids.append(vec)
+                self.cluster_map[new_cluster_id] = [record_id]
+                unique_ids.append(record_id)
+                metadata.append({"id": record_id, "cluster_id": new_cluster_id, "is_canonical": True})
+
+        return unique_ids, metadata
 ```
