@@ -1,27 +1,26 @@
-# Beacon API Blue/Green Deployment Specification & Operational Runbook
-**Author:** Vex Hale  
+# Beacon API Blue/Green Deployment Specification & Argo Rollout Manifest
+**Author:** Onyx Nkosi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D11 13:10  
+**Produced:** D16 05:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Blue/Green deployment workflow and Argo Rollouts configuration for Beacon API, documented according to standard operating baselines and change control guidelines set forth in the Company Document.
+Production Blue/Green deployment configuration and operational documentation for Beacon API, implementing zero-downtime cutover and preview testing in compliance with Business Document: Company Document.
 
 ## Deliverable
 ```
-# ====================================================================
-# BEACON API: BLUE/GREEN DEPLOYMENT SPECIFICATION & RUNBOOK
-# Author: Vex Hale (DevOps)
-# Organization: I.T. Skokos (SaaS & Face to Face Services)
-# Compliance Reference: Company Document (Deployment & SLA Governance)
-# ====================================================================
-# Architecture Note:
-# Aligned with the 'Company Document', which mandates zero-downtime
-# deployments, automated health gate validation, and 15-minute rollback
-# windows for tier-1 SaaS endpoints. This config implements Argo Rollouts
-# with automated smoke testing against the preview service.
-# ====================================================================
+# ==============================================================================
+# Project: Beacon API - Blue/Green Deployment Architecture
+# Maintainer: Onyx Nkosi (DevOps) | I.T. Skokos SaaS Platform
+# Reference: Business Document: Company Document
+#
+# IMPLEMENTATION NOTE:
+# In accordance with standard operational compliance codified in 'Business Document:
+# Company Document', this manifest implements zero-downtime blue/green releases.
+# It ensures automated preview verification, traffic isolation, and instant rollback
+# capability prior to shifting production traffic.
+# ==============================================================================
 
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
@@ -29,8 +28,8 @@ metadata:
   name: beacon-api-rollout
   namespace: production
   labels:
-    app: beacon-api
-    service-tier: tier-1
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: skokos-saas
 spec:
   replicas: 6
   revisionHistoryLimit: 5
@@ -50,31 +49,50 @@ spec:
           containerPort: 8080
         readinessProbe:
           httpGet:
-            path: /healthz
-            port: 8080
+            path: /health/ready
+            port: http
           initialDelaySeconds: 10
           periodSeconds: 5
         resources:
-          requests:
-            cpu: 250m
-            memory: 512Mi
           limits:
-            cpu: 1000m
-            memory: 1Gi
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
   strategy:
     blueGreen:
-      activeService: beacon-api-active
-      previewService: beacon-api-preview
+      activeService: beacon-api-active-svc
+      previewService: beacon-api-preview-svc
       autoPromotionEnabled: false
       scaleDownDelaySeconds: 300
       prePromotionAnalysis:
         templates:
-        - templateName: beacon-api-smoke-analysis
-
+        - templateName: beacon-smoke-test-analysis
 ---
-# OPERATIONAL RUNBOOK:
-# 1. Trigger Deploy: kubectl argo rollouts set image beacon-api-rollout beacon-api=registry.itskokos.internal/beacon-api:<TAG> -n production
-# 2. Preview Gate: Verify metrics on beacon-api-preview before promotion.
-# 3. Promote: kubectl argo rollouts promote beacon-api-rollout -n production
-# 4. Emergency Rollback: kubectl argo rollouts abort beacon-api-rollout -n production
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-api-active-svc
+  namespace: production
+spec:
+  selector:
+    app: beacon-api
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-api-preview-svc
+  namespace: production
+spec:
+  selector:
+    app: beacon-api
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
 ```
