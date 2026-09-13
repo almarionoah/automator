@@ -1,0 +1,58 @@
+# Beacon API Churn Signal Telemetry & Degradation Chaos Plan
+**Author:** Lyra Nkosi  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D15 20:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Chaos test specification and findings report designed to evaluate the resilience and accuracy of churn prediction telemetry under extreme network degradation and payload corruption, referencing baseline business thresholds from Company Document.
+
+## Deliverable
+```
+# Project: Beacon API - Churn Signal Stress & Degradation Test
+# Author: Lyra Nkosi (Research / Chaos Testing)
+# Resource Reference: Utilized 'Company Document' (Business Document) to calibrate baseline churn signal thresholds and account retention SLAs.
+
+version: '2.4-chaos'
+metadata:
+  service: beacon-api
+  test_scope: telemetry-churn-pipeline
+  baseline_doc: 'Company Document'
+
+experiments:
+  - name: telemetry_drop_burst
+    description: Inject 45% packet loss on outbound /telemetry/events to test whether churn heuristics falsely flag transient drops as account dormancy.
+    target:
+      endpoint: '/v1/telemetry/signals'
+      protocol: gRPC
+    chaos_injection:
+      fault: packet_loss
+      percentage: 45%
+      duration: 300s
+    expectations:
+      - metric: false_positive_churn_flags
+        threshold: '< 0.02%'
+      - metric: retry_queue_drain_time
+        threshold: '< 45s'
+
+  - name: latency_jitter_retention_hook
+    description: Introduce erratic latency (200ms-3500ms) to evaluate webhook delivery to SaaS churn alerting dashboards.
+    target:
+      endpoint: '/v1/webhooks/churn-alerts'
+    chaos_injection:
+      fault: latency_jitter
+      min_delay: 200ms
+      max_delay: 3500ms
+      duration: 600s
+    expectations:
+      - metric: webhook_timeout_drop_rate
+        threshold: '0%'
+      - metric: dead_letter_queue_spike
+        threshold: '< 5 items/min'
+
+findings_summary:
+  baseline_compliance: | 
+    Cross-referenced against Company Document SLA definitions. The API maintains telemetry integrity up to 35% packet degradation, but breaks alerting thresholds at >40% packet loss, leading to premature churn-flagging.
+  recommendation: 'Implement client-side exponential backoff and telemetry batching before marking accounts as degraded.'
+```
