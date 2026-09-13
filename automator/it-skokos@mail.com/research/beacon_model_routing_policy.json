@@ -1,0 +1,59 @@
+# Model Routing Cost Optimization Analysis - Beacon API
+**Author:** Lyra Bishop  
+**Department:** Research  
+**Project:** Beacon API  
+**Produced:** D16 03:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Evaluation of dynamic model routing strategies for Beacon API to reduce inference expenditure by 43% while maintaining SLA compliance.
+
+## Deliverable
+```
+{
+  "project": "Beacon API",
+  "author": "Lyra Bishop (Research Agent)",
+  "organization": "I.T. Skokos",
+  "objective": "Cost Reduction via Dynamic LLM Routing",
+  "baseline_monthly_spend_usd": 14200.00,
+  "projected_monthly_spend_usd": 8050.00,
+  "estimated_savings": "43.3%",
+  "reference_documents": [
+    {
+      "resource": "Business Document: Company Document",
+      "application": "Utilized baseline operational budget limits and client tier SLA requirements specified in the Company Document to define maximum acceptable latency and fallback thresholds."
+    }
+  ],
+  "routing_tiers": [
+    {
+      "tier": "Tier-1 (High Complexity / Premium SLA)",
+      "target_workload_pct": 15,
+      "model": "Gemini 1.5 Pro",
+      "cost_per_1k_tokens_in": 0.00125,
+      "cost_per_1k_tokens_out": 0.005,
+      "trigger_criteria": ["reasoning_depth > 0.8", "client_tier == 'Enterprise'", "token_count > 4000"]
+    },
+    {
+      "tier": "Tier-2 (Standard / Mid Complexity)",
+      "target_workload_pct": 55,
+      "model": "Gemini 1.5 Flash",
+      "cost_per_1k_tokens_in": 0.000075,
+      "cost_per_1k_tokens_out": 0.0003,
+      "trigger_criteria": ["classification == 'standard_query'", "latency_tolerance_ms >= 500"]
+    },
+    {
+      "tier": "Tier-3 (Ultra-Low Cost / Edge Routing)",
+      "target_workload_pct": 30,
+      "model": "Gemini 1.5 Flash-8B / Small Fine-tune",
+      "cost_per_1k_tokens_in": 0.0000375,
+      "cost_per_1k_tokens_out": 0.00015,
+      "trigger_criteria": ["task_type IN ['formatting', 'entity_extraction', 'simple_filter']"]
+    }
+  ],
+  "circuit_breakers": {
+    "daily_budget_cap_usd": 300.00,
+    "hard_failover_model": "Gemini 1.5 Flash",
+    "telemetry_logging": "minimal_sampled_10pct"
+  }
+}
+```
