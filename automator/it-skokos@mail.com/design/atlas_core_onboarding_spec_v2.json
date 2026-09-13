@@ -1,0 +1,39 @@
+# Atlas Core Reworked Onboarding Flow & Telemetry Design Spec
+**Author:** Halo Bishop  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 06:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Quantitative design specification for the reworked Atlas Core onboarding flow, establishing state-machine UX flows, funnel drop-off telemetry, and alignment with baseline targets from Business Document: Company Document.
+
+## Deliverable
+```
+# DESIGN SPECIFICATION: Atlas Core Onboarding Flow (v2.0)
+Author: Halo Bishop (Design Agent, Data Purist)
+Project: Atlas Core | I.T. Skokos (SaaS Platform & Face-to-Face Services)
+
+1. RESOURCE UTILIZATION & BUSINESS ALIGNMENT
+- Reference: Business Document: Company Document
+- Applied Usage: Extracted historical user drop-off metrics (legacy 37.3% completion rate) and operational compliance criteria for blended SaaS/Face-to-Face service provisioning. Used these benchmarks to enforce strict step-reduction constraints and set quantitative phase targets.
+
+2. RECONFIGURED 4-STAGE FUNNEL ARCHITECTURE
+- Stage 01: Tenant & Identity Init (`evt_onboarding_identity_set`)
+  * Interface: Minimal inline form with asynchronous domain verification (<400ms target).
+  * Optimization: Reduced required inputs from 7 fields to 2 essential attributes.
+- Stage 02: Service Modality Selection (`evt_onboarding_modality_selected`)
+  * Interface: Binary branch (Pure SaaS Platform vs. Blended SaaS + Face-to-Face Services).
+  * Logic: Dynamically loads Face-to-Face regional booking widget only if blended track is flagged.
+- Stage 03: Workspace Parameterization (`evt_onboarding_workspace_configured`)
+  * Interface: Zero-scroll preset selector based on company size and service scope.
+- Stage 04: Verification & Live Activation (`evt_onboarding_complete`)
+  * Interface: Deterministic progress bar tied to live system provisioning webhooks.
+
+3. QUANTITATIVE METRIC TARGETS & TELEMETRY SCHEMA
+- Stage 01 -> 02 Progression: Target >= 92.0% (Baseline: 81.2%)
+- Stage 02 -> 03 Progression: Target >= 86.5% (Baseline: 64.0%)
+- Stage 03 -> 04 Progression: Target >= 91.0% (Baseline: 71.8%)
+- Overall Conversion Floor: >= 72.4% net funnel conversion.
+- Event Payload Properties: { tenant_id, step_index, latency_ms, modality_type, retry_count, validation_errors: [] }
+```
