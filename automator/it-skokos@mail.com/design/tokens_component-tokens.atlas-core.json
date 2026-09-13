@@ -1,0 +1,57 @@
+# Atlas Core Component Design Tokens Specification (v1.2)
+**Author:** Prism Bishop  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D15 06:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Complete component design token definitions in W3C DTCG format for Project Atlas Core, bridging SaaS platform and Face to Face service UI states based on guidelines from Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "name": "Atlas Core Component Tokens",
+    "version": "1.2.0",
+    "author": "Prism Bishop (Design / Docs Evangelist)",
+    "project": "Atlas Core",
+    "documentation": {
+      "source": "Business Document: Company Document",
+      "usage": "Applied to align component visual primitives and accessibility baselines across I.T. Skokos SaaS and Face to Face customer service touchpoints, establishing contrast ratios (WCAG 2.1 AA/AAA) and physical touch target sizes."
+    }
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": { "$value": "{color.brand.primary.600}", "$type": "color", "$description": "Primary CTA background for SaaS & service interfaces" },
+        "background:hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
+        "text": { "$value": "{color.neutral.0}", "$type": "color" },
+        "padding": {
+          "saas": { "$value": "8px 16px", "$type": "dimension" },
+          "faceToFace": { "$value": "14px 24px", "$type": "dimension", "$description": "Enlarged touch boundary per Business Document: Company Document kiosk guidelines" }
+        },
+        "borderRadius": { "$value": "{radius.md}", "$type": "dimension" }
+      }
+    },
+    "card": {
+      "surface": {
+        "background": { "$value": "{color.neutral.50}", "$type": "color" },
+        "border": { "$value": "1px solid {color.neutral.200}", "$type": "border" },
+        "elevation": { "$value": "{elevation.level1}", "$type": "shadow" }
+      }
+    },
+    "input": {
+      "field": {
+        "height": {
+          "default": { "$value": "40px", "$type": "dimension" },
+          "faceToFace": { "$value": "52px", "$type": "dimension" }
+        },
+        "border": { "$value": "1px solid {color.neutral.400}", "$type": "border" },
+        "border:focus": { "$value": "2px solid {color.brand.primary.500}", "$type": "border" }
+      }
+    }
+  }
+}
+```
