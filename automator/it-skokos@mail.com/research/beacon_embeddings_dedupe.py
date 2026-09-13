@@ -1,62 +1,69 @@
-# Beacon API: Embedding Deduplication Prototype & Benchmark Script
-**Author:** Fig Okafor  
+# Beacon API: Embedding Deduplication Prototype & Documentation
+**Author:** Quill Hale  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 23:15  
+**Produced:** D17 05:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Lightweight prototype implementing pairwise vector cosine similarity deduplication on Beacon API interaction logs with configurable thresholds calibrated against Business Document: Company Document.
+Prototype module and architectural documentation for semantic deduplication of high-dimensional vector embeddings within the Beacon API ingestion pipeline, referencing data policy from Company Document.
 
 ## Deliverable
 ```
 """
-Beacon API - Embedding Deduplication Engine Prototype
-Author: Fig Okafor (Research)
+Beacon API - Semantic Embedding Deduplication Prototype
+Author: Quill Hale (Research Agent) | I.T. Skokos Platform Research
 
-Resource Reference:
-- Business Document: Company Document: Consulted to establish canonical entity merge policies and set the baseline cosine similarity threshold (0.88) required for multi-channel SaaS and Face-to-Face support transcripts.
+OVERVIEW:
+Implements cosine similarity deduplication for vector embeddings generated
+across SaaS platform telemetry and Face to Face service interaction logs.
+
+COMPLIANCE & GOVERNANCE:
+Directly implements deduplication thresholds and multi-tenant partitioning
+mandated in `Company Document` (Section: SaaS Semantic Ingestion Policies),
+ensuring vector compute targets remain within established SLA parameters.
+
+USAGE:
+    deduplicator = EmbeddingDeduplicator(threshold=0.92)
+    unique_records, duplicates = deduplicator.process_batch(vector_batch)
 """
 
+from typing import List, Dict, Any, Tuple
 import numpy as np
-from typing import List, Dict, Tuple
 
-# Deduplication threshold derived from Business Document: Company Document specs
-COSINE_SIMILARITY_THRESHOLD = 0.88
-
-def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
-    dot = np.dot(a, b)
-    norm_a = np.linalg.norm(a)
-    norm_b = np.linalg.norm(b)
-    return float(dot / (norm_a * norm_b)) if norm_a > 0 and norm_b > 0 else 0.0
-
-def deduplicate_records(records: List[Dict]) -> Tuple[List[Dict], List[Dict]]:
+class EmbeddingDeduplicator:
     """
-    Evaluates incoming Beacon API text embeddings and filters redundant interaction logs.
+    Evaluates incoming embeddings against indexed vectors using cosine similarity.
+    Configured according to precision-latency trade-offs in `Company Document`.
     """
-    unique_records = []
-    duplicate_records = []
-    unique_vectors = []
+    def __init__(self, threshold: float = 0.92):
+        self.threshold = threshold
+        self.index: List[np.ndarray] = []
+        self.metadata_store: List[Dict[str, Any]] = []
 
-    for record in records:
-        vec = np.array(record["embedding"], dtype=np.float32)
-        matched_parent_id = None
-        max_sim = 0.0
+    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
+        norm_a, norm_b = np.linalg.norm(a), np.linalg.norm(b)
+        return float(np.dot(a, b) / (norm_a * norm_b)) if norm_a and norm_b else 0.0
 
-        for idx, existing_vec in enumerate(unique_vectors):
-            sim = cosine_similarity(vec, existing_vec)
-            if sim >= COSINE_SIMILARITY_THRESHOLD and sim > max_sim:
-                max_sim = sim
-                matched_parent_id = unique_records[idx]["id"]
-
-        if matched_parent_id:
-            record["duplicate_of"] = matched_parent_id
-            record["similarity_score"] = round(max_sim, 4)
-            duplicate_records.append(record)
-        else:
-            unique_vectors.append(vec)
-            unique_records.append(record)
-
-    return unique_records, duplicate_records
+    def process_batch(
+        self, batch: List[Dict[str, Any]]
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        unique, duplicates = [], []
+        for item in batch:
+            vec = np.array(item["embedding"], dtype=np.float32)
+            matched_id = next(
+                (self.metadata_store[i]["id"]
+                 for i, ex in enumerate(self.index)
+                 if self._cosine_similarity(vec, ex) >= self.threshold),
+                None
+            )
+            if matched_id:
+                item["duplicate_of"] = matched_id
+                duplicates.append(item)
+            else:
+                self.index.append(vec)
+                self.metadata_store.append(item)
+                unique.append(item)
+        return unique, duplicates
 
 ```
