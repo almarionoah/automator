@@ -1,0 +1,60 @@
+# Atlas Core - Dashboard Density & Layout Token Refactoring Specification
+**Author:** Ash Nkosi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 15:45  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Refactored the Atlas Core dashboard UI architecture from cluttered widget grids to a streamlined 8pt hierarchy, referencing Business Document: Company Document to align SaaS platform analytics and Face-to-Face booking workflows.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.it-skokos.internal/v2/schema.json",
+  "meta": {
+    "project": "Atlas Core",
+    "module": "Dashboard / Overview Layout",
+    "author": "Ash Nkosi (Design o3)",
+    "refactorStatus": "Phase 4 - Density De-cluttering Complete",
+    "sourceDocumentation": {
+      "reference": "Business Document: Company Document",
+      "usage": "Utilized Business Document: Company Document to audit information hierarchy, prune secondary SaaS metrics, and isolate critical Face-to-Face service appointment workflows from high-frequency telemetry."
+    }
+  },
+  "refactorSummary": {
+    "previousState": "24 nested cards, 4px micro-gutters, 11 font sizes, visual noise ratio 0.68",
+    "targetState": "Unified 3-tier modular grid, baseline 8px token scale, 4 strict typography steps, visual noise ratio 0.22"
+  },
+  "tokens": {
+    "spacing": {
+      "dashboard-canvas-padding": "32px",
+      "widget-gap": "24px",
+      "card-internal-padding": "20px",
+      "metric-stack-gap": "8px"
+    },
+    "grid": {
+      "columns": 12,
+      "max-width": "1440px",
+      "breakpoints": {
+        "desktop": "1280px",
+        "compact": "1024px"
+      }
+    },
+    "components": {
+      "MetricCard": {
+        "visualWeight": "minimal",
+        "border": "1px solid var(--color-border-subtle)",
+        "elevation": "none",
+        "contentSlot": "consolidated-kpi-delta"
+      },
+      "ServiceFeed": {
+        "density": "compact-row",
+        "rowHeight": "48px",
+        "pagination": "infinite-virtualized",
+        "actionPlacement": "overflow-menu"
+      }
+    }
+  }
+}
+```
