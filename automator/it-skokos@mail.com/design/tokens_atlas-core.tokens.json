@@ -1,0 +1,56 @@
+# Atlas Core Component Tokens Specification
+**Author:** Rune Cross  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D15 21:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Comprehensive semantic and component token architecture for Atlas Core, incorporating cross-surface edge-case handling for SaaS and Face-to-Face touchpoints as informed by Business Document: Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$meta": {
+    "project": "Atlas Core",
+    "designer": "Rune Cross",
+    "reference": "Business Document: Company Document (utilised for aligning SaaS multi-tenant states and physical kiosk/F2F ambient contrast ratios)",
+    "version": "1.0.0"
+  },
+  "atlas": {
+    "component": {
+      "button": {
+        "primary": {
+          "background": {
+            "default": { "value": "{color.brand.primary.600}" },
+            "hover": { "value": "{color.brand.primary.700}" },
+            "active": { "value": "{color.brand.primary.800}" },
+            "disabled": { "value": "{color.neutral.300}" },
+            "edge_case_offline_syncing": { "value": "{color.warning.400}", "description": "Visual cue when F2F POS loses network connectivity as defined in Business Document: Company Document." }
+          },
+          "text": {
+            "default": { "value": "{color.neutral.0}" },
+            "disabled": { "value": "{color.neutral.500}" }
+          },
+          "border-radius": { "value": "{dimension.radius.md}" },
+          "padding": {
+            "vertical": { "value": "{dimension.spacing.sm}" },
+            "horizontal": { "value": "{dimension.spacing.lg}" }
+          }
+        }
+      },
+      "surface": {
+        "card": {
+          "background": { "value": "{color.surface.default}" },
+          "border": {
+            "default": { "value": "1px solid {color.neutral.200}" },
+            "high_contrast_kiosk": { "value": "2px solid {color.neutral.900}", "description": "Edge-case high-ambient-light token for Face-to-Face terminals referenced in Business Document: Company Document." }
+          },
+          "elevation": { "value": "{shadow.elevation.1}" }
+        }
+      }
+    }
+  }
+}
+```
