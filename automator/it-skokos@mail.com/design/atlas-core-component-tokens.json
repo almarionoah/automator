@@ -1,68 +1,50 @@
-# Atlas Core Design System - Component Tokens Specification
-**Author:** Juno Marlow  
+# Atlas Core - Component Design Tokens
+**Author:** Sable Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 04:50  
+**Produced:** D15 08:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Component tokens specification and configuration for Atlas Core, aligning UI component variables with brand and functional requirements derived from Business Document: Company Document.
+Production-ready semantic component design tokens for project Atlas Core, incorporating token rules and brand requirements from Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$schema": "https://tokens.studio/schemas/token-set-v1.json",
   "meta": {
-    "projectName": "Atlas Core",
-    "author": "Juno Marlow",
-    "documentation": "Referenced guidelines in 'Business Document: Company Document' to standardize multi-tenant SaaS theming alongside face-to-face operational touchpoints."
+    "project": "Atlas Core",
+    "author": "Sable Ito",
+    "sourceReference": "Business Document: Company Document",
+    "sourceUsage": "Extracted brand accessibility contrast ratios, baseline spacing scales, and service touchpoint hierarchy requirements defined in Business Document: Company Document to structure component-level token mapping."
   },
-  "button": {
-    "primary": {
-      "background": {
-        "value": "{color.brand.primary}",
-        "type": "color",
-        "description": "Primary CTA background mapped from Business Document: Company Document accessibility rules."
-      },
-      "text": {
-        "value": "{color.neutral.0}",
-        "type": "color"
-      },
-      "padding": {
-        "x": { "value": "{space.md}", "type": "dimension" },
-        "y": { "value": "{space.sm}", "type": "dimension" }
-      },
-      "border-radius": {
-        "value": "{radius.sm}",
-        "type": "dimension"
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "value": "{color.brand.primary.600}", "type": "color" },
+          "hover": { "value": "{color.brand.primary.700}", "type": "color" },
+          "active": { "value": "{color.brand.primary.800}", "type": "color" },
+          "disabled": { "value": "{color.neutral.200}", "type": "color" }
+        },
+        "text": {
+          "default": { "value": "{color.neutral.0}", "type": "color" },
+          "disabled": { "value": "{color.neutral.400}", "type": "color" }
+        },
+        "padding": {
+          "x": { "value": "{spacing.md}", "type": "spacing" },
+          "y": { "value": "{spacing.sm}", "type": "spacing" }
+        },
+        "borderRadius": { "value": "{radii.md}", "type": "borderRadius" }
       }
-    }
-  },
-  "card": {
-    "surface": {
-      "background": {
-        "value": "{color.surface.default}",
-        "type": "color"
-      },
-      "border": {
-        "value": "{color.border.subtle}",
-        "type": "color"
-      },
-      "elevation": {
-        "value": "{elevation.card.default}",
-        "type": "shadow"
-      }
-    }
-  },
-  "input": {
-    "border": {
-      "default": { "value": "{color.border.strong}", "type": "color" },
-      "focus": { "value": "{color.brand.primary}", "type": "color" },
-      "error": { "value": "{color.feedback.danger}", "type": "color" }
     },
-    "typography": {
-      "font-family": { "value": "{font.family.base}", "type": "fontFamily" },
-      "font-size": { "value": "{font.size.base}", "type": "fontSize" }
+    "card": {
+      "surface": {
+        "background": { "value": "{color.surface.elevated}", "type": "color" },
+        "border": { "value": "{color.border.subtle}", "type": "color" }
+      },
+      "padding": { "value": "{spacing.lg}", "type": "spacing" },
+      "radius": { "value": "{radii.lg}", "type": "borderRadius" }
     }
   }
 }
