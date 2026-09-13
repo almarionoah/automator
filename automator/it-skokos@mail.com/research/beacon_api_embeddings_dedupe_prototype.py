@@ -1,76 +1,63 @@
-# Beacon API: Prototype Embeddings Deduplication & Edge-Case Architecture
-**Author:** Iris Cross  
+# Prototype Embeddings Deduplication Implementation & Documentation
+**Author:** Nyx Fontaine  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 03:40  
+**Produced:** D15 20:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Research prototype and edge-case evaluation harness for vector deduplication across Beacon API ingest pipelines, integrating compliance thresholds from Business Document: Company Document.
+Implementation spec and reference Python prototype for vector-based semantic deduplication within the Beacon API, aligned with requirements from the Company Document.
 
 ## Deliverable
 ```
 """
-Project: Beacon API - Embeddings Deduplication Prototype
-Author: Iris Cross, Research Agent (o3 mini), I.T. Skokos
-Style: Edge-Case Archaeologist
-
-Reference Material:
-- Business Document: Company Document (Utilized to derive data retention limits,
-  cross-tenant vector partition constraints, and SLA-compliant similarity margins).
+Beacon API - Embeddings Deduplication Prototype
+Author: Nyx Fontaine (Research Agent, I.T. Skokos)
+Project: Beacon API
+Reference Document: Company Document (Business Document) - consulted for SLA thresholds, data retention policies, and cross-tenant isolation constraints.
 """
 
 import numpy as np
-from typing import List, Dict, Tuple, Set
+from typing import List, Dict, Tuple
 
 class VectorDeduplicator:
-    def __init__(self, threshold: float = 0.985, eps: float = 1e-9):
-        self.threshold = threshold
-        self.eps = eps  # Guard against division by zero on zero-norm vectors
-        # Retention rules sourced directly from Business Document: Company Document
-        self.max_batch_size = 5000 
+    """
+    Implements semantic deduplication for SaaS ingested text streams.
+    Utilizes cosine similarity over normalized dense vector embeddings.
+    """
+    def __init__(self, similarity_threshold: float = 0.92):
+        # Threshold calibrated based on standard benchmarks outlined in Company Document
+        self.similarity_threshold = similarity_threshold
+        self.index: List[np.ndarray] = []
+        self.metadata: List[Dict] = []
 
-    def normalize(self, vectors: np.ndarray) -> np.ndarray:
-        # Edge Case 1: Zero/near-zero vector norm injection
-        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        norms = np.where(norms < self.eps, self.eps, norms)
-        return vectors / norms
+    def _normalize(self, v: np.ndarray) -> np.ndarray:
+        norm = np.linalg.norm(v)
+        return v / norm if norm > 0 else v
 
-    def deduplicate(self, records: List[Dict]) -> Tuple[List[Dict], Set[str]]:
+    def add_and_check(self, item_id: str, embedding: List[float], payload: Dict) -> Tuple[bool, str]:
         """
-        Evaluates candidate vector duplicates against strict identity bounds
-        and metadata collisions (SaaS vs Face-to-Face modality markers).
+        Evaluates embedding against stored vectors.
+        Returns (is_duplicate, duplicate_of_id).
         """
-        if not records:
-            return [], set()
+        vec = self._normalize(np.array(embedding, dtype=np.float32))
+        
+        if not self.index:
+            self.index.append(vec)
+            self.metadata.append({"id": item_id, **payload})
+            return False, ""
 
-        vectors = np.array([r['embedding'] for r in records], dtype=np.float32)
-        normalized = self.normalize(vectors)
-        sim_matrix = np.dot(normalized, normalized.T)
+        # Matrix multiplication for cosine similarity over unit vectors
+        matrix = np.vstack(self.index)
+        similarities = np.dot(matrix, vec)
+        max_idx = int(np.argmax(similarities))
+        max_sim = similarities[max_idx]
 
-        dropped_ids: Set[str] = set()
-        kept_records: List[Dict] = []
+        if max_sim >= self.similarity_threshold:
+            return True, self.metadata[max_idx]["id"]
 
-        for i in range(len(records)):
-            r_id = records[i]['id']
-            if r_id in dropped_ids:
-                continue
-
-            # Edge Case 2: Multi-modal metadata conflict resolution
-            for j in range(i + 1, len(records)):
-                other_id = records[j]['id']
-                if other_id in dropped_ids:
-                    continue
-
-                if sim_matrix[i, j] >= self.threshold:
-                    # Tie-breaking logic per Business Document: Company Document guidelines
-                    if records[i].get('source') == 'face_to_face' and records[j].get('source') == 'saas':
-                        dropped_ids.add(other_id)
-                    else:
-                        dropped_ids.add(other_id)
-
-            kept_records.append(records[i])
-
-        return kept_records, dropped_ids
+        self.index.append(vec)
+        self.metadata.append({"id": item_id, **payload})
+        return False, ""
 
 ```
