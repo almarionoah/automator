@@ -1,58 +1,58 @@
-# Atlas Core Component Design Tokens Specification
-**Author:** Pixel Reyes  
+# Atlas Core: Expressive Component Design Token Architecture
+**Author:** Sable Petrov  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D16 07:05  
+**Produced:** D16 07:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized component token system for Atlas Core, standardizing UI primitives and semantic mappings to minimize bundle bloat and design handoff overhead, aligned with Business Document: Company Document.
+Complete semantic and component token specifications for Atlas Core, translated from the brand ethos and service blueprints in the Company Document to bridge digital SaaS interactions with face-to-face emotional resonance.
 
 ## Deliverable
 ```
 {
-  "$metadata": {
+  "$schema": "https://tokens.spec.atlas.io/v1/schema.json",
+  "metadata": {
     "project": "Atlas Core",
-    "author": "Pixel Reyes",
-    "version": "1.0.0",
-    "strategy": "Cost Cutter / Lean Architecture",
-    "references": {
-      "source": "Business Document: Company Document",
-      "usage": "Extracted brand baseline color values, service-tier visual constraints, and accessibility requirements to prevent redundant palette expansions and reduce component variant overhead."
-    }
-  },
-  "global": {
-    "color": {
-      "brand-primary": { "value": "#0F4C81", "type": "color" },
-      "brand-neutral-dark": { "value": "#1A1A1A", "type": "color" },
-      "brand-neutral-light": { "value": "#F4F5F7", "type": "color" },
-      "brand-success": { "value": "#107C41", "type": "color" },
-      "brand-warning": { "value": "#D83B01", "type": "color" }
-    },
-    "spacing": {
-      "unit-xs": { "value": "4px", "type": "dimension" },
-      "unit-sm": { "value": "8px", "type": "dimension" },
-      "unit-md": { "value": "16px", "type": "dimension" },
-      "unit-lg": { "value": "24px", "type": "dimension" }
-    },
-    "radius": {
-      "default": { "value": "4px", "type": "dimension" }
-    }
+    "designer": "Sable Petrov",
+    "governance": "Aligned directly with the service standards and brand architecture detailed in Company Document to ensure continuous tactile empathy across digital SaaS touchpoints and face-to-face client encounters."
   },
   "component": {
-    "button": {
-      "padding-y": { "value": "{global.spacing.unit-sm.value}" },
-      "padding-x": { "value": "{global.spacing.unit-md.value}" },
-      "radius": { "value": "{global.radius.default.value}" },
-      "primary-bg": { "value": "{global.color.brand-primary.value}" },
-      "primary-text": { "value": "#FFFFFF" },
-      "secondary-bg": { "value": "{global.color.brand-neutral-light.value}" },
-      "secondary-text": { "value": "{global.color.brand-neutral-dark.value}" }
-    },
     "card": {
-      "surface-bg": { "value": "#FFFFFF" },
-      "border": { "value": "1px solid {global.color.brand-neutral-light.value}" },
-      "padding": { "value": "{global.spacing.unit-md.value}" }
+      "surface": {
+        "value": "{color.surface.warm-canvas}",
+        "description": "A welcoming, grounded foundation derived from the Company Document's human-first hospitality directives."
+      },
+      "border": {
+        "value": "1px solid {color.stroke.subtle-intimacy}",
+        "radius": "{radii.lg}"
+      },
+      "elevation": {
+        "resting": "{shadow.ambient.soft-glow}",
+        "hover": "{shadow.elevation.embraced}"
+      },
+      "motion": {
+        "transition": "all {motion.duration.deliberate} {motion.easing.natural-breath}"
+      }
+    },
+    "button": {
+      "primary": {
+        "background": {
+          "default": "{color.brand.resonant-indigo}",
+          "hover": "{color.brand.deep-twilight}"
+        },
+        "padding": "{spacing.sm} {spacing.xl}",
+        "radii": "{radii.pill}",
+        "typography": "{font.action.poetic-medium}"
+      }
+    },
+    "interaction": {
+      "focusRing": {
+        "width": "2px",
+        "style": "solid",
+        "color": "{color.accessibility.clear-embrace}",
+        "offset": "2px"
+      }
     }
   }
 }
