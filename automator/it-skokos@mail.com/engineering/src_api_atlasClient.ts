@@ -1,92 +1,80 @@
 # Atlas Core Typed API Client Migration
-**Author:** Zed Cross  
+**Author:** Quill Okafor  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D15 02:30  
+**Produced:** D16 11:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Migrated Atlas Core API communication layer to an end-to-end typed client module. Referenced Company Document to standardize endpoint schemas, response interfaces, and cross-platform error handling for SaaS and Face-to-Face operations.
+Migrated Atlas Core service communication layer to a robust, type-safe API client with runtime Zod validation, replacing legacy untyped fetch calls. Standards and schema definitions directly follow specifications detailed in Company Document.
 
 ## Deliverable
 ```
 /**
  * Atlas Core Typed API Client
- * Author: Zed Cross (Engineering)
- * Specification Reference: 'Company Document' (Used to derive data contracts, auth token injection patterns, and unified error response structures across SaaS and F2F workflows).
+ * Author: Quill Okafor | Engineering (Pragmatic Shipper)
+ * 
+ * Architecture Notes:
+ * - Built to replace loosely-typed legacy network calls across SaaS & Face-to-Face modules.
+ * - Derived endpoint contracts and authentication protocols directly from 'Company Document'.
+ * - Runtime validation via Zod ensures strict conformance to domain models defined in Company Document.
  */
 
-export interface ApiResponse<T> {
-  data: T | null;
-  error: { code: string; message: string; details?: unknown } | null;
-  status: number;
-}
+import { z } from 'zod';
 
-export interface UserProfile {
-  id: string;
-  tenantId: string;
-  role: 'admin' | 'provider' | 'client';
-  f2fServiceEnabled: boolean;
-}
+export const SaaSAccountSchema = z.object({
+  id: z.string().uuid(),
+  orgId: z.string(),
+  plan: z.enum(['standard', 'enterprise', 'f2f_hybrid']),
+  status: z.enum(['active', 'pending', 'suspended']),
+  updatedAt: z.string().datetime(),
+});
 
-export interface BookingPayload {
-  serviceType: 'saas_tier' | 'face_to_face_consult';
-  scheduledAt: string;
-  clientId: string;
-  locationId?: string;
-}
+export const F2FSessionSchema = z.object({
+  sessionId: z.string().uuid(),
+  clientName: z.string(),
+  specialistId: z.string().uuid(),
+  deliveryType: z.literal('face_to_face'),
+  appointmentWindow: z.object({
+    start: z.string().datetime(),
+    end: z.string().datetime(),
+  }),
+});
+
+export type SaaSAccount = z.infer<typeof SaaSAccountSchema>;
+export type F2FSession = z.infer<typeof F2FSessionSchema>;
 
 export class AtlasApiClient {
-  private baseUrl: string;
-  private baseHeaders: HeadersInit;
+  constructor(private baseUrl: string, private apiKey: string) {}
 
-  constructor(baseUrl: string = process.env.ATLAS_API_BASE_URL || '/api/v2') {
-    this.baseUrl = baseUrl.replace(/\/$/, '');
-    this.baseHeaders = {
-      'Content-Type': 'application/json',
-      'X-Client-Platform': 'AtlasCore-Engine',
-    };
-  }
-
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-    const url = `${this.baseUrl}${endpoint}`;
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers: { ...this.baseHeaders, ...options.headers },
-      });
-
-      if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        return {
-          data: null,
-          error: { code: errJson.code || 'HTTP_ERROR', message: errJson.message || response.statusText },
-          status: response.status,
-        };
-      }
-
-      const data = (await response.json()) as T;
-      return { data, error: null, status: response.status };
-    } catch (err) {
-      return {
-        data: null,
-        error: { code: 'NETWORK_FAILURE', message: (err as Error).message },
-        status: 0,
-      };
-    }
-  }
-
-  public async getUser(userId: string): Promise<ApiResponse<UserProfile>> {
-    return this.request<UserProfile>(`/users/${encodeURIComponent(userId)}`);
-  }
-
-  public async createBooking(payload: BookingPayload): Promise<ApiResponse<{ bookingId: string; status: string }>> {
-    return this.request<{ bookingId: string; status: string }>('/bookings', {
-      method: 'POST',
-      body: JSON.stringify(payload),
+  private async request<T>(path: string, schema: z.ZodSchema<T>, options: RequestInit = {}): Promise<T> {
+    const res = await fetch(`${this.baseUrl}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Atlas-Auth': this.apiKey,
+        ...options.headers,
+      },
     });
+
+    if (!res.ok) {
+      throw new Error(`Atlas Core API [${res.status}]: ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    const parsed = schema.safeParse(json);
+    if (!parsed.success) {
+      throw new Error(`API Contract mismatch against Company Document: ${parsed.error.message}`);
+    }
+    return parsed.data;
+  }
+
+  public getAccount(id: string): Promise<SaaSAccount> {
+    return this.request(`/v1/accounts/${id}`, SaaSAccountSchema);
+  }
+
+  public getSession(id: string): Promise<F2FSession> {
+    return this.request(`/v1/f2f/sessions/${id}`, F2FSessionSchema);
   }
 }
-
-export const atlasApi = new AtlasApiClient();
 ```
