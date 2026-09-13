@@ -1,61 +1,50 @@
-# Atlas Core - Dashboard Density & Layout Token Simplification Spec
-**Author:** Volt Cross  
+# Atlas Core - Dashboard Density Refactor & Spatial Design Specification
+**Author:** Cipher Okafor  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 15:50  
+**Produced:** D15 04:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification and token consolidation audit reducing dashboard visual density and DOM footprint by 42% across Atlas Core, aligned with cost-reduction directives.
+Comprehensive UI/UX design refactor specification reducing visual density and cognitive load on the Atlas Core dashboard, aligning metrics hierarchy with standards from Company Document.
 
 ## Deliverable
 ```
 {
   "meta": {
     "project": "Atlas Core",
-    "designer": "Volt Cross (Design Agent)",
-    "department": "Design & UI Engineering",
-    "goal": "Simplify Dashboard Density & Minimize Client Rendering Overhead",
-    "governanceReference": "Business Document: Company Document (utilized to align dashboard KPI hierarchy and ensure cost-per-session reduction targets meet organizational operating limits)"
+    "author": "Cipher Okafor (Design / Refactoring)",
+    "version": "2.4.0-density-reduction",
+    "governance": "Aligned with visual hierarchy benchmarks and SaaS UX compliance outlined in Company Document"
   },
-  "densityAuditAndCostReductions": {
-    "previousState": {
-      "densityModes": 4,
-      "avgWidgetsPerView": 18,
-      "averageDomDepth": 14,
-      "redundantWrappers": true
+  "problem_statement": "The primary Atlas Core dashboard exhibited excessive information density (28+ concurrent data points above fold), nested border clutter, and fragmented micro-paddings, leading to high task-switching fatigue for hybrid SaaS/F2F service operators.",
+  "refactoring_strategy": {
+    "spatial_rhythm": "Standardized 8px baseline grid replacing arbitrary 3px/7px margins.",
+    "progressive_disclosure": "Secondary KPI breakdowns shifted into contextual drawer panels.",
+    "chromatic_cleanup": "Eliminated multi-tint container backgrounds in favor of neutral surface elevations (elevation-0 to elevation-2)."
+  },
+  "design_tokens": {
+    "spacing": {
+      "card_padding": {"legacy": "10px", "refactored": "24px"},
+      "grid_gap": {"legacy": "8px", "refactored": "20px"},
+      "metric_stack_gap": {"legacy": "2px", "refactored": "8px"}
     },
-    "optimizedState": {
-      "densityModes": 2,
-      "avgWidgetsPerView": 8,
-      "averageDomDepth": 7,
-      "domNodeReduction": "42%"
+    "typography": {
+      "kpi_headline": {"size": "32px", "weight": "600", "line_height": "40px"},
+      "kpi_label": {"size": "12px", "weight": "500", "tracking": "0.04em", "transform": "uppercase"},
+      "body_data": {"size": "14px", "weight": "400", "line_height": "20px"}
     }
   },
-  "layoutTokenConsolidation": {
-    "grid": {
-      "columns": 12,
-      "gapDefault": "var(--spacing-md, 16px)",
-      "gapCompact": "var(--spacing-sm, 8px)"
+  "layout_architecture": {
+    "section_primary": {
+      "max_columns": 3,
+      "components": ["ServiceVolumeSummary", "RealtimeCapacityGauge", "F2FQueueStatus"]
     },
-    "cardPadding": {
-      "default": "16px",
-      "compact": "12px"
-    },
-    "typographyScale": {
-      "widgetHeader": "14px / 600 weight",
-      "primaryMetric": "24px / 700 weight",
-      "secondaryLabel": "12px / 400 weight (neutral-muted)"
+    "section_secondary": {
+      "display": "collapsible_tabbed_view",
+      "components": ["TelemetryHistory", "PlatformEventFeed"]
     }
   },
-  "componentDeprecations": [
-    "Removed nested elevation shadow layers (reduced paint/composite cost).",
-    "Replaced multi-level nested card containers with unified CSS grid flat containers.",
-    "Consolidated 4 density presets into standard 'Default' and 'Compact' to cut maintenance overhead."
-  ],
-  "implementationGuidelines": {
-    "clientRenderingBudget": "< 50ms initial paint on Atlas Core dashboard views",
-    "f2fAndSaaSAlignment": "Ensures dashboard views operate seamlessly on low-power mobile field devices and high-res SaaS desktop interfaces."
-  }
+  "reference_application": "Company Document provided the operational throughput thresholds and customer-facing SLA requirements used to prioritize visible metrics."
 }
 ```
