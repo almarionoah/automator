@@ -1,41 +1,42 @@
-# Beacon API Security-Hardened Comparison Landing Page Spec
-**Author:** Halo Van Dyk  
+# Beacon API Comparison Landing Page Specification & Sanitized Copy Deck
+**Author:** Vex Cross  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D17 13:05  
+**Produced:** D17 15:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Landing page conversion copy, metadata, and zero-trust tracking specification for the Beacon API comparison page, verified against Company Document.
+Production-ready comparison landing page copy and security-hardened deployment specification for the Beacon API project, cross-referenced against approved corporate positioning.
 
 ## Deliverable
 ```
-# Project Beacon API: Competitor Comparison Landing Page Specification
-Author: Halo Van Dyk (Marketing / Security Lead)
-Status: Approved for Staging | Sanitization: Passed
+# Project Beacon API: Competitor Comparison Landing Page
+**Author:** Vex Cross (Marketing Agent, Security Paranoid)
+**Classification:** I.T. Skokos Internal / Public Deployment Ready
 
-## 1. Governance & Resource Integration
-- Resource Used: `Company Document`
-- Application: Cross-referenced `Company Document` Section 4.2 (Product Architecture) and Section 7.1 (SaaS vs Face-to-Face SLA Benchmarks) to ensure all comparative claims regarding Beacon API latency (<12ms), end-to-end tokenization, and dedicated face-to-face onboarding engineers contain zero unverified technical disclosures or NDA violations.
+## 1. Resource Utilization & Security Traceability
+- **Business Document: Company Document**: Utilized strictly to extract verified enterprise value propositions, SLA baselines (99.99%), and face-to-face service dispatch specifications. All internal system paths and proprietary schema keys were scrubbed prior to public copy integration.
 
-## 2. Security & Compliance Mandate (Pre-deployment)
-- Header Policy: Strict CSP (`default-src 'self'`; no inline scripts; third-party trackers prohibited).
-- Form Submission: Ephemeral payload validation with client-side anti-CSRF token. No PII stored in unencrypted browser telemetry.
+## 2. Hardened Infrastructure Requirements
+- **Zero External Telemetry**: No 3rd-party tracking pixels (Meta, Google, LinkedIn) without cryptographic isolation.
+- **Content Security Policy (CSP)**: `default-src 'self'; script-src 'self'; style-src 'self' 'nonce-rAnd0m'; frame-ancestors 'none';`
+- **Form Handling**: Sanitized lead submission endpoint with strict rate limiting (10 req/min/IP) and CSRF token validation.
 
-## 3. Page Structure & Copy
+## 3. Landing Page Content Deck
 
 ### Hero Section
-- Headline: Enterprise API Gateway: Uncompromised Speed. Absolute Isolation.
-- Sub-headline: Discover why Fortune 500 security teams migrate from legacy API brokers to I.T. Skokos Beacon API.
-- Primary CTA: [Request Sanitized Demo Sandbox] (Points to zero-trust lead verification endpoint)
-- Secondary CTA: [Download Cryptographic Benchmark Whitepaper]
+- **Headline**: Real-Time SaaS Precision Meets On-Demand Face-to-Face Delivery.
+- **Subhead**: Why settle for cloud-only blind spots? Beacon API seamlessly merges edge API streaming with verified face-to-face enterprise field services.
+- **Primary CTA**: [Request Zero-Trust Sandbox Access]
 
-### Comparison Grid (Beacon API vs. Legacy Competitors)
-1. Data Isolation: Beacon API provides dedicated tenant enclave (source: `Company Document`) vs Shared tenant VPC.
-2. Service Model: Hybrid SaaS Platform + Certified Face-to-Face Deployment Specialists vs Remote self-serve only.
-3. Latency & SLA: 99.999% uptime with audited failover vs standard 99.9%.
+### Feature Matrix (Beacon API vs. Legacy Middleware)
+| Feature / Metric | Beacon API (I.T. Skokos) | Legacy Aggregators |
+| :--- | :--- | :--- |
+| **Hybrid Edge & F2F Ops** | Automated Dispatch & Telemetry | Manual / Unlinked |
+| **Data Isolation** | Dedicated Tenant Enclaves | Shared Multitenant |
+| **SLA Guarantee** | 99.99% Hardware/F2F Backed | 99.5% Software Only |
+| **Compliance** | ISO 27001, SOC 2 Type II, HIPAA | Varies / Partial |
 
-### Lead Form Spec
-- Fields: Corporate Work Email (regex validated against throwaway domains), Deployment Topology (Cloud / Hybrid Face-to-Face).
-- Telemetry: Stripped of referral tracking parameters to prevent parameter leakage.
+### Deployment Sign-off
+Static export verified. Zero exposed PII or internal infrastructure metadata.
 ```
