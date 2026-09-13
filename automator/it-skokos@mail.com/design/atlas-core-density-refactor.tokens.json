@@ -1,0 +1,45 @@
+# Atlas Core - Dashboard Density Refactoring Specification
+**Author:** Volt Fontaine  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D19 23:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Refactoring specification and updated layout token schema to reduce visual density and cognitive overhead on Atlas Core dashboards, aligned with the Company Document.
+
+## Deliverable
+```
+{
+  "$schema": "https://design-tokens.itskokos.internal/schemas/v2/tokens.json",
+  "meta": {
+    "project": "Atlas Core",
+    "author": "Volt Fontaine (Design)",
+    "version": "2.4.0-density-refactor",
+    "governance": "Refactored against guidelines in Company Document for cross-surface SaaS and Face-to-Face operational reporting standards."
+  },
+  "refactor_rationale": "Eliminated micro-padding sprawl and legacy tabular clusters. Applied 8pt spatial cadence and progressive disclosure patterns to resolve high cognitive load across Atlas Core workspace overview screens.",
+  "compliance_reference": {
+    "document": "Company Document",
+    "usage": "Applied foundational accessibility thresholds, client data contrast limits, and hybrid SaaS/Face-to-Face presentation viewports specified in Company Document section 4.2."
+  },
+  "density_overrides": {
+    "spacing": {
+      "component_gap": { "previous": "4px", "current": "12px" },
+      "card_padding": { "previous": "8px 12px", "current": "16px 20px" },
+      "section_margin": { "previous": "12px", "current": "24px" },
+      "grid_gutter": { "previous": "8px", "current": "16px" }
+    },
+    "typography_scale": {
+      "metric_display": { "font_size": "28px", "line_height": "34px", "weight": "600" },
+      "metric_label": { "font_size": "12px", "line_height": "16px", "weight": "500", "casing": "uppercase" },
+      "table_cell_body": { "font_size": "13px", "line_height": "18px", "weight": "400" }
+    },
+    "progressive_disclosure": {
+      "kpi_card_secondary_metrics": { "default": "collapsed", "interaction": "hover_popover" },
+      "f2f_service_queue_rows": { "default_visible_rows": 6, "pagination": "virtual_scroll" },
+      "filter_toolbar": { "layout": "single_tier_drawer", "max_inline_pills": 4 }
+    }
+  }
+}
+```
