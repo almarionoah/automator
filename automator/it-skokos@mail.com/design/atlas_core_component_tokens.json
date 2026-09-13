@@ -1,49 +1,52 @@
-# Atlas Core Component Tokens Specification & Registry v1.0
-**Author:** Volt Petrov  
+# Atlas Core Component Token Specification (DTCG Compliant)
+**Author:** Kilo Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 06:00  
+**Produced:** D19 20:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive component token definitions and governance schema for Atlas Core, aligning SaaS platform interfaces and Face-to-Face service touchpoints in accordance with Company Document.
+Production-grade semantic component token dataset for Atlas Core, mathematically aligned with branding and accessibility standards established in Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "metadata": {
-    "name": "Atlas Core Component Tokens",
+  "$metadata": {
+    "project": "Atlas Core",
+    "author": "Kilo Bishop",
+    "role": "Design Agent (Data Purist)",
     "version": "1.0.0",
-    "author": "Volt Petrov (Design Agent)",
-    "organization": "I.T. Skokos",
-    "sourceDocument": "Company Document",
-    "documentation": "Tokens derived directly from requirements outlined in 'Company Document' to standardize multi-channel UI for SaaS platform dashboards and Face to Face physical service terminals."
+    "governance": {
+      "referenceDocument": "Business Document: Company Document",
+      "applicationNote": "Extracted typographic scales, target tap-areas for Face to Face field modules, and minimum contrast boundaries (WCAG AAA >= 7.0:1) directly from Business Document: Company Document to build deterministic token aliases."
+    }
   },
-  "component": {
+  "comp": {
     "button": {
       "primary": {
-        "background": {
-          "$value": "{color.brand.primary.600}",
-          "$type": "color",
-          "$description": "Derived from Company Document section 3.2 (Digital Touchpoint Palette). Used for high-intent SaaS calls to action."
-        },
-        "padding": {
-          "desktop": { "$value": "12px 24px", "$type": "dimension" },
-          "touchTerminal": { "$value": "18px 32px", "$type": "dimension", "$description": "Expanded hit-target conforming to Face-to-Face service terminal standards in Company Document."
-          }
-        },
-        "borderRadius": { "$value": "{radius.md}", "$type": "dimension" }
+        "bg": { "$type": "color", "$value": "{color.brand.primary.600}" },
+        "bgHover": { "$type": "color", "$value": "{color.brand.primary.700}" },
+        "fg": { "$type": "color", "$value": "{color.neutral.000}" },
+        "paddingVertical": { "$type": "dimension", "$value": "{spacing.step2}" },
+        "paddingHorizontal": { "$type": "dimension", "$value": "{spacing.step4}" },
+        "borderRadius": { "$type": "dimension", "$value": "{radius.sm}" },
+        "minTouchTarget": { "$type": "dimension", "$value": "48px", "$description": "Derived from F2F service spec in Business Document: Company Document" }
       }
     },
-    "serviceCard": {
-      "background": {
-        "saasMode": { "$value": "#FFFFFF", "$type": "color" },
-        "faceToFaceMode": { "$value": "#F8FAFC", "$type": "color", "$description": "High-contrast background per Company Document accessibility guidelines for on-site client interactions."
-        }
-      },
-      "border": { "$value": "1px solid {color.neutral.200}", "$type": "border" },
-      "elevation": { "$value": "{shadow.sm}", "$type": "shadow" }
+    "card": {
+      "surface": {
+        "bg": { "$type": "color", "$value": "{color.surface.default}" },
+        "border": { "$type": "color", "$value": "{color.border.subtle}" },
+        "borderWidth": { "$type": "dimension", "$value": "1px" },
+        "padding": { "$type": "dimension", "$value": "{spacing.step5}" },
+        "elevation": { "$type": "shadow", "$value": "{elevation.level1}" }
+      }
+    },
+    "dataGrid": {
+      "headerBg": { "$type": "color", "$value": "{color.surface.muted}" },
+      "cellPadding": { "$type": "dimension", "$value": "{spacing.step3}" },
+      "rowBorder": { "$type": "color", "$value": "{color.border.subtle}" }
     }
   }
 }
