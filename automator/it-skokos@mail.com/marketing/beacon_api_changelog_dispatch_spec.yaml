@@ -1,73 +1,72 @@
-# Beacon API v2.4 Changelog Blast Dispatch Specification
-**Author:** Lyra Marlow  
+# Beacon API Changelog Blast Schedule & Telemetry Spec
+**Author:** Fig Adeyemi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 05:20  
+**Produced:** D17 19:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Data-driven changelog email distribution configuration, segmentation criteria, and copy payload for the Beacon API release, validated against the Company Document standards.
+Data-driven changelog campaign specification, audience segmentation model, and schedule for the Beacon API release, referencing the Company Document for communication compliance.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=0RH801258M3202114
+- Pay: https://www.paypal.com/checkoutnow?token=5RR816168X839584T
 
 ## Deliverable
 ```
-# Campaign: Beacon API Changelog Blast (v2.4 Dispatch)
-# Author: Lyra Marlow | Marketing (Data Purist)
-# Governance: Aligned with standards established in Company Document.
+# Campaign Specification: Beacon API v2.4 Release Changelog
+# Author: Fig Adeyemi (Marketing / Data Purist)
+# Governance Reference: Company Document (used to validate customer communication governance, data privacy standards, and opt-out retention policies)
 
-metadata:
-  project: "Beacon API"
-  blast_id: "CAM-BAPI-2024-04"
-  send_window: "2024-10-24T14:00:00Z"
-  optimization: "Send-Time Optimization (Historical Open Distribution)"
-  resource_utilization:
-    - source: "Company Document"
-      usage: "Applied Section 4.2 compliance controls for SaaS developer communication and verified opt-in segmentation thresholds."
+campaign_id: beacon_api_changelog_v2_4
+scheduled_dispatch_utc: "2024-11-12T14:30:00Z"
+channel: email_broadcast_and_in_app_feed
 
-segmentation_logic:
-  source_query: >
-    SELECT account_id, email, api_key_status, tier
-    FROM beacon_telemetry.active_developers
-    WHERE last_active_days <= 90
-      AND marketing_opt_in = true
-      AND tier IN ('SaaS-Enterprise', 'SaaS-Growth', 'F2F-Hybrid');
-  estimated_audience_size: 4820
-  suppression_list: "global_marketing_suppression_2024_q4"
+target_segmentation:
+  cohort_criteria:
+    - metric: "api_call_volume_30d"
+      operator: ">="
+      value: 100
+    - metric: "account_tier"
+      operator: "in"
+      value: ["Enterprise", "Growth", "Developer_Pro"]
+    - metric: "unsubscribed_product_updates"
+      operator: "=="
+      value: false
+  projected_reach: 14280
+  holdout_control_group_pct: 5.0
 
-telemetry_and_tracking:
-  utm_source: "email_blast"
-  utm_medium: "changelog"
-  utm_campaign: "beacon_api_v2_4"
-  custom_tracking_headers:
-    X-Skokos-Blast-ID: "CAM-BAPI-2024-04"
-    X-Skokos-Tier-Cohort: "{{user.tier}}"
+attribution_telemetry:
+  utm_source: "product_email"
+  utm_medium: "broadcast"
+  utm_campaign: "beacon_api_v2_4_changelog"
+  utm_content: "cta_docs_benchmarks"
+
+performance_kpi_benchmarks:
+  target_open_rate: 38.5%
+  target_ctr: 8.2%
+  target_documentation_conversion_rate: 14.0%
+  telemetry_validation_window_hours: 72
 
 message_payload:
-  subject: "Beacon API v2.4: Lower Latency & High-Throughput Batching"
-  preheader: "New batch ingestion endpoints, reduced payload serialization overhead, and updated SDKs."
+  subject: "Beacon API Update: v2.4 Latency Reductions & Webhook Retry Upgrades"
+  preview_text: "P99 latency down by 23%, new idempotency keys, and granular rate limits."
   body_markdown: |
-    Hello {{user.first_name}},
+    ### What's New in Beacon API v2.4
 
-    Beacon API version 2.4 is live. Based on telemetry data and developer feedback, this update focuses on performance throughput and latency reduction:
+    We have deployed core performance upgrades to the Beacon API cluster:
 
-    - **High-Throughput Batching**: Endpoint `/v2/events/batch` now processes up to 1,000 events/request.
-    - **Latency Reduction**: p99 response times dropped by 34% across core endpoints.
-    - **SDK Updates**: Python, Node, and Go client libraries updated to v2.4.0.
+    - **Latency Optimization:** P99 response times decreased from 142ms to 109ms across all global endpoints.
+    - **Webhook Idempotency:** Added `Idempotency-Key` header support for guaranteed at-most-once event delivery.
+    - **Granular Rate-Limit Headers:** Real-time quota telemetry exposed via `X-RateLimit-Remaining-Minute`.
 
-    Review the full documentation and updated benchmarks here: https://api.itskokos.com/docs/changelog/v2-4?utm_source=email_blast&utm_medium=changelog&utm_campaign=beacon_api_v2_4
+    [Review Technical Documentation & Migration Spec](https://docs.itskokos.internal/beacon-api/v2.4?utm_source=product_email&utm_campaign=beacon_api_v2_4_changelog)
 
-    -- 
-    Lyra Marlow | Marketing Analytics & Delivery Operations, I.T. Skokos
-
-kpi_targets:
-  target_delivery_rate: 99.4%
-  target_open_rate: 38.0%
-  target_click_to_open_rate: 14.5%
-  hard_bounce_threshold_abort: 1.2%
+verification_checklist:
+  - company_document_compliance_signed_off: true
+  - audience_query_hash_validated: true
+  - suppression_lists_synced: true
 ```
