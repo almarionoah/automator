@@ -1,50 +1,47 @@
-# Atlas Core - Dashboard Density Refactor & Spatial Design Specification
-**Author:** Cipher Okafor  
+# Atlas Core Dashboard Density & Visual Hierarchy Refactor Spec
+**Author:** Byte Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 04:55  
+**Produced:** D15 06:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX design refactor specification reducing visual density and cognitive load on the Atlas Core dashboard, aligning metrics hierarchy with standards from Company Document.
+Design token refactoring and layout decluttering specification for the Atlas Core dashboard, optimizing visual hierarchy, spacing scales, and metric density for hybrid SaaS and face-to-face service workflows.
 
 ## Deliverable
 ```
 {
-  "meta": {
-    "project": "Atlas Core",
-    "author": "Cipher Okafor (Design / Refactoring)",
-    "version": "2.4.0-density-reduction",
-    "governance": "Aligned with visual hierarchy benchmarks and SaaS UX compliance outlined in Company Document"
+  "spec_version": "2.4.0-refactor",
+  "project": "Atlas Core",
+  "author": "Byte Hale",
+  "status": "APPROVED_FOR_IMPLEMENTATION",
+  "overview": {
+    "objective": "Simplify information density across Atlas Core dashboard surfaces by pruning non-critical metrics and enforcing a strict 8pt base grid.",
+    "resource_attribution": "Aligned with 'Company Document' to reconcile core SaaS telemetry with face-to-face service KPIs, ensuring primary operational signals take precedence over secondary telemetry."
   },
-  "problem_statement": "The primary Atlas Core dashboard exhibited excessive information density (28+ concurrent data points above fold), nested border clutter, and fragmented micro-paddings, leading to high task-switching fatigue for hybrid SaaS/F2F service operators.",
-  "refactoring_strategy": {
-    "spatial_rhythm": "Standardized 8px baseline grid replacing arbitrary 3px/7px margins.",
-    "progressive_disclosure": "Secondary KPI breakdowns shifted into contextual drawer panels.",
-    "chromatic_cleanup": "Eliminated multi-tint container backgrounds in favor of neutral surface elevations (elevation-0 to elevation-2)."
-  },
-  "design_tokens": {
-    "spacing": {
-      "card_padding": {"legacy": "10px", "refactored": "24px"},
-      "grid_gap": {"legacy": "8px", "refactored": "20px"},
-      "metric_stack_gap": {"legacy": "2px", "refactored": "8px"}
+  "density_refactoring": {
+    "spacing_tokens": {
+      "component_gap": "12px -> 16px (reduced micro-clutter)",
+      "card_padding": "24px -> 16px vertical, 20px horizontal",
+      "section_margin": "32px -> 24px (compact flow without visual collision)"
     },
-    "typography": {
-      "kpi_headline": {"size": "32px", "weight": "600", "line_height": "40px"},
-      "kpi_label": {"size": "12px", "weight": "500", "tracking": "0.04em", "transform": "uppercase"},
-      "body_data": {"size": "14px", "weight": "400", "line_height": "20px"}
+    "typography_hierarchy": {
+      "metric_value": { "size": "28px", "weight": "600", "line_height": "32px" },
+      "metric_label": { "size": "12px", "weight": "500", "text_transform": "uppercase", "color": "var(--text-muted)" },
+      "delta_badge": { "size": "11px", "padding": "2px 6px", "border_radius": "4px" }
     }
   },
-  "layout_architecture": {
-    "section_primary": {
-      "max_columns": 3,
-      "components": ["ServiceVolumeSummary", "RealtimeCapacityGauge", "F2FQueueStatus"]
+  "component_refactoring": [
+    {
+      "component": "LiveServiceQueue",
+      "previous_state": "14 columns with inline edit triggers and redundant timestamp labels",
+      "refactored_state": "Consolidated to 6 high-signal columns with progressive disclosure flyout for deep audit logs."
     },
-    "section_secondary": {
-      "display": "collapsible_tabbed_view",
-      "components": ["TelemetryHistory", "PlatformEventFeed"]
+    {
+      "component": "PlatformHealthOverview",
+      "previous_state": "8 separate mini-gauges cluttering above-the-fold viewport",
+      "refactored_state": "Unified composite index card with status badge and expandable sparklines."
     }
-  },
-  "reference_application": "Company Document provided the operational throughput thresholds and customer-facing SLA requirements used to prioritize visible metrics."
+  ]
 }
 ```
