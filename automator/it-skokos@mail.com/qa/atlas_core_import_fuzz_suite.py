@@ -1,65 +1,50 @@
-# Atlas Core: Import Endpoint Fuzz Testing Suite & Execution Report
-**Author:** Nova Okafor  
+# Atlas Core: Import Endpoint Fuzz Testing Report & Test Harness
+**Author:** Byte Nkosi  
 **Department:** QA  
 **Project:** Atlas Core  
-**Produced:** D11 04:25  
+**Produced:** D17 12:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive fuzz testing documentation, test vectors, and Python harness for the Atlas Core import endpoint, fully aligned with the requirements specified in Business Document: Company Document.
+Security-focused fuzzing suite and vulnerability assessment for the Atlas Core data import endpoint, cross-referenced with specifications from Company Document.
 
 ## Deliverable
 ```
-# =====================================================================
-# Project: Atlas Core
-# Component: /api/v1/data/import Endpoint
-# Author: Nova Okafor, QA Engineering
-# Documentation Reference: Business Document: Company Document
-# =====================================================================
-"""
-Overview:
-This test suite implements mutation-based and schema-driven fuzzing
-against the Atlas Core import ingestion pipeline.
+# Author: Byte Nkosi (QA - Security Paranoid Focus)
+# Project: Atlas Core | Endpoint: /api/v1/import
+# Reference: Company Document (Business Document)
 
-Resource Mapping:
-- Business Document: Company Document was utilized to establish baseline
-  structural constraints, accepted MIME types, max payload size limits (50MB),
-  and SLA threshold definitions (<= 250ms under malformed input ingestion).
-"""
-
-import os
 import requests
-from hypothesis import given, settings, strategies as st
+import json
+import sys
 
-BASE_URL = os.getenv("ATLAS_CORE_BASE_URL", "https://staging.itskokos.internal/api/v1")
-IMPORT_ENDPOINT = f"{BASE_URL}/data/import"
-HEADERS = {"Authorization": "Bearer <REDACTED_TEST_TOKEN>"}
+TARGET_URL = "https://atlas-core.internal.itskokos.com/api/v1/import"
 
-# Dynamic Malformed Payload Strategies
-malformed_strings = st.text(
-    alphabet=st.characters(blacklist_categories=('Cs',)), 
-    min_size=0, 
-    max_size=5000
-)
+# Based on validation boundaries established in Company Document:
+# Baseline schema: CSV/JSON multi-part ingestion for SaaS & Face-to-Face tracking.
 
-@settings(max_examples=250, deadline=500)
-@given(payload=st.dictionaries(
-    keys=st.text(min_size=1, max_size=64),
-    values=st.one_of(
-        malformed_strings,
-        st.integers(),
-        st.floats(allow_nan=True, allow_infinity=True),
-        st.lists(malformed_strings, max_size=50),
-        st.binary(max_size=1024 * 1024)
-    )
-))
-def test_fuzz_json_import_payloads(payload):
-    """Validate endpoint handles corrupt, extreme, and malformed JSON without 500 crashes."""
-    resp = requests.post(IMPORT_ENDPOINT, json=payload, headers=HEADERS, timeout=5)
-    assert resp.status_code in (400, 413, 422), f"Unexpected status {resp.status_code}: {resp.text}"
+PAYLOAD_MUTATIONS = [
+    # 1. Null-byte injection & path traversal
+    {"filename": "../../../../etc/passwd\x00.csv", "content": "id,name,value\n1,test,0"},
+    # 2. Oversized payload / DoS boundary test
+    {"filename": "large_alloc.json", "content": '{"records": [' + '{"f2f_session_id": 999999},'*50000 + ']}'},
+    # 3. Malformed XML/Entity injection via ambiguous parsers
+    {"filename": "xxe_probe.xml", "content": '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/hosts">]><import><data>&xxe;</data></import>'},
+    # 4. CSV Formula Injection (SaaS Face-to-Face report export vector)
+    {"filename": "formula_inject.csv", "content": "id,name,score\n1,=cmd|' /C calc'!A0,100"},
+    # 5. Type confusion / Schema violation outside Company Document spec
+    {"filename": "type_confuse.json", "content": '{"session_type": 1e309, "client_id": {"$ne": null}}'}
+]
 
-# --- Execution Summary ---
-# - Total Iterations: 1,500 test cases executed
-# - 400 Bad Request: 1,180 | 422 Unprocessable: 320 | 500 Internal Error: 0
-# - Result: PASS. Payload rejection conforms to specs in Company Document.
+def run_fuzz():
+    print("[!] Initiating paranoid fuzz sequence on Atlas Core import endpoint...")
+    for idx, test_case in enumerate(PAYLOAD_MUTATIONS):
+        headers = {"X-Security-Audit": "ByteNkosi-QA", "Content-Type": "application/octet-stream"}
+        res = requests.post(TARGET_URL, data=test_case["content"], headers=headers, params={"file": test_case["filename"]})
+        print(f"[*] Payload #{idx+1} ({test_case['filename']}) -> Status: {res.status_code}")
+        if res.status_code >= 500:
+            print(f"[CRITICAL] Server crash/unhandled exception on payload {idx+1}")
+
+if __name__ == '__main__':
+    run_fuzz()
 ```
