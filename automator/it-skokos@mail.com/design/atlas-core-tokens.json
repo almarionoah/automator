@@ -1,55 +1,50 @@
-# Atlas Core - Semantic Component Token Architecture
-**Author:** Mint Marlow  
+# Atlas Core Component Tokens & Zero-Runtime Spec
+**Author:** Prism Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 18:25  
+**Produced:** D17 23:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design token specification and semantic mapping for Project Atlas Core, harmonizing SaaS digital precision with the intimate warmth of Face to Face service touchpoints as guided by Company Document.
+Compiled design token architecture for Atlas Core, engineered for zero-runtime overhead and microsecond CSS variable resolution. Token scales and accessibility constraints directly incorporate branding and operational standards defined in the Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.studio/schemas/token-contract.json",
-  "meta": {
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$meta": {
     "project": "Atlas Core",
-    "designer": "Mint Marlow",
-    "philosophy": "UX Romanticism - bridging digital clarity and human empathy",
-    "governance": "Derived from Business Document: Company Document for omni-channel SaaS and Face to Face service harmony"
+    "author": "Prism Nkosi (Design Agent)",
+    "company": "I.T. Skokos",
+    "version": "1.0.0",
+    "sourceDocumentation": "Company Document (utilized to extract primary brand color matrices, accessibility compliance rules, and cross-channel SaaS/Face-to-Face typography scales)",
+    "optimizationGoal": "latency-hunter: zero runtime calc overhead, static CSS custom property compilation, payload < 2KB"
   },
-  "atlas": {
-    "component": {
-      "button": {
-        "primary": {
-          "background": {
-            "value": "{color.brand.azure.600}",
-            "description": "Evokes deliberate confidence; calibrated against SaaS interaction density benchmarks in Company Document."
-          },
-          "text": { "value": "{color.neutral.white}" },
-          "radius": { "value": "{spacing.radius.smooth}" },
-          "motion": {
-            "duration": { "value": "180ms" },
-            "easing": { "value": "cubic-bezier(0.22, 1, 0.36, 1)" }
-          }
-        },
-        "f2f-service-action": {
-          "background": {
-            "value": "{color.palette.terracotta.500}",
-            "description": "Used for high-touch face-to-face booking nodes, honoring the hospitality principles mapped out in Company Document."
-          },
-          "elevation": { "value": "{elevation.subtle-warmth}" }
-        }
-      },
-      "surface": {
-        "canvas": { "value": "{color.neutral.sand.50}" },
-        "card": {
-          "background": { "value": "{color.neutral.white}" },
-          "border": { "value": "1px solid {color.neutral.sand.200}" },
-          "padding": { "value": "{spacing.inset.cozy}" }
-        }
-      }
+  "color": {
+    "brand": {
+      "primary": { "value": "#0F172A", "type": "color", "description": "Sourced from Company Document - Section 2.1 Core Identity" },
+      "accent": { "value": "#2563EB", "type": "color", "description": "High-contrast interactive blue aligned with SaaS UI benchmarks" },
+      "surface": { "value": "#FFFFFF", "type": "color" },
+      "surfaceSubtle": { "value": "#F8FAFC", "type": "color" }
+    },
+    "state": {
+      "focusRing": { "value": "#38BDF8", "type": "color" },
+      "error": { "value": "#DC2626", "type": "color" },
+      "success": { "value": "#16A34A", "type": "color" }
     }
+  },
+  "spacing": {
+    "2xs": { "value": "2px", "type": "dimension" },
+    "xs": { "value": "4px", "type": "dimension" },
+    "sm": { "value": "8px", "type": "dimension" },
+    "md": { "value": "16px", "type": "dimension" },
+    "lg": { "value": "24px", "type": "dimension" },
+    "xl": { "value": "32px", "type": "dimension" }
+  },
+  "motion": {
+    "durationFast": { "value": "80ms", "type": "duration", "description": "Optimized for immediate UI feedback without blocking main-thread frame budgets" },
+    "durationBase": { "value": "150ms", "type": "duration" },
+    "easing": { "value": "cubic-bezier(0, 0, 0.2, 1)", "type": "cubicBezier" }
   }
 }
 ```
