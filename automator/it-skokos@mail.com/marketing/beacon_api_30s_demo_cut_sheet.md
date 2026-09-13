@@ -1,38 +1,45 @@
-# 30-Second Product Demo Script & Cut Sheet - Beacon API
-**Author:** Byte Petrov  
+# 30-Second Product Demo Cut Sheet & Script: Beacon API
+**Author:** Onyx Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 15:55  
+**Produced:** D16 20:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A lean, high-conversion 30-second video demo script and asset breakdown for Beacon API, produced entirely in-house with zero external agency spend by referencing messaging benchmarks from the Company Document.
+Fast-cut 30-second demo video script, motion timing sheet, and visual storyboard for Beacon API, highlighting sub-millisecond edge routing and hybrid service sync as defined in the Company Document.
 
 ## Deliverable
 ```
-# Project Beacon API: 30s High-Velocity Product Demo Spec
-Author: Byte Petrov (Marketing)
-Strategy: Zero-Budget Internal Asset Repurposing
-
-## Resource Integration
-- **Company Document**: Consulted for official value propositions, SLA tier metrics, and compliance-approved brand disclaimers to eliminate legal review bottlenecks and avoid paid copywriting contractors.
+# Production Cut Sheet: Beacon API 30s Product Demo
+**Creator:** Onyx Reyes (Marketing / Latency Hunter)
+**Project:** Beacon API | I.T. Skokos SaaS & Face-to-Face Services
+**Source Reference:** `Company Document` (utilized to extract verified latency benchmarks, core value propositions, brand typography standards, and SaaS-to-F2F integration compliance rules).
 
 ---
 
-## Video Script & Storyboard (30 Seconds Total)
+### Video Breakdown & Motion Timing (Total: 30.00s)
 
-| Time | Visual Asset | Audio / Voiceover (Lean In-House / TTS) | On-Screen Text (OST) |
-|---|---|---|---|
-| **0:00-0:05** | Split screen: Dev struggling with manual webhook logs vs clean terminal. | "Tired of fractured webhooks and failing integrations eating your sprint budget?" | Stop Webhook Drift |
-| **0:05-0:12** | Screen capture of Beacon API dashboard. Real-time endpoint health monitor blinking green. | "Meet Beacon API. Instant failover, unified telemetry, and 99.99% event delivery out of the box." | 99.99% Delivery Rate |
-| **0:12-0:20** | Live code demo: 3-line SDK initialization in Node/Python. JSON payload validated instantly. | "Drop in 3 lines of code. Transform legacy REST endpoints into reliable real-time pipelines." | 3 Lines of Code. Zero Infra Overhead. |
-| **0:20-0:26** | Enterprise metric card popping up: 40% reduction in API debugging time. | "Scale securely with I.T. Skokos SaaS reliability and dedicated face-to-face onboarding." | 40% Less Debug Time |
-| **0:26-0:30** | Call to Action screen: Beacon API logo + clean URL button. | "Start for free today at itskokos.com/beacon." | Deploy Free • Beacon API |
+**[00:00 - 00:05] The Hook: Latency Bottleneck vs. Beacon**
+* **Visual:** Split-screen terminal. Left: Legacy API choking at 420ms (red). Right: Beacon API executing at 1.8ms (neon green).
+* **On-Screen Text:** `LATENCY KILLS CONVERSION. FIX IT IN 1.8ms.`
+* **Audio/VO:** "Milliseconds cost millions. Why let legacy pipelines throttle your data?"
+* **SFX:** Sharp sub-bass drop transitioning into high-speed digital pulse.
 
----
+**[00:05 - 00:14] The Engine: High-Throughput Edge Routing**
+* **Visual:** Ultra-fast UI tour. 100k requests/sec stress test graph stabilizing instantly; single-line SDK initialization (`npm i @itskokos/beacon-api`).
+* **On-Screen Text:** `Sub-Millisecond Edge Routing | Zero Overhead`
+* **Audio/VO:** "Meet Beacon API by I.T. Skokos. High-throughput edge dispatch that shreds compute latency to near-zero."
+* **SFX:** Mechanical key clicks, smooth data whoosh.
 
-## Cost-Cutter Execution Notes
-1. **Asset Source**: Native UI screen capture directly from staging; diagrams sourced from `Company Document`.
-2. **Audio**: Standard corporate royalty-free bed; VO recorded internally.
-3. **Distribution**: Re-usable for organic LinkedIn, documentation header, and sales follow-up loops.
+**[00:14 - 00:22] The Bridge: SaaS to Real-Time F2F Sync**
+* **Visual:** Seamless split: Cloud dashboard updates -> instant push trigger on an on-site service technician's mobile tablet.
+* **On-Screen Text:** `Unified SaaS & Face-to-Face Execution`
+* **Audio/VO:** "Synchronize cloud analytics with on-the-ground service teams instantaneously."
+* **SFX:** Crisp chime indicating successful payload transmission.
+
+**[00:22 - 00:30] The Call-to-Action**
+* **Visual:** Minimalist dark mode logo lockup: Beacon API + I.T. Skokos. Fast-render URL.
+* **On-Screen Text:** `Deploy in 60 seconds. Visit itskokos.com/beacon`
+* **Audio/VO:** "Cut your latency today. Ship Beacon API in under five minutes."
+* **Outro SFX:** Resonant brand sonic signature.
 ```
