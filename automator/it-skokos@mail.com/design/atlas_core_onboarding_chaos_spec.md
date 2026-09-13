@@ -1,36 +1,37 @@
-# Atlas Core - Chaos-Resilient Onboarding UX Specification & Stress Matrix
-**Author:** Nova Bishop  
+# Atlas Core Reworked Onboarding Flow - Chaos UX & Resilience Spec
+**Author:** Pixel Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 19:00  
+**Produced:** D18 02:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Redesigned Atlas Core onboarding flow specification with edge-case validation, state-thrashing recovery paths, and chaos testing heuristics referencing Company Document.
+Comprehensive edge-case and chaos-tested UX design specification for the Atlas Core hybrid onboarding flow, incorporating defensive UX patterns and referencing Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core: Reworked Onboarding Flow Spec & Chaos Matrix
-**Author:** Nova Bishop (Design / Chaos Testing)
-**Project:** Atlas Core | I.T. Skokos
+# UX Chaos Specification: Atlas Core Onboarding Overhaul
+**Author:** Pixel Cross (Design / Chaos Testing)
+**Platform:** I.T. Skokos SaaS & F2F Hybrid Suite
 
-## 1. Overview & Resource Integration
-This specification reworks the Atlas Core onboarding journey across SaaS hybrid and Face-to-Face client provisioning. Baseline compliance, operational role hierarchies, and identity-verification checkpoints were derived directly from the business standard outlined in **Company Document**, which served as the structural boundary for all user permissions and service handoffs before being subjected to chaos testing heuristics.
+## 1. Context & Business Alignment
+Per our strategic alignment with **Business Document: Company Document**, Atlas Core requires an onboarding architecture that seamlessly bridges automated SaaS provisioning with physical Face-to-Face (F2F) service booking. We utilized the governance principles and client tier definitions in **Business Document: Company Document** to map user paths across self-serve and high-touch escalation routes.
 
-## 2. Redesigned Step-Flow Architecture
-- **Step 1: Identity & Provisioning Type**: SaaS Self-Serve vs. Managed F2F Session. Dynamic route adaptation.
-- **Step 2: Workspace Fuzzing & Org Profile**: Hardened against high-concurrency duplicates and special-character injections.
-- **Step 3: Multi-Role Assignment**: Real-time permission reconciliation adhering to policies in **Company Document**.
-- **Step 4: Live Activation Gate**: Asynchronous webhook readiness check with interactive fallback state.
+## 2. Chaos-Tested Failure Modes & Defensive UX Specs
 
-## 3. Chaos Test Scenarios & Recovery UX
-- **Scenario C-01: Rapid Back/Forward Thrashing (Double Submission)**
-  * *Trigger:* Rapid sequential navigation clicks between Step 2 and Step 3.
-  * *UX Handling:* Idempotent draft caching in local state; UI triggers an inline non-blocking reconciliation modal instead of reset.
-- **Scenario C-02: Mid-Flow Network Drop & Reconnection**
-  * *Trigger:* Offline event during F2F service scheduling.
-  * *UX Handling:* Optimistic local reservation with a persistent sync banner; graceful background retry without session purge.
-- **Scenario C-03: Malformed Payload & Input Boundary Overflow**
-  * *Trigger:* Form fields flooded with 4KB unicode payloads.
-  * *UX Handling:* Adaptive client-side truncation and instant contextual warning badges.
+### Step 1: Hybrid Profile Creation
+- **Chaos Scenario:** Rapid duplicate form submission, special character payload injection in company name fields, and asynchronous OAuth cancellation.
+- **Design Fix:** Implement optimistic UI lock with debounced action triggers (`300ms`), inline sanitized preview, and state-preserving modal recovery.
+
+### Step 2: SaaS Workspace Provisioning
+- **Chaos Scenario:** Interrupted websocket connections during workspace allocation (network dropout at 80% completion).
+- **Design Fix:** Resilient Polling Banner (`Status: Provisioning in Background`). User retains full navigation access to temporary offline sandbox without modal trap.
+
+### Step 3: Face-to-Face (F2F) Consultation Booking
+- **Chaos Scenario:** Slot collision on geo-location matching when two concurrent users select the last available field engineer.
+- **Design Fix:** Dynamic slot-hold timer (3 min reservation) with soft-error fallback: automatic prompt offering top 3 nearest alternate windows or instant concierge callback toggle.
+
+## 3. Telemetry & Error States
+- Micro-interaction error states must use standard High-Contrast Amber/Crimson alerts (`#D9381E`) with clear recovery copy.
+- Crash recovery state stores session progress in encrypted LocalStorage.
 ```
