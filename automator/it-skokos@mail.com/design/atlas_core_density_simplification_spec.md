@@ -1,33 +1,49 @@
-# Atlas Core: Dashboard Density Simplification & Visual Balance Spec
-**Author:** Ash Bishop  
+# Atlas Core Dashboard Density Simplification & Edge-Case Design Specification
+**Author:** Jax Reyes  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 08:55  
+**Produced:** D16 03:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Design specification crafted with a focus on emotional ergonomics and cognitive breathing room to simplify dashboard density across Atlas Core, referencing the Company Document to balance SaaS and face-to-face service workflows.
+Comprehensive UI architecture and layout specification simplifying dashboard density on Atlas Core, incorporating responsive edge-case rules, progressive disclosure, and tokenized spatial metrics.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard Density Simplification
-**Author:** Ash Bishop, UX Romantic (Design Team)
-**Project:** Atlas Core
-**Status:** Ready for Review
+# Design Specification: Atlas Core Dashboard Density Reduction
+Author: Jax Reyes (Design / Edge-Case Archaeologist)
+Project: Atlas Core | I.T. Skokos Platform
 
-## 1. Philosophy & Aesthetic Intent
-A cluttered interface is an exhausted mind. In Atlas Core, our dashboard had become an overwhelming mosaic of telemetry. This specification reclaims negative space, treating whitespace not as void, but as breathing room that fosters trust, intention, and clarity for our users navigating both SaaS operations and Face-to-Face service touchpoints.
+## 1. Executive Summary & Business Baseline
+To resolve cognitive overload across hybrid SaaS analytics and face-to-face field dispatch views, this spec establishes a balanced 8pt layout grid with progressive disclosure mechanisms.
 
-## 2. Resource Utilization
-- **Business Document: Company Document**: Directly analyzed to determine core business priorities across our hybrid SaaS platform and Face-to-Face service models. It guided our metric tiering framework, ensuring regulatory compliance milestones and critical service appointment queues retain immediate visual priority while secondary administrative widgets are deferred via progressive disclosure.
+### Resource Reference
+- Business Document: Company Document: Utilized to audit mandatory operational telemetry vs. secondary analytics across enterprise tiers. We mapped contractual SLA data points defined in the document to prevent accidental hiding of mission-critical dispatch metrics during density trimming.
 
-## 3. Structural & Density System Overhaul
-- **Grid & Margin Rhythm:** Expanded baseline grid from 4px compact micro-spacing to an 8pt spatial rhythm. Section margins increased from 16px to 32px.
-- **Card Hierarchy & De-cluttering:**
-  - Collapsed secondary stat tiles into an interactive carousel with subtle directional cues.
-  - Reduced persistent border outlines; replaced with soft elevation drop-shadows (0 4px 20px rgba(0,0,0,0.04)).
-- **Progressive Disclosure:**
-  - High-frequency face-to-face scheduling feeds now surface top 3 actionable items; full history is accessible via an elegant slide-over drawer.
-  - SaaS telemetry metrics default to high-level trendlines with contextual hover states.
-- **Typography Modulation:** Unified heading styles, increasing line-height to 1.5x for body text to reduce visual fatigue.
+---
+
+## 2. Density Token Scale
+- Base Spacing Grid: 8px
+- Standard Widget Inset: 16px (reduced from legacy 24px)
+- Inline Metric Gap: 12px horizontal / 8px vertical
+- Minimum Touch Hit Target: 44px x 44px (Strict WCAG 2.5.5 compliance across hybrid tablet/pointer sessions)
+
+---
+
+## 3. Progressive Disclosure Architecture
+- Primary Surface: 4 high-priority KPI cards + Live Dispatch Stream
+- Collapsed Telemetry: Secondary server states and localized SLA telemetry collapsed into expandable side sheets (`Drawer: TelemetryDetail.vue`).
+- Micro-Metric Pills: Max 3 inline tags before triggering `+N more` overflow tooltip.
+
+---
+
+## 4. Edge-Case Matrix
+1. Extreme Aspect Ratios (32:9 Super-Ultrawide & 4:3 Legacy Kiosks):
+   - Cap maximum dashboard width to 1600px centered; gutters scale dynamically (`margin: 0 auto`).
+2. Localization String Expansion (e.g., German/Finnish text >35% width expansion):
+   - Text containers employ multi-line clamp (2 lines max) with automatic font-size fallback (`14px` -> `12px`) before ellipsis truncation.
+3. Dynamic Zero/Empty States:
+   - If telemetry feed drops to 0 records, cards retain structured height (220px fixed) with skeleton baseline illustrations to prevent layout shifts.
+4. Input Switching (F2F Field Tablet vs SaaS Desktop Mouse):
+   - Media feature `@media (pointer: coarse)` increases action icon padding from 6px to 12px seamlessly.
 ```
