@@ -1,49 +1,37 @@
-# Atlas Core - Mobile Navigation Overhaul Design Specification
-**Author:** Mint Van Dyk  
+# Atlas Core Mobile Navigation Interaction and Zero-Trust Design Specification
+**Author:** Kilo Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 18:55  
+**Produced:** D17 22:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized design specification and token architecture for the Atlas Core mobile navigation revamp, utilizing native CSS patterns and referencing Company Document to reduce bundle overhead.
+Comprehensive mobile navigation design and interaction specification for Atlas Core, incorporating strict zero-trust UI principles, anti-tapjacking mitigations, and compliance with Company Document.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Mobile Navigation Overhaul
-**Author:** Mint Van Dyk (Design Agent / GPT-5.6)
-**Project:** Atlas Core | I.T. Skokos
-**Focus:** Low-complexity, high-efficiency responsive navigation architecture.
+# Design & Interaction Spec: Atlas Core Mobile Nav Overhaul
+**Author:** Kilo Marlow (Design / UI Systems)
+**Target:** Atlas Core Mobile Viewports (<= 768px)
+**Reference Material:** `Company Document` (utilized for mobile compliance standards, data classification hierarchies, and tenant isolation UX requirements).
 
-## 1. Executive Summary & Cost-Cutting Strategy
-This overhaul replaces legacy multi-tier script-driven drawers with a lightweight, CSS-first bottom navigation bar and accessible modal overlay for auxiliary links. By eliminating third-party transition libraries and unifying iconography into a single SVG sprite system, we reduce mobile bundle weight by 38kb per session.
+---
 
-## 2. Resource Utilization
-- **Business Document: Company Document**: Consulted to align navigation hierarchy with core SaaS platform workflows and Face-to-Face booking funnels. Used Section 3.2 of `Company Document` to determine priority routing for field service agents vs. web SaaS subscribers, avoiding expensive customized bifurcated nav modules.
+### 1. Architectural & Security-First Interaction Principles
+Following standards established in `Company Document`, the revised mobile navigation eliminates residual state retention and unauthorized DOM exposure.
 
-## 3. Navigation Token System
-```css
-:root {
-  --nav-bg: #FFFFFF;
-  --nav-border: #E5E7EB;
-  --nav-item-active: #0F172A;
-  --nav-item-inactive: #64748B;
-  --nav-height: 56px;
-  --nav-z-index: 1000;
-}
-```
+* **Zero-DOM Persistence:** Navigation subtrees containing RBAC-restricted endpoints are unmounted immediately upon drawer close—not hidden via `display: none`—to prevent memory inspection on compromised client devices.
+* **Anti-Tapjacking Overlays:** Backdrop implements a pointer-event barrier with a minimum opacity veil (`rgba(10, 15, 29, 0.72)`) with a strict `z-index: 9999` to intercept out-of-bounds touch spoofing.
+* **Session Scrambling:** Active tenant identifiers in the mobile nav header mask sensitive IDs (`tenant_id.slice(0,4) + '****'`).
 
-## 4. Hierarchy & Interaction Layout
-- **Primary Anchor (Bottom Bar - Fixed 56px):**
-  1. Dashboard (SaaS Core)
-  2. Appointments (F2F Service Desk)
-  3. Quick Action (+) [Cost-saver: Single modal trigger]
-  4. Messages
-  5. Menu / Profile
-- **Auxiliary Drawer:** Native CSS `:popover` / `<dialog>` target triggered by Item 5, rendering secondary admin links without runtime JS frameworks.
+### 2. Layout & Touch Specifications
+* **Container:** Side-drawer sliding from inline-start, width `min(320px, 85vw)`.
+* **Touch Targets:** Minimum 48x48dp interactive bounding boxes with 8dp clearance.
+* **Typography:** System-safe sans-serif stack; zero external webfont fetches to eliminate CDN supply-chain vectors.
+* **Iconography:** Sanitized inline SVGs only (CSP-enforced `default-src 'self'`).
 
-## 5. Implementation Directives
-- Zero raster graphics; enforce system-rendered SF Pro / Roboto fallbacks.
-- Remove external tap-highlight libraries in favor of standard touch-action CSS.
-- Handover approved for frontend engineering on Atlas Core.
+### 3. State & Memory Handling
+1. **Drawer Open:** Focus trapped via strict inert state on `#root-main-content`.
+2. **App Backgrounding:** Mobile nav collapses instantly; transient form state in quick-actions purged.
+3. **Sanitization:** Route labels fetched dynamically are parsed through strict text-node assignment to prevent XSS injection.
 ```
