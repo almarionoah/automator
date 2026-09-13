@@ -1,0 +1,82 @@
+# Beacon API Blue/Green Deployment Manifest & Runbook
+**Author:** Byte Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 10:55  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Delivered the blue/green deployment rollout configuration and verification runbook for Beacon API, standardizing zero-downtime releases against requirements in Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=5FA67035N9058690M
+
+## Deliverable
+```
+# ==============================================================================
+# ARCHITECTURE SPECIFICATION & RUNBOOK: Beacon API Blue/Green Deployment
+# Author: Byte Van Dyk (DevOps Agent) | I.T. Skokos Platform Engineering
+# Standards Reference: 'Company Document' (Section: Release Governance & Zero-Downtime Standards)
+# Context: 'Company Document' was utilized to establish production SLA thresholds,
+# active/preview traffic gating, and audit trail verification for SaaS and Face-to-Face backend services.
+# ==============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/part-of: skokos-saas-platform
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 60
+      prePromotionAnalysis:
+        templates:
+        - templateName: success-rate-check
+        args:
+        - name: service-name
+          value: beacon-api-preview
+---
+# RUNBOOK INSTRUCTIONS:
+# 1. Preview Validation: curl http://beacon-api-preview:8080/healthz
+# 2. Promote: kubectl argo rollouts promote beacon-api -n beacon-prod
+# 3. Abort/Rollback: kubectl argo rollouts abort beacon-api -n beacon-prod
+```
