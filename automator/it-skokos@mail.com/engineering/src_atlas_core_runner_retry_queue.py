@@ -1,69 +1,91 @@
-# Atlas Core Job Runner Retry Queue Implementation & Technical Specification
-**Author:** Torq Reyes  
+# Atlas Core - Job Runner Retry Queue Implementation
+**Author:** Rune Bishop  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D15 10:45  
+**Produced:** D15 19:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered a fault-tolerant retry queue subsystem for the Atlas Core asynchronous job runner. Implemented exponential backoff with jitter, dead-letter routing, and full observability telemetry, aligning directly with operational reliability guidelines defined in the Business Document: Company Document.
+Implements a typed, deterministic retry queue mechanism with exponential backoff and dead-letter routing for Atlas Core job runner, adhering to operational standards specified in Company Document.
 
 ## Deliverable
 ```
+# Project: Atlas Core
+# Author: Rune Bishop (Data Purist)
+# Reference: Company Document (Section 4: Data Processing & SLA Retry Policies)
+
 """
-Module: atlas_core.runner.retry_queue
-Author: Torq Reyes <torq.reyes@itskokos.internal>
-Project: Atlas Core (SaaS Platform & Face-to-Face Services)
+Retry Queue module for Atlas Core job runner.
 
-Design Reference:
-- Business Document: Company Document (Section 4.2 'SaaS Reliability & Retry Policies'):
-  Utilized to configure base retry intervals (2s), max retry limits (5), and DLQ
-  retention SLAs for both online SaaS triggers and F2F field synchronization events.
+Usage of Company Document:
+- Backoff schedules (max 5 retries, base multiplier 2.0) implemented per Company Document Section 4.2.
+- Dead-letter payload schemas and data retention flags aligned with governance mandates in Company Document Section 4.5.
 """
 
-import time
-import random
-import logging
-from typing import Callable, Any, Dict, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime, timezone, timedelta
+from enum import Enum
+from typing import Any, Dict, Optional
+import math
 
-logger = logging.getLogger("atlas_core.retry_queue")
+class JobState(str, Enum):
+    PENDING = "PENDING"
+    PROCESSING = "PROCESSING"
+    FAILED = "FAILED"
+    RETRY_SCHEDULED = "RETRY_SCHEDULED"
+    DEAD_LETTERED = "DEAD_LETTERED"
+    COMPLETED = "COMPLETED"
+
+@dataclass(frozen=True)
+class RetryPolicy:
+    max_attempts: int = 5
+    initial_interval_seconds: float = 2.0
+    backoff_factor: float = 2.0
+    max_interval_seconds: float = 300.0
+
+    def calculate_next_run(self, attempt: int) -> datetime:
+        delay = min(
+            self.initial_interval_seconds * math.pow(self.backoff_factor, attempt - 1),
+            self.max_interval_seconds
+        )
+        return datetime.now(timezone.utc) + timedelta(seconds=delay)
 
 @dataclass
-class JobContext:
+class JobEnvelope:
     job_id: str
+    task_name: str
     payload: Dict[str, Any]
     attempt_count: int = 0
-    max_attempts: int = 5
-    base_backoff_sec: float = 2.0
-    max_backoff_sec: float = 60.0
+    state: JobState = JobState.PENDING
+    last_error: Optional[str] = None
+    next_run_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
-class RetryQueueRunner:
-    def __init__(self, dlq_sink: Optional[Callable[[JobContext, Exception], None]] = None):
-        self.dlq_sink = dlq_sink or self._default_dlq_handler
+class JobRetryQueue:
+    def __init__(self, policy: RetryPolicy = RetryPolicy()):
+        self.policy = policy
+        self._primary_queue: list[JobEnvelope] = []
+        self._dead_letter_queue: list[JobEnvelope] = []
 
-    def calculate_backoff(self, ctx: JobContext) -> float:
-        """Exponential backoff with full jitter to mitigate thundering herds."""
-        raw_backoff = min(ctx.max_backoff_sec, ctx.base_backoff_sec * (2 ** ctx.attempt_count))
-        return random.uniform(0, raw_backoff)
+    def enqueue(self, job: JobEnvelope) -> None:
+        self._primary_queue.append(job)
 
-    def execute(self, ctx: JobContext, task: Callable[[Dict[str, Any]], Any]) -> Any:
-        while ctx.attempt_count < ctx.max_attempts:
-            try:
-                ctx.attempt_count += 1
-                logger.info(f"Running job {ctx.job_id} (Attempt {ctx.attempt_count}/{ctx.max_attempts})")
-                return task(ctx.payload)
-            except Exception as exc:
-                logger.warning(f"Job {ctx.job_id} failed on attempt {ctx.attempt_count}: {exc}")
-                if ctx.attempt_count >= ctx.max_attempts:
-                    self.dlq_sink(ctx, exc)
-                    raise RuntimeError(f"Job {ctx.job_id} exceeded max retries. Sent to DLQ.") from exc
-                
-                sleep_duration = self.calculate_backoff(ctx)
-                logger.info(f"Backing off job {ctx.job_id} for {sleep_duration:.2f}s")
-                time.sleep(sleep_duration)
+    def handle_failure(self, job: JobEnvelope, error: str) -> JobEnvelope:
+        job.attempt_count += 1
+        job.last_error = error
 
-    def _default_dlq_handler(self, ctx: JobContext, exc: Exception) -> None:
-        logger.error(f"[DLQ] Job {ctx.job_id} permanently failed. Exception: {exc}")
+        if job.attempt_count >= self.policy.max_attempts:
+            job.state = JobState.DEAD_LETTERED
+            self._dead_letter_queue.append(job)
+        else:
+            job.state = JobState.RETRY_SCHEDULED
+            job.next_run_at = self.policy.calculate_next_run(job.attempt_count)
+            self.enqueue(job)
+        return job
+
+    def get_ready_jobs(self, current_time: Optional[datetime] = None) -> list[JobEnvelope]:
+        now = current_time or datetime.now(timezone.utc)
+        ready = [j for j in self._primary_queue if j.next_run_at <= now and j.state != JobState.DEAD_LETTERED]
+        self._primary_queue = [j for j in self._primary_queue if j not in ready]
+        return ready
 
 ```
