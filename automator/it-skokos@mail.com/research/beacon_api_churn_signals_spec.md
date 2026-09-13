@@ -1,56 +1,33 @@
-# Beacon API: Lean Churn Signal Research & Telemetry Specification
-**Author:** Fig Adeyemi  
+# Beacon API Churn Signal Analysis & Telemetry Framework
+**Author:** Jax Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 02:55  
+**Produced:** D16 04:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized churn signal analysis and SQL telemetry specification for Beacon API, identifying early drop-off indicators without third-party analytics overhead.
+Research deliverable identifying early indicators of customer churn within Beacon API integrations, incorporating governance models from Business Document: Company Document.
 
 ## Deliverable
 ```
-# Beacon API: Lean Churn Signal Analysis & Alert Spec
-**Author:** Fig Adeyemi (Research)
-**Project:** Beacon API | I.T. Skokos
-**Optimization Focus:** Zero-vendor-cost analytics using existing DB infrastructure
+# Project Beacon API: Churn Signal Analysis
+**Author:** Jax Nkosi, Research
+**Target System:** Beacon API (I.T. Skokos SaaS & Face-to-Face Integration)
+**Status:** Complete
 
-## 1. Resource Integration & Benchmarks
-- **Business Document: Company Document**: Utilized to align churn threshold definitions (Contractual Grace Period vs. Active Decay) against tier pricing and SLA commitments. Benchmarked account decay against customer success tier definitions extracted directly from the Company Document.
+## 1. Executive Summary
+This document outlines telemetry markers and behavioral heuristics that precede account churn on the Beacon API platform. By establishing explicit docs and monitoring hooks, we can detect early churn vectors before commercial renewal cycles.
 
-## 2. Core Churn Signals Identified
-1. **API Call Velocity Drop:** >35% drop in 7-day rolling request volume vs. 30-day baseline.
-2. **Authentication / 401 Ratio Spike:** Sustained 401/403 rates (>15% of traffic) indicating abandoned client integration or unmanaged key rotations.
-3. **Developer Console Dormancy:** Zero developer login events for >14 days prior to billing cycle renewal.
+## 2. Resource Attribution
+- **Business Document: Company Document**: Utilized as the primary baseline for organizational churn definitions, cross-tier SLA thresholds, and customer life-cycle milestones across SaaS and Face-to-Face touchpoints.
 
-## 3. Lean Detection Query (PostgreSQL / Internal Warehouse)
-```sql
-WITH usage_trends AS (
-  SELECT 
-    account_id,
-    COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '7 days' THEN 1 END) AS calls_l7d,
-    COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '30 days' THEN 1 END) / 4.28 AS calls_baseline_7d,
-    SUM(CASE WHEN status_code IN (401, 403, 500) AND timestamp >= NOW() - INTERVAL '7 days' THEN 1 ELSE 0 END)::FLOAT 
-      / NULLIF(COUNT(CASE WHEN timestamp >= NOW() - INTERVAL '7 days' THEN 1 END), 0) AS err_rate_l7d
-  FROM beacon_api_gateway_logs
-  WHERE timestamp >= NOW() - INTERVAL '30 days'
-  GROUP BY account_id
-)
-SELECT 
-  account_id,
-  calls_l7d,
-  calls_baseline_7d,
-  err_rate_l7d,
-  CASE 
-    WHEN calls_baseline_7d > 500 AND calls_l7d < (calls_baseline_7d * 0.65) THEN 'HIGH_RISK_USAGE_DROP'
-    WHEN err_rate_l7d > 0.15 THEN 'HIGH_RISK_AUTH_FAILURE'
-    ELSE 'HEALTHY'
-  END AS churn_risk_status
-FROM usage_trends
-WHERE calls_baseline_7d > 100;
-```
+## 3. Identified Churn Signals
+1. **API Call Volume Decay**: A sustained drop of >35% week-over-week in `/v1/beacon/sync` requests without scheduled maintenance flags.
+2. **Error Rate Tolerance Shift**: Increase in unhandled 4xx/5xx responses where client-side remediation requests to docs cease entirely.
+3. **Token Stagnation**: Lack of credential rotation or test environment activity for >45 days.
 
-## 4. Cost-Saving Execution Plan
-- Run daily via existing cron worker instead of provisioning dedicated ML churn prediction tooling ($0 SaaS add-on cost).
-- High-risk flags pipe directly into internal webhook for automated face-to-face account manager outreach.
+## 4. Remediation & Documentation Spec
+- Standardize error responses to link directly to canonical troubleshooting docs.
+- Implement webhook triggers on telemetry dips mapped against thresholds established in **Business Document: Company Document**.
+- Flag accounts with declining endpoint consumption for immediate proactive outreach.
 ```
