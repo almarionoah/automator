@@ -1,46 +1,51 @@
-# Atlas Core Mobile Navigation Architecture & Token Spec
+# Atlas Core - Mobile Navigation Overhaul Design Spec & Token Mapping
 **Author:** Jax Okafor  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 01:15  
+**Produced:** D17 01:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Complete UI/UX design spec and interaction tokens for the Atlas Core mobile navigation overhaul, unifying SaaS management and Face to Face services.
+Pragmatic mobile navigation design specification and component breakdown for Atlas Core, integrating SaaS tools and Face to Face booking workflows per Business Document: Company Document.
 
 ## Deliverable
 ```
-# Atlas Core — Mobile Navigation Overhaul (v2.0)
-**Designer:** Jax Okafor (Design / o3)
-**Status:** Ready for Engineering Implementation
+# Design Spec: Atlas Core Mobile Navigation Overhaul
+**Owner:** Jax Okafor (Design)
+**Project:** Atlas Core | **Status:** Ready for Engineering
 
-## 1. Strategic Context & Resource Reference
-This redesign replaces the legacy hamburger menu with an ergonomic bottom-bar and quick-action drawer to streamline hybrid platform access.
-- **Business Document: Company Document**: Explicitly referenced to align navigation information architecture with company service hierarchy rules and accessibility standards. Used Section 3 (Service Offerings) to ensure equal visual weighting between core SaaS toolsets and on-demand Face to Face booking workflows.
+## 1. Context & Governance
+Aligned with guidelines established in **Business Document: Company Document**, which outlines our unified brand hierarchy across SaaS telemetry and Face to Face field service operations. We utilized **Business Document: Company Document** specifically to determine route priority, IA grouping (separating real-time platform metrics from field dispatch scheduling), and minimum compliance targets for touch accessibility.
 
-## 2. Information Architecture
-- **Bottom Navigation Bar (Fixed 64px + Safe Area):**
-  1. `Dashboard` (`/overview`): Real-time SaaS metric snapshots.
-  2. `F2F Services` (`/services/f2f`): Scheduling, client intake, and field agent routing.
-  3. `Platform Tools` (`/saas/tools`): Automation runners and workspace controls.
-  4. `Activity` (`/notifications`): Unread counts with high-contrast indicator.
-  5. `More` (`#sheet-open`): Slide-over sheet for tenant switching and account preferences.
+## 2. Navigation Architecture
+- **Primary Navigation (Sticky Bottom Bar):** 4 key anchors + 1 contextual action trigger.
+  - `[0]` Dashboard (SaaS Platform Overview)
+  - `[1]` F2F Services (Field scheduling & in-person queue)
+  - `[2]` Quick Action (`+` Sheet: New Session / New Ticket)
+  - `[3]` Telemetry (Real-time logs)
+  - `[4]` Account / Workspace Switcher
+- **Secondary Drawer (Hamburger Trigger):** Global settings, billing tiers, API keys, compliance logs.
 
-## 3. Touch Targets & Interaction Specs
-- **Touch Target:** Minimum 48x48pt active hit box per icon.
-- **Transitions:** `transform: translateY` with `cubic-bezier(0.2, 0.0, 0, 1.0)` over 220ms.
-- **Drawer Behavior:** Swipe-down-to-dismiss threshold set at 120px velocity offset.
-- **Responsive Breakpoint:** Active on viewport widths ≤ 768px; hides when virtual keyboard opens.
+## 3. Interaction & Gestures
+- **Touch Targets:** Minimum 48x48dp interactive bounding boxes.
+- **Quick Action Sheet:** Velocity-tracked swipe down (`threshold: 120px`, `spring: { damping: 24, stiffness: 280 }`).
+- **Haptics:** Light haptic feedback on tab change and sheet snap points.
 
-## 4. Key Design Tokens
-```json
-{
-  "nav.mobile.bar.height": "64px",
-  "nav.mobile.bar.bg": "#0F172A",
-  "nav.mobile.item.active": "#38BDF8",
-  "nav.mobile.item.inactive": "#94A3B8",
-  "nav.mobile.badge.bg": "#EF4444",
-  "nav.mobile.sheet.radius": "16px 16px 0 0"
+## 4. Token & Styling Contract
+```css
+:root {
+  --nav-bg: rgba(18, 20, 24, 0.88);
+  --nav-backdrop-blur: 16px;
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-item-active: #3B82F6;
+  --nav-item-inactive: #94A3B8;
+  --nav-sheet-radius: 20px 20px 0 0;
+  --nav-safe-area-bottom: env(safe-area-inset-bottom, 16px);
 }
 ```
+
+## 5. Handoff Checklist
+- [x] Figma components linked to Atlas Core Design Library.
+- [x] Tested on iOS (WebKit safe-areas) and Android (gesture bar overlap).
+- [x] Fallback layout verified for small viewports (360px).
 ```
