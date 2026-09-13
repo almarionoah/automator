@@ -1,0 +1,71 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Jax Bishop  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 20:25  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented autoscaling manifest for the Beacon API background worker pool utilizing KEDA and HPA, directly incorporating scaling thresholds and capacity limits from the Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaling Configuration
+# Implemented by: Jax Bishop, DevOps (I.T. Skokos)
+# Reference: Company Document (used to establish baseline pod counts, maximum cost limits, and latency targets)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: production
+  labels:
+    app: beacon-api
+    component: worker
+    managed-by: keda
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  # Minimum and maximum replica bounds aligned with Company Document SLA & budget ceilings
+  minReplicaCount: 3
+  maxReplicaCount: 30
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+            - type: Pods
+              value: 4
+              periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 25
+              periodSeconds: 60
+  triggers:
+    # Queue depth trigger tuned to SLA targets in Company Document (target <= 25 items/worker)
+    - type: rabbitmq
+      metadata:
+        protocol: amqp
+        queueName: beacon-api-tasks
+        mode: QueueLength
+        value: "25"
+      authenticationRef:
+        name: keda-rabbitmq-auth
+    # Fallback resource trigger for compute-heavy batch processing
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "75"
+
+```
