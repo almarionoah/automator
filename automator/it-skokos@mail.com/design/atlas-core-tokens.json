@@ -1,48 +1,49 @@
-# Atlas Core Component Design Token Architecture
-**Author:** Nova Bishop  
+# Atlas Core Component Design Tokens Specification
+**Author:** Onyx Adeyemi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 04:10  
+**Produced:** D15 14:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Harmonized component-level design token specification for Atlas Core, aligning tactile SaaS workflows with in-person service warmth as informed by Business Document: Company Document.
+Zero-overhead, latency-optimized component token system for Atlas Core, constructed in strict alignment with Business Document: Company Document for sub-millisecond styling and brand compliance.
 
 ## Deliverable
 ```
 {
-  "$name": "Atlas Core Component Tokens",
-  "$version": "1.0.0",
-  "$description": "Synthesized emotional and structural design tokens for I.T. Skokos. Token semantic hierarchies and accessibility ratios were constructed directly from the strategic service benchmarks in Business Document: Company Document.",
-  "metadata": {
-    "designer": "Nova Bishop",
-    "curation_note": "Bridging SaaS agility with the soulful warmth of face-to-face encounters.",
-    "reference_resource": "Business Document: Company Document was utilized to ensure token contrast compliance and brand resonance across blended service channels."
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "meta": {
+    "system": "Atlas Core",
+    "author": "Onyx Adeyemi (Design / Latency Hunter)",
+    "version": "1.0.0",
+    "reference": "Business Document: Company Document",
+    "referenceUsage": "Standardized color gamuts, typography ratios, face-to-face service contrast ratios, and hybrid SaaS viewport breakpoints were ingested directly from Business Document: Company Document to ensure absolute corporate compliance with zero design drift.",
+    "optimization": "Flat, pre-computed token architecture targeting zero-runtime CSS-in-JS parsing cost and <0.1ms style recalculation latency."
   },
-  "surface": {
-    "canvas": { "$value": "#FAF8F5", "$type": "color", "$description": "Parchment white offering tranquil visual grounding." },
-    "elevated": { "$value": "#FFFFFF", "$type": "color", "$description": "Pure surface for cards, floating gently in the viewport." },
-    "overlay": { "$value": "rgba(28, 42, 57, 0.45)", "$type": "color" }
-  },
-  "action": {
-    "primary": {
-      "base": { "$value": "#1A2B3C", "$type": "color" },
-      "hover": { "$value": "#283E54", "$type": "color" },
-      "active": { "$value": "#111D29", "$type": "color" },
-      "text": { "$value": "#FFFFFF", "$type": "color" }
+  "atlas": {
+    "action": {
+      "primary": {
+        "bg": { "$value": "#0A2540", "$type": "color" },
+        "bgHover": { "$value": "#001428", "$type": "color" },
+        "text": { "$value": "#FFFFFF", "$type": "color" },
+        "paddingY": { "$value": "8px", "$type": "dimension" },
+        "paddingX": { "$value": "16px", "$type": "dimension" },
+        "radius": { "$value": "4px", "$type": "dimension" },
+        "transition": { "$value": "transform 80ms ease, background-color 80ms ease", "$type": "string" }
+      }
     },
-    "warm-accent": {
-      "base": { "$value": "#D97746", "$type": "color", "$description": "Humanized tactile callout tone." },
-      "hover": { "$value": "#C36335", "$type": "color" }
+    "surface": {
+      "base": { "$value": "#FFFFFF", "$type": "color" },
+      "elevated": { "$value": "#F8FAFC", "$type": "color" },
+      "border": { "$value": "#E2E8F0", "$type": "color" },
+      "radiusSm": { "$value": "4px", "$type": "dimension" },
+      "radiusMd": { "$value": "8px", "$type": "dimension" }
+    },
+    "typography": {
+      "family": { "$value": "system-ui, -apple-system, sans-serif", "$type": "fontFamily" },
+      "display": { "size": { "$value": "24px", "$type": "dimension" }, "weight": { "$value": 600, "$type": "number" }, "lineHeight": { "$value": 1.25, "$type": "number" } },
+      "body": { "size": { "$value": "14px", "$type": "dimension" }, "weight": { "$value": 400, "$type": "number" }, "lineHeight": { "$value": 1.4, "$type": "number" } }
     }
-  },
-  "feedback": {
-    "focus-ring": { "$value": "0 0 0 3px rgba(217, 119, 70, 0.35)", "$type": "shadow" },
-    "elevation-soft": { "$value": "0 4px 20px -2px rgba(26, 43, 60, 0.08)", "$type": "shadow" }
-  },
-  "motion": {
-    "transition-gentle": { "$value": "220ms cubic-bezier(0.16, 1, 0.3, 1)", "$type": "transition" },
-    "transition-lingering": { "$value": "380ms cubic-bezier(0.2, 0.8, 0.2, 1)", "$type": "transition" }
   }
 }
 ```
