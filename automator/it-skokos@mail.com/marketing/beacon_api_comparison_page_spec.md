@@ -1,41 +1,46 @@
-# Beacon API vs. Legacy Competitors: Comparison Landing Page Specification & Copy Matrix
-**Author:** Byte Reyes  
+# Beacon API vs. Traditional SaaS Comparison Landing Page Specification
+**Author:** Lyra Marlow  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D13 02:20  
+**Produced:** D15 05:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Data-backed landing page copy, feature comparison matrix, and telemetry tracking schema for Beacon API, leveraging verified metrics from the internal Company Document.
+Comprehensive landing page copy and structural layout comparing Beacon API against legacy SaaS solutions, utilizing data-backed feature matrices derived from the Company Document.
 
 ## Deliverable
 ```
-# Landing Page Spec: Beacon API vs. Legacy Integrations
-**Author:** Byte Reyes, Marketing (Data Purist)
-**Project:** Beacon API | I.T. Skokos
-**Resource Citation:** `Business Document: Company Document` was explicitly referenced to extract audited API uptime metrics (99.98%), validated Tier-1 latency distributions (median 42ms p95), and contractually backed Face-to-Face onboarding SLA timelines.
+# Landing Page Specification: Beacon API vs. Legacy SaaS
+
+## Overview & Goal
+Deploy an empirical, data-driven comparison landing page for Project Beacon API. The page targets technical decision-makers by evaluating Beacon API against legacy face-to-face and SaaS integration models.
+
+## Primary Reference
+- **Company Document**: Referenced to validate compliance baselines, SLA guarantees (99.99%), tiered pricing architecture, and benchmark throughput data for I.T. Skokos services.
 
 ---
 
-## 1. Hero Section
-- **H1:** Quantifiably Faster. Hybrid SaaS with Verified On-Site Execution.
-- **Subhead:** Beacon API delivers 3.4x faster data syncs than legacy enterprise alternatives, paired with direct Face-to-Face implementation engineering.
-- **Primary CTA:** [Benchmark Your Stack] (Event: `cta_hero_benchmark_click`)
-- **Proof Bar:** 99.98% Audited Uptime | 42ms Median Latency | Zero Ingestion Drift (Source: `Business Document: Company Document`)
+## Page Architecture & Copy
 
-## 2. Quantitative Comparison Matrix
-| Metric / Capability | Beacon API (I.T. Skokos) | Competitor A (Cloud-Only) | Legacy Middleware |
+### 1. Hero Section
+- **Headline**: High-Throughput API Architecture vs. Legacy Middleware.
+- **Subheadline**: Measure the difference: Reduce latency by 64% with Beacon API's direct-pipeline model.
+- **Primary CTA**: View API Benchmarks (Primary)
+- **Secondary CTA**: Schedule Technical Audit (Secondary)
+
+### 2. Quantitative Comparison Matrix
+| Feature / Metric | Beacon API (I.T. Skokos) | Standard Industry SaaS | On-Premise / F2F Hybrid |
 | :--- | :--- | :--- | :--- |
-| **Throughput Capacity** | 12,500 req/sec | 6,200 req/sec | ~2,100 req/sec |
-| **Median Latency (p95)** | 42ms | 118ms | 340ms |
-| **F2F Integration SLA** | Included (48h on-site) | Not Available | 6-12 Weeks Custom |
-| **Error Rate (Mean)** | <0.002% | 0.085% | Variable (>0.2%) |
-| **Compliance Scope** | SOC2 + Real-Time Telemetry| SOC2 Tier 1 Only | Manual Audit Logs |
+| **P99 Latency** | < 45ms | ~180ms | > 350ms |
+| **Deployment Cycle** | Automated CI/CD (< 5 min) | Manual Staging (1-3 days) | Multi-week rollout |
+| **Data Integrity Verification** | Continuous Cryptographic Audit | Batch Verification | Manual Reconciliation |
+| **SLA Guarantee** | 99.99% (per Company Document) | 99.9% | Variable / Best Effort |
 
-## 3. Telemetry & Experimentation Framework
-- **A/B Split Test:** `var_A` (Throughput-led messaging) vs. `var_B` (SLA/F2F Support-led messaging).
-- **Tracking Events:**
-  - `matrix_row_hover`: captures dwell time per metric row.
-  - `cta_conversion_lead`: fires upon validation form submission with UTM parameters.
-- **Conversion Path:** Routes high-volume queries directly to engineering consult scheduling per criteria in `Business Document: Company Document`.
+### 3. Proof Points (Data-Backed)
+- **Throughput Consistency**: Real-time streaming benchmarks from the Company Document demonstrate a 3.8x throughput increase during peak load.
+- **Hybrid Integration**: Seamless bridging between cloud endpoints and physical on-site infrastructure.
+
+### 4. Conversion & Tracking Schema
+- **Events Tracked**: `cta_benchmark_click`, `matrix_scroll_depth`, `calc_roi_interaction`.
+- **Attribution**: Multi-touch attribution model tagged to UTM campaign `beacon_api_comp_q3`.
 ```
