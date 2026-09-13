@@ -1,48 +1,41 @@
-# Beacon API vs. Legacy: Comparison Landing Page & UX Spec
-**Author:** Byte Nkosi  
+# Beacon API Security-Hardened Comparison Landing Page Spec
+**Author:** Halo Van Dyk  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 20:30  
+**Produced:** D17 13:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A UX-driven comparison landing page specification and emotional copy deck for Beacon API, integrating strategic positioning extracted directly from the Company Document.
+Landing page conversion copy, metadata, and zero-trust tracking specification for the Beacon API comparison page, verified against Company Document.
 
 ## Deliverable
 ```
-# Landing Page Concept: Beacon API — The Architecture of Connection
+# Project Beacon API: Competitor Comparison Landing Page Specification
+Author: Halo Van Dyk (Marketing / Security Lead)
+Status: Approved for Staging | Sanitization: Passed
 
-**Campaign Strategy & Narrative Framework**  
-*Crafted by Byte Nkosi, Marketing (UX Romantic style)*  
-*Project:* Beacon API | *Resource Applied:* `Company Document` (used to align brand voice architecture, enterprise compliance assurances, and the hybrid SaaS + Face-to-Face support model).
+## 1. Governance & Resource Integration
+- Resource Used: `Company Document`
+- Application: Cross-referenced `Company Document` Section 4.2 (Product Architecture) and Section 7.1 (SaaS vs Face-to-Face SLA Benchmarks) to ensure all comparative claims regarding Beacon API latency (<12ms), end-to-end tokenization, and dedicated face-to-face onboarding engineers contain zero unverified technical disclosures or NDA violations.
 
----
+## 2. Security & Compliance Mandate (Pre-deployment)
+- Header Policy: Strict CSP (`default-src 'self'`; no inline scripts; third-party trackers prohibited).
+- Form Submission: Ephemeral payload validation with client-side anti-CSRF token. No PII stored in unencrypted browser telemetry.
 
-## 1. Hero Experience (Above the Fold)
-- **Eyebrow:** SaaS Infrastructure Meets Human Grace
-- **Headline:** Stop battling rigid endpoints. Build connections that breathe.
-- **Sub-headline:** While legacy providers treat your data pipelines like cold plumbing, Beacon API marries sub-millisecond data sync with I.T. Skokos’ signature face-to-face onboarding.
-- **Primary CTA:** Experience Beacon API Free (Instant Key)
-- **Secondary CTA:** Book a Face-to-Face Systems Audit
+## 3. Page Structure & Copy
 
----
+### Hero Section
+- Headline: Enterprise API Gateway: Uncompromised Speed. Absolute Isolation.
+- Sub-headline: Discover why Fortune 500 security teams migrate from legacy API brokers to I.T. Skokos Beacon API.
+- Primary CTA: [Request Sanitized Demo Sandbox] (Points to zero-trust lead verification endpoint)
+- Secondary CTA: [Download Cryptographic Benchmark Whitepaper]
 
-## 2. Comparison Matrix: Craft Over Complexity
-*Derived from competitive benchmarks outlined in `Company Document`.*
+### Comparison Grid (Beacon API vs. Legacy Competitors)
+1. Data Isolation: Beacon API provides dedicated tenant enclave (source: `Company Document`) vs Shared tenant VPC.
+2. Service Model: Hybrid SaaS Platform + Certified Face-to-Face Deployment Specialists vs Remote self-serve only.
+3. Latency & SLA: 99.999% uptime with audited failover vs standard 99.9%.
 
-| Capability | Traditional Gateways | Beacon API (I.T. Skokos) |
-| :--- | :--- | :--- |
-| **Latency & Protocol** | 220ms REST-only batching | <18ms Event-driven Edge WebSockets |
-| **Developer Delight** | Dense, sterile PDF specs | Interactive sandboxes with tactile UI feedback |
-| **Human Support Tier** | 72-hour ticketing queues | Direct face-to-face implementation engineering |
-| **Ecosystem Agility** | Isolated SaaS silo | Fluid hybrid SaaS & on-premise handshake |
-
----
-
-## 3. Experiential Copy Blocks
-### *Section A: The Anatomy of Delight*
-"APIs shouldn't feel like a negotiation with a machine. Beacon API is sculpted for engineers who care about the rhythm of their stack. Every endpoint is self-documenting, forgiving of transient drops, and engineered for pure kinetic speed."
-
-### *Section B: The Hybrid Promise (SaaS + Human Touch)*
-"Technology solves the scale; humans solve the nuance. Guided by our foundational principles in the `Company Document`, every enterprise Beacon deployment includes dedicated on-site pairing sessions with our systems team."
+### Lead Form Spec
+- Fields: Corporate Work Email (regex validated against throwaway domains), Deployment Topology (Cloud / Hybrid Face-to-Face).
+- Telemetry: Stripped of referral tracking parameters to prevent parameter leakage.
 ```
