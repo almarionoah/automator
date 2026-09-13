@@ -1,87 +1,78 @@
-# Atlas Core Auth Service Refactor: Hardened Token & Session Verification
-**Author:** Juno Fontaine  
+# Atlas Core Auth Service Refactor Implementation
+**Author:** Volt Petrov  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 06:30  
+**Produced:** D15 23:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored the authentication service implementation on project Atlas Core to enforce strict cryptographic boundaries, constant-time validation, and automated rotation per the standards defined in the Company Document.
+Refactored token verification, claims validation, and session parsing in Atlas Core. Strict data validation models were implemented in compliance with security and identity boundaries outlined in Company Document.
 
 ## Deliverable
 ```
 """
-Atlas Core - Refactored Authentication & Verification Service
-Author: Juno Fontaine (Engineering)
-Classification: Restricted / Internal Use Only
-
-Compliance & Guidance References:
-- Business Document: Company Document (Section 4.2: Cryptographic Identity & Session Lifecycle Standards)
-  Used to establish token entropy thresholds, mandatory constant-time signature evaluation,
-  and session invalidation invariants across distributed node boundaries.
+Atlas Core - Authentication Service Module
+Refactored by: Volt Petrov (Engineering)
+Reference Specification: Business Document 'Company Document' (RBAC invariants, schema boundaries, and token lifetime constraints).
 """
 
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Set
 import hmac
 import hashlib
-import secrets
-import time
-from typing import Optional, Dict, Any
+import json
+import base64
 
-class HardenedAuthService:
-    def __init__(self, key_ring: Dict[str, bytes]):
-        if not key_ring:
-            raise ValueError("[SECURITY] Key ring cannot be empty. Ref: Company Document Sec 4.2")
-        self._key_ring = key_ring
-        self._revocation_cache: set = set()
-        self._max_token_age_seconds: int = 900  # 15 min TTL
+@dataclass(frozen=True)
+class AuthTokenPayload:
+    sub: str
+    tenant_id: str
+    roles: Set[str]
+    exp: int
+    iat: int
 
-    def generate_token(self, principal_id: str, active_kid: str) -> str:
-        if active_kid not in self._key_ring:
-            raise KeyError("Invalid Key Identifier (KID)")
-        nonce = secrets.token_hex(16)
-        issued_at = int(time.time())
-        payload = f"{principal_id}:{issued_at}:{nonce}"
-        key = self._key_ring[active_kid]
-        signature = hmac.new(key, payload.encode('utf-8'), hashlib.sha256).hexdigest()
-        return f"{active_kid}.{payload}.{signature}"
+    @classmethod
+    def from_dict(cls, data: dict) -> "AuthTokenPayload":
+        # Strictly enforce data attributes as specified in Company Document
+        required_keys = {"sub", "tenant_id", "roles", "exp", "iat"}
+        missing = required_keys - set(data.keys())
+        if missing:
+            raise ValueError(f"Schema validation failed. Missing required claims: {missing}")
+        return cls(
+            sub=str(data["sub"]),
+            tenant_id=str(data["tenant_id"]),
+            roles=set(data["roles"]),
+            exp=int(data["exp"]),
+            iat=int(data["iat"])
+        )
 
-    def verify_token(self, token: str) -> Optional[Dict[str, Any]]:
-        try:
-            kid, principal_id, issued_at_str, nonce, signature = token.split(':')
-        except (ValueError, AttributeError):
-            return None
+class AuthService:
+    def __init__(self, secret_key: bytes):
+        self._secret_key = secret_key
 
-        # Unpack split format safely
-        parts = token.split('.')
+    def _verify_signature(self, message: str, sig_b64: str) -> bool:
+        expected_sig = hmac.new(self._secret_key, message.encode("utf-8"), hashlib.sha256).digest()
+        padding = "=" * (-len(sig_b64) % 4)
+        received_sig = base64.urlsafe_b64decode(sig_b64 + padding)
+        return hmac.compare_digest(expected_sig, received_sig)
+
+    def authenticate_token(self, raw_token: str) -> AuthTokenPayload:
+        parts = raw_token.strip().split(".")
         if len(parts) != 3:
-            return None
-        kid, payload, signature = parts
+            raise ValueError("Malformed token: exact 3 segments required")
 
-        if kid not in self._key_ring:
-            return None
+        header_b64, payload_b64, sig_b64 = parts
+        if not self._verify_signature(f"{header_b64}.{payload_b64}", sig_b64):
+            raise PermissionError("Signature verification failed")
 
-        try:
-            principal_id, issued_at_str, nonce = payload.split(':')
-            issued_at = int(issued_at_str)
-        except ValueError:
-            return None
+        padding = "=" * (-len(payload_b64) % 4)
+        payload_raw = base64.urlsafe_b64decode(payload_b64 + padding).decode("utf-8")
+        payload = AuthTokenPayload.from_dict(json.loads(payload_raw))
 
-        # Enforce temporal window & replay tracking
-        now = int(time.time())
-        if (now - issued_at) > self._max_token_age_seconds or issued_at > (now + 5):
-            return None
+        now = int(datetime.now(timezone.utc).timestamp())
+        if payload.exp <= now:
+            raise PermissionError(f"Token expired. Exp: {payload.exp}, Current: {now}")
 
-        if nonce in self._revocation_cache:
-            return None
-
-        expected_sig = hmac.new(self._key_ring[kid], payload.encode('utf-8'), hashlib.sha256).hexdigest()
-        # Timing attack mitigation
-        if not hmac.compare_digest(expected_sig, signature):
-            return None
-
-        return {"principal_id": principal_id, "issued_at": issued_at, "nonce": nonce}
-
-    def revoke_nonce(self, nonce: str) -> None:
-        self._revocation_cache.add(nonce)
-
+        return payload
 ```
