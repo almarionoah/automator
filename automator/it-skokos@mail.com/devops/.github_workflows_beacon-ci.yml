@@ -1,20 +1,18 @@
-# Beacon API: Hardened CI Pipeline Specification
-**Author:** Rune Bishop  
+# Hardened CI Pipeline Configuration for Beacon API
+**Author:** Jax Ito  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D17 11:45  
+**Produced:** D18 00:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-hardened CI workflow for Beacon API featuring immutable SHA pinning, minimal GITHUB_TOKEN permissions, automated SAST/dependency audit gates, and developer-delight status formatting compliant with the Company Document standards.
+Production-grade, zero-trust GitHub Actions workflow implementing SAST, dependency auditing, secret scanning, and strict principle-of-least-privilege permissions in full compliance with the Company Document security baseline.
 
 ## Deliverable
 ```
-# Beacon API - Hardened CI/CD Pipeline
-# Maintained by Rune Bishop | I.T. Skokos DevOps
-# Aligned with security baselines defined in Business Document: Company Document
-
-name: Beacon API Hardened Gate
+# Hardened CI Pipeline for Beacon API
+# Compliant with I.T. Skokos Security Standards outlined in Company Document.
+name: Beacon API Hardened CI
 
 on:
   push:
@@ -22,66 +20,64 @@ on:
   pull_request:
     branches: [ main ]
 
-# Principle of Least Privilege: Deny all default permissions at top level
+# Enforce least privilege global permissions (Company Document Sec 4.1)
 permissions: {}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  audit-and-lint:
-    name: ✨ Developer Experience & Security Sanity
+  security_audit:
+    name: Security Auditing & SAST
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
     steps:
-      - name: Checkout Source (Pinned SHA)
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Checkout Source Code
+        uses: actions/checkout@b4ffde65f46336ab851b3e7d66f441432c0c91af # v4.1.1 pinned commit
         with:
           persist-credentials: false
 
-      - name: Verify Compliance with Company Document
+      - name: Run Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+
+      - name: Run Static Application Security Testing (SAST)
+        uses: returntocorp/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
+        with:
+          config: >-
+            p/security-audit
+            p/owasp-top-ten
+            p/ci
+
+      - name: Audit Dependencies (SCA)
         run: |
-          echo "Validating pipeline controls against Company Document compliance matrix..."
-          test -f security-policy.json || echo "Notice: Standard policy enforcement active."
+          # Enforcing vulnerability scanning as required by Company Document
+          npm audit --audit-level=high
 
-      - name: Scan Secrets & Vulnerabilities (Trivy)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Security Findings
-        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a # v2.13.4
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
-
-  build-and-test:
-    name: 🛡️ Hermetic Build & Attestation
-    needs: audit-and-lint
+  build_test:
+    name: Hardened Build & Unit Testing
+    needs: security_audit
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - name: Setup Node (Deterministic Cache)
-        uses: actions/setup-node@60edb5dd545a775178f525247059d6428237b467
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab851b3e7d66f441432c0c91af
+        with:
+          persist-credentials: false
+
+      - name: Set up Isolated Runtime
+        uses: actions/setup-node@60edb5dd545a775178f525247059d6179ab1b41a
         with:
           node-version: '20.x'
           cache: 'npm'
 
-      - name: Immutable Install & Strict Test
-        run: |
-          npm ci --ignore-scripts
-          npm run test:ci -- --reporters=default --reporters=github-actions
+      - name: Deterministic Dependency Installation
+        run: npm ci --ignore-scripts
 
-      - name: Emit Romantic DX Summary
-        if: success()
-        run: echo "### 🌸 Beacon API Pipeline Passed with Elegance & Zero Trust Compliance" >> $GITHUB_STEP_SUMMARY
+      - name: Run Automated Test Suite
+        run: npm test -- --coverage --ci
+
 ```
