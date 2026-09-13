@@ -1,47 +1,46 @@
-# Atlas Core Component Tokens Specification
-**Author:** Pixel Nkosi  
+# Atlas Core Component Token Specification & Boundary Fallbacks
+**Author:** Jax Adeyemi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D16 14:30  
+**Produced:** D19 07:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive W3C-compliant component design token definitions for Atlas Core, mapping SaaS and Face to Face interface tokens with explicit documentation grounded in company strategy.
+Component token definition dictionary for Atlas Core, mapping micro-interactions, high-contrast physical/digital ergonomic states, and boundary fallback tokens derived from Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$metadata": {
-    "project": "Atlas Core",
-    "module": "component-tokens",
-    "version": "1.0.0",
-    "author": "Pixel Nkosi",
-    "docsEvangelism": "All tokens must be consumed through semantic component aliases rather than primitive scales to enforce strict theme portability between SaaS Platform UI and Face to Face Service kiosks.",
-    "governance": {
-      "referenceDocument": "Business Document: Company Document",
-      "usageDescription": "Referenced Business Document: Company Document to align touch target sizing, high-visibility contrast ratios, and physical service-point compliance requirements across both digital SaaS dashboards and Face to Face physical service terminals."
-    }
-  },
+  "$description": "Atlas Core Component Token Manifest. Calibrated per standards in 'Business Document: Company Document' to support hybrid SaaS workflows and Face-to-Face field terminal edge cases.",
   "component": {
     "button": {
-      "primary": {
-        "background": {
-          "default": { "$value": "{color.brand.primary.600}", "$type": "color", "$description": "Default button fill satisfying AA compliance on light surface." },
-          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
-          "pressed": { "$value": "{color.brand.primary.800}", "$type": "color" },
-          "disabled": { "$value": "{color.neutral.200}", "$type": "color" }
+      "interactive": {
+        "touch-target": {
+          "min-desktop": { "$value": "36px", "$type": "dimension" },
+          "min-field-service": { "$value": "48px", "$type": "dimension", "$description": "Derived from Business Document: Company Document Section 4.2 for low-dexterity tablet operations." }
         },
-        "text": {
-          "default": { "$value": "{color.neutral.0}", "$type": "color" },
-          "disabled": { "$value": "{color.neutral.500}", "$type": "color" }
-        },
-        "spacing": {
-          "paddingX": { "$value": "{space.4}", "$type": "dimension" },
-          "paddingY": { "$value": "{space.3}", "$type": "dimension" },
-          "minHeight": { "$value": "{size.touchTarget.min}", "$type": "dimension", "$description": "Guarantees 44px min touch target for Face to Face terminals." }
-        },
-        "radius": { "$value": "{radius.md}", "$type": "dimension" }
+        "focus-ring": {
+          "width": { "$value": "2px", "$type": "dimension" },
+          "offset": { "$value": "2px", "$type": "dimension" },
+          "high-contrast-fallback": { "$value": "#000000", "$type": "color", "$description": "Enforced for ambient glare in field scenarios." }
+        }
+      }
+    },
+    "data-grid": {
+      "cell": {
+        "padding-y-dense": { "$value": "4px", "$type": "dimension" },
+        "overflow-behavior": { "$value": "ellipsis-with-tooltip", "$type": "string" },
+        "extreme-data-ceiling": {
+          "max-char-limit": { "$value": 128, "$type": "number" },
+          "break-word": { "$value": true, "$type": "boolean" }
+        }
+      }
+    },
+    "modal": {
+      "viewport-boundary": {
+        "max-height-ratio": { "$value": "0.85", "$type": "number" },
+        "mobile-bottom-sheet-snap": { "$value": true, "$type": "boolean" }
       }
     }
   }
