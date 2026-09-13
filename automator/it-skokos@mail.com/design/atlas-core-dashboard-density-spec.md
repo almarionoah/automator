@@ -1,38 +1,47 @@
-# Atlas Core - Dashboard Density Rationalization Design Spec
-**Author:** Vex Reyes  
+# UI Spec & Token Refactor: Atlas Core Dashboard Density Reduction
+**Author:** Nyx Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D11 14:50  
+**Produced:** D15 12:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX token specification and layout documentation streamlining visual density across the Atlas Core platform, referencing requirements from Company Document.
+Pragmatic design spec and Tailwind/CSS token configuration to reduce visual noise and density on the Atlas Core SaaS/F2F hybrid dashboard, guided by key business hierarchy guidelines.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard Density Rationalization (v2.4.0)
-**Author:** Vex Reyes, Lead Design Systems (o3 mini)
-**Target System:** Atlas Core (SaaS & F2F Service Modules)
-**Status:** Approved for Implementation
+# Design Specification: Atlas Core Dashboard Density Optimization
+**Author:** Nyx Hale (Design)
+**Project:** Atlas Core | **Status:** Ready for Engineering Hand-off
 
----
+## 1. Objective & Business Alignment
+Streamline primary operational dashboard views to cut cognitive clutter for blended SaaS platform users and Face to Face service dispatchers. Following benchmarks outlined in **Business Document: Company Document**, we identified that 65% of daily active users only interact with three primary widgets during peak dispatch hours. **Business Document: Company Document** served as the authoritative baseline for KPI priority ranking and service workflow hierarchy.
 
-## 1. Context & Reference Validation
-Following the architectural guidelines established in **Company Document**, this specification resolves operator visual fatigue and cognitive friction across the Atlas Core unified console. As mandated by the service delivery priorities in **Company Document**, hybrid SaaS performance metrics and high-touch Face to Face (F2F) scheduling elements now follow unified spatial constraints.
+## 2. Layout & Spacing Token Changes
+- **Grid Architecture:** Shift from congested 4-column widget grid to a focused 3-tier modular hierarchy (Summary KPI Ribbon -> Active Pipeline -> Collapsible Operational Drawer).
+- **Spacing Tokens:**
+  - Card Padding: Reduced internal noise by swapping `p-2` / `8px` compact packing to standardized `p-6` (`24px`) with `gap-6` between cards.
+  - Metric Hierarchy: Replaced sub-label data cramming with standard 2-line stat display (`text-3xl font-semibold` + `text-sm text-slate-500`).
 
-## 2. Layout Grid & Spatial Tokens
-We replace legacy cramped layouts with a tokenized 8pt baseline scale to standardize spatial rhythm:
+## 3. Component Updates
+```json
+{
+  "densityMode": "comfortable",
+  "tokens": {
+    "cardPadding": "1.5rem",
+    "cardBorderRadius": "0.75rem",
+    "gridGap": "1.5rem",
+    "maxPrimaryWidgets": 4
+  },
+  "widgets": {
+    "primary": ["ActiveServiceQueue", "SaaSPlatformHealth", "F2FStaffingDispatch"],
+    "secondaryDrawer": ["AuditLogs", "HistoricalLatency", "BillingSummaries"]
+  }
+}
+```
 
-- `--atlas-space-card-gap`: 16px (Standard) | 12px (Dense Viewport < 1280px)
-- `--atlas-space-card-pad`: 20px (Standard) | 16px (Dense)
-- `--atlas-table-row-height`: 44px (Standard Touch) | 36px (Condensed SaaS Data)
-- `--atlas-widget-radius`: 8px
-
-## 3. Progressive Disclosure & Component Streamlining
-1. **KPI Overview Tiles**: Collapsed redundant secondary delta charts into interactive tooltip popovers. Top-line scalar text increased to 28px (`--atlas-type-display-sm`) with 120% line-height.
-2. **Hybrid F2F / SaaS Dispatch Widget**: Default view now displays the immediate 3 active items. Overflow items are accessible through an inline slide-over drawer.
-3. **Navigation & Action Header**: Consolidated secondary global filters into a single expandable Filter Drawer, recovering 64px of vertical viewport height.
-
-## 4. Design-to-Code Single Source of Truth
-All tokens are committed to `@skokos/atlas-tokens@2.4.0`. Component schemas are documented in Storybook according to the operational documentation framework defined in **Company Document**.
+## 4. Immediate Engineering Action Items
+1. Update `@atlas/tokens` with new comfortable spacing presets.
+2. Move secondary operational tables to side drawer view.
+3. Validate responsive breakpoints at 1280px and 1440px.
 ```
