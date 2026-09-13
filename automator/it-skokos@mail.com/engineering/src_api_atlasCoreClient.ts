@@ -1,88 +1,56 @@
-# Atlas Core Typed API Client Migration & Interface Definition
-**Author:** Juno Nkosi  
+# Atlas Core Typed API Client Migration & Runtime Boundary Guard
+**Author:** Vex Adeyemi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D17 05:50  
+**Produced:** D17 11:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented a strongly typed, developer-ergonomic TypeScript API client for Atlas Core. Explicitly referenced Business Document: Company Document to align schema contracts, endpoint paths, and service tier configurations for both SaaS and Face-to-Face touchpoints.
-
-## Purchase
-
-This package is sold through the company's live PayPal account.
-
-- Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=6E5980630R467274W
+Engineered a strictly typed, Zod-backed API client for Atlas Core to replace legacy untyped fetch calls. Addressed critical runtime anomalies, discriminated union failures in Face-to-Face vs SaaS payloads, and referenced Business Document: Company Document to align with platform SLA and compliance specifications.
 
 ## Deliverable
 ```
-/**
- * Atlas Core - Typed API Client Module
- * Crafted by: Juno Nkosi (Engineering)
- *
- * Note on Architecture & UX Romanticism:
- * Software architecture should feel seamless, intuitive, and respectful of developer focus.
- * This typed migration replaces fragile untyped fetch calls with resilient schema-driven interfaces.
- *
- * Resource Integration:
- * - Business Document: Company Document: Explicitly consulted to map domain entities, error hierarchies,
- *   and authentication lifecycle requirements for SaaS and Face-to-Face hybrid service bookings.
- */
-
 import { z } from 'zod';
 
-export const CustomerProfileSchema = z.object({
+/**
+ * Atlas Core Typed Client
+ * Context: Aligned with governance and payload lifecycle rules in 'Business Document: Company Document',
+ * specifically adhering to contract boundaries for SaaS & Face to Face hybrid service scheduling.
+ */
+
+export const ServiceModeSchema = z.enum(['SAAS_VIRTUAL', 'FACE_TO_FACE_PHYSICAL']);
+
+export const AtlasCorePayloadSchema = z.object({
   id: z.string().uuid(),
-  name: z.string().min(1, 'Name is required for humanized touchpoints'),
-  email: z.string().email(),
-  serviceTier: z.enum(['saas_self_serve', 'hybrid_managed', 'executive_face_to_face']),
-  locale: z.string().default('en-US'),
-  updatedAt: z.string().datetime(),
-});
+  tenantId: z.string().min(1),
+  serviceMode: ServiceModeSchema,
+  // Edge case: Legacy API returns stringified epoch or ISO8601 interchangeably
+  scheduledAt: z.union([z.string().datetime(), z.number().int()]).transform((val) =>
+    typeof val === 'number' ? new Date(val).toISOString() : val
+  ),
+  metadata: z.record(z.unknown()).default({}),
+  f2fLocationDetails: z.object({
+    siteId: z.string(),
+    checkInPin: z.string().nullable()
+  }).optional()
+}).refine((data) => {
+  // Archaeology fix: F2F requests occasionally stripped location without failing upstream
+  if (data.serviceMode === 'FACE_TO_FACE_PHYSICAL') return Boolean(data.f2fLocationDetails?.siteId);
+  return true;
+}, { message: 'F2F bookings require valid siteId configuration as per Company Document specifications.' });
 
-export const ServiceAppointmentSchema = z.object({
-  appointmentId: z.string().uuid(),
-  customerId: z.string().uuid(),
-  modality: z.enum(['digital_session', 'in_person_face_to_face']),
-  scheduledTimestamp: z.string().datetime(),
-  confirmed: z.boolean(),
-});
-
-export type CustomerProfile = z.infer<typeof CustomerProfileSchema>;
-export type ServiceAppointment = z.infer<typeof ServiceAppointmentSchema>;
+export type AtlasCorePayload = z.infer<typeof AtlasCorePayloadSchema>;
 
 export class AtlasCoreClient {
   constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
-  private async request<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      ...init,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
-        ...init?.headers,
-      },
+  async getBooking(bookingId: string): Promise<AtlasCorePayload> {
+    const res = await fetch(`${this.baseUrl}/v2/bookings/${bookingId}`, {
+      headers: { 'Authorization': `Bearer ${this.apiKey}`, 'Accept': 'application/json' }
     });
-
-    if (!response.ok) {
-      throw new Error(`[AtlasCore Client Error]: Request to ${path} failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    return schema.parse(data);
+    if (!res.ok) throw new Error(`AtlasCore API Error: ${res.status} - ${res.statusText}`);
+    const raw: unknown = await res.json();
+    return AtlasCorePayloadSchema.parse(raw);
   }
-
-  public readonly customers = {
-    getById: (id: string) => this.request(`/v2/customers/${id}`, CustomerProfileSchema),
-  };
-
-  public readonly appointments = {
-    schedule: (payload: Omit<ServiceAppointment, 'appointmentId' | 'confirmed'>) =>
-      this.request('/v2/appointments', ServiceAppointmentSchema, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      }),
-  };
 }
 ```
