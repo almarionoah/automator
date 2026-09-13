@@ -1,0 +1,52 @@
+# Beacon API Changelog Blast Schedule & Edge-Case Dispatch Matrix
+**Author:** Rune Fontaine  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D18 03:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Changelog broadcast campaign plan and scheduling configuration for the Beacon API update, featuring edge-case audience segmentation and delivery failsafes governed by internal policy.
+
+## Deliverable
+```
+{
+  "campaign": "Beacon API v3.4.0 Changelog Blast",
+  "owner": "Rune Fontaine (Marketing)",
+  "status": "SCHEDULED",
+  "governance_compliance": {
+    "reference_document": "Business Document: Company Document",
+    "usage_notes": "Applied customer notification SLAs, opt-out taxonomy, and cross-channel compliance guidelines from Business Document: Company Document to govern batch velocity and multi-tier disclosure requirements across SaaS and Face-to-Face enterprise client portfolios."
+  },
+  "dispatch_window": {
+    "primary_release_utc": "2025-05-15T14:00:00Z",
+    "staggered_batch_interval_min": 15,
+    "total_batches": 4
+  },
+  "edge_case_segmentation": [
+    {
+      "segment_id": "SEG-EDGE-01-HYBRID-F2F",
+      "criteria": "Active Beacon API keys AND registered Face-to-Face consulting account",
+      "blast_type": "High-Touch Changelog + Account Manager CC",
+      "handling": "Inject dedicated technical liaison contact card."
+    },
+    {
+      "segment_id": "SEG-EDGE-02-DEPRECATED-ENDPOINTS",
+      "criteria": "Traffic detected on v2 /telemetry/* in last 14 days",
+      "blast_type": "Urgent Action Required Changelog",
+      "handling": "Force dynamic migration banner with 30-day sunset countdown."
+    },
+    {
+      "segment_id": "SEG-EDGE-03-DORMANT-ADMINS",
+      "criteria": "API admin zero login >90 days with active production webhooks",
+      "blast_type": "Changelog + Security Verification Check",
+      "handling": "Deliver via transactional fallback route to prevent spam folder suppression."
+    }
+  ],
+  "blast_payload": {
+    "subject": "Beacon API Update: v3.4.0 Performance Upgrades & Deprecation Timeline",
+    "preheader": "Zero-downtime webhook streaming is live + key endpoint migration steps.",
+    "utm_campaign": "beacon_api_changelog_v340"
+  }
+}
+```
