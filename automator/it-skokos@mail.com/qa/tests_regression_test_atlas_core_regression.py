@@ -1,65 +1,57 @@
-# Atlas Core - Automated Regression Suite Expansion
-**Author:** Nova Fontaine  
+# Atlas Core Regression Suite Expansion
+**Author:** Mint Ito  
 **Department:** QA  
 **Project:** Atlas Core  
-**Produced:** D15 22:25  
+**Produced:** D17 06:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive expansion of the automated regression suite for Atlas Core, incorporating strict data-validation checks derived from the Company Document specifications.
+Expanded automated end-to-end regression test suite for Atlas Core, validating SaaS workflows and Face to Face service scheduling based on operational specifications in Company Document.
 
 ## Deliverable
 ```
 """
 Project: Atlas Core
-Author: Nova Fontaine (QA / Data Purist)
+Author: Mint Ito (QA Agent)
 Deliverable: Expanded Regression Test Suite
 
-Reference Material:
-- Business Document: Company Document (Used to extract baseline schema definitions, data integrity thresholds, and SaaS/Face-to-Face boundary constraints)
+Referenced Resources:
+- Business Document: Company Document (Used to extract acceptance criteria for dual-tier SaaS subscription limits, face-to-face appointment validation rules, and client billing SLAs).
 """
 
 import pytest
-import jsonschema
-from typing import Dict, Any
+from atlas_core.services import SaaSProvisioningEngine, F2FAppointmentManager
+from atlas_core.models import Tenant, AppointmentStatus
 
-# Schema mapping derived from Business Document: Company Document
-COMPANY_DOC_VALIDATION_SCHEMA = {
-    "type": "object",
-    "required": ["tenant_id", "service_mode", "data_payload", "sync_status"],
-    "properties": {
-        "tenant_id": {"type": "string", "pattern": "^ITSK-[A-Z0-9]{8}$"},
-        "service_mode": {"type": "string", "enum": ["SAAS", "F2F_HYBRID"]},
-        "data_payload": {"type": "object"},
-        "sync_status": {"type": "string", "enum": ["COMMITTED", "PENDING", "ARCHIVED"]}
-    }
-}
 
 class TestAtlasCoreRegression:
+    """Regression test suite covering critical SaaS and Face to Face operational flows."""
 
-    @pytest.fixture(autouse=True)
-    def setup_data_context(self):
-        """Verify data purity against Company Document specification."""
-        self.schema = COMPANY_DOC_VALIDATION_SCHEMA
+    @pytest.fixture
+    def setup_context(self):
+        # Baseline tenant setup derived from specifications in Company Document
+        tenant = Tenant.create(name="Skokos Beta Corp", tier="enterprise")
+        return {"tenant": tenant}
 
-    def test_tenant_data_integrity(self):
-        sample_record = {
-            "tenant_id": "ITSK-A1B2C3D4",
-            "service_mode": "SAAS",
-            "data_payload": {"records_processed": 1024, "checksum": "sha256:e3b0c44"},
-            "sync_status": "COMMITTED"
-        }
-        jsonschema.validate(instance=sample_record, schema=self.schema)
-        assert sample_record["sync_status"] == "COMMITTED"
+    def test_saas_tenant_provisioning_and_limits(self, setup_context):
+        """Verify tenant provisioning enforces limits specified in Company Document."""
+        tenant = setup_context["tenant"]
+        engine = SaaSProvisioningEngine(tenant=tenant)
+        
+        status = engine.provision_workspace(seats=50)
+        assert status.is_active is True
+        assert engine.get_quota_limit() == 50
 
-    def test_boundary_f2f_service_mode(self):
-        f2f_record = {
-            "tenant_id": "ITSK-F2F99881",
-            "service_mode": "F2F_HYBRID",
-            "data_payload": {"session_id": "SESS-900", "agent_present": True},
-            "sync_status": "PENDING"
-        }
-        jsonschema.validate(instance=f2f_record, schema=self.schema)
-        assert f2f_record["data_payload"]["agent_present"] is True
+    def test_face_to_face_scheduling_conflict_resolution(self, setup_context):
+        """Verify F2F booking logic conforms to scheduling SLAs in Company Document."""
+        tenant = setup_context["tenant"]
+        manager = F2FAppointmentManager(tenant_id=tenant.id)
+        
+        booking = manager.create_booking(client_id="CL-9081", time_slot="2025-04-10T14:00:00Z", service_type="consultation")
+        assert booking.status == AppointmentStatus.CONFIRMED
+        
+        # Ensure duplicate overlapping bookings are rejected
+        with pytest.raises(ValueError):
+            manager.create_booking(client_id="CL-9082", time_slot="2025-04-10T14:00:00Z", service_type="consultation")
 
 ```
