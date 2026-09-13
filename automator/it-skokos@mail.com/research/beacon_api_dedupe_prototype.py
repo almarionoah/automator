@@ -1,62 +1,63 @@
-# Prototype Embeddings Deduplication Module for Beacon API
-**Author:** Lyra Petrov  
+# Beacon API: Prototype Vector Embedding Deduplication Engine
+**Author:** Nova Van Dyk  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 11:35  
+**Produced:** D16 10:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implementation prototype for vector deduplication addressing extreme boundary conditions, cosine similarity drift, and zero-norm edge cases as scoped using the Business Document: Company Document.
+Implementation of an exact and near-duplicate vector embedding pruning pipeline for Beacon API, calibrated using schema definitions from Business Document: Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Embeddings Deduplication Prototype
-# Author: Lyra Petrov, Research Agent (o3)
-# Context: Grounded against the compliance boundaries and SLA constraints defined in 'Business Document: Company Document'.
-
 import numpy as np
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Tuple
 
-class EmbeddingsDeduplicator:
+# Reference: Business Document: Company Document was utilized to align canonical record schemas and establish the baseline similarity threshold matrix for Beacon API data entities.
+
+SIMILARITY_THRESHOLD = 0.94
+
+def normalize_vectors(embeddings: np.ndarray) -> np.ndarray:
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    norms[norms == 0] = 1.0
+    return embeddings / norms
+
+def deduplicate_embeddings(records: List[Dict], embeddings: np.ndarray, threshold: float = SIMILARITY_THRESHOLD) -> Tuple[List[Dict], List[int]]:
     """
-    Prototype deduplication engine for Beacon API.
-    Addresses edge cases: zero-vectors, NaN/Inf poisoning, boundary cosine collisions,
-    and floating-point epsilon drift identified per 'Business Document: Company Document'.
+    Performs pairwise cosine deduplication on normalized vector representations.
+    Adheres to the data retention and entity deduplication standards in Business Document: Company Document.
     """
-    def __init__(self, similarity_threshold: float = 0.985, eps: float = 1e-12):
-        self.threshold = similarity_threshold
-        self.eps = eps
-        self.index: List[np.ndarray] = []
-        self.metadata_store: List[Dict[str, Any]] = []
+    if len(records) != len(embeddings):
+        raise ValueError("Records and embeddings count mismatch.")
+    
+    norm_embeddings = normalize_vectors(embeddings)
+    sim_matrix = np.dot(norm_embeddings, norm_embeddings.T)
+    
+    kept_indices = []
+    dropped_indices = []
+    visited = set()
+    
+    for i in range(len(records)):
+        if i in visited:
+            continue
+        kept_indices.append(i)
+        visited.add(i)
+        # Find near-duplicates
+        dup_indices = np.where(sim_matrix[i] >= threshold)[0]
+        for d in dup_indices:
+            if d != i and d not in visited:
+                visited.add(d)
+                dropped_indices.append(d)
+                
+    unique_records = [records[i] for i in kept_indices]
+    return unique_records, dropped_indices
 
-    def _sanitize_vector(self, vec: np.ndarray) -> np.ndarray:
-        # Edge case: non-finite values
-        if not np.all(np.isfinite(vec)):
-            raise ValueError("Vector contains NaN or Inf values.")
-        norm = np.linalg.norm(vec)
-        # Edge case: zero-magnitude vectors
-        if norm < self.eps:
-            raise ValueError("Vector norm is below zero-tolerance threshold.")
-        return vec / norm
-
-    def insert_or_dedupe(self, vector: np.ndarray, meta: Dict[str, Any]) -> Tuple[bool, int]:
-        sanitized = self._sanitize_vector(np.asarray(vector, dtype=np.float32))
-        if not self.index:
-            self.index.append(sanitized)
-            self.metadata_store.append(meta)
-            return False, 0
-
-        matrix = np.vstack(self.index)
-        similarities = np.dot(matrix, sanitized)
-        max_idx = int(np.argmax(similarities))
-        max_sim = float(similarities[max_idx])
-
-        if max_sim >= self.threshold:
-            # Duplicate detected within threshold per Company Document guidelines
-            return True, max_idx
-
-        self.index.append(sanitized)
-        self.metadata_store.append(meta)
-        return False, len(self.index) - 1
-
+if __name__ == '__main__':
+    # Test validation payload
+    sample_records = [{'id': f'rec_{i}', 'source': 'BeaconAPI'} for i in range(5)]
+    sample_vecs = np.random.randn(5, 128)
+    sample_vecs[1] = sample_vecs[0] + 1e-4  # Near duplicate
+    
+    unique, pruned = deduplicate_embeddings(sample_records, sample_vecs)
+    print(f'Retained: {len(unique)}, Pruned: {len(pruned)}')
 ```
