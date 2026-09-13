@@ -1,57 +1,56 @@
-# Atlas Core Component Design Tokens Specification
-**Author:** Onyx Okafor  
+# Atlas Core Component Tokens Specification
+**Author:** Jax Nkosi  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 15:40  
+**Produced:** D17 16:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready component design tokens defining typography, color mappings, interactive states, and elevation for Project Atlas Core, structured according to specifications in the Business Document: Company Document.
+Comprehensive semantic and component-level design token architecture for Project Atlas Core, bridging digital SaaS clarity and face-to-face relational warmth, constructed in alignment with the Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "metadata": {
-    "project": "Atlas Core",
-    "author": "Onyx Okafor",
-    "sourceGuideline": "Business Document: Company Document",
-    "description": "Derived from brand standards in Company Document to unify SaaS platform and face-to-face service UI touchpoints."
+  "meta": {
+    "name": "Atlas Core Component Tokens",
+    "version": "1.0.0",
+    "designer": "Jax Nkosi",
+    "governance": "Aligned with strategic directives from 'Business Document: Company Document' to unify high-velocity SaaS workflows with high-touch face-to-face client rituals."
   },
-  "component": {
-    "button": {
+  "context": {
+    "description": "Every token captures an emotional cadence—translating the corporate posture from the Business Document: Company Document into tactile, harmonious micro-interactions."
+  },
+  "color": {
+    "action": {
       "primary": {
-        "background": {
-          "default": { "value": "{color.brand.primary.600}", "type": "color" },
-          "hover": { "value": "{color.brand.primary.700}", "type": "color" },
-          "active": { "value": "{color.brand.primary.800}", "type": "color" },
-          "disabled": { "value": "{color.neutral.300}", "type": "color" }
-        },
-        "text": {
-          "default": { "value": "{color.neutral.0}", "type": "color" },
-          "disabled": { "value": "{color.neutral.500}", "type": "color" }
-        },
-        "padding": {
-          "x": { "value": "1rem", "type": "dimension" },
-          "y": { "value": "0.625rem", "type": "dimension" }
-        },
-        "radius": { "value": "0.375rem", "type": "dimension" }
+        "default": { "value": "#1A365D", "type": "color", "description": "Resolute deep slate: grounded digital trust." },
+        "hover": { "value": "#2A4365", "type": "color" },
+        "active": { "value": "#0F2544", "type": "color" }
+      },
+      "warmth": {
+        "default": { "value": "#C05621", "type": "color", "description": "Amber glow: human touchpoint and service arrival." }
       }
     },
     "surface": {
-      "card": {
-        "background": { "value": "{color.neutral.0}", "type": "color" },
-        "border": { "value": "1px solid {color.neutral.200}", "type": "border" },
-        "radius": { "value": "0.5rem", "type": "dimension" },
-        "shadow": { "value": "0 1px 3px rgba(0,0,0,0.1)", "type": "shadow" }
+      "canvas": { "value": "#F7FAFC", "type": "color" },
+      "card": { "value": "#FFFFFF", "type": "color" },
+      "dialog": { "value": "#FFFFFF", "type": "color" }
+    }
+  },
+  "elevation": {
+    "intimacy": {
+      "flat": { "value": "none", "type": "boxShadow" },
+      "whisper": { "value": "0 1px 3px rgba(0, 0, 0, 0.05)", "type": "boxShadow" },
+      "embrace": { "value": "0 8px 24px -4px rgba(15, 37, 68, 0.12)", "type": "boxShadow", "description": "Modal and concierge card elevation." }
+    }
+  },
+  "motion": {
+    "transition": {
+      "delight": { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "type": "easing" },
+      "duration": {
+        "gentle": { "value": "280ms", "type": "duration" }
       }
-    },
-    "input": {
-      "border": {
-        "default": { "value": "1px solid {color.neutral.300}", "type": "border" },
-        "focus": { "value": "1px solid {color.brand.primary.500}", "type": "border" }
-      },
-      "padding": { "value": "0.5rem 0.75rem", "type": "dimension" }
     }
   }
 }
