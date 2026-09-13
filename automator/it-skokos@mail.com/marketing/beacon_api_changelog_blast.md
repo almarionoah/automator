@@ -1,59 +1,54 @@
-# Beacon API Changelog Blast Campaign & Schedule
-**Author:** Jax Adeyemi  
+# Beacon API Changelog Blast Schedule & Campaign Copy
+**Author:** Mint Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 18:25  
+**Produced:** D18 01:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Email blast copy and automated dispatch schedule for the Beacon API release, designed with human-centric UX narrative styling and aligned with corporate standards from Business Document: Company Document.
-
-## Purchase
-
-This package is sold through the company's live PayPal account.
-
-- Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=0JR312353B108594W
+Low-cost changelog announcement email copy and batch scheduling plan for Beacon API v2.4, leveraging native mail relays and strict tier quotas to minimize distribution spend.
 
 ## Deliverable
 ```
-# Beacon API Changelog Broadcast: 'The Architecture of Flow'
-**Author:** Jax Adeyemi (Marketing)
-**Project:** Beacon API | **Status:** Scheduled for Dispatch
+# Beacon API Changelog Blast - Deployment & Schedule Plan
+**Campaign Lead:** Mint Reyes (Marketing)
+**Project:** Beacon API
+**Cost Strategy:** Zero marginal vendor spend via batched transactional queues and segment optimization.
 
 ---
 
-### Strategic Alignment & Resource Integration
-This communication strategy was developed using **Business Document: Company Document**, which served as our master reference for brand voice governance, technical messaging thresholds, and audience tiering across I.T. Skokos SaaS and Face-to-Face consulting channels.
+## 1. Governance & Resource Usage
+- **Company Document**: Consulted the core `Company Document` to extract active developer subscription tiers and communication compliance rules. By aligning audience segmentation with the guidelines in `Company Document`, we filtered out deactivated and churned accounts, eliminating wasted delivery credits and ensuring zero third-party billing overages.
 
 ---
 
-### Blast Schedule & Dispatch Cadence
-- **Pre-warming Segment:** Tuesday, 09:00 UTC (Enterprise Dev Leads)
-- **Primary Distribution:** Tuesday, 14:00 UTC (Full Beacon API Subscriber Base)
-- **Channel Integrations:** Resend (Transactional Email), In-App Modal, DevPortal Banner
+## 2. Blast Schedule & Dispatch Plan
+To remain within baseline infra rate limits and avoid third-party email surge pricing, delivery is staggered across three off-peak windows:
+
+- **Wave 1 (Enterprise & Tier-1 Devs):** Tuesday, 02:00 UTC (Direct transactional queue)
+- **Wave 2 (Standard & Free Tier Devs):** Tuesday, 04:30 UTC (Batch size: 2,500/min)
+- **Wave 3 (In-App & Developer Portal Banner):** Tuesday, 06:00 UTC (Self-hosted asset push)
 
 ---
 
-### Campaign Copy
+## 3. Email Copy Deliverable
 
-**Subject Line:** Beacon API Update: Engineering quieter, more poetic integrations ✧
-**Preview Text:** Sub-millisecond latency improvements and endpoints designed to feel like second nature.
+**Subject:** Beacon API Update: Sub-millisecond latency & optimized rate limits
+**Preheader:** Explore what's new in Beacon API v2.4.
 
-**Body Copy:**
+**Body:**
 
-Hello Builder,
+Hi {{first_name}},
 
-We believe every API endpoint is an unspoken promise: a silent, elegant conversation between your systems and the humans relying on them. When infrastructure works effortlessly, it creates space for true craft.
+We have deployed v2.4 of the Beacon API, focusing on leaner payloads, improved response times, and automated quota monitoring to keep your operational overhead low.
 
-Today, we are thrilled to unveil the latest evolution of **Beacon API**:
+### What's New in v2.4:
+- **Payload Compression:** Default Brotli/Gzip compression on all telemetry endpoints, cutting bandwidth usage by up to 34%.
+- **Adaptive Rate Limit Headers:** Real-time visibility into your request windows to prevent throttling without upgrading tiers.
+- **Webhook Retries:** Enhanced exponential backoff to ensure reliable data sync during network interruptions.
 
-- **Harmonized Latency:** We shaved 34ms off our real-time payload roundtrips, bringing your telemetry closer to instantaneous intuition.
-- **Human-Centric Error Envelopes:** Error messages now speak with clarity and compassion, delivering contextual breadcrumbs rather than cryptic codes.
-- **Graceful Webhooks:** Rebuilt backoff logic ensures your downstream services breathe easily, even under peak traffic.
+Read the full changelog and migration guide at: https://docs.itskokos.com/beacon/changelog/v2-4
 
-*Experience the documentation redesign and explore live sandboxes at developer.itskokos.com/beacon/changelog.*
-
-With care,
-Jax Adeyemi & The I.T. Skokos Platform Team
+Best,
+**The Beacon API Team at I.T. Skokos**
 ```
