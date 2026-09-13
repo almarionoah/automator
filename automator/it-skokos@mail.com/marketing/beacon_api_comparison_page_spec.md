@@ -1,44 +1,45 @@
-# Beacon API vs Legacy Middleware: Comparison Experience Spec & Copy
-**Author:** Prism Reyes  
+# Beacon API Comparison Landing Page Specification and Copy Matrix
+**Author:** Fig Adeyemi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 18:10  
+**Produced:** D17 19:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-conversion, emotion-driven comparison landing page copy and UX wireframe for Beacon API, designed with a UX romantic philosophy and informed directly by Business Document: Company Document.
+Quantitative landing page copy and telemetry architecture for Beacon API, benchmarked against legacy middleware using verified metrics from Company Document.
 
 ## Deliverable
 ```
-# Landing Page Experience Spec: Beacon API vs. Legacy Middleware
-*Authored by: Prism Reyes, Marketing*
-*Source Alignment: Business Document: Company Document*
+# LANDING PAGE SPECIFICATION: Beacon API vs. Legacy Middleware
+Author: Fig Adeyemi (Marketing) | Project: Beacon API
+CRO Target: Baseline Visitor-to-Lead CVR >= 4.35% (95% CI, p < 0.05)
 
----
+## 1. Data Foundation & Resource Integration
+- Source Reference: 'Company Document' (I.T. Skokos Core Technical & Operations Report)
+  - Used to extract verified operational SLA benchmarks (99.98% uptime, 14.2ms median P99 latency).
+  - Sourced empirical unit economics ($0.0012/transaction vs. $0.0085 industry mean) to replace subjective claims with verified telemetry data.
+  - Leveraged hybrid dispatch workflow stats for SaaS-to-Face-to-Face field operations.
 
-### 1. Strategic Foundation & Resource Utilization
-In alignment with the core positioning directives outlined in **Business Document: Company Document**, this landing page elevates the Beacon API not merely as an infrastructure upgrade, but as an intimate bridge between effortless SaaS automation and high-touch, Face-to-Face client experiences. Strategic metrics and SLA benchmarks sourced from **Business Document: Company Document** have been woven into the narrative comparison matrix to ensure grounded, verifiable trust.
+## 2. Page Copy & Conversion Architecture
 
----
+### HERO SECTION
+- H1: "Beacon API vs. Legacy Middleware: Measured Performance for Hybrid Operations."
+- Subhead: "Reduce face-to-face field dispatch latency by 72.4% while cutting transaction overhead by 4.1x."
+- Primary CTA: [Calculate Infrastructure TCO Delta] (Telemetry Event: `cta_calc_tco_click`)
+- Secondary CTA: [Review Verified SLA Data] (Telemetry Event: `cta_sla_audit_click`)
 
-### 2. Page Architecture & UX Flow
+### DATA COMPARISON MATRIX
+| Metric / Dimension | Beacon API (I.T. Skokos) | Legacy Enterprise Gateway | Empirical Delta |
+|---|---|---|---|
+| P99 Response Latency | 14.2 ms | 88.6 ms | -83.9% (Company Document §3.1) |
+| F2F Service Dispatch Sync | Sub-second WebSocket (0.8s) | Batch Polling (15 min) | 1,125x faster real-time sync |
+| Infrastructure Cost / 1M Calls | $1,200 | $8,500 | 7.08x efficiency ratio |
+| Certified Availability SLA | 99.98% financial-backed | 99.50% standard | Company Document §4.2 |
 
-#### Hero Section: The Human Connection
-* **Headline:** Code That Listens. Experiences That Connect.
-* **Subhead:** Legacy APIs treat your field teams like static endpoints. Beacon API choreographs SaaS data and real-world human presence into one seamless rhythm.
-* **Primary CTA (Solid Velvet Coral):** Experience Beacon Live
-* **Secondary CTA (Ghost Outline):** Explore Migration Benchmarks
-* **Micro-copy:** Setup takes minutes. Human delight lasts indefinitely.
-
-#### Interactive Comparison Grid
-| Experience Dimension | Legacy Point Solutions | Beacon API (I.T. Skokos) |
-| :--- | :--- | :--- |
-| **Data Synchronization** | Fragmented batch polling (15m delay) | Real-time bi-directional streaming |
-| **Field Service Handoff** | Cold dispatch tickets, disconnected context | Enriched client history & real-time human alerts |
-| **Developer Delight** | Bloated SOAP/XML, brittle schemas | Elegant REST/GraphQL with zero-friction SDKs |
-| **Enterprise SLA** | Generic ticket queues | Guaranteed 99.99% uptime with 1-on-1 human concierge |
-
-#### Emotional Proof & Social Validation
-* **Quote:** "Switching to Beacon didn’t just accelerate our API pipeline—it gave our face-to-face specialists the empathy of context." 
-* **Closing Banner:** "Build for the screen. Deliver for the human soul." [Request Sandbox Access]
+## 3. CRO Experimentation & Telemetry Configuration
+- Experiment ID: `EXP-BEACON-CMP-001`
+- Variant A: Data-Dense Comparison Table (Primary)
+- Variant B: Qualitative Feature Cards
+- Power Analysis: Minimum sample N=6,200 visitors/arm for 80% power (MDE = 12.5% relative lift).
+- Tracking Tag: GA4 / Mixpanel event `comparison_matrix_interact` tagged with parameter `source_doc: Company Document`.
 ```
