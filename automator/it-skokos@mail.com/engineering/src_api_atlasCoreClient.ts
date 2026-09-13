@@ -1,75 +1,85 @@
-# Atlas Core Typed API Client Migration with Strict Runtime Boundary Validation
-**Author:** Juno Fontaine  
+# Atlas Core Typed API Client Implementation
+**Author:** Torq Bishop  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D11 06:05  
+**Produced:** D15 20:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Migrated Atlas Core API consumer layer to a fully typed client utilizing Zod schemas for runtime payload validation, header sanitization, and defensive error boundaries in compliance with Company Document.
+Delivered a zero-compromise, runtime-validated typed API client for Atlas Core to replace untyped fetch calls across SaaS and Face-to-Face modules. Integrated strict Zod schemas adhering to schema specifications referenced in Company Document.
 
 ## Deliverable
 ```
 /**
- * Atlas Core - Hardened Typed API Client
- * Author: Juno Fontaine (Engineering)
- * Reference: Business Document: Company Document (API Security and Payload Validation Standards)
- * Notes: Implemented zero-trust runtime schema enforcement to neutralize upstream payload poisoning.
+ * @file atlasCoreClient.ts
+ * @module AtlasCore/Client
+ * @author Torq Bishop <torq.bishop@itskokos.internal>
+ * 
+ * Governance Reference:
+ * - Business Document: 'Company Document' (Utilized to formalize endpoint contracts, multi-tenant SaaS/F2F header conventions, and strict response envelope parsing rules).
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
-export const UserProfileSchema = z.object({
-  id: z.string().uuid(),
+export const ServiceContextSchema = z.enum(["SaaS_Platform", "Face_To_Face"]);
+export type ServiceContext = z.infer<typeof ServiceContextSchema>;
+
+export const MetaEnvelopeSchema = z.object({
+  requestId: z.string().uuid(),
+  timestamp: z.string().datetime(),
+  schemaVersion: z.literal("1.4.0"),
+});
+
+export const createApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.object({
+    success: z.literal(true),
+    data: dataSchema,
+    meta: MetaEnvelopeSchema,
+  });
+
+export const TenantSessionSchema = z.object({
   tenantId: z.string().uuid(),
-  role: z.enum(['admin', 'operator', 'auditor']),
-  email: z.string().email(),
-  faceToFaceVerified: z.boolean(),
-  lastActiveAt: z.string().datetime()
-}).strict();
-
-export type UserProfile = z.infer<typeof UserProfileSchema>;
+  serviceContext: ServiceContextSchema,
+  activeUnits: z.number().int().nonnegative(),
+  telemetrySyncEnabled: z.boolean(),
+});
+export type TenantSession = z.infer<typeof TenantSessionSchema>;
 
 export class AtlasCoreClient {
-  private readonly baseUrl: string;
-  private readonly sessionToken: string;
+  constructor(
+    private readonly baseUrl: string,
+    private readonly apiKey: string
+  ) {}
 
-  constructor(baseUrl: string, sessionToken: string) {
-    if (!baseUrl.startsWith('https://') && process.env.NODE_ENV === 'production') {
-      throw new Error('[SECURITY_VIOLATION] Atlas Core API client requires strict HTTPS in production.');
-    }
-    this.baseUrl = baseUrl.replace(/\/+$/, '');
-    this.sessionToken = sessionToken;
+  public async getTenantSession(tenantId: string): Promise<TenantSession> {
+    return this.executeRequest(
+      `/v1/tenants/${encodeURIComponent(tenantId)}/session`,
+      TenantSessionSchema
+    );
   }
 
-  private getSecureHeaders(): HeadersInit {
-    return {
-      'Authorization': `Bearer ${this.sessionToken}`,
-      'Content-Type': 'application/json',
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY'
-    };
-  }
-
-  public async getUserProfile(userId: string): Promise<UserProfile> {
-    const sanitizedId = encodeURIComponent(userId.trim());
-    const response = await fetch(`${this.baseUrl}/v1/users/${sanitizedId}`, {
-      method: 'GET',
-      headers: this.getSecureHeaders()
+  private async executeRequest<T>(path: string, schema: z.ZodType<T>): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${this.apiKey}`,
+        "Accept": "application/json",
+        "X-Client-Purist-Validation": "strict",
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`[API_ERROR] Request failed with status code ${response.status}`);
+      throw new Error(`API Error [${response.status}]: ${response.statusText}`);
     }
 
-    const rawData = await response.json();
-    const parsed = UserProfileSchema.safeParse(rawData);
-    
+    const rawData: unknown = await response.json();
+    const parsed = createApiResponseSchema(schema).safeParse(rawData);
+
     if (!parsed.success) {
-      throw new Error('[VALIDATION_FAILURE] Payload quarantine triggered: response deviated from Company Document schema specification.');
+      throw new Error(`Data Integrity Violation: ${JSON.stringify(parsed.error.format())}`);
     }
 
-    return parsed.data;
+    return parsed.data.data;
   }
 }
 ```
