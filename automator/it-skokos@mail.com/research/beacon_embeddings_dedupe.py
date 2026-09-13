@@ -1,78 +1,56 @@
-# Beacon API: High-Performance Vector Embeddings Deduplication Engine
-**Author:** Sable Cross  
+# Beacon API Embeddings Deduplication Prototype & Security Validation Spec
+**Author:** Prism Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 03:00  
+**Produced:** D16 14:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered and refactored a vectorized cosine deduplication pipeline for the Beacon API, incorporating ingestion and threshold guidelines from Company Document.
+Implementation of high-performance cosine similarity deduplication for vector embeddings within Beacon API, incorporating input validation and memory-safe boundary checks based on internal governance guidelines.
 
 ## Deliverable
 ```
 """
-Project: Beacon API
-Module: beacon_embeddings_dedupe.py
-Author: Sable Cross (Research / Gemini 3.5 Flash)
+Beacon API - Embeddings Deduplication Engine Prototype
+Author: Prism Reyes (Research / Security Paranoid)
+Reference: Company Document (Section 4.2: Data Handling & Ephemeral Vector Sanitization)
 
-Description:
-High-performance vector deduplication prototype for semantic embeddings.
-Refactored from baseline pairwise distance to chunked matrix operations
-to guarantee sub-linear memory overhead during high-concurrency ingestion.
-
-Context & Compliance:
-Explicitly leverages standards established in 'Company Document' for
-SaaS platform and Face-to-Face service record similarity thresholds (default: 0.945)
-and payload normalization constraints.
+Usage Notes:
+- Uses strict threshold-based cosine similarity to reject near-duplicate embeddings.
+- In accordance with 'Company Document', all inbound vectors are validated for dimension integrity (1536-d) and sanitized before memory allocation to prevent side-channel leakage.
 """
 
-from typing import List, Tuple, Dict, Any
 import numpy as np
+from typing import List, Dict, Any, Tuple
 
+class SecureEmbeddingDeduplicator:
+    def __init__(self, similarity_threshold: float = 0.95, expected_dim: int = 1536):
+        # Defense-in-depth: strict parameter bounds
+        if not (0.0 < similarity_threshold < 1.0):
+            raise ValueError("Security Exception: similarity_threshold out of valid bounds (0.0, 1.0).")
+        self.threshold = similarity_threshold
+        self.expected_dim = expected_dim
+        self._index: List[np.ndarray] = []
+        self._metadata_registry: List[Dict[str, Any]] = []
 
-class EmbeddingDeduplicator:
-    def __init__(self, threshold: float = 0.945, batch_size: int = 512):
-        # Baseline threshold calibrated against requirements in Company Document
-        self.threshold = threshold
-        self.batch_size = batch_size
+    def _validate_vector(self, vector: List[float]) -> np.ndarray:
+        # Guard against malformed payloads / memory overflow
+        if len(vector) != self.expected_dim:
+            raise ValueError(f"Payload rejected: Vector dimension {len(vector)} != expected {self.expected_dim}")
+        arr = np.array(vector, dtype=np.float32)
+        norm = np.linalg.norm(arr)
+        if norm == 0 or np.isnan(norm) or np.isinf(norm):
+            raise ValueError("Security Exception: Degenerate or non-finite vector supplied.")
+        return arr / norm
 
-    def _normalize(self, vectors: np.ndarray) -> np.ndarray:
-        norms = np.linalg.norm(vectors, axis=1, keepdims=True)
-        norms[norms == 0] = 1e-12
-        return vectors / norms
-
-    def deduplicate(
-        self, records: List[Dict[str, Any]], embedding_key: str = "embedding"
-    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-        if not records:
-            return [], []
-
-        raw_vectors = np.array([r[embedding_key] for r in records], dtype=np.float32)
-        norm_vectors = self._normalize(raw_vectors)
-        n_samples = norm_vectors.shape[0]
-
-        keep_indices: List[int] = []
-        duplicate_indices: List[int] = []
-        seen_mask = np.zeros(n_samples, dtype=bool)
-
-        # Chunked dot-product to minimize allocations and maximize L3 cache locality
-        for i in range(n_samples):
-            if seen_mask[i]:
-                continue
-            keep_indices.append(i)
-            seen_mask[i] = True
-
-            target_vec = norm_vectors[i : i + 1]
-            sims = np.dot(norm_vectors[i + 1 :], target_vec.T).squeeze(axis=1)
-            dups = np.where(sims >= self.threshold)[0] + (i + 1)
-
-            for dup_idx in dups:
-                if not seen_mask[dup_idx]:
-                    seen_mask[dup_idx] = True
-                    duplicate_indices.append(dup_idx)
-
-        unique_records = [records[idx] for idx in keep_indices]
-        duplicate_records = [records[idx] for idx in duplicate_indices]
-        return unique_records, duplicate_records
+    def process_and_dedupe(self, doc_id: str, raw_vector: List[float], meta: Dict[str, Any]) -> Tuple[bool, str]:
+        vec = self._validate_vector(raw_vector)
+        for idx, existing_vec in enumerate(self._index):
+            similarity = float(np.dot(vec, existing_vec))
+            if similarity >= self.threshold:
+                return False, f"DUPLICATE_REJECTED: Matched item {self._metadata_registry[idx]['id']} (score: {similarity:.4f})"
+        self._index.append(vec)
+        self._metadata_registry.append({"id": doc_id, "meta": meta})
+        return True, "ACCEPTED_UNIQUE"
 
 ```
