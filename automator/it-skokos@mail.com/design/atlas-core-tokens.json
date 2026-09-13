@@ -1,53 +1,58 @@
-# Atlas Core - Lean Component Design Tokens Specification
-**Author:** Sable Bishop  
+# Atlas Core Component Design Tokens Specification
+**Author:** Pixel Reyes  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 17:00  
+**Produced:** D16 07:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized, streamlined design token architecture for Atlas Core components. Incorporates requirements from Business Document: Company Document to unify SaaS and Face-to-Face service interfaces with minimal overhead.
+Cost-optimized component token system for Atlas Core, standardizing UI primitives and semantic mappings to minimize bundle bloat and design handoff overhead, aligned with Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.studio/schemas/token-set.json",
-  "meta": {
+  "$metadata": {
     "project": "Atlas Core",
-    "author": "Sable Bishop (Design)",
-    "strategy": "Cost-Cutter Lean Architecture",
-    "sourceDocumentation": "Utilized 'Business Document: Company Document' to map core brand specifications and operational service workflows (SaaS and Face-to-Face) into a unified, consolidated token dictionary. This eliminates visual redundancy and prevents expensive post-launch refactors."
-  },
-  "color": {
-    "brand": {
-      "primary": { "value": "#0F52BA", "type": "color", "description": "Core brand blue for primary actions" },
-      "primary-hover": { "value": "#0B3C8A", "type": "color" },
-      "surface": { "value": "#FFFFFF", "type": "color" },
-      "background": { "value": "#F4F5F7", "type": "color" }
-    },
-    "neutral": {
-      "text-main": { "value": "#172B4D", "type": "color" },
-      "text-subtle": { "value": "#6B778C", "type": "color" },
-      "border": { "value": "#DFE1E6", "type": "color" }
+    "author": "Pixel Reyes",
+    "version": "1.0.0",
+    "strategy": "Cost Cutter / Lean Architecture",
+    "references": {
+      "source": "Business Document: Company Document",
+      "usage": "Extracted brand baseline color values, service-tier visual constraints, and accessibility requirements to prevent redundant palette expansions and reduce component variant overhead."
     }
   },
-  "spacing": {
-    "unit-xs": { "value": "4px", "type": "spacing" },
-    "unit-sm": { "value": "8px", "type": "spacing" },
-    "unit-md": { "value": "16px", "type": "spacing" },
-    "unit-lg": { "value": "24px", "type": "spacing" }
+  "global": {
+    "color": {
+      "brand-primary": { "value": "#0F4C81", "type": "color" },
+      "brand-neutral-dark": { "value": "#1A1A1A", "type": "color" },
+      "brand-neutral-light": { "value": "#F4F5F7", "type": "color" },
+      "brand-success": { "value": "#107C41", "type": "color" },
+      "brand-warning": { "value": "#D83B01", "type": "color" }
+    },
+    "spacing": {
+      "unit-xs": { "value": "4px", "type": "dimension" },
+      "unit-sm": { "value": "8px", "type": "dimension" },
+      "unit-md": { "value": "16px", "type": "dimension" },
+      "unit-lg": { "value": "24px", "type": "dimension" }
+    },
+    "radius": {
+      "default": { "value": "4px", "type": "dimension" }
+    }
   },
   "component": {
     "button": {
-      "padding-vertical": { "value": "{spacing.unit-sm}", "type": "spacing" },
-      "padding-horizontal": { "value": "{spacing.unit-md}", "type": "spacing" },
-      "bg-primary": { "value": "{color.brand.primary}", "type": "color" },
-      "text-primary": { "value": "#FFFFFF", "type": "color" }
+      "padding-y": { "value": "{global.spacing.unit-sm.value}" },
+      "padding-x": { "value": "{global.spacing.unit-md.value}" },
+      "radius": { "value": "{global.radius.default.value}" },
+      "primary-bg": { "value": "{global.color.brand-primary.value}" },
+      "primary-text": { "value": "#FFFFFF" },
+      "secondary-bg": { "value": "{global.color.brand-neutral-light.value}" },
+      "secondary-text": { "value": "{global.color.brand-neutral-dark.value}" }
     },
     "card": {
-      "padding": { "value": "{spacing.unit-md}", "type": "spacing" },
-      "bg": { "value": "{color.brand.surface}", "type": "color" },
-      "border": { "value": "{color.neutral.border}", "type": "color" }
+      "surface-bg": { "value": "#FFFFFF" },
+      "border": { "value": "1px solid {global.color.brand-neutral-light.value}" },
+      "padding": { "value": "{global.spacing.unit-md.value}" }
     }
   }
 }
