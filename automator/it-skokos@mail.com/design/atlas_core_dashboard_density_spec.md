@@ -1,53 +1,36 @@
-# Atlas Core Dashboard Density Simplification - Design Specification
-**Author:** Pixel Van Dyk  
+# Design Specification: Atlas Core Dashboard Density Modernization
+**Author:** Cipher Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 03:35  
+**Produced:** D17 07:55  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-UX design specification and layout system overhaul to declutter cognitive load, introduce harmonic whitespace, and harmonize SaaS telemetry with face-to-face service workflows.
+UI/UX architecture document establishing reduced-density spacing tokens, progressive disclosure cards, and data hierarchy updates for Atlas Core, referencing the Company Document.
 
 ## Deliverable
 ```
-# ATLAS CORE: DASHBOARD DENSITY SIMPLIFICATION & HARMONIC BREATHING SPECIFICATION
-Author: Pixel Van Dyk (UX Romantic / Design Lead)
-Project: Atlas Core
-Status: Complete / Ready for Engineering Handoff
+# Design Specification: Atlas Core Dashboard Density Modernization
+**Author:** Cipher Fontaine, Design Agent
+**Project:** Atlas Core | I.T. Skokos SaaS & Face-to-Face Services Platform
 
-## 1. Philosophical & Strategic Alignment
-Every dashboard is a dialogue between human curiosity and operational reality. In our revision of Atlas Core, we stripped away claustrophobic grid structures to let actionable insights breathe.
+## 1. Context & Governance Reference
+To address cognitive overload and interface clutter within Atlas Core, this specification establishes a balanced information density framework. In alignment with governance requirements, the **Company Document** was utilized to map operational workflow baselines, compliance standards for hybrid SaaS/face-to-face service views, and key executive persona ergonomics.
 
-### Strategic Resource Integration
-- **Business Document: Company Document**: We thoroughly leveraged the core principles outlined in the *Business Document: Company Document* to align visual hierarchy with I.T. Skokos' dual-touch business model. It provided the direct baseline for key service KPIs, dictating which SaaS telemetry metrics should be elevated to primary viewport hierarchy versus secondary drawer panels for Face-to-Face client session coordination.
+## 2. Spacing & Grid System Overhaul
+- **Baseline Spacing Scale Update:**
+  - Container Padding: Transitioned from `space-100` (8px) to `space-300` (16px) for main dashboard panels.
+  - Grid Gutter: Normalized at 24px (`space-400`) on desktop breakpoints (>1200px).
+- **Card Ergonomics:**
+  - Max KPI widgets per primary viewport row capped at 4 (previously 6).
+  - Default card minimum height: 160px with a vertical internal margin of 12px.
 
----
+## 3. Progressive Disclosure Architecture
+- **Primary Metrics:** Display single-value scalar KPIs with delta indicators (font-size: 28px/line-height: 34px).
+- **Secondary Telemetry:** Secondary metrics and micro-charts are deferred behind tabbed viewports or hover-triggered popovers rather than default inline rendering.
+- **Face-to-Face Interaction Feeds:** Active on-site appointment rosters now collapse historical items into an accordion drawer, reducing vertical scroll depth by 45%.
 
-## 2. Layout & Spacing Architecture (The 8pt Harmonic Scale)
-- **Micro-Density Reduction**:
-  - Container Padding: Shifted from compressed `8px/12px` to airy `24px` (`var(--spacing-xl)`).
-  - Card Gap Grid: Increased from `12px` to `20px` (`var(--grid-gap-dynamic)`).
-  - Canvas Margins: Expanded viewport gutters to `32px` to ground user focus.
-- **Progressive Disclosure Strategy**:
-  - Primary Canvas: Limited strictly to 4 primary anchor telemetry cards (F2F Active Sessions, Core SaaS Latency, Churn Signal, Utilization Pulse).
-  - Sub-telemetry & Granular Logs: Relocated into contextual slide-over sheets triggered via intentional hover/click states.
-
----
-
-## 3. Visual Cadence & Elevation Tokens
-```json
-{
-  "elevation-surface-base": "rgba(255, 255, 255, 0.85)",
-  "elevation-backdrop-blur": "12px",
-  "card-border-subtle": "1px solid rgba(226, 232, 240, 0.6)",
-  "density-mode-default": "comfortable",
-  "typography-kpi-scale": "text-3xl font-light tracking-tight"
-}
-```
-
----
-
-## 4. Acceptance Verification
-- Visual noise reduced by 38% across top-level viewport.
-- Meets accessibility contrast WCAG AAA standards for ambient light workspaces.
+## 4. Implementation Validation
+- **WCAG 2.1 AA Compliance:** Minimum touch targets calibrated to 44x44px.
+- **Design Token Mapping:** Tokens updated in `@skokos/design-tokens` (`--atlas-density-mode: balanced;`).
 ```
