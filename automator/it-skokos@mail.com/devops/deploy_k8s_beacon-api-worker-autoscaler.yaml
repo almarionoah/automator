@@ -1,18 +1,18 @@
-# Beacon API Worker Pool Low-Latency Autoscaling Configuration
-**Author:** Mint Van Dyk  
+# Beacon API Worker Pool Dynamic Autoscaling Configuration
+**Author:** Mint Nkosi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D10 18:30  
+**Produced:** D16 18:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implementation of an aggressive, latency-focused autoscaling manifest for Beacon API worker nodes using KEDA and native HPA metrics. Resource allocation and scale-up thresholds directly follow the operational compliance and SLA benchmarks defined in Business Document: Company Document.
+Telemetry-driven KEDA and Kubernetes HPA configuration for Beacon API asynchronous worker pools, calibrated using SLA and capacity specifications from the Company Document.
 
 ## Deliverable
 ```
-# Project: Beacon API - Worker Pool Dynamic Autoscaler
-# Author: Mint Van Dyk (DevOps / Latency Hunter)
-# Reference: Derived from SLA and scaling requirements in 'Business Document: Company Document'
+# Beacon API Worker Pool Autoscaling Policy
+# Author: Mint Nkosi (DevOps)
+# Compliance: Aligned with capacity thresholds and SLA targets from 'Company Document'
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -21,16 +21,16 @@ metadata:
   namespace: beacon-prod
   labels:
     app.kubernetes.io/part-of: beacon-api
-    deployment.tier: worker-pool
+    telemetry.skokos.io/managed-by: data-purist-metrics
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: beacon-api-worker
-  minReplicaCount: 8
-  maxReplicaCount: 64
-  cooldownPeriod: 30
-  pollingInterval: 5
+  minReplicaCount: 4   # Minimum baseline derived from 'Company Document' 99.9% uptime SLA
+  maxReplicaCount: 48  # Ceiling derived from upstream database concurrency limits in 'Company Document'
+  cooldownPeriod: 300
+  pollingInterval: 15
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
@@ -38,30 +38,30 @@ spec:
           stabilizationWindowSeconds: 0
           policies:
           - type: Percent
-            value: 100
-            periodSeconds: 5
+            value: 50
+            periodSeconds: 15
           - type: Pods
             value: 8
-            periodSeconds: 5
+            periodSeconds: 15
           selectPolicy: Max
         scaleDown:
-          stabilizationWindowSeconds: 120
+          stabilizationWindowSeconds: 600
           policies:
           - type: Percent
             value: 10
-            periodSeconds: 30
+            periodSeconds: 60
   triggers:
-  # Metric 1: Immediate Redis queue lag detection for zero-latency backlog processing
-  - type: redis
-    metadata:
-      address: redis-cluster.beacon-prod.svc.cluster.local:6379
-      listName: beacon_jobs_high_priority
-      listLength: '10'
-  # Metric 2: HTTP p99 target latency constraint aligned with Business Document: Company Document
   - type: prometheus
     metadata:
-      serverAddress: http://prometheus-k8s.monitoring.svc:9090
-      metricName: http_request_duration_p99_seconds
-      query: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{app="beacon-api"}[1m])) by (le))
-      threshold: '0.045'
+      serverAddress: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+      # Telemetry metric: Target processing lag < 200ms based on 'Company Document' response-time bounds
+      metricName: beacon_worker_p95_queue_latency_seconds
+      query: histogram_quantile(0.95, sum(rate(beacon_worker_task_latency_seconds_bucket[2m])) by (le))
+      threshold: '0.200'
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: beacon_api_tasks_v1
+      mode: QueueLength
+      value: '25' # 25 messages/worker saturation point verified in baseline load profiling
 ```
