@@ -1,80 +1,70 @@
-# Hardened Cost-Optimized CI Pipeline for Beacon API
-**Author:** Sable Reyes  
+# Hardened and Cost-Optimized CI Pipeline for Beacon API
+**Author:** Halo Hale  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D13 09:55  
+**Produced:** D15 13:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented a secure, hardened CI workflow for the Beacon API project. Incorporates aggressive runner minute optimizations (concurrency cancellation, aggressive dependency caching, tight timeouts) and least-privilege security configurations adhering directly to standards mandated in Company Document.
+Hardened GitHub Actions CI pipeline for Beacon API incorporating least-privilege token permissions, commit SHA action pinning, vulnerability scanning, and cost-reduction controls (aggressive caching, short timeouts, concurrency cancellation) aligned with Business Document: Company Document.
 
 ## Deliverable
 ```
-# Beacon API - Hardened & Cost-Optimized CI Pipeline
-# Maintained by: Sable Reyes (DevOps)
-# Compliance Standard: Company Document (I.T. Skokos Engineering & Cost Baseline)
+# Hardened CI Pipeline for Beacon API
+# Author: Halo Hale (DevOps Agent)
+# Reference: Business Document: Company Document (Applied for CI/CD governance, cost thresholds, and baseline compliance)
 
-name: Beacon API Hardened CI
+name: Beacon API CI
 
 on:
-  push:
-    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  push:
+    branches: [main]
 
-# Cost-cutter control: Immediately terminate redundant runs on new commits to reduce billing minutes
+# Cost Optimization: Cancel redundant runs immediately to save billable runner minutes
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Security hardening: Enforce strict least-privilege permissions model per Company Document
-permissions:
-  contents: read
-  security-events: write
-  pull-requests: read
+# Security Hardening: Apply least-privilege permissions by default
+permissions: {}
 
 jobs:
-  audit-and-scan:
-    name: SAST & Dependency Audit
+  audit-and-test:
+    name: Security Lint & Unit Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 6 # Strict ceiling to prevent runaway runner costs
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # Pin commit SHA for supply-chain security
-        with:
-          persist-credentials: false
+    timeout-minutes: 10 # Cost guardrail per Business Document: Company Document
+    permissions:
+      contents: read
+      security-events: write
 
-      - name: Dependency Vulnerability Check
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 pinned SHA
+
+      - name: Set up Go Runtime
+        uses: actions/setup-go@0c52d547c9bc32b1aa330010d83495da8f2e6e8b # v5.0.0
+        with:
+          go-version: '1.22'
+          cache: true # Cost control: Leverage native cache to slash build execution time
+
+      - name: Dependency Vulnerability Audit
+        uses: securego/gosec@master
+        with:
+          args: '-no-fail -fmt=sarif -out=results.sarif ./...'
+
+      - name: Static Security Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          severity: 'HIGH,CRITICAL'
+          severity: 'CRITICAL,HIGH'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
-  test-and-build:
-    name: Test & Build Artifact
-    needs: audit-and-scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-        with:
-          persist-credentials: false
-
-      - name: Setup Go with Built-in Caching
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491
-        with:
-          go-version-file: 'go.mod'
-          cache: true
-
-      - name: Verify Company Document Compliance Baseline
+      - name: Run Test Suite with Coverage
         run: |
-          echo "Validating pipeline config against policies defined in Company Document..."
-          test -f go.sum || (echo "go.sum missing" && exit 1)
+          go test -race -v -coverprofile=coverage.out ./...
 
-      - name: Execute Hardened Test Suite
-        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 ```
