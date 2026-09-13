@@ -1,37 +1,46 @@
-# Atlas Core: Streamlined Low-Latency Onboarding Flow Spec
-**Author:** Mint Ito  
+# Atlas Core: Re-imagined Onboarding Journey Specification
+**Author:** Ash Fontaine  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 09:15  
+**Produced:** D17 04:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A design and interaction specification for the reworked onboarding flow of Atlas Core, optimizing step latency, reducing time-to-value, and integrating business requirements from Company Document.
+Comprehensive UX design specification for the reworked Atlas Core onboarding experience, blending human warmth with SaaS efficiency through an emotive, hybrid-service user journey.
 
 ## Deliverable
 ```
-# Specification: Atlas Core Onboarding Flow Rework
-**Author:** Mint Ito (Design Agent)
-**Focus:** Latency Optimization & Frictionless SaaS/F2F Handshake
+# UX Design Specification: Atlas Core Hybrid Onboarding
+**Author:** Ash Fontaine, Lead Experience Designer  
+**Project:** Atlas Core | I.T. Skokos  
+**Status:** Ready for Engineering Hand-off  
 
-## 1. Executive Summary & Resource Reference
-This rework restructures the onboarding experience for Atlas Core to minimize Total Time to First Value (TTFV) and client-side transition latencies. Per the **Business Document: Company Document**, we integrated core business rules regarding user tier routing, SaaS-to-Face-to-Face consultation eligibility thresholds, and mandatory verification checkpoints into a continuous, optimistic interface.
+---
 
-## 2. Key Latency & UX Optimizations
-- **Pre-emptive Asset & Schema Prefetching:** Onboarding step payloads are prefetched during user authentication, dropping transition latency between Step 1 and Step 2 to <50ms.
-- **Optimistic State Progression:** Form validations execute client-side using light schemas; server reconciliation occurs asynchronously in the background.
-- **Step Reduction:** Consolidated 6 legacy screens down to 2 dynamic modals with inline progressive disclosure, honoring data mandates outlined in the **Company Document**.
+### 1. The Design Philosophy: The Romantic First Touch
+Onboarding is not a chore of data entry; it is the opening movement of a relationship. For Atlas Core, our goal is to soften the boundary between digital SaaS precision and the organic warmth of our Face-to-Face services.
 
-## 3. Flow Architecture
-1. **Step 1: Workspace & Intent Setup**
-   - Input: Org Name, primary deployment mode (SaaS vs. F2F hybrid).
-   - Latency target: Immediate interaction (<16ms frame rate), single-click preset selection.
-2. **Step 2: Role-Based Routing (Company Document Alignment)**
-   - Routes enterprise or hybrid requests directly to the dedicated scheduling module without full page reloads.
-   - Self-serve users bypass directly into the Atlas Core dashboard with pre-seeded templates.
+### 2. Business Alignment & Resource Traceability
+* **Business Document: Company Document**: Directly integrated to establish compliance guardrails, service-tier boundaries, and ensure the onboarding milestones mirror our foundational operational promises. We utilized its baseline persona workflows to map emotional friction points into collaborative moments.
 
-## 4. Telemetry & Success Metrics
-- Target Drop-off: < 8%
-- Screen-to-Screen P95 Latency: < 100ms
-- Completion Time P50: reduced from 3m 45s to 42s.
+### 3. The 3-Act Onboarding Architecture
+
+```
+[Act I: The Welcome Hearth] -> [Act II: The Canvas of Intent] -> [Act III: The Hybrid Handshake]
+```
+
+#### Act I: The Welcome Hearth (Soft Entry)
+* **Visual Tone:** Warm ambient lighting (`#FAF7F2`), subtle organic easing (600ms bezier). Personal greeting with gentle contextual fade-in.
+* **Interaction:** Single-field progressive revelation. The user defines their primary operational rhythm without cognitive overload.
+
+#### Act II: The Canvas of Intent (SaaS Configuration)
+* **Interaction:** Declarative module selection. Users select their team's core pillars via magnetic card components with micro-haptic feedback.
+* **Copy Philosophy:** Empowering, clear, and unhurried. Error states are reframed as supportive guidance.
+
+#### Act III: The Hybrid Handshake (F2F Integration)
+* **Interaction:** Smooth scheduling bridge connecting Atlas Core SaaS telemetry to our Face-to-Face consulting experts. A synchronized calendar node confirms their dedicated specialist.
+
+### 4. Transition Tokens & Motion
+* `easing-romance`: `cubic-bezier(0.16, 1, 0.3, 1)`
+* `duration-breath`: `450ms`
 ```
