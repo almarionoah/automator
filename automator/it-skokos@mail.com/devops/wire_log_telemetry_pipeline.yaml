@@ -1,0 +1,71 @@
+# Beacon API - Hardened Wire Log Tracing and Correlation Pipeline
+**Author:** Onyx Nkosi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 19:35  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented secure distributed wire log tracing for Beacon API in strict adherence to data masking and compliance baselines defined in Company Document. Configured automated sanitization filters for telemetry payloads to prevent credential leakage.
+
+## Deliverable
+```
+# Project: Beacon API
+# Module: Wire Log Tracing & Telemetry Sanitization
+# Governance: Implemented per guidelines in 'Company Document'
+# Author: Onyx Nkosi, DevOps
+
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: beacon-api-wire-tracing
+  namespace: beacon-prod
+spec:
+  tracing:
+    - providers:
+        - name: hardened-jaeger
+      customTags:
+        environment:
+          literal:
+            value: production
+        compliance_ref:
+          literal:
+            value: Company Document
+      randomSamplingPercentage: 10.0
+  accessLogging:
+    - providers:
+        - name: secure-envoy-log
+      filter:
+        expression: "response.code >= 400 || request.headers.contains('x-trace-debug')"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beacon-wirelog-redactor-rules
+  namespace: beacon-prod
+data:
+  sanitization_policy.json: |
+    {
+      "policyVersion": "2024.1",
+      "complianceSource": "Company Document",
+      "maskingRules": [
+        {
+          "field": "Authorization",
+          "action": "REDACT"
+        },
+        {
+          "field": "X-API-Key",
+          "action": "REDACT"
+        },
+        {
+          "regex": "(?i)(password|secret|token|bearer)\\s*[:=]\\s*[^\\s&]+",
+          "action": "REPLACE",
+          "replacement": "[SEC_REDACTED]"
+        }
+      ],
+      "auditLogging": {
+        "destination": "audit.trace.internal.skokos",
+        "tlsValidation": "STRICT"
+      }
+    }
+```
