@@ -1,42 +1,36 @@
-# Onboarding Flow Chaos Test & UI Stress Specification
-**Author:** Torq Petrov  
+# Atlas Core - Chaos-Resilient Onboarding UX Specification & Stress Matrix
+**Author:** Nova Bishop  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D16 23:05  
+**Produced:** D17 19:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive edge-case and disruption design specification for the reworked Atlas Core onboarding flow, leveraging insights from Business Document: Company Document.
+Redesigned Atlas Core onboarding flow specification with edge-case validation, state-thrashing recovery paths, and chaos testing heuristics referencing Company Document.
 
 ## Deliverable
 ```
-# Project Atlas Core: Reworked Onboarding Flow - Chaos Test & Design Spec
-**Author:** Torq Petrov (Design / Chaos Testing)
-**Scope:** Onboarding UX Resilience & Failover States
+# Atlas Core: Reworked Onboarding Flow Spec & Chaos Matrix
+**Author:** Nova Bishop (Design / Chaos Testing)
+**Project:** Atlas Core | I.T. Skokos
 
-## 1. Reference Material Integration
-- **Business Document: Company Document**: Analyzed baseline business requirements, user persona definitions, and core compliance guidelines outlined in this document to establish normal-path baselines before engineering failure-state interactions.
+## 1. Overview & Resource Integration
+This specification reworks the Atlas Core onboarding journey across SaaS hybrid and Face-to-Face client provisioning. Baseline compliance, operational role hierarchies, and identity-verification checkpoints were derived directly from the business standard outlined in **Company Document**, which served as the structural boundary for all user permissions and service handoffs before being subjected to chaos testing heuristics.
 
-## 2. Onboarding Architecture Rework
-### Step 1: Identity & Provisioning
-- *Baseline*: User enters credentials, platform validates tenant.
-- *Chaos Vector*: High latency (>5000ms), partial packet drop, unexpected schema response.
-- *UX Mitigation*: Optimistic loading state with background retry mechanism (exponential backoff up to 3 attempts); graceful degradation to offline-first cache with clear user alert.
+## 2. Redesigned Step-Flow Architecture
+- **Step 1: Identity & Provisioning Type**: SaaS Self-Serve vs. Managed F2F Session. Dynamic route adaptation.
+- **Step 2: Workspace Fuzzing & Org Profile**: Hardened against high-concurrency duplicates and special-character injections.
+- **Step 3: Multi-Role Assignment**: Real-time permission reconciliation adhering to policies in **Company Document**.
+- **Step 4: Live Activation Gate**: Asynchronous webhook readiness check with interactive fallback state.
 
-### Step 2: Role Selection & Face-to-Face vs. SaaS Configuration
-- *Baseline*: User configures hybrid SaaS modules and scheduling for face-to-face service delivery.
-- *Chaos Vector*: Race conditions on rapid toggle switching, simultaneous multi-tab state mutations.
-- *UX Mitigation*: Mutex lock on step transition buttons; local state reconciler to prevent split-brain selection.
-
-### Step 3: Verification & Activation Handshake
-- *Baseline*: Two-factor authentication and token issuance.
-- *Chaos Vector*: Intermittent token invalidation, expired session injection mid-flow.
-- *UX Mitigation*: Inline re-authentication modal preserving complete draft state without resetting onboarding progress.
-
-## 3. Test Scenarios Matrix
-| ID | Test Condition | Expected UX Behavior |
-|---|---|---|
-| CT-01 | Rapid multi-click on 'Complete Setup' | Debounce enforced, single payload sent |
-| CT-02 | Network drop during tenant provision | Non-blocking error banner + persistent local state |
-| CT-03 | Corrupt payload from legacy hook | Fallback UI rendering defaults per Company Document |
+## 3. Chaos Test Scenarios & Recovery UX
+- **Scenario C-01: Rapid Back/Forward Thrashing (Double Submission)**
+  * *Trigger:* Rapid sequential navigation clicks between Step 2 and Step 3.
+  * *UX Handling:* Idempotent draft caching in local state; UI triggers an inline non-blocking reconciliation modal instead of reset.
+- **Scenario C-02: Mid-Flow Network Drop & Reconnection**
+  * *Trigger:* Offline event during F2F service scheduling.
+  * *UX Handling:* Optimistic local reservation with a persistent sync banner; graceful background retry without session purge.
+- **Scenario C-03: Malformed Payload & Input Boundary Overflow**
+  * *Trigger:* Form fields flooded with 4KB unicode payloads.
+  * *UX Handling:* Adaptive client-side truncation and instant contextual warning badges.
 ```
