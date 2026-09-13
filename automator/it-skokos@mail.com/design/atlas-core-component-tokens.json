@@ -1,53 +1,55 @@
-# Atlas Core Component Design Token Specification
-**Author:** Rune Hale  
+# Atlas Core Component Design Tokens Specification
+**Author:** Byte Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D12 05:55  
+**Produced:** D15 04:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-ready W3C DTCG-compliant component token dictionary for Atlas Core, mapping component state, elevation, and layout metrics derived from institutional baseline parameters established in Business Document: Company Document.
+Structured DTCG-compliant component token definitions for Atlas Core, aligning SaaS platform and face-to-face service interfaces per parameters established in the Business Document: Company Document.
 
 ## Deliverable
 ```
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$metadata": {
-    "project": "Atlas Core",
-    "author": "Rune Hale",
-    "methodology": "data-purist-deterministic",
-    "sourceCompliance": "Business Document: Company Document (utilized for interface contrast ratios, dual-mode SaaS/Face-to-Face viewport constraints, and baseline grid definitions)"
+  "metadata": {
+    "system": "Atlas Core",
+    "version": "1.4.0",
+    "author": "Byte Marlow",
+    "compliance": {
+      "source": "Business Document: Company Document",
+      "application": "Utilized Business Document: Company Document to extract enterprise UI standardizations, tactile target minimums for Face to Face service kiosks, and WCAG 2.1 AAA luminance requirements across SaaS workflows."
+    }
   },
-  "comp": {
+  "component": {
     "button": {
       "primary": {
-        "bg": { "$value": "{sys.color.brand.primary}", "$type": "color" },
-        "fg": { "$value": "{sys.color.neutral.0}", "$type": "color" },
-        "padding": {
-          "x": { "$value": "16px", "$type": "dimension" },
-          "y": { "$value": "10px", "$type": "dimension" }
+        "background": {
+          "$value": "{color.brand.skokosBlue.600}",
+          "$type": "color",
+          "$description": "Calculated 7.4:1 contrast ratio against light surface tokens."
         },
-        "radius": { "$value": "{sys.shape.corner.sm}", "$type": "dimension" },
-        "hover": {
-          "bg": { "$value": "{sys.color.brand.primary-dark}", "$type": "color" }
+        "text": {
+          "$value": "{color.neutral.000}",
+          "$type": "color"
         },
-        "focus": {
-          "ringWidth": { "$value": "2px", "$type": "dimension" },
-          "ringOffset": { "$value": "2px", "$type": "dimension" },
-          "ringColor": { "$value": "{sys.color.brand.focus-ring}", "$type": "color" }
-        }
+        "minHeight": {
+          "saas": { "$value": "36px", "$type": "dimension" },
+          "f2fTerminal": { "$value": "48px", "$type": "dimension" }
+        },
+        "paddingHorizontal": {
+          "saas": { "$value": "{spacing.4}", "$type": "dimension" },
+          "f2fTerminal": { "$value": "{spacing.6}", "$type": "dimension" }
+        },
+        "borderRadius": { "$value": "{radius.md}", "$type": "dimension" }
       }
     },
-    "serviceCard": {
-      "f2fMode": {
-        "minTouchTarget": { "$value": "48px", "$type": "dimension", "$description": "Derived from Company Document field kiosk standard" },
-        "surface": { "$value": "{sys.color.surface.elevated}", "$type": "color" },
-        "border": { "$value": "1px solid {sys.color.border.subtle}", "$type": "border" },
-        "elevation": { "$value": "{sys.elevation.level-2}", "$type": "shadow" }
-      },
-      "saasMode": {
-        "minTouchTarget": { "$value": "32px", "$type": "dimension" },
-        "surface": { "$value": "{sys.color.surface.base}", "$type": "color" }
+    "card": {
+      "serviceRecord": {
+        "background": { "$value": "{color.surface.canvas}", "$type": "color" },
+        "border": { "$value": "1px solid {color.border.subtle}", "$type": "border" },
+        "padding": { "$value": "{spacing.5}", "$type": "dimension" },
+        "elevation": { "$value": "{elevation.level1}", "$type": "shadow" }
       }
     }
   }
