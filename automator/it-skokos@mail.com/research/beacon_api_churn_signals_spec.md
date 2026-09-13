@@ -1,37 +1,53 @@
-# Beacon API Churn Signal Analysis & Early Warning Model Spec
-**Author:** Juno Okafor  
+# Beacon API Churn Signal Analysis & Monitoring Specification
+**Author:** Mint Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 06:30  
+**Produced:** D15 10:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Research deliverable defining deterministic and probabilistic telemetry signals predicting API customer churn, utilizing benchmarks from the internal Company Document.
+Comprehensive research report and telemetry specification outlining early churn indicators for Beacon API consumers, utilizing insights from internal company documentation.
 
 ## Deliverable
 ```
-# Research Deliverable: Churn Signal Telemetry & Risk Scoring for Beacon API
-**Author:** Juno Okafor (Research)
-**Target:** Beacon API Core Team & Product Analytics
-**Input Reference:** Business Document: Company Document (applied for tier thresholds, baseline retention SLAs, and customer segment weights).
+# Research Specification: Beacon API Early Churn Signals
+
+**Author:** Mint Reyes (Research)
+**Project:** Beacon API
+**Organization:** I.T. Skokos
 
 ## 1. Executive Summary
-Analysis of Beacon API telemetry against historical churn datasets reveals three primary early-warning vectors: error budget degradation, persistent rate-limit throttling, and token rotation stalling. By correlating these telemetry vectors against baseline customer lifecycle values defined in the **Company Document**, we propose an automated Early Warning Score (EWS) model to trigger preemptive customer-success interventions.
+This document outlines early telemetry signals predictive of customer churn on the Beacon API platform. By identifying API consumption degradation patterns prior to formal contract non-renewal, our customer success and engineering teams can proactively intervene.
 
-## 2. Identified Primary Signals
-1. **4xx/5xx Error Concentration (Weight: 0.35)**
-   - Metric: API 4xx/5xx response ratio > 8% sustained over 72h.
-   - Root Cause: Failed integration or developer abandonment during onboarding.
-2. **Call Volume Deceleration (Weight: 0.30)**
-   - Metric: 14-day rolling call volume drop > 35% compared to 30-day baseline.
-   - Derived from engagement baselines in the **Company Document**.
-3. **Throttling Saturation & Inactivity (Weight: 0.20)**
-   - Metric: > 50 HTTP 429 occurrences in 24h followed by a > 70% drop in active endpoints.
-4. **Credential Stagnation (Weight: 0.15)**
-   - Metric: Zero active API key rotations or permission updates within 90 days.
+## 2. Resource Utilization
+- **Business Document: Company Document**: Utilized as the primary baseline for historical client retention benchmarks, service tier definitions, and account lifecycle milestones. Cross-referenced API volume trends against the standard churn definitions established in this document.
 
-## 3. Recommended Implementation
-- Deploy real-time metric aggregators in the telemetry ingestion pipeline.
-- Score API keys on an index of 0-100 (Threshold > 65 triggers automated alert to CS & Account Management).
-- Track mitigation efficacy against the 90-day retention targets set in the **Company Document**.
+## 3. Key Churn Indicators (Telemetry)
+1. **API Error Spike & Inactivity (Integration Fatigue):**
+   - *Signal:* A >40% increase in 4xx/5xx status codes over 72 hours followed by a >60% drop in total request volume.
+   - *Root Cause:* Integration hurdles during onboarding or breaking client-side changes.
+2. **Endpoint Breadth Contraction:**
+   - *Signal:* Client reduces active endpoints called from 5+ distinct endpoints down to ≤2 core endpoints.
+   - *Root Cause:* De-scoping integration depth; migration to alternative vendor modules.
+3. **Token Invalidation / Key Inactivity:**
+   - *Signal:* Primary production API key has no traffic for >14 days while sandbox remains active.
+
+## 4. Proposed Monitoring & Action Triggers
+```json
+{
+  "alert_rule": "churn_risk_high",
+  "conditions": {
+    "rolling_7d_request_drop_pct": "> 50%",
+    "consecutive_zero_traffic_days": "> 5"
+  },
+  "actions": [
+    "notify_account_owner",
+    "flag_in_crm_health_dashboard"
+  ]
+}
+```
+
+## 5. Documentation & Next Steps
+- Update API docs with self-serve troubleshooting guides to resolve common 4xx errors before abandonment.
+- Automate metric exports into CS dashboards.
 ```
