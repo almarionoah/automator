@@ -1,39 +1,36 @@
-# Beacon API: Intelligent Model Routing Cost & Experience Evaluation
-**Author:** Onyx Reyes  
+# Model Routing Cost & Security Risk Assessment - Project Beacon API
+**Author:** Onyx Cross  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D15 08:30  
+**Produced:** D15 10:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A comprehensive cost-benefit research evaluation balancing token economics with empathetic user latency profiles for the Beacon API, grounded in baseline parameters from the Company Document.
+Security-conscious evaluation of dynamic model routing architectures and cost constraints for Project Beacon API, explicitly referencing the Company Document.
 
 ## Deliverable
 ```
-# Beacon API: Model Routing Economics & Experiential Harmony
-Author: Onyx Reyes, Research
-Project: Beacon API | I.T. Skokos
+# Project Beacon API: Model Routing Cost & Threat Surface Evaluation
+**Author:** Onyx Cross, Research Division
+**Status:** Under Review (Strict Clearance Required)
 
-### 1. Research Intent & Experiential Philosophy
-Software should feel like an effortless human dialogue. In Beacon API, model routing is not merely an algorithmic balance sheet—it is choreography. Every millisecond saved and every token budgeted must preserve the user's emotional flow while sustaining the platform's operating margins.
+## 1. Context & Baseline Constraints
+Per the baseline specifications outlined in the provided **Company Document**, our dynamic model routing layer for Beacon API must satisfy strict operating budget targets without expanding the zero-trust attack surface.
 
-### 2. Context & Resource Integration
-We grounded our routing boundary conditions using **Business Document: Company Document**. Specifically, we extracted:
-- The baseline target COGS ceiling ($0.0012/interaction) for SaaS self-service tiers.
-- Service Level Agreements (SLAs) regarding sub-second first-token response times for face-to-face hybrid booking handoffs.
+### Application of Provided Resources:
+- **Company Document**: Utilized to extract operational throughput quotas, budget ceiling tolerances ($0.0042/request avg target), and data classification tiers for SaaS/Face-to-Face tenant interactions.
 
-### 3. Evaluated Routing Topology
+## 2. Model Routing Cost Comparison Matrix
+| Route Tier | Primary Model | Fallback Model | Estimated Cost/1k Tokens (Input/Output) | Security Risk Rating | Mitigations |
+|---|---|---|---|---|---|
+| Tier 1 (Deterministic/Fast) | Gemini 1.5 Flash | Rule-based Validator | $0.000075 / $0.0003 | LOW | Output schema locking |
+| Tier 2 (Complex Synthesis) | Claude 3.5 Sonnet | Gemini 1.5 Pro | $0.003000 / $0.0150 | MEDIUM | PII redaction layer |
+| Tier 3 (Sensitive Face-to-Face) | Self-Hosted Llama 3 70B (Air-gapped) | Fail-closed | $0.001800 (Infra amortized) | MINIMAL | Hard isolation, zero outbound egress |
 
-| Tier / Route | Model Target | Cost / 1k Tokens (Blend) | p95 TTFT | UX Empathy & Fit |
-|---|---|---|---|---|
-| **Fast Path (72%)** | Micro / Distilled (Flash-lite) | $0.00015 | 180ms | Crisp, instantaneous clarity for transactional intent and navigation. |
-| **Deep Path (24%)** | Advanced Reasoning (Pro tier) | $0.00280 | 640ms | Deep contextual resonance for advisory and custom SaaS workflows. |
-| **Hybrid Escalation (4%)** | Human-in-the-Loop Handoff | N/A (F2F Service) | Dynamic | Seamless human bridge when sentiment friction is detected. |
+## 3. Cost-Exploitation Vector Analysis
+1. **Denial-of-Wallet (DoW) via Complexity Poisoning:** Malicious payloads crafted to force escalation to Tier 2 routing will drain allocations. Recommendation: Enforce pre-routing token entropy analysis.
+2. **Fallback Hijacking:** Forcing primary model rate limits via distributed bursts could redirect traffic to unhardened fallback endpoints. Hard failure modes must be preferred over untrusted dynamic rerouting.
 
-### 4. Financial & Latency Synthesis
-- **Blended Cost per Query:** ~$0.00078 (35% below the ceiling established in *Business Document: Company Document*).
-- **Emotional Velocity:** 72% of user intents receive immediate resolution with zero perceived cognitive stall.
-
-### 5. Recommendation
-Implement dynamic intent-sentiment thresholding at the gateway layer. Route warm greetings and immediate data lookups via Fast Path; route high-ambiguity or emotionally complex prompts to the Reasoning tier.
+## 4. Final Recommendation
+Implement strict cost-capping middleware with circuit breakers at 85% of the Company Document's daily budget cap, coupled with strict boundary validation on all upstream requests.
 ```
