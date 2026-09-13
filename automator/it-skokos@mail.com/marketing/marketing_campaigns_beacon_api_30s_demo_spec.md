@@ -1,39 +1,37 @@
-# Beacon API 30s Product Demo Script & Storyboard Spec
-**Author:** Jax Reyes  
+# Beacon API 30s Product Demo Script & Production Spec
+**Author:** Byte Bishop  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 04:20  
+**Produced:** D17 09:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-impact 30-second product demo video script and visual spec for Beacon API, detailing edge-case failover handling between SaaS and Face-to-Face operations as guided by the internal Business Document: Company Document.
+Storyboards, AV script, and documentation-driven visual specs for the 30-second Beacon API product demo video.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30s Product Demo
-**Creator:** Jax Reyes, Marketing | **Project:** Beacon API
-**Reference Resource:** Utilized `Business Document: Company Document` to align brand messaging hierarchy, enterprise compliance verbiage, and hybrid SaaS / Face-to-Face service positioning.
+# Project Beacon API: 30-Second Product Demo Spec
+**Owner:** Byte Bishop (Product Marketing / Docs Evangelist)
+**Asset:** High-Conversion 30s Product Demo Video
+**Target Audience:** Technical Leads, Operations Directors, SaaS Integrators
+
+## Resource & Compliance References
+- **Company Document**: Consulted to align on I.T. Skokos brand identity standards, SaaS Platform positioning, and compliant messaging around hybrid SaaS/Face-to-Face Service dispatch orchestration.
 
 ---
 
-### Narrative Concept: "Zero Drop at the Fringe"
-**Target Audience:** Enterprise Solutions Architects & F2F Operations Leads.
-**Core Message:** Beacon API automatically resolves edge-case synchronization deadlocks between distributed SaaS backends and physical Face-to-Face service terminals.
+## Video Storyboard & AV Script
+
+| Time | Visual / Screen Capture | Voiceover (VO) | On-Screen Text (OST) |
+|---|---|---|---|
+| **00:00 - 00:05** | Split screen: Cluttered legacy ticketing vs. sleek Beacon API developer portal (`/docs/quickstart`). | "Struggling to bridge your SaaS platform with real-world field operations?" | **Beacon API: Instant Dispatch Orchestration** |
+| **00:05 - 00:12** | IDE view: Executing `POST /v1/dispatch` with real-time response validation (<45ms). | "Meet Beacon API by I.T. Skokos. Integrate enterprise-grade dispatch and face-to-face services in three lines of code." | `npm install @itskokos/beacon-api` |
+| **00:12 - 00:20** | Interactive API sandbox live-updating field technician location and SaaS dashboard telemetry. | "Plug into live status webhooks, automated technician matching, and end-to-end sync—backed by complete, copy-pasteable docs." | **Sub-50ms Webhooks & Real-Time Sync** |
+| **00:20 - 00:30** | Sleek 3D product render transitions to I.T. Skokos dev portal with glowing 'Get Free API Key' CTA button. | "Scale your hybrid operations today. Read the docs and generate your production key at itskokos.com/beacon." | **Read the Docs. Deploy in Minutes.**<br>itskokos.com/beacon |
 
 ---
 
-### Shot-by-Shot Storyboard (30 Seconds Total)
-
-| Time | Visual Track | Voiceover / Audio Track | On-Screen Graphic / Edge Telemetry |
-| :--- | :--- | :--- | :--- |
-| **00:00 - 00:06** | Split screen: SaaS dashboard throwing 409 conflict while F2F POS handheld loses link mid-transaction. | *"High-concurrency edge collisions stall revenue and degrade customer trust."* | `WARN: Edge Conflict detected [SyncID: #8841-F2F]` |
-| **00:06 - 00:14** | Fast zoom into terminal CLI executing `beacon connect --mesh-auto`. Neon telemetry lines re-route data packets instantly. | *"Meet Beacon API. Instant distributed state reconciliation for SaaS and on-site touchpoints."* | `Beacon Mesh v2.4 Active` • `State Resolved: 12ms` |
-| **00:14 - 00:22** | Clean dynamic UI showing live reconciliation metrics: 0% data loss, sub-50ms latency graph, offline queue drain. | *"Built for extreme edge cases: offline queues, multi-region drift, and instant fallback."* | `0.000% Dropped Payloads` • `Compliance: ISO/SOC2` |
-| **00:22 - 00:30** | I.T. Skokos branded end-card with sleek CTA button and QR code to sandbox environment. | *"Power your operations with I.T. Skokos. Test Beacon API in under 5 minutes."* | **Deploy Beacon API Today**<br>`itskokos.com/beacon-api` |
-
----
-
-### Asset & Audio Notes
-- **SFX:** Subdued ambient electronic bass pulse building to crisp confirmation chimes on resolution at 00:14.
-- **Typography & UI Specs:** Monospaced edge telemetry overlay strictly conforms to styling outlined in `Business Document: Company Document`.
+## Production Notes
+- **Docs Evangelism Emphasis:** Visuals highlight clear code samples, automated schema validation, and Swagger UI.
+- **Audio:** Crisp electronic synth bed (120 BPM) sidechained to VO.
 ```
