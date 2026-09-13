@@ -1,71 +1,69 @@
-# Auth Service Refactoring - Atlas Core
-**Author:** Zed Cross  
+# Atlas Core - Refactored Authentication & Session Service
+**Author:** Nyx Okafor  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D15 01:45  
+**Produced:** D15 17:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Refactored JWT verification, token rotation, and RBAC enforcement for the Atlas Core platform, directly incorporating authentication guidelines and compliance specs from Business Document: Company Document.
+Architectural overhaul and implementation of Atlas Core's authentication service, aligning token lifecycle management and human-first error ergonomics with guidelines from the Company Document.
 
 ## Deliverable
 ```
-import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-import { TokenPayload, AuthConfig } from '../types/auth';
-
 /**
- * Auth Service - Atlas Core
- * Refactored to adhere to architectural patterns and compliance constraints
- * specified in Business Document: Company Document (session rules & token rotation).
+ * @project Atlas Core
+ * @module AuthService
+ * @author Nyx Okafor <nyx.okafor@itskokos.com>
+ * @description Refactored authentication domain prioritizing seamless token rotation, 
+ * intuitive session recovery, and hybrid SaaS/Face-to-Face check-in continuity.
+ * 
+ * Resource Reference: 
+ * - Company Document: Consulted for security baseline compliance, token TTL standards, 
+ *   and multi-factor grace period policies across hybrid SaaS/F2F service interactions.
  */
-export class AuthService {
-  private readonly jwtSecret: string;
-  private readonly tokenExpiry: string;
 
-  constructor(config: AuthConfig) {
-    this.jwtSecret = config.jwtSecret;
-    // Session validity period established directly from Business Document: Company Document
-    this.tokenExpiry = config.tokenExpiry || '15m';
-  }
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { signToken, verifyToken, revokeSession } from '../utils/crypto.util';
+import { AuditLogger } from '../telemetry/audit';
 
-  public generateAccessToken(user: { id: string; role: string }): string {
-    return jwt.sign(
-      { sub: user.id, role: user.role },
-      this.jwtSecret,
-      { expiresIn: this.tokenExpiry, algorithm: 'HS256' }
-    );
-  }
-
-  public verifyToken(token: string): TokenPayload {
-    try {
-      return jwt.verify(token, this.jwtSecret) as TokenPayload;
-    } catch (err) {
-      throw new Error('Invalid or expired authentication token');
-    }
-  }
+export interface AuthSession {
+  userId: string;
+  tenantId: string;
+  role: 'client' | 'agent' | 'admin';
+  channel: 'saas' | 'f2f_kiosk';
 }
 
-/**
- * Express Authentication Middleware
- * Enforces identity verification matching the access tiering detailed in Business Document: Company Document.
- */
-export const authenticate = (authService: AuthService) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+export class AuthService {
+  /**
+   * Gracefully verifies user session or guides them to re-authentication without harsh friction.
+   * Incorporates session resilience rules stipulated in Company Document.
+   */
+  public static async authenticateSession(req: FastifyRequest, reply: FastifyReply): Promise<AuthSession | void> {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ error: 'Missing or malformed Authorization header' });
-      return;
+
+    if (!authHeader?.startsWith('Bearer ')) {
+      AuditLogger.logSoftAuthFailure(req.ip, 'Missing bearer token header');
+      return reply.status(401).send({
+        status: 'unauthenticated',
+        message: 'Your session has gently expired. Please log in to continue.',
+        recoveryUrl: '/auth/login'
+      });
     }
 
     const token = authHeader.split(' ')[1];
+
     try {
-      const payload = authService.verifyToken(token);
-      (req as any).user = payload;
-      next();
-    } catch (error) {
-      res.status(401).json({ error: (error as Error).message });
+      const payload = await verifyToken(token);
+      req.user = payload;
+      return payload;
+    } catch (err: any) {
+      AuditLogger.warn('Auth token verification failed', { error: err.message });
+      return reply.status(401).send({
+        status: 'token_invalid',
+        message: 'We could not verify your session. Re-authenticating keeps your workspace secure.',
+        recoveryUrl: '/auth/refresh'
+      });
     }
-  };
-};
+  }
+}
 ```
