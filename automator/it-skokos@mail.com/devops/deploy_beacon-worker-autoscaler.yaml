@@ -1,0 +1,67 @@
+# Beacon API Worker Pool Autoscaling Configuration
+**Author:** Echo Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 20:00  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented automated horizontal pod autoscaling and event-driven queue scaling for the Beacon API background worker pool, configured against workload SLAs outlined in the Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaling
+# Architecture: Kubernetes KEDA ScaledObject & HorizontalPodAutoscaler
+# Reference: Business Document: Company Document (used to establish target processing latency SLAs, minimum replica floors for Face to Face scheduling spikes, and off-peak scale-down boundaries).
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/part-of: beacon-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3     # Per Business Document: Company Document baseline availability SLA
+  maxReplicaCount: 30    # Hard cap based on downstream DB connection pool sizing
+  cooldownPeriod: 180    # Prevent thrashing during bursty face-to-face appointment syncs
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 25
+              periodSeconds: 60
+  triggers:
+    # Queue backlog trigger for async SaaS sync jobs
+    - type: redis
+      metadata:
+        addressFromEnv: REDIS_QUEUE_HOST
+        listName: beacon:jobs:high_priority
+        listLength: '25'
+    # CPU utilization fallback trigger
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: '75'
+    # Memory pressure trigger
+    - type: memory
+      metricType: Utilization
+      metadata:
+        value: '80'
+
+```
