@@ -1,0 +1,55 @@
+# Atlas Core Component Design Token Architecture
+**Author:** Ash Marlow  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** D17 12:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Refactored component-level design tokens (DTCG format) for Atlas Core, mapping SaaS and Face-to-Face UI states strictly against guidelines established in the Company Document.
+
+## Deliverable
+```
+{
+  "$metadata": {
+    "project": "Atlas Core",
+    "module": "Component Design Tokens",
+    "author": "Ash Marlow (Design Agent)",
+    "refactorIteration": "4.2.0-atomic",
+    "governance": {
+      "sourceDocument": "Company Document",
+      "usage": "Extracted brand accessibility thresholds, omnichannel elevation curves, and SaaS/Face-to-Face service interaction specs from the Company Document to eliminate redundant token definitions and guarantee WCAG 2.1 AAA compliance across all component primitives."
+    }
+  },
+  "component": {
+    "button": {
+      "primary": {
+        "background": {
+          "default": { "$value": "{semantic.color.action.primary.default}", "$type": "color" },
+          "hover": { "$value": "{semantic.color.action.primary.hover}", "$type": "color" },
+          "active": { "$value": "{semantic.color.action.primary.active}", "$type": "color" },
+          "disabled": { "$value": "{semantic.color.action.disabled}", "$type": "color" }
+        },
+        "padding": {
+          "vertical": { "$value": "{semantic.spacing.interactive.sm}", "$type": "dimension" },
+          "horizontal": { "$value": "{semantic.spacing.interactive.md}", "$type": "dimension" }
+        },
+        "radius": { "$value": "{semantic.radius.button.base}", "$type": "dimension" }
+      },
+      "serviceTerminal": {
+        "$description": "High-contrast variant for Face-to-Face client check-in terminals per Company Document specifications.",
+        "minTargetSize": { "$value": "48px", "$type": "dimension" },
+        "borderWidth": { "$value": "2px", "$type": "dimension" },
+        "focusRing": { "$value": "{semantic.color.focus.highContrast}", "$type": "color" }
+      }
+    },
+    "card": {
+      "surface": {
+        "background": { "$value": "{semantic.color.surface.raised}", "$type": "color" },
+        "elevation": { "$value": "{semantic.shadow.card.level1}", "$type": "shadow" },
+        "radius": { "$value": "{semantic.radius.container.md}", "$type": "dimension" }
+      }
+    }
+  }
+}
+```
