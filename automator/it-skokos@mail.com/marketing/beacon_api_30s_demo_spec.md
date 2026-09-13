@@ -1,44 +1,37 @@
-# Beacon API 30s Demo Script & Lean Production Spec
-**Author:** Fig Marlow  
+# 30-Second Beacon API Product Demo Script & Lean Cut Spec
+**Author:** Cipher Okafor  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 02:00  
+**Produced:** D16 02:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A cost-optimized 30-second product demo script and storyboard for Beacon API, utilizing in-house screen assets and strategic messaging sourced directly from the Company Document.
+Ultra-lean 30-second product demo video script and post-production edit cut spec for Beacon API, produced entirely in-house with zero agency spend by extracting messaging from Business Document: Company Document.
 
 ## Deliverable
 ```
-# Beacon API: 30-Second Product Demo Spec
-**Lead:** Fig Marlow | Marketing (Cost-Cutter)
-**Total Budget Spent:** $0.00 (Zero external production spend)
+# Production Spec: Beacon API 30s Product Demo
+**Creator:** Cipher Okafor | Marketing
+**Cost-Optimization Profile:** Zero-dollar production utilizing pre-existing UI assets, in-house screen capture, and royalty-free audio.
 
-## Resource Reference
-- **Company Document**: Reviewed core brand messaging pillars, tone-of-voice guidelines, and compliance standards from the internal **Company Document**. Leveraging this resource directly eliminated external agency copy costs and ensured immediate alignment with I.T. Skokos SaaS and Face-to-Face service positioning.
+## Resource Utilization
+- **Business Document: Company Document**: Evaluated to extract core value propositions, tier-1 SaaS endpoint metrics, and hybrid Face-to-Face service integration points. By extracting copy directly from this document, we eliminated the need for external scriptwriting and creative agency retainers.
 
 ---
 
-## 30-Second Cut Breakdown
+## 30-Second Cut Timeline & Shot List
 
-### [00:00 - 00:06] Scene 1: The Problem (Hook)
-- **Visual:** Fast-paced capture of failed API calls and cluttered backend logs.
-- **Audio:** High-tempo click track (CC0 License). Low sub-bass drop.
-- **VO:** "Is legacy integration bottlenecking your SaaS workflows and field operations?"
-- **On-Screen Text:** Latency Kills Scale.
+| Timecode | Visual Asset (Screen Capture / Motion) | Audio / Voiceover (In-House AI Voice) | On-Screen Text Overlay |
+|---|---|---|---|
+| **00:00 - 00:05** | Fast-paced macro shot of failed terminal API requests (Red highlight). | "Struggling with fragmented SaaS workflows and slow data sync?" | Cut latency. Scale faster. |
+| **00:05 - 00:12** | Clean transition to Beacon API dashboard; 1-click token generation. | "Meet Beacon API by I.T. Skokos. Real-time orchestration in minutes." | Beacon API: Instant Connect |
+| **00:12 - 00:20** | Split screen: SaaS webhook trigger firing live update to Face-to-Face service dispatch console. | "Unify your digital platform with hybrid face-to-face field operations effortlessly." | Real-time Hybrid Sync |
+| **00:20 - 00:26** | Performance graph showing 99.99% uptime and sub-10ms response times. | "High throughput, zero bloat, enterprise-grade reliability." | <10ms Latency | 99.99% Uptime |
+| **00:26 - 00:30** | I.T. Skokos lockup + Beacon API URL + Free Tier CTA. | "Deploy your free API key today at skokos.it/beacon." | Deploy Free Today |
 
-### [00:06 - 00:16] Scene 2: The Solution (Beacon API in Action)
-- **Visual:** Split screen. Left: Terminal executing `npm install @itskokos/beacon-api` in 2s. Right: Dashboard syncing real-time customer data across SaaS and in-person POS terminals.
-- **VO:** "Meet Beacon API by I.T. Skokos. Sub-50ms endpoint sync connecting cloud apps to on-site service operations instantly."
-- **On-Screen Text:** Sub-50ms Sync | Zero Friction
+---
 
-### [00:16 - 00:24] Scene 3: Enterprise Reliability
-- **Visual:** Pan across active telemetry metrics showing 99.99% uptime and zero-drop fallback buffers.
-- **VO:** "One endpoint. Complete pipeline observability. Built lean for enterprise scale."
-- **On-Screen Text:** 99.99% Guaranteed SLA
-
-### [00:24 - 00:30] Scene 4: Call to Action
-- **Visual:** High-contrast end card featuring I.T. Skokos logo, Beacon API badge, and developer portal URL.
-- **VO:** "Deploy in minutes. Start your free developer sandbox today."
-- **On-Screen Text:** itskokos.com/beacon-api | Start Free
+## Export & Distribution Parameters
+- **Formats:** 16:9 (YouTube/Web), 9:16 (Shorts/Reels), 1:1 (LinkedIn)
+- **Encoding:** H.264, 1080p, 60fps, stereo AAC
 ```
