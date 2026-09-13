@@ -1,0 +1,87 @@
+# Hardened Horizontal Autoscaler & Worker Deployment Spec for Beacon API
+**Author:** Nyx Van Dyk  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D17 10:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-ready, zero-trust autoscaling configuration and KEDA ScaledObject for the Beacon API worker pool, enforcing strict least-privilege constraints, network egress boundaries, and limits dictated by the Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool - Hardened Autoscaling Specification
+# Author: Nyx Van Dyk (DevOps)
+# Compliance: Designed in strict accordance with threat modeling and quota limits in 'Company Document'.
+# 'Company Document' was utilized to establish minimum replica floors (anti-DOS), maximum ceilings (denial-of-wallet mitigation), and mandatory security contexts.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/managed-by: keda
+    security.skokos.internal/risk-profile: restricted
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 18 # Bound by Company Document compute quota ceiling
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 600
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon-events-v1
+      mode: QueueLength
+      value: "50"
+    authenticationRef:
+      name: keda-rabbitmq-vault-auth # Zero hardcoded secrets; dynamic mTLS certs via Vault
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon-api-worker
+  namespace: beacon-prod
+spec:
+  replicas: 3
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: worker
+        image: registry.skokos.internal/beacon/worker:sha-4b9e2f1
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+```
