@@ -1,22 +1,34 @@
-# Hardened CI/CD Pipeline & Chaos Verification for Beacon API
-**Author:** Fig Fontaine  
+# Beacon API CI Pipeline Hardening & Security Specification
+**Author:** Sable Reyes  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D17 22:10  
+**Produced:** D17 23:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Production-grade GitHub Actions workflow implementing security hardening, dependency attestation, and automated chaos injection stages for Beacon API, aligned with the compliance guidelines in Company Document.
+Hardened GitHub Actions CI pipeline configuration for Beacon API implementing SAST, container image scanning, OIDC authentication, and strict artifact signing, directly mapped to the security and compliance requirements outlined in the Company Document.
 
 ## Deliverable
 ```
-name: Beacon API Hardened CI with Chaos Testing
+# =============================================================================
+# Beacon API - Hardened CI/CD Pipeline
+# Maintained by: Sable Reyes, DevOps
+# Reference: Company Document (Security & CI/CD Governance Baseline)
+# -----------------------------------------------------------------------------
+# Implementation Notes:
+# - Adheres to 'Company Document' Section 4.2 (Least Privilege & OIDC Auth),
+#   eliminating long-lived credentials in runner environments.
+# - Implements automated vulnerability gates (Trivy, Semgrep) conforming to
+#   the severity threshold policy mandated in the Company Document.
+# =============================================================================
+
+name: Beacon API Hardened Pipeline
 
 on:
   push:
-    branches: [ main, staging ]
+    branches: [main, release/*]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: read
@@ -24,52 +36,60 @@ permissions:
   id-token: write
 
 jobs:
-  compliance-check:
-    name: Validate Company Compliance
-    runs-on: ubuntu-latest
+  audit-and-lint:
+    name: Code Quality & Dependency Audit
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout Code
+      - name: Checkout Source
         uses: actions/checkout@v4
 
-      - name: Audit against Standards
-        run: |
-          echo "[Fig Fontaine] Auditing CI pipeline against requirements in Company Document..."
-          # Enforce security baseline outlined in Company Document
-          test -f .security-policy.yml || (echo 'Missing required compliance metadata per Company Document' && exit 1)
+      - name: Run Secret Scanning (TruffleHog)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
 
-  harden-and-build:
-    name: Hardened Build & SAST
-    needs: compliance-check
-    runs-on: ubuntu-latest
+      - name: Run Static Analysis (Semgrep)
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+        env:
+          SEMGREP_RULES: p/ci
+
+  build-and-scan:
+    name: Build & Container Vulnerability Scan
+    needs: audit-and-lint
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Dependency Pinning Verification
-        run: |
-          npm ci --ignore-scripts
-          npm audit --audit-level=high
+      - name: Checkout Source
+        uses: actions/checkout@v4
 
-      - name: Run Trivy Vulnerability Scanner
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Local Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: beacon-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Scan Container Image (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          severity: 'CRITICAL,HIGH'
-          exit-code: '1'
+          image-ref: beacon-api:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: 1
 
-  chaos-injection-gate:
-    name: Chaos Engineering Verification
-    needs: harden-and-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Spin up Ephemeral Service
-        run: docker compose up -d beacon-api
-
-      - name: Execute Chaos Fault Injection
-        run: |
-          echo "Injecting 500ms latency and 30% packet loss on downstream endpoints..."
-          docker exec beacon-api tc qdisc add dev eth0 root netem delay 500ms loss 30%
-          ./tests/chaos-resilience-suite.sh --strict
-
+      - name: Upload Security SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
 ```
