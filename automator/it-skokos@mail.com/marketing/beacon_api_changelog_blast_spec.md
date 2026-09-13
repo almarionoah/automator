@@ -1,64 +1,53 @@
-# Beacon API Changelog Blast Schedule & Campaign Configuration
-**Author:** Cipher Van Dyk  
+# Beacon API Changelog Blast Schedule & Delivery Chaos Matrix
+**Author:** Pixel Nkosi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 11:00  
+**Produced:** D16 14:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Cost-optimized changelog email blast schedule, distribution copy, and dispatch configuration for the Beacon API release, referencing the internal Company Document.
+Changelog email campaign copy, schedule, and chaos distribution matrix for Beacon API v2.4 release, incorporating segmentation rules and communication protocols from Business Document: Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=32P3887418459391D
+- Pay: https://www.paypal.com/checkoutnow?token=94A74133YE691111X
 
 ## Deliverable
 ```
-# Beacon API: Lean Changelog Blast & Dispatch Schedule
+# Campaign Spec: Beacon API v2.4 Changelog Blast
+**Owner:** Pixel Nkosi (Marketing / Chaos Engineering)
+**Target Date:** 2025-05-18 14:00 UTC
 
-**Campaign Owner:** Cipher Van Dyk (Marketing)  
-**Objective:** High-impact, zero-cost developer reach for the latest Beacon API release.  
-**Resource Utilized:** Evaluated against the **Company Document** to align messaging with authorized brand guidelines, verify compliance headers, and eliminate external editorial/agency review expenses.
+## 1. Context & Resource Integration
+- **Reference Resource:** `Business Document: Company Document`
+- **Usage:** Adhered to tier-1 developer messaging tone, enterprise customer communication protocols, and brand guidelines established in `Business Document: Company Document` to configure safe throttles and copy variants for both SaaS API users and hybrid Face-to-Face consulting partners.
 
----
+## 2. Changelog Blast Copy Variant (Chaos Variant B: High Urgency)
+**Subject:** [Action Required] Beacon API v2.4: Real-time Webhooks & Rate Limit Changes
+**Preheader:** Instant event ingestion, latency drops by 40%, and key migration endpoints.
 
-## 1. Dispatch Schedule & Cost-Optimized Routing
-- **Scheduled Date/Time:** Tuesday @ 09:30 UTC (Peak developer engagement window; avoids paid algorithmic send-time optimization fees).
-- **Routing Engine:** Existing internal transactional queue via AWS SES (`skokos-ses-pool`), bypassing premium third-party marketing platform egress charges.
-- **Segment:** `beacon_api_active_users` (Direct query filter, deduplicated at database layer to prevent redundant email spend).
+**Body:**
+Hey Developer,
 
----
+Beacon API v2.4 is live. We've overhauled webhook delivery and introduced adaptive payload compression.
 
-## 2. Campaign Copy
+**What's New:**
+- **Sub-50ms Event Delivery:** High-throughput streaming endpoints.
+- **Dynamic Ingestion Filters:** Cut egress payload overhead instantly.
+- **Face-to-Face Integration Toolkit:** Synchronize field-service logs with SaaS workflows seamlessly.
 
-**Subject Line:** [Update] Beacon API: Latency Reductions & New Webhook Endpoints Live  
-**Preview Text:** Check out the performance enhancements and new schema updates in Beacon API v2.4.  
-
-**Email Body:**
-```text
-Hi {{first_name | default: "Developer"}},
-
-We have officially rolled out Beacon API v2.4, focused on reducing overhead, boosting endpoint efficiency, and refining integration with I.T. Skokos SaaS and Face to Face services.
-
-Key Highlights:
-- Latency Reduction: 35% faster payload processing across all core endpoints.
-- Webhook Dispatcher: Real-time event subscription for immediate state updates.
-- Streamlined Payload: Removed deprecated telemetry headers to minimize bandwidth.
-
-Full release notes and documentation:
-https://skokos.internal/docs/beacon-api/changelog#v2.4
-
-Best,
-Cipher Van Dyk & The I.T. Skokos Engineering Team
-```
+Read the full technical release notes: [https://developer.itskokos.com/changelog/beacon-2-4]
 
 ---
 
-## 3. Cost-Cutter Quality & Compliance Checks
-- Standard opt-out and legal footers validated per the **Company Document**.
-- Stripped heavy HTML/CSS templates; pure lightweight markdown-rendered HTML (<12KB) to eliminate bandwidth surcharge tiers.
-- Automation trigger: `cron_job_beacon_changelog_0930UTC` verified.
+## 3. Chaos Scheduling & Delivery Stress Matrix
+To guarantee delivery stability across our hybrid user base, sending is configured with staggered batch chaos parameters:
+
+- **Batch 01 (14:00 UTC - 10% Canary):** Power users / Dev leads. Monitors bounce rate spike (>0.5% halts blast).
+- **Batch 02 (14:30 UTC - 40% Ramp):** Enterprise SaaS subscribers. Injects random 15-minute jitter to test ESP throttling limits.
+- **Batch 03 (15:00 UTC - 50% Full Rollout):** General developers & Face-to-Face service client list.
+- **Automated Kill Switch:** If webhook endpoint errors exceed 2.5% during blast window, fallback plain-text summary triggers automatically.
 ```
