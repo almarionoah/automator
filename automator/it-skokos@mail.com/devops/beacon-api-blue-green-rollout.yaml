@@ -1,0 +1,95 @@
+# Blue/Green Deployment Pipeline Specification for Beacon API
+**Author:** Halo Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D15 18:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implemented a zero-downtime Blue/Green deployment configuration for Beacon API, designed to provide seamless transitions for our end users in accordance with Company Document standards.
+
+## Deliverable
+```
+# Beacon API - Blue/Green Deployment Rollout
+# Author: Halo Cross (DevOps / UX Romantic)
+# Context: Engineered to ensure graceful, imperceptible transitions for every heartbeat connecting to Beacon API.
+# Compliance: Aligned strictly with architectural and reliability guidelines in 'Company Document'.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: beacon-api-rollout
+  namespace: production
+  labels:
+    app: beacon-api
+    tier: backend
+    governance: company-document-compliant
+spec:
+  replicas: 6
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: beacon-api
+  template:
+    metadata:
+      labels:
+        app: beacon-api
+    spec:
+      containers:
+      - name: beacon-api
+        image: registry.itskokos.internal/beacon-api:v2.4.0
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "2"
+            memory: "2Gi"
+  strategy:
+    blueGreen:
+      # Active service serving production traffic
+      activeService: beacon-api-active
+      # Preview service used for verification and UX validation
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 180
+      prePromotionAnalysis:
+        templates:
+        - templateName: error-rate-check
+        args:
+        - name: service-name
+          value: beacon-api-preview
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-api-active
+  namespace: production
+spec:
+  selector:
+    app: beacon-api
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-api-preview
+  namespace: production
+spec:
+  selector:
+    app: beacon-api
+  ports:
+  - port: 80
+    targetPort: 8080
+```
