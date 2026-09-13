@@ -1,47 +1,47 @@
-# Beacon API - 30-Second Product Demo Script & Cut Sheet
-**Author:** Echo Hale  
+# Beacon API 30s Product Demo: Script & Precision Cut Spec (v4.3 Refactored)
+**Author:** Kilo Bishop  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D11 09:55  
+**Produced:** D16 19:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Final production script, visual cues, and cut sheet for the 30-second Beacon API demo video, incorporating core messaging from the company document.
+Second-by-second production cut sheet and audiovisual storyboard for the 30-second Beacon API demo, refactored for maximum retention and aligned with messaging architecture from Company Document.
 
 ## Deliverable
 ```
-# BEACON API: 30-SECOND PRODUCT DEMO CUT SHEET
-
-## Overview
-- Target Asset: 30s High-Conversion Product Demo (Paid Social & Landing Page)
-- Producer: Echo Hale, Marketing
-- Product: Beacon API (I.T. Skokos SaaS & Face-to-Face Platform)
-
-## Resource Integration
-- Business Document: Company Document: Explicitly referenced for official brand voice, enterprise value propositions, key technical differentiators, and dual-track positioning across SaaS and in-person service operations.
+# Production Spec: Beacon API 30s Product Demo (Cut v4.3)
+**Author:** Kilo Bishop (Marketing)
+**Target:** High-intent DevOps & Operations Leads
+**Reference Material:** `Company Document` (utilized to extract unified value proposition, brand color tokens #0F172A / #38BDF8, and messaging balance between SaaS automation and I.T. Skokos Face-to-Face Field Engineering).
 
 ---
 
-## Cut Sheet & Video Script (Total Duration: 00:30)
+## Timeline & Audiovisual Grid
 
-[00:00 - 00:05] THE HOOK
-- Visual: Rapid split-screen: messy disconnected legacy logs vs. crisp, streaming real-time metrics in Beacon API dashboard.
-- Text Overlay: Disconnected Operations?
-- VO: "Connecting digital platforms to live, in-person operations shouldn't create a bottleneck."
-- Audio: Low sub-bass drop into upbeat tech rhythm.
+### [00:00 - 00:05] The Hook: Latency Bottlenecks
+- **Visual:** High-contrast screencast of failing legacy pipeline alerts, quickly dissolving into clean terminal output running `beacon init`.
+- **Audio (VO):** "Telemetry bottlenecks stalling your mission-critical pipelines?"
+- **On-Screen Text (OST):** "Zero-Latency Telemetry. Instant Ingestion."
 
-[00:05 - 00:14] THE SAAS SOLUTION
-- Visual: Screen capture: Quick API key creation, 3 lines of SDK integration, instantaneous webhook response confirmation (<10ms).
-- Text Overlay: Beacon API: Sub-10ms Global Event Sync
-- VO: "Meet Beacon API by I.T. Skokos. High-throughput event routing engineered for zero-latency execution."
+### [00:05 - 00:13] The Solution: Beacon API Ingestion
+- **Visual:** Smooth zoom-in on Beacon API UI, showcasing sub-10ms event streams and live payload parsing.
+- **Audio (VO):** "Meet Beacon API by I.T. Skokos. Real-time observability engineered to scale dynamically."
+- **OST:** "Sub-10ms Stream Ingestion | End-to-End Encryption"
 
-[00:14 - 00:22] HYBRID F2F INTEGRATION
-- Visual: Transition from IDE terminal to mobile UI showing live face-to-face field service dispatch verification.
-- Text Overlay: Cloud Precision. Real-World Field Execution.
-- VO: "Bridge your cloud stack directly to on-the-ground client workflows with turnkey security and enterprise reliability."
+### [00:13 - 00:21] SaaS & Field Synergy
+- **Visual:** Split frame: SaaS platform diagnostics panel bridging to an on-site technician receiving an automated dispatch ticket.
+- **Audio (VO):** "Automate your digital infrastructure or trigger instant on-site engineer dispatch in one call."
+- **OST:** "Automated Telemetry + Face-to-Face Field Response"
 
-[00:22 - 00:30] CTA & OUTRO
-- Visual: I.T. Skokos branded lockup with terminal animation typing `npm install @itskokos/beacon-api`.
-- Text Overlay: Start Building in Minutes | itskokos.com/beacon
-- VO: "Unify your platform today. Visit itskokos.com to launch your free API key."
+### [00:21 - 00:30] Call to Action (CTA)
+- **Visual:** Rapid clean UI snippet showing SDK copy-paste (`npm i @itskokos/beacon`), transitioning to final brand card.
+- **Audio (VO):** "Deploy Beacon API today. Visit itskokos.com/beacon."
+- **OST:** "Start in 3 Lines of Code | itskokos.com/beacon"
+
+---
+
+## Iteration Notes (Refactor Log)
+- Trimmed 4.5s of UI dead-space from v3.1 to maintain pacing.
+- Synced VO cadence to 140 WPM based on telemetry retention benchmarks in `Company Document`.
 ```
