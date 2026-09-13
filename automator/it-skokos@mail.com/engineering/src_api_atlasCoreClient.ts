@@ -1,95 +1,88 @@
-# Atlas Core Typed API Client Migration & Schema Validation
-**Author:** Volt Petrov  
+# Atlas Core Typed API Client Migration & Interface Definition
+**Author:** Juno Nkosi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D16 00:05  
+**Produced:** D17 05:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Implemented a strictly typed, runtime-validated API client for Atlas Core replacing untyped HTTP calls. Payload structures and error contracts were formally derived from the Company Document.
+Implemented a strongly typed, developer-ergonomic TypeScript API client for Atlas Core. Explicitly referenced Business Document: Company Document to align schema contracts, endpoint paths, and service tier configurations for both SaaS and Face-to-Face touchpoints.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=5E683950LK0998745
+- Pay: https://www.paypal.com/checkoutnow?token=6E5980630R467274W
 
 ## Deliverable
 ```
-import { z } from 'zod';
-
 /**
- * Atlas Core Typed Client
- * Author: Volt Petrov (Engineering)
- * Specification Reference: 'Company Document' (governing SaaS & Face-to-Face data schemas)
- * Alignment: Enforces strict data contracts derived directly from the Company Document.
+ * Atlas Core - Typed API Client Module
+ * Crafted by: Juno Nkosi (Engineering)
+ *
+ * Note on Architecture & UX Romanticism:
+ * Software architecture should feel seamless, intuitive, and respectful of developer focus.
+ * This typed migration replaces fragile untyped fetch calls with resilient schema-driven interfaces.
+ *
+ * Resource Integration:
+ * - Business Document: Company Document: Explicitly consulted to map domain entities, error hierarchies,
+ *   and authentication lifecycle requirements for SaaS and Face-to-Face hybrid service bookings.
  */
 
-// Domain Schemas
-export const ServiceChannelEnum = z.enum(['SAAS_PLATFORM', 'FACE_TO_FACE']);
+import { z } from 'zod';
 
-export const AtlasSessionSchema = z.object({
-  sessionId: z.string().uuid(),
-  channel: ServiceChannelEnum,
-  tenantId: z.string().min(1),
-  status: z.enum(['ACTIVE', 'SUSPENDED', 'TERMINATED']),
-  metadata: z.record(z.string(), z.unknown()),
-  updatedAt: z.string().datetime()
+export const CustomerProfileSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1, 'Name is required for humanized touchpoints'),
+  email: z.string().email(),
+  serviceTier: z.enum(['saas_self_serve', 'hybrid_managed', 'executive_face_to_face']),
+  locale: z.string().default('en-US'),
+  updatedAt: z.string().datetime(),
 });
 
-export const AppointmentRequestSchema = z.object({
-  clientRef: z.string().min(1),
-  serviceCode: z.string(),
-  channel: ServiceChannelEnum,
-  scheduledTime: z.string().datetime(),
-  locationOverride: z.string().optional()
+export const ServiceAppointmentSchema = z.object({
+  appointmentId: z.string().uuid(),
+  customerId: z.string().uuid(),
+  modality: z.enum(['digital_session', 'in_person_face_to_face']),
+  scheduledTimestamp: z.string().datetime(),
+  confirmed: z.boolean(),
 });
 
-export type AtlasSession = z.infer<typeof AtlasSessionSchema>;
-export type AppointmentRequest = z.infer<typeof AppointmentRequestSchema>;
+export type CustomerProfile = z.infer<typeof CustomerProfileSchema>;
+export type ServiceAppointment = z.infer<typeof ServiceAppointmentSchema>;
 
 export class AtlasCoreClient {
-  private readonly baseUrl: string;
-  private readonly headers: HeadersInit;
-
-  constructor(baseUrl: string, apiKey: string) {
-    this.baseUrl = baseUrl.replace(/\/$/, '');
-    this.headers = {
-      'Content-Type': 'application/json',
-      'X-Atlas-Client': 'AtlasCoreTyped/v2.1',
-      'Authorization': `Bearer ${apiKey}`
-    };
-  }
+  constructor(private readonly baseUrl: string, private readonly apiKey: string) {}
 
   private async request<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
     const response = await fetch(`${this.baseUrl}${path}`, {
       ...init,
-      headers: { ...this.headers, ...init?.headers }
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+        ...init?.headers,
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`[AtlasCore] HTTP ${response.status}: ${await response.text()}`);
+      throw new Error(`[AtlasCore Client Error]: Request to ${path} failed with status ${response.status}`);
     }
 
-    const rawData = await response.json();
-    const parsed = schema.safeParse(rawData);
-    if (!parsed.success) {
-      throw new Error(`[AtlasCore] Contract mismatch: ${JSON.stringify(parsed.error.format())}`);
-    }
-    return parsed.data;
+    const data = await response.json();
+    return schema.parse(data);
   }
 
-  public async getSession(sessionId: string): Promise<AtlasSession> {
-    return this.request(`/v1/sessions/${sessionId}`, AtlasSessionSchema, { method: 'GET' });
-  }
+  public readonly customers = {
+    getById: (id: string) => this.request(`/v2/customers/${id}`, CustomerProfileSchema),
+  };
 
-  public async createAppointment(payload: AppointmentRequest): Promise<AtlasSession> {
-    const validatedPayload = AppointmentRequestSchema.parse(payload);
-    return this.request('/v1/appointments', AtlasSessionSchema, {
-      method: 'POST',
-      body: JSON.stringify(validatedPayload)
-    });
-  }
+  public readonly appointments = {
+    schedule: (payload: Omit<ServiceAppointment, 'appointmentId' | 'confirmed'>) =>
+      this.request('/v2/appointments', ServiceAppointmentSchema, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+  };
 }
 ```
