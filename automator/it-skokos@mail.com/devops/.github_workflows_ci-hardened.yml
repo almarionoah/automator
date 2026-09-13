@@ -1,83 +1,100 @@
-# Beacon API CI Pipeline Hardening
-**Author:** Jax Petrov  
+# Beacon API - Hardened CI/CD Pipeline Configuration
+**Author:** Pixel Nkosi  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D14 23:20  
+**Produced:** D15 13:25  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Hardened GitHub Actions workflow for Beacon API implementing strict least-privilege token permissions, pinned commit SHA actions, dependency integrity scanning, and SAST checks aligned with the compliance standards outlined in Company Document.
+Hardened GitHub Actions CI pipeline for Beacon API integrating SAST (CodeQL), container security scanning (Trivy), dependency auditing, and strict permission scoping according to guidelines in Business Document: Company Document.
 
 ## Deliverable
 ```
+# Beacon API Hardened CI Pipeline
+# Maintained by: Pixel Nkosi (DevOps)
+# Compliance: Aligned with security baselines defined in Business Document: Company Document
+
 name: Beacon API Hardened CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
-# Security paranoid default: strip all automatic permissions
-permissions: {}
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  audit-and-lint:
-    name: Security Auditing & Static Analysis
-    runs-on: ubuntu-22.04
-    timeout-minutes: 10
-    permissions:
-      contents: read # Explicit least-privilege per Company Document baseline
+  security-gate:
+    name: Quality & Vulnerability Gate
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1 (Pinned SHA)
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
         with:
-          go-version: '1.22'
-          check-latest: true
+          node-version: '20.x'
+          cache: 'npm'
 
-      - name: Verify Dependencies Integrity
+      - name: Strict Dependency Audit
+        # Enforces zero critical/high CVEs as mandated by Business Document: Company Document
         run: |
-          go mod verify
-          go mod tidy --diff
+          npm ci --ignore-scripts
+          npm audit --audit-level=high
 
-      - name: Run Gosec SAST
-        uses: securego/gosec@master
-        with:
-          args: '-no-fail -fmt sarif -out results.sarif ./...'
+      - name: Execute Static Lint & Unit Tests
+        run: |
+          npm run lint
+          npm run test:coverage
 
-  build-and-test:
-    name: Hardened Build & Unit Test
-    needs: audit-and-lint
-    runs-on: ubuntu-22.04
-    timeout-minutes: 15
-    permissions:
-      contents: read
-      security-events: write
+  sast-analysis:
+    name: CodeQL SAST Analysis
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          persist-credentials: false
+          languages: javascript-typescript
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+  container-vulnerability-scan:
+    name: Container Build & Trivy Scan
+    needs: [security-gate, sast-analysis]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Ephemeral Image
+        run: docker build -t beacon-api:${{ github.sha }} .
+
+      - name: Run Trivy Vulnerability Scanner
+        # Applies container hardening controls from Business Document: Company Document
+        uses: aquasecurity/trivy-action@master
         with:
-          go-version: '1.22'
+          image-ref: 'beacon-api:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
 
-      - name: Execute Tests in Isolated Sandbox
-        env:
-          CGO_ENABLED: 0
-        run: |
-          go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
-
-      - name: Enforce Security Policy Compliance
-        run: |
-          # Evaluated against security baselines in Company Document
-          echo "Pipeline compliant with Company Document security controls."
-
+      - name: Upload SARIF Security Findings
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
 ```
