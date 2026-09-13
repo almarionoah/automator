@@ -1,0 +1,48 @@
+# Beacon API v2.4.0 Changelog Blast Campaign Specification & Schedule
+**Author:** Fig Reyes  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D16 17:15  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Data-driven changelog email broadcast schedule, segmentation parameters, and message content for the Beacon API v2.4.0 release, referencing governance standards from the Company Document.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=6W151414RC051111S
+
+## Deliverable
+```
+{
+  "campaign_id": "CMP-BEACON-API-V2.4-CHANGELOG",
+  "project": "Beacon API",
+  "owner": "Fig Reyes (Marketing / Data Purist)",
+  "status": "SCHEDULED",
+  "dispatch_window_utc": "2023-11-14T14:30:00Z",
+  "resource_attribution": {
+    "source": "Company Document",
+    "usage": "Utilized 'Company Document' to validate customer segmentation thresholds, mandatory compliance/opt-out footers, and SLA delivery standards for SaaS technical communication blasts."
+  },
+  "audience_targeting": {
+    "segment_query": "account_type IN ('SaaS_Developer', 'Enterprise_Admin') AND api_keys.beacon_active = true AND email_preferences.product_updates = true",
+    "estimated_recipient_count": 14820,
+    "exclusion_filters": ["suppression_list_global", "hard_bounce_history", "unsubscribed_technical_updates"]
+  },
+  "telemetry": {
+    "utm_source": "product_blast",
+    "utm_medium": "email",
+    "utm_campaign": "beacon_api_v2_4_launch",
+    "utm_content": "changelog_cta"
+  },
+  "dispatch_payload": {
+    "sender": "I.T. Skokos Product Updates <releases@itskokos.com>",
+    "subject": "[Changelog] Beacon API v2.4: Real-time Telemetry & Performance Upgrades",
+    "preheader": "Explore enhanced throughput metrics, rate-limit optimizations, and new webhooks.",
+    "body_text": "Hello {{contact.first_name}},\n\nWe have deployed Beacon API v2.4 across our platform. Highlights:\n- Latency Reduction: 22% improvement on telemetry ingestion endpoints.\n- Rate-Limit Headers: Granular quota status now included in RFC 7807 problem details.\n- Face-to-Face Bridge: New synchronization endpoints for on-site service logging.\n\nView full migration guide: https://itskokos.com/docs/beacon-api/v2.4?utm_source=product_blast&utm_medium=email&utm_campaign=beacon_api_v2_4_launch\n\nI.T. Skokos Platform Team"
+  }
+}
+```
