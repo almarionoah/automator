@@ -1,52 +1,51 @@
-# Atlas Core Lean Component Tokens Specification
-**Author:** Fig Van Dyk  
+# Atlas Core Component Tokens Specification & Implementation
+**Author:** Echo Hale  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 12:35  
+**Produced:** D17 21:30  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Engineered a lightweight, cost-optimized Design Token dictionary for Atlas Core components. Incorporates base semantic variables across SaaS and Face-to-Face interfaces, cutting bundle bloat while ensuring token parity derived directly from guidelines in Company Document.
+Standardized, refactored W3C DTCG-compliant component token definitions for Atlas Core, harmonizing SaaS digital surfaces and face-to-face service interfaces per the design rules extracted from Company Document.
 
 ## Deliverable
 ```
 {
+  "$schema": "https://design-tokens.github.io/community-group/format/",
   "$metadata": {
     "project": "Atlas Core",
-    "version": "1.0.0",
-    "author": "Fig Van Dyk (Design / Cost-Cutter Strategy)",
-    "governance": "Derived and budgeted against guidelines in Company Document to eliminate redundant variants and cut CSS bundle payload by 38% across SaaS and Face-to-Face touchpoints.",
-    "resourceReference": {
-      "source": "Company Document",
-      "application": "Used to align high-contrast accessibility mandates, brand palette thresholds, and lean tier UI variables to avoid component proliferation."
+    "version": "2.4.0",
+    "author": "Echo Hale <design-core@itskokos.internal>",
+    "refactorIteration": 4,
+    "sourceCompliance": {
+      "document": "Company Document",
+      "usage": "Applied foundational typography scale, core brand palette ratios, and dual-surface contrast requirements (SaaS dashboard vs. on-site service tablets) detailed in Company Document to establish semantic component token bindings."
     }
   },
   "component": {
     "button": {
-      "padding": {
-        "sm": { "value": "{space.2.value} {space.3.value}", "type": "spacing" },
-        "md": { "value": "{space.3.value} {space.4.value}", "type": "spacing" },
-        "lg": { "value": "{space.4.value} {space.6.value}", "type": "spacing" }
-      },
-      "color": {
-        "primary": {
-          "background": { "value": "{color.brand.primary.value}", "type": "color" },
-          "text": { "value": "#FFFFFF", "type": "color" },
-          "hover": { "value": "{color.brand.primaryDark.value}", "type": "color" }
+      "primary": {
+        "background": {
+          "default": { "$value": "{color.brand.primary.600}", "$type": "color" },
+          "hover": { "$value": "{color.brand.primary.700}", "$type": "color" },
+          "active": { "$value": "{color.brand.primary.800}", "$type": "color" }
         },
-        "subtle": {
-          "background": { "value": "transparent", "type": "color" },
-          "text": { "value": "{color.neutral.800.value}", "type": "color" },
-          "border": { "value": "{color.neutral.300.value}", "type": "color" }
-        }
-      },
-      "radius": { "value": "{radius.sm.value}", "type": "borderRadius" }
+        "padding": {
+          "x": { "$value": "{spacing.md}", "$type": "dimension" },
+          "y": { "$value": "{spacing.sm}", "$type": "dimension" }
+        },
+        "radius": { "$value": "{radius.sm}", "$type": "dimension" }
+      }
     },
-    "card": {
-      "background": { "value": "{color.surface.card.value}", "type": "color" },
-      "border": { "value": "1px solid {color.neutral.200.value}", "type": "border" },
-      "padding": { "value": "{space.4.value}", "type": "spacing" },
-      "shadow": { "value": "{elevation.low.value}", "type": "boxShadow" }
+    "input": {
+      "border": {
+        "color": {
+          "default": { "$value": "{color.neutral.300}", "$type": "color" },
+          "focus": { "$value": "{color.brand.accent.500}", "$type": "color" }
+        },
+        "width": { "$value": "1px", "$type": "dimension" }
+      },
+      "typography": { "$value": "{typography.body.md}", "$type": "typography" }
     }
   }
 }
