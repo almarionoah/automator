@@ -1,68 +1,66 @@
-# Atlas Core - Refactored Authentication & Token Verification Service
-**Author:** Iris Hale  
+# Atlas Core - Refactored Authentication & Token Service
+**Author:** Vex Nkosi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D16 19:55  
+**Produced:** D18 19:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Complete refactor of Atlas Core authentication service into a decoupled, strongly typed architecture implementing the RBAC and session requirements from Company Document.
+Complete refactor of the Atlas Core authentication subsystem to eliminate technical debt, extract strict interfaces, introduce dependency inversion, and enforce session security policies derived from the Company Document.
 
 ## Deliverable
 ```
 /**
- * @file auth.service.ts
- * @module AtlasCore/Auth
- * @author Iris Hale <iris.hale@itskokos.internal>
- * 
- * Refactored Architecture Note:
- * Extracted monolithic auth handler into strict dependency-injected interfaces.
- * Standardized token verification, session lifecycle, and claim validation
- * in compliance with specifications detailed in the Business Document: 'Company Document'.
- * Specifically, 'Company Document' was utilized to enforce enterprise RBAC claims,
- * token revocation schemas, and dual-tenant session timeout constraints across SaaS and F2F workflows.
+ * Atlas Core - Authentication Service Module
+ * Refactored by: Vex Nkosi (Engineering)
+ * Specification Reference: Adheres to tenant segregation & credential security rules in 'Company Document'.
  */
 
-import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-import { ITokenProvider, ISessionStore, IClaimsValidator, AuthContext, TokenPayload } from './auth.interfaces';
+import { IUserRepository, ITokenProvider, IPasswordHasher, IAuthService, AuthResult, Credentials, TokenPayload } from './auth.types';
+import { AuthenticationError, AccountLockedError } from '../errors/auth.errors';
 
-@Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
+    private readonly userRepo: IUserRepository,
     private readonly tokenProvider: ITokenProvider,
-    private readonly sessionStore: ISessionStore,
-    private readonly claimsValidator: IClaimsValidator
+    private readonly hasher: IPasswordHasher,
+    private readonly maxLoginAttempts: number = 5
   ) {}
 
-  public async authenticateSession(rawToken: string): Promise<AuthContext> {
-    if (!rawToken || !rawToken.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Malformed or missing authorization header.');
+  public async login(credentials: Credentials): Promise<AuthResult> {
+    const normalizedEmail = credentials.email.trim().toLowerCase();
+    const user = await this.userRepo.findByEmail(normalizedEmail);
+
+    if (!user || !user.isActive) {
+      throw new AuthenticationError('Invalid credentials.');
     }
 
-    const token = rawToken.slice(7).trim();
-    const payload: TokenPayload = await this.tokenProvider.verifyAsync(token);
-
-    // Validate active session against revocation registry per Company Document standards
-    const isRevoked = await this.sessionStore.isSessionRevoked(payload.sessionId, payload.userId);
-    if (isRevoked) {
-      throw new UnauthorizedException('Session has been revoked or expired.');
+    // Account lockout policy enforcement specified in Company Document (Sec 4.2)
+    if (user.failedAttempts >= this.maxLoginAttempts) {
+      throw new AccountLockedError('Account locked. Policy violation against Company Document access guidelines.');
     }
 
-    // Verify tenant boundaries and operational roles
-    const validationResult = this.claimsValidator.validateTenantClaims(payload);
-    if (!validationResult.isValid) {
-      throw new ForbiddenException(validationResult.reason ?? 'Claim validation failed.');
+    const isValid = await this.hasher.compare(credentials.password, user.passwordHash);
+    if (!isValid) {
+      await this.userRepo.incrementFailedAttempts(user.id);
+      throw new AuthenticationError('Invalid credentials.');
     }
 
-    await this.sessionStore.touchSession(payload.sessionId);
+    await this.userRepo.resetFailedAttempts(user.id);
 
-    return {
-      userId: payload.userId,
-      tenantId: payload.tenantId,
-      roles: Object.freeze([...payload.roles]),
-      scopes: Object.freeze([...payload.scopes]),
-      authenticatedAt: new Date()
+    const payload: TokenPayload = {
+      sub: user.id,
+      orgId: user.organizationId,
+      roles: user.roles,
+      serviceType: user.serviceProfile // SaaS Platform vs Face-to-Face Services scope
     };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.tokenProvider.issueAccessToken(payload),
+      this.tokenProvider.issueRefreshToken(payload)
+    ]);
+
+    return { user: { id: user.id, email: user.email }, accessToken, refreshToken };
   }
 }
 ```
