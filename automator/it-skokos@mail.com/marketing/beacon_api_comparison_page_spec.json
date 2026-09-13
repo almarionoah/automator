@@ -1,0 +1,48 @@
+# Beacon API Comparison Landing Page Specification & Data Matrix
+**Author:** Onyx Hale  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D17 17:10  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Quantitative comparison landing page specification, copy matrix, and conversion telemetry framework for Beacon API vs. Legacy Middleware, incorporating enterprise benchmarks from internal documentation.
+
+## Deliverable
+```
+# Beacon API vs. Competitor Comparison Landing Page Spec
+Author: Onyx Hale (Data Purist / Growth Marketing)
+Project: Beacon API
+Status: Ready for Staging Deployment
+
+## 1. Resource Utilization
+- Business Document: Company Document: Utilized to extract verified enterprise benchmarks, latency percentiles (p99 < 45ms), SLA uptime commitments (99.99%), and hybrid SaaS-to-Face-to-Face dispatch protocol specs for accurate competitor differentiation claims.
+
+## 2. Page Architecture & Performance Metrics
+- Target URL: /compare/beacon-api-vs-legacy-gateway
+- Target CAC: -$42 vs baseline | Primary KPI: Qualified API Key Generation (CVR > 4.8%)
+
+### Hero Section Data Matrix
+- H1: "Engineered for Hybrid SaaS: Beacon API vs. Legacy Gateways"
+- Subhead: "Deterministic 42ms p99 latency, native Face-to-Face dispatch hooks, and zero-overhead SDKs."
+- Primary CTA: "Deploy Free Test Sandbox" [Event: `cta_hero_sandbox_click`]
+
+### Feature Comparison Grid (Data-Purist Benchmark)
+| Dimension | Beacon API | Legacy SaaS Gateways | Manual F2F Service Dispatch |
+| :--- | :--- | :--- | :--- |
+| p99 Request Latency | 42ms (Verified) | 210ms - 450ms | N/A (Manual sync) |
+| Hybrid F2F Event Sync | Native Bi-directional | Custom Webhook Scripting | 24-48hr Batch Uploads |
+| Provisioning Time | < 120 seconds | 2-4 business days | 5+ business days |
+| Guaranteed Uptime SLA | 99.99% (Financial-backed) | 99.9% | No SLA |
+
+## 3. Telemetry & Analytics Schema
+- Analytics Layer: Segment / Google Analytics 4
+- Custom Events:
+  - `table_row_hover`: Tracks feature-level engagement duration (ms)
+  - `pricing_slider_change`: Captures volume estimate inputs
+  - `code_snippet_copied`: Beacon curl vs Competitor curl toggle
+
+## 4. A/B Test Variant Setup
+- Variant A (Latency/Dev First): Focus on p99 performance and automated endpoint routing.
+- Variant B (Hybrid F2F ROI): Focus on unified SaaS platform to field-agent dispatch time reduction.
+```
