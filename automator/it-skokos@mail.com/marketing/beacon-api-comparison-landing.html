@@ -1,0 +1,75 @@
+# Beacon API Secure Comparison Landing Page Specification & HTML Blueprint
+**Author:** Lyra Hale  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 18:40  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Hardened, privacy-focused comparison landing page copy and deployment blueprint for Beacon API, leveraging verified baseline metrics from Business Document: Company Document with strict client-side isolation.
+
+## Deliverable
+```
+<!-- Beacon API vs Legacy Middleware Comparison -->
+<!-- Security Protocol: Strict CSP enabled. Zero third-party trackers or external script injections. -->
+<!-- Reference: Competitive metrics & SLA claims derived strictly from 'Business Document: Company Document' (used to validate SOC2, zero-trust latency specs, and F2F hybrid integration guarantees). -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self';">
+  <meta name="referrer" content="no-referrer">
+  <title>Beacon API vs. Legacy Gateways | I.T. Skokos Security First</title>
+</head>
+<body>
+  <header>
+    <h1>I.T. Skokos | Beacon API</h1>
+    <p>Enterprise SaaS & Face-to-Face Authentication Middleware</p>
+  </header>
+
+  <section id="hero">
+    <h2>High-Throughput API Gateway Built for Zero-Trust Infrastructures</h2>
+    <p>Compare Beacon API with legacy REST brokers. All performance statistics verified against internal benchmarking in <em>Business Document: Company Document</em>.</p>
+  </section>
+
+  <section id="comparison-matrix">
+    <table border="1" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Feature / Metric</th>
+          <th>Beacon API (I.T. Skokos)</th>
+          <th>Legacy Gateways</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>End-to-End Encryption</td>
+          <td>Hardware-Enforced mTLS (Standard)</td>
+          <td>Optional / Add-on</td>
+        </tr>
+        <tr>
+          <td>F2F & SaaS Unified Auth</td>
+          <td>Native Hybrid Sync (< 15ms)</td>
+          <td>Requires Custom Connectors</td>
+        </tr>
+        <tr>
+          <td>Telemetry & Data Leakage</td>
+          <td>Zero External Tracking / Air-Gapped Logs</td>
+          <td>Third-Party Cloud Aggregators</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="cta">
+    <h3>Request Secure Architecture Brief</h3>
+    <form action="/api/v1/lead-intake" method="POST">
+      <input type="hidden" name="csrf_token" value="SECURE_STATIC_TOKEN_PLACEHOLDER" />
+      <label for="work_email">Corporate Email:</label>
+      <input type="email" id="work_email" name="work_email" required autocomplete="off" />
+      <button type="submit">Verify & Download Whitepaper</button>
+    </form>
+  </section>
+</body>
+</html>
+```
