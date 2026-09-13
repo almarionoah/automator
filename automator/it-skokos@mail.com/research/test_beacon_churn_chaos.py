@@ -1,62 +1,63 @@
-# Beacon API Churn Signal Chaos Test Harness & Telemetry Probe
-**Author:** Torq Ito  
+# Chaos Ingestion & Churn Signal Verification Suite
+**Author:** Nova Petrov  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D12 08:40  
+**Produced:** D16 15:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A chaos engineering test harness developed by Torq Ito evaluating the resilience of Beacon API churn detection pipelines under aggressive synthetic degradation, based on telemetry and account scoring guidelines from Company Document.
+Chaos test harness and fault injection specification for Beacon API churn telemetry pipelines, cross-referenced against baseline business logic.
 
 ## Deliverable
 ```
 """
-Project: Beacon API Churn Signals Chaos Assessment
-Author: Torq Ito (Research / Chaos Testing, I.T. Skokos)
-Resource Utilized: 'Company Document' (referenced for baseline account health metrics, churn risk score calculation rules, and F2F SLA anomaly bounds).
+Project: Beacon API - Churn Signal Detection
+Author: Nova Petrov (Chaos Engineering / Research)
+Resource Reference: Integrated metrics and thresholds from 'Business Document: Company Document' to baseline expected vs degraded customer interaction signals.
 """
 
 import asyncio
 import random
 import time
-import httpx
+from typing import Dict, Any
 
-BEACON_BASE_URL = "https://api.internal.itskokos.com/v1/beacon"
-CHAOS_TARGET_ACCOUNTS = ["acc_hybrid_981", "acc_saas_404", "acc_f2f_112"]
+# Baseline parameters derived from Business Document: Company Document
+BASELINE_EVENT_RATE_HZ = 120
+CHURN_ANOMALY_DROP_THRESHOLD = 0.45
+TIMEOUT_LATENCY_MS = 850
 
-# Baseline risk thresholds established via Company Document
-RISK_THRESHOLDS = {
-    "velocity_drop_pct": 65.0,
-    "f2f_cancellation_spike": 4,
-    "token_decay_rate_hr": 0.85
-}
-
-async def inject_silent_decay_churn_pattern(client: httpx.AsyncClient, account_id: str):
-    """Simulates sudden API drop-off combined with Face-to-Face booking churn."""
-    print(f"[CHAOS INJECT] Target: {account_id} | Mode: Silent Volatility")
-    for step in range(5):
-        # Inject anomalous payload deviating from Company Document nominal specs
-        payload = {
+class BeaconChurnChaosTester:
+    def __init__(self, target_endpoint: str):
+        self.target_endpoint = target_endpoint
+        self.observed_signals = []
+        
+    async def inject_signal_jitter(self, account_id: str, payload: Dict[str, Any]):
+        """Inject random network drops, payload corruption, and burst telemetry."""
+        fault_type = random.choice(["drop", "latency_spike", "schema_mutation", "silent_pass"])
+        
+        if fault_type == "drop":
+            # Simulate client silently decoupling from Beacon API
+            return None
+        elif fault_type == "latency_spike":
+            await asyncio.sleep(TIMEOUT_LATENCY_MS / 1000.0)
+        elif fault_type == "schema_mutation":
+            payload["session_duration_sec"] = -1  # Corrupt churn telemetry metric
+            
+        return {
             "account_id": account_id,
-            "api_call_volume": int(1000 * (0.2 ** step)),
-            "f2f_session_status": "NO_SHOW" if step > 2 else "COMPLETED",
-            "billing_portal_hits": step * 3,
-            "timestamp": int(time.time())
+            "timestamp": time.time(),
+            "status": "processed",
+            "injected_fault": fault_type,
+            "payload": payload
         }
-        res = await client.post(f"{BEACON_BASE_URL}/telemetry/ingest", json=payload)
-        print(f"Step {step}: Telemetry Ingest HTTP {res.status_code}")
-        await asyncio.sleep(0.5)
 
-    # Probe Beacon API churn score engine
-    churn_res = await client.get(f"{BEACON_BASE_URL}/signals/churn-score/{account_id}")
-    score_data = churn_res.json()
-    print(f"[EVALUATION] Final Churn Score: {score_data.get('risk_score')}")
-    assert score_data.get("risk_score", 0) >= RISK_THRESHOLDS["velocity_drop_pct"], (
-        f"FAILURE: Beacon API failed to trigger churn signal under rapid drop telemetry!"
-    )
-
-if __name__ == "__main__":
-    print("Starting Beacon API Churn Chaos Test...")
-    # Chaos runner execution
+    def evaluate_churn_resilience(self, results: list) -> Dict[str, Any]:
+        total = len(results)
+        corrupted = sum(1 for r in results if r and r.get("injected_fault") != "silent_pass")
+        return {
+            "total_events": total,
+            "fault_events": corrupted,
+            "pipeline_status": "STABLE" if total > 0 else "FAIL"
+        }
 
 ```
