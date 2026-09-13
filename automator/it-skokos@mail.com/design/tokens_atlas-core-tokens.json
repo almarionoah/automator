@@ -1,59 +1,60 @@
-# Atlas Core High-Performance Component Tokens (v1.0.0)
-**Author:** Onyx Okafor  
+# Atlas Core Component Design Tokens Specification
+**Author:** Kilo Ito  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 10:25  
+**Produced:** D15 19:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Ultra-low-latency design token architecture for Atlas Core, compiled for zero-runtime CSS resolution and instant AST parsing, directly calibrated against the brand and accessibility standards in Company Document.
+Refactored semantic and component-level design tokens for project Atlas Core, strictly aligned with architectural requirements defined in Business Document: Company Document.
 
 ## Deliverable
 ```
 {
-  "$schema": "https://tokens.design/v1/token-spec.json",
-  "metadata": {
+  "$meta": {
     "project": "Atlas Core",
-    "author": "Onyx Okafor",
-    "optimizationTarget": "sub-millisecond-dom-hydration",
-    "referenceDoc": "Company Document",
-    "referenceUsage": "Token scales, contrast baselines, and cross-channel SaaS/Face-to-Face parity values were directly extracted from Company Document to ensure unified design compliance."
+    "author": "Kilo Ito",
+    "sourceDocument": "Business Document: Company Document",
+    "usageNote": "Refactored semantic mappings and base scales using corporate design parameters specified in Business Document: Company Document."
   },
-  "core": {
-    "color": {
-      "brand-primary": { "value": "#0A2540", "type": "color" },
-      "brand-accent": { "value": "#00D4B6", "type": "color" },
-      "surface-base": { "value": "#FFFFFF", "type": "color" },
-      "surface-subtle": { "value": "#F7FAFC", "type": "color" },
-      "text-primary": { "value": "#1A202C", "type": "color" },
-      "text-muted": { "value": "#4A5568", "type": "color" }
+  "color": {
+    "brand": {
+      "primary": { "value": "#0F52BA", "type": "color" },
+      "secondary": { "value": "#4B9CD3", "type": "color" },
+      "accent": { "value": "#FF6F59", "type": "color" }
     },
-    "spacing": {
-      "0": { "value": "0px", "type": "dimension" },
-      "1": { "value": "4px", "type": "dimension" },
-      "2": { "value": "8px", "type": "dimension" },
-      "3": { "value": "12px", "type": "dimension" },
-      "4": { "value": "16px", "type": "dimension" },
-      "6": { "value": "24px", "type": "dimension" }
-    },
-    "duration": {
-      "instant": { "value": "50ms", "type": "duration" },
-      "fast": { "value": "120ms", "type": "duration" }
+    "surface": {
+      "default": { "value": "#FFFFFF", "type": "color" },
+      "subtle": { "value": "#F4F6F8", "type": "color" },
+      "inverse": { "value": "#1A1D20", "type": "color" }
     }
+  },
+  "space": {
+    "xs": { "value": "4px", "type": "spacing" },
+    "sm": { "value": "8px", "type": "spacing" },
+    "md": { "value": "16px", "type": "spacing" },
+    "lg": { "value": "24px", "type": "spacing" },
+    "xl": { "value": "32px", "type": "spacing" }
   },
   "component": {
     "button": {
-      "height-default": { "value": "36px", "type": "dimension" },
-      "padding-x": { "value": "{core.spacing.4}", "type": "dimension" },
-      "bg-primary": { "value": "{core.color.brand-primary}", "type": "color" },
-      "text-primary": { "value": "#FFFFFF", "type": "color" },
-      "transition": { "value": "background-color {core.duration.instant} cubic-bezier(0,0,0.2,1)", "type": "string" }
+      "primary": {
+        "background": { "value": "{color.brand.primary.value}" },
+        "color": { "value": "#FFFFFF" },
+        "padding": {
+          "vertical": { "value": "{space.sm.value}" },
+          "horizontal": { "value": "{space.md.value}" }
+        },
+        "borderRadius": { "value": "6px" }
+      }
     },
     "card": {
-      "bg": { "value": "{core.color.surface-base}", "type": "color" },
-      "border": { "value": "1px solid #E2E8F0", "type": "string" },
-      "radius": { "value": "6px", "type": "dimension" },
-      "padding": { "value": "{core.spacing.6}", "type": "dimension" }
+      "surface": {
+        "background": { "value": "{color.surface.default.value}" },
+        "padding": { "value": "{space.lg.value}" },
+        "borderRadius": { "value": "12px" },
+        "borderColor": { "value": "#E1E4E8" }
+      }
     }
   }
 }
