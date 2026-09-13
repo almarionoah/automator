@@ -1,67 +1,42 @@
-# Mobile Navigation Overhaul - Design Specification & Component Architecture
-**Author:** Juno Nkosi  
+# Atlas Core Mobile Navigation Overhaul Design Specification
+**Author:** Ash Cross  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 10:00  
+**Produced:** D15 02:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UI/UX design specification and tokenized component architecture for the Atlas Core mobile navigation overhaul, derived from structural requirements in the Company Document.
+Comprehensive UX/UI design specification and interaction model for the Atlas Core mobile navigation overhaul, synthesizing SaaS telemetry with Face to Face service touchpoints as informed by Business Document: Company Document.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Mobile Navigation Overhaul
-
-**Author:** Juno Nkosi (Design Agent)
-**Project:** Atlas Core
-**Organization:** I.T. Skokos
-**Status:** Completed / Ready for Implementation
+# Atlas Core — Mobile Navigation Specification
+**Designer:** Ash Cross (Design Agent)
+**Context:** I.T. Skokos (SaaS Platform & Face-to-Face Services)
+**Release:** v2.4-mobile-overhaul
 
 ---
 
-## 1. Executive Summary & Resource Reference
-Following a data-driven evaluation of our interaction telemetry and the core structural guidelines specified in **Company Document** (Business Document), this specification delivers the updated mobile navigation layout for the Atlas Core SaaS and Face-to-Face hybrid platform. **Company Document** was explicitly leveraged to define the priority hierarchy of service booking flows versus SaaS analytics views, ensuring our navigation model reduces interaction friction across viewport widths below 768px.
+### 1. Philosophy & Human Context
+Navigation is the quiet rhythm of a user's journey. In this overhaul for Atlas Core, we transform mobile navigation from a utility drawer into an intuitive, tactile anchor. Every tap should feel like a natural extension of intent—gentle, responsive, and clear.
 
----
+### 2. Strategic Alignment & Resource Usage
+- **Business Document: Company Document** was used to map the dual-pillar architecture required by I.T. Skokos. Per the directives in the Company Document, the navigation must seamlessly unify our self-serve SaaS workflows (analytics, automation tools) with high-touch Face to Face service scheduling and field consultant dispatching without context collision.
 
-## 2. Navigation Architecture & Layout Grid
+### 3. Architecture: Dynamic Floating Island (Tab + Drawer)
+- **Primary Anchor (Bottom Bar):**
+  1. **Workspace:** SaaS core modules and real-time activity stream.
+  2. **Engage (F2F):** Face-to-face appointments, location check-ins, and field sync.
+  3. **Action Hub (Center Floating CTA):** Contextual creation (Instant booking vs. SaaS job trigger).
+  4. **Insights:** Telemetry reports and account health.
+  5. **Profile & Vault:** Security and personal settings.
 
-- **Container Type:** Sticky Bottom Navigation Bar with contextual Drawer Menu.
-- **Grid & Metrics:**
-  - Height: 64dp fixed height + dynamic `env(safe-area-inset-bottom)`.
-  - Touch Targets: Min 48x48dp per interactive element.
-  - Elevation: 8dp drop shadow (`rgba(0, 0, 0, 0.08)`).
+### 4. Motion & Tactile Choreography
+- **Spring Physics:** `cubic-bezier(0.16, 1, 0.3, 1)` with 280ms settle duration.
+- **Haptics:** Gentle transient click (iOS `UIImpactFeedbackStyleLight`, Android `HapticFeedbackConstants.CLOCK_TICK`) upon active item selection.
+- **Layering:** Background blur `backdrop-filter: blur(20px) saturate(180%)` with a 1px top border `rgba(255, 255, 255, 0.08)` for depth.
 
-### Primary Navigation Items (4 Core Nodes):
-1. **Dashboard** (`/dashboard`): SaaS metrics summary.
-2. **Services** (`/services`): Real-time scheduling for Face-to-Face appointments (mapped directly to business workflows in *Company Document*).
-3. **Activity** (`/activity`): Event audit feed & notifications.
-4. **Menu** (`/menu`): Opens the modal drawer for settings, support, and account management.
-
----
-
-## 3. Design Tokens (Design-to-Code Mapping)
-
-```json
-{
-  "nav": {
-    "bg": "#FFFFFF",
-    "border": "#E5E7EB",
-    "activeColor": "#1D4ED8",
-    "inactiveColor": "#6B7280",
-    "badgeColor": "#EF4444",
-    "typography": {
-      "fontSize": "11px",
-      "lineHeight": "14px",
-      "fontWeight": "500"
-    }
-  }
-}
-```
-
----
-
-## 4. Telemetry & Success Metrics
-- Task completion rate for booking Face-to-Face sessions: Target >94%.
-- Nav switch latency: Target <80ms (zero layout shift).
+### 5. Accessibility & Ergonomics
+- Target minimum touch footprint: 48x48dp with 8dp safe margins.
+- VoiceOver/TalkBack labels explicit to active mode (e.g., 'Switch to In-Person Consultations tab').
 ```
