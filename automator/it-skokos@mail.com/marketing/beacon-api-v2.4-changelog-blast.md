@@ -1,57 +1,48 @@
-# Beacon API v2.4 Changelog Blast Campaign & Distribution Schedule
-**Author:** Vex Van Dyk  
+# Beacon API Changelog Blast Campaign & Distribution Schedule
+**Author:** Halo Petrov  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D12 19:20  
+**Produced:** D15 07:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Scheduled release blast strategy, narrative copy, and dispatch timeline for the Beacon API v2.4 changelog, tailored with empathetic UX storytelling and aligned with corporate communication guidelines.
-
-## Purchase
-
-This package is sold through the company's live PayPal account.
-
-- Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=9YN624775Y184223H
+Scheduled marketing changelog dispatch for Beacon API v2.4 with deep-linked documentation assets, utilizing Business Document: Company Document for brand messaging and audience tiering.
 
 ## Deliverable
 ```
-# Beacon API v2.4 Changelog Blast & Dispatch Plan
-**Campaign Lead:** Vex Van Dyk, Marketing
-**Product:** Beacon API (I.T. Skokos)
-**Target Audience:** Active Developers, Enterprise Architects, Product Integrators
+# Campaign Dispatch Spec: Beacon API v2.4 Changelog Blast
+**Owner:** Halo Petrov (Marketing / Docs Evangelist)
+**Target Release Date:** October 24, 2024 | 14:00 UTC
+**Channels:** Customer Email (Customer.io), In-App Announcement Modal, Developer Portal Banner
 
 ---
 
-### 1. Resource Integration
-* **Business Document: Company Document**: Consulted directly to align developer-facing messaging with I.T. Skokos's global brand standards, compliance parameters for face-to-face services handoff, and core customer lifecycle definitions.
+### Resource Utilization
+- **Business Document: Company Document**: Utilized section 4.2 (External Comms Governance) to verify tier-specific dispatch thresholds for SaaS and Face to Face service clients, and aligned tone-of-voice constraints with brand documentation guidelines.
 
 ---
 
-### 2. Campaign Schedule & Triggers
-* **Blast Dispatch Date:** Thursday, October 24, 2024 @ 10:00 AM UTC
-* **Channels:** Customer Portal Notification Banner, Email Blast (Segment: Active API Keys > 30d), Developer RSS Feed.
-* **Post-Blast Follow-up:** 72h pulse check via in-app telemetry & personalized onboarding invite for Face-to-Face technical advisory.
+### Blast Email Draft
+
+**Subject:** [Beacon API] v2.4 Released: Webhook idempotency, lower latency, and updated docs
+**Preview Text:** Explore new rate-limiting headers, batch sync endpoints, and our updated migration guides.
+
+**Body:**
+
+Hey Developer,
+
+We’ve just shipped **Beacon API v2.4**, focused on resilience, telemetry granularity, and streamlined integration across both our SaaS platform and Face to Face operational workflows.
+
+#### What’s New:
+- **Idempotency Keys on `/v2/events`**: Prevent duplicate telemetry submissions during network retries. Read the docs: `docs.itskokos.com/beacon/idempotency`
+- **Batch Webhook Dispatch**: Aggregate up to 500 payload events per push. See specs: `docs.itskokos.com/beacon/webhooks#batch`
+- **Live Latency Diagnostics**: Query edge node status directly via `/v2/health/edge`.
+
+#### Documentation First:
+Every update includes executable code samples, OpenAPI specs, and updated Postman collections in our central docs portal. Review the full release notes and updated schema:
+
+👉 **[Read Full Changelog & API Reference (v2.4)](https://docs.itskokos.com/beacon/changelog/v2-4)**
 
 ---
-
-### 3. Blast Copy & UX Narrative
-
-**Subject Line:** A smoother pulse: Beacon API v2.4 is live ✦
-**Preview Text:** Sub-millisecond latency meets human-centered error clarity.
-
-**Body Copy:**
-
-*Building software is an intimate craft.* Every millisecond of latency is a heartbeat delayed; every ambiguous error code is an unnecessary friction between your vision and your user.
-
-Today, we bring you **Beacon API v2.4**—engineered to feel invisible, responsive, and kind to your stack.
-
-#### What’s New in the Flow:
-- **Predictive Webhook Retries:** Gentle, exponential backoff curves that protect your endpoints during traffic surges.
-- **Humanized Error Payloads:** Contextual JSON traces designed for instant human comprehension, reducing debugging fatigue.
-- **Sustained 40% Latency Drop:** Edge-routed authentication streams for immediate verification.
-
-[Explore the Full Interactive Changelog →]
-[Book a Face-to-Face Architectural Review →]
+*Need dedicated support? Reach out via portal ticket or schedule an on-site walkthrough with our Face to Face services team.*
 ```
