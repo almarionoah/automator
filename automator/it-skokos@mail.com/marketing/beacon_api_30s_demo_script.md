@@ -1,40 +1,42 @@
-# Beacon API - 30-Second Product Demo Script & Production Plan
-**Author:** Cipher Marlow  
+# Beacon API 30s Product Demo Script & Storyboard
+**Author:** Onyx Van Dyk  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 14:50  
+**Produced:** D16 16:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-High-conversion 30-second promotional video script and production storyboard for Beacon API, designed according to specifications in Company Document.
+A precise 30-second video demo storyboard and script for Beacon API, designed to showcase edge-case resilience and core integration features.
 
 ## Deliverable
 ```
-# Production Deliverable: Beacon API 30s Product Demo
-**Creator:** Cipher Marlow (Data Purist, Marketing)
-**Referenced Resource:** Business Document: Company Document (Utilized to align core value metrics, service integration boundaries between SaaS and Face-to-Face offerings, and strict terminology guidelines).
+# Production Script & Storyboard: Beacon API 30s Demo
+
+**Author:** Onyx Van Dyk (Marketing / Edge-Case Archaeology)
+**Target:** Engineering Leads & SaaS Operators
+**Resource Utilisation:** Built directly upon parameters extracted from *Business Document: Company Document*, specifically leveraging its compliance guidelines, platform positioning matrix, and brand messaging hierarchy to guarantee value alignment.
 
 ---
 
-## Visual & Audio Storyboard (Duration: 30 Seconds)
+### Video Breakdown (Total Duration: 00:30)
 
-### [00:00 - 00:05] Hook: The Fragmentation Problem
-* **Visual:** High-contrast split screen. Left side shows erratic API latency logs; right side shows disconnected in-person service appointments.
-* **Voiceover (VO):** "SaaS speed meets real-world execution. Are your digital workflows disconnected from your face-to-face services?"
-* **On-Screen Text:** Eliminate Service Lag.
+**[00:00 - 00:05] The Hook: Chaos in Edge Cases**
+* Visual: Screen capture showing cascading timeout errors on legacy endpoint.
+* Audio (Voiceover): "Your APIs handle the happy path. But what happens when network partitions hit sub-millisecond edge cases?"
+* On-Screen Text: "Edge Cases Shouldn't Break Production."
 
-### [00:05 - 00:15] Solution: Introducing Beacon API
-* **Visual:** Clean terminal interface initializing `@itskokos/beacon-api`. Live telemetry dashboard instantly stabilizes into unified data streams.
-* **VO:** "Meet Beacon API from I.T. Skokos. A single, robust interface uniting real-time cloud data pipelines with field service delivery."
-* **On-Screen Text:** Sub-10ms Sync | Enterprise SaaS & Field Integration
+**[00:05 - 00:15] The Solution: Beacon API**
+* Visual: Smooth cut to Beacon API dashboard. Real-time telemetry graph self-heals as traffic dynamically reroutes.
+* Audio (Voiceover): "Meet Beacon API by I.T. Skokos. High-throughput SaaS connectivity backed by intelligent failover and face-to-face SLA support."
+* On-Screen Text: "Beacon API: Resilient. Observable. Instant."
 
-### [00:15 - 00:25] Core Value: Data Precision & Actionable Insights
-* **Visual:** Smooth UI transition displaying automated scheduling dispatch triggered directly by webhook telemetry.
-* **VO:** "Zero fluff, pure data integrity. Automate scheduling, track on-site telemetry, and scale operations seamlessly."
-* **On-Screen Text:** 99.999% Reliability | End-to-End Orchestration
+**[00:15 - 00:23] Technical Differentiation**
+* Visual: Split-screen showing 3-line SDK initialization (`import { Beacon } from '@itskokos/beacon'`) side-by-side with 99.999% uptime metrics.
+* Audio (Voiceover): "Deploy in under two minutes with zero-config edge sync. Documented directly against rigorous enterprise benchmarks."
+* Contextual Note: Data points aligned with specifications from *Business Document: Company Document*.
 
-### [00:25 - 00:30] Call to Action
-* **Visual:** Minimalist I.T. Skokos branding lockup with direct URL and API documentation badge.
-* **VO:** "Deploy Beacon API today. Visit itskokos.com/beacon."
-* **On-Screen Text:** Build Faster. Deliver Everywhere. itskokos.com/beacon
+**[00:23 - 00:30] Call to Action**
+* Visual: Clean minimal title card with custom demo URL and enterprise tier badge.
+* Audio (Voiceover): "Stop debugging edge cases. Start building. Test Beacon API today."
+* On-Screen Text: "itskokos.com/beacon-api | Enterprise Ready"
 ```
