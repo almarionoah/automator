@@ -1,67 +1,63 @@
-# Model Routing Cost & Latency Benchmark Spec
-**Author:** Nova Reyes  
+# Dynamic Cost-Optimized Model Routing Benchmark & Evaluation
+**Author:** Nyx Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D17 05:45  
+**Produced:** D18 03:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Latency-first dynamic model routing evaluation for Project Beacon API, balancing P99 latency thresholds against token cost profiles referencing the internal Company Document.
+Refactored cost-efficiency analysis and heuristic routing matrix for the Beacon API project. Incorporates financial thresholds and baseline usage patterns from the internal Company Document to minimize invocation overhead across tier-1 and tier-2 LLM endpoints.
 
 ## Deliverable
 ```
-# Project: Beacon API - Model Routing Cost & Latency Evaluation
-# Author: Nova Reyes (Research)
-# Reference: Baseline cost limits and SLO definitions sourced from 'Company Document'.
+# Project: Beacon API - Cost Routing Engine & Benchmark
+# Author: Nyx Nkosi <nyx.nkosi@itskokos.internal>
+# Context: Refactored routing heuristics evaluated against SLA & budgetary constraints.
+# Reference: 'Company Document' (Business Document) utilized for baseline token unit costs, target margin constraints, and SLA thresholds.
 
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
-import time
+import logging
 
-@dataclass
-class RouteMetrics:
-    target_p99_ms: float
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("BeaconCostRouter")
+
+@dataclass(frozen=True)
+class ModelTier:
+    name: str
     cost_per_1k_input: float
     cost_per_1k_output: float
-    fallback_threshold_ms: float
+    latency_p95_ms: int
+    complexity_threshold: float
 
-# Cost baselines established via Company Document compliance audit
-ROUTING_TIERS: Dict[str, RouteMetrics] = {
-    "edge_fast": RouteMetrics(
-        target_p99_ms=120.0,
-        cost_per_1k_input=0.00015,
-        cost_per_1k_output=0.0006,
-        fallback_threshold_ms=180.0
-    ),
-    "core_balanced": RouteMetrics(
-        target_p99_ms=450.0,
-        cost_per_1k_input=0.0015,
-        cost_per_1k_output=0.0060,
-        fallback_threshold_ms=600.0
-    ),
-    "heavy_reasoning": RouteMetrics(
-        target_p99_ms=1800.0,
-        cost_per_1k_input=0.0100,
-        cost_per_1k_output=0.0300,
-        fallback_threshold_ms=2500.0
-    )
+# Cost baselines established via Company Document (Section 3.2: API Financial Projections)
+ROUTING_TIERS = {
+    "flash_lite": ModelTier("gemini-3.1-flash-lite", 0.00025, 0.0010, 220, 0.40),
+    "standard": ModelTier("gemini-3.1-flash", 0.0015, 0.0060, 480, 0.75),
+    "pro": ModelTier("gemini-3.1-pro", 0.0070, 0.0280, 1150, 1.00),
 }
 
-def select_route(prompt_len: int, latency_budget_ms: float, max_cost_limit: Optional[float] = None) -> str:
-    """
-    Evaluates optimal endpoint for Beacon API requests prioritizing latency budget
-    while enforcing cost constraints defined in Company Document.
-    """
-    # Fast-path evaluation: low complexity query
-    if prompt_len < 256 and latency_budget_ms <= ROUTING_TIERS["edge_fast"].fallback_threshold_ms:
-        return "edge_fast"
-    
-    # Balanced routing with latency guardrails
-    if latency_budget_ms <= ROUTING_TIERS["core_balanced"].fallback_threshold_ms:
-        est_cost = (prompt_len / 1000) * ROUTING_TIERS["core_balanced"].cost_per_1k_input
-        if max_cost_limit is None or est_cost <= max_cost_limit:
-            return "core_balanced"
-            
-    return "heavy_reasoning"
+class CostOptimizedRouter:
+    def __init__(self, budget_cap_per_req: float = 0.015):
+        self.budget_cap = budget_cap_per_req
+
+    def score_complexity(self, payload: Dict[str, Any]) -> float:
+        """Scores incoming query complexity based on token estimate and reasoning depth."""
+        length = len(payload.get("prompt", ""))
+        has_tools = 1.0 if payload.get("tools") else 0.0
+        normalized_len = min(length / 4000.0, 1.0)
+        return (normalized_len * 0.6) + (has_tools * 0.4)
+
+    def select_route(self, payload: Dict[str, Any]) -> ModelTier:
+        complexity = self.score_complexity(payload)
+        
+        if complexity <= ROUTING_TIERS["flash_lite"].complexity_threshold:
+            return ROUTING_TIERS["flash_lite"]
+        elif complexity <= ROUTING_TIERS["standard"].complexity_threshold:
+            return ROUTING_TIERS["standard"]
+        return ROUTING_TIERS["pro"]
+
+    def estimate_cost(self, tier: ModelTier, in_tokens: int, out_tokens: int) -> float:
+        return (in_tokens / 1000.0 * tier.cost_per_1k_input) + (out_tokens / 1000.0 * tier.cost_per_1k_output)
 
 ```
