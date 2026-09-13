@@ -1,36 +1,55 @@
-# Atlas Core - Dashboard Density De-escalation & Spatial Harmony Spec
-**Author:** Onyx Bishop  
+# Atlas Core Dashboard Density Simplification Spec
+**Author:** Prism Marlow  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D13 06:40  
+**Produced:** D15 14:40  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-UX design specification detailing the spatial de-densification of the Atlas Core operational dashboard, transforming visual clutter into empathetic cognitive breathing room while honoring guidelines from Business Document: Company Document.
+Design specification and UI token updates to reduce visual clutter and simplify dashboard density across Atlas Core, aligned with business tiering from Company Document.
 
 ## Deliverable
 ```
-# Design Specification: Atlas Core Dashboard De-Densification
-**Author:** Onyx Bishop, Lead UX Romantic
-**Project:** Atlas Core | I.T. Skokos
-**Status:** Ready for Implementation
+# Design Spec: Atlas Core Dashboard Density Simplification
+**Designer:** Prism Marlow | **Project:** Atlas Core | **Status:** Ready for Dev
 
----
+## 1. Context & Business Alignment
+To reduce cognitive overload for dual SaaS and Face-to-Face operators, we refactored the Atlas Core dashboard density. We referenced **Business Document: Company Document** to determine widget priority, ensuring high-value service-tier metrics and client appointment queues receive primary real estate while secondary telemetry is moved to progressive disclosure drawers.
 
-### 1. Conceptual Philosophy & Empathy Framing
-A dashboard should not shout over the human heartbeat. In this revision, we strip away the abrasive claustrophobia of legacy metric grids, replacing anxiety-inducing density with intentional rhythm, quiet elevation, and poetic clarity.
+## 2. Spacing & Grid Adjustments
+- **Base Grid:** Migrated from 4px micro-grid to 8px proportional grid.
+- **Card Padding:** Increased from `8px` (`$space-xs`) to `16px` (`$space-sm`) on desktop; `12px` on tablet.
+- **Container Gaps:** Normalized grid row/column gap to `16px` (down from chaotic mixed `4px`-`24px`).
+- **Max Viewport Density:** Capped default widgets at 6 primary cards per viewport.
 
-### 2. Upstream References & Integration
-- **Business Document: Company Document**: Directly utilized to audit executive KPI hierarchies and ensure our SaaS telemetry harmonizes seamlessly with I.T. Skokos' face-to-face service milestones. Every condensed tile preserves the core business imperatives defined therein while shedding unnecessary telemetry artifacts.
+## 3. Component Updates
+### A. KPI Metric Cards (`MetricCard.tsx`)
+- Deprecated inline sparklines on secondary metrics.
+- Primary metric font size normalized: `text-2xl font-semibold` (`24px/32px`).
+- Added overflow dropdown for raw export and audit history.
 
-### 3. Spatial System & Density Rules
-- **Grid Cadence:** Shift from 12-column micro-grid (8px gutter) to an airy 8-column adaptive rhythm with 24px gutters.
-- **Card Padding:** Increased from `compact: 8px 12px` to `harmonious: 20px 24px`.
-- **Progressive Disclosure:** 
-  - Secondary telemetry (raw ping, sub-node delta logs) hidden under organic hover-reveal trays.
-  - Primary metrics elevated to monumental focal nodes (Typographic scale: Display-02, 32px/40px, Inter Medium).
+### B. Face-to-Face Schedule Feed (`ScheduleWidget.tsx`)
+- Grouped appointments by active time-block (Morning/Afternoon/Evening) rather than an unsegmented flat list.
+- Status badges condensed to monochrome dot indicators with hover tooltips.
 
-### 4. Component Refactors
-1. **Unified State Indicator:** Merged 4 disjointed status badges into a single ambient breathing pulse dot (`#10B981` 8px radius with 4s ease-in-out glow).
-2. **Action Palette:** Reduced persistent icon actions per widget from 5 to 1 contextual overflow menu, giving users serene visual quietude.
+## 4. Design Tokens (Extract)
+```json
+{
+  "density": {
+    "card-padding-default": "1rem",
+    "card-gap": "1rem",
+    "header-height": "3.5rem",
+    "table-row-height": "2.75rem"
+  },
+  "typography": {
+    "kpi-value": "1.5rem",
+    "kpi-label": "0.875rem",
+    "widget-title": "1rem"
+  }
+}
+```
+
+## 5. Next Steps
+- Hand off token constants to Frontend for immediate integration into `@atlas/ui-kit`.
+- Review build in staging against 1080p and 1440p standard resolutions.
 ```
