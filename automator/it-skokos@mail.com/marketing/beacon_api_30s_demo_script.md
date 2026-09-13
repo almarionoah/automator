@@ -1,42 +1,45 @@
-# Beacon API 30s Product Demo Script & Storyboard
-**Author:** Onyx Van Dyk  
+# Beacon API 30-Second Product Demo Script & Production Plan
+**Author:** Quill Reyes  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D16 16:50  
+**Produced:** D17 02:15  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A precise 30-second video demo storyboard and script for Beacon API, designed to showcase edge-case resilience and core integration features.
+Lean 30-second video demo storyboard, VO script, and zero-agency editing plan for Beacon API, referencing the Company Document to eliminate revision costs.
 
 ## Deliverable
 ```
-# Production Script & Storyboard: Beacon API 30s Demo
-
-**Author:** Onyx Van Dyk (Marketing / Edge-Case Archaeology)
-**Target:** Engineering Leads & SaaS Operators
-**Resource Utilisation:** Built directly upon parameters extracted from *Business Document: Company Document*, specifically leveraging its compliance guidelines, platform positioning matrix, and brand messaging hierarchy to guarantee value alignment.
+# Beacon API: 30-Second Product Demo Production Spec
+**Producer / Copywriter:** Quill Reyes (Marketing o3)
+**Budget Tier:** Ultra-Lean ($0 External Spend / In-House Screen Capture & Native VO)
 
 ---
 
-### Video Breakdown (Total Duration: 00:30)
+### Resource Reference & Utilization
+* **Business Document: Company Document**: Directly referenced for verified API integration speed benchmarks (sub-50ms), pricing tier callouts (Free Starter Tier), and I.T. Skokos brand voice guardrails. Using this canonical doc eliminated external agency copy fees and legal review cycles.
 
-**[00:00 - 00:05] The Hook: Chaos in Edge Cases**
-* Visual: Screen capture showing cascading timeout errors on legacy endpoint.
-* Audio (Voiceover): "Your APIs handle the happy path. But what happens when network partitions hit sub-millisecond edge cases?"
-* On-Screen Text: "Edge Cases Shouldn't Break Production."
+---
 
-**[00:05 - 00:15] The Solution: Beacon API**
-* Visual: Smooth cut to Beacon API dashboard. Real-time telemetry graph self-heals as traffic dynamically reroutes.
-* Audio (Voiceover): "Meet Beacon API by I.T. Skokos. High-throughput SaaS connectivity backed by intelligent failover and face-to-face SLA support."
-* On-Screen Text: "Beacon API: Resilient. Observable. Instant."
+### Video Breakdown & Edit Decision List (30s Total)
 
-**[00:15 - 00:23] Technical Differentiation**
-* Visual: Split-screen showing 3-line SDK initialization (`import { Beacon } from '@itskokos/beacon'`) side-by-side with 99.999% uptime metrics.
-* Audio (Voiceover): "Deploy in under two minutes with zero-config edge sync. Documented directly against rigorous enterprise benchmarks."
-* Contextual Note: Data points aligned with specifications from *Business Document: Company Document*.
+**[00:00 - 00:06] The Hook**
+* **Visual:** Fast screen capture: Complex legacy API error logs flash red, transitioning to a streamlined Beacon API dashboard terminal.
+* **On-Screen Text:** Stop integration bottlenecks.
+* **Voiceover (VO):** "Tired of slow endpoint syncs draining dev hours and budget? Meet Beacon API."
 
-**[00:23 - 00:30] Call to Action**
-* Visual: Clean minimal title card with custom demo URL and enterprise tier badge.
-* Audio (Voiceover): "Stop debugging edge cases. Start building. Test Beacon API today."
-* On-Screen Text: "itskokos.com/beacon-api | Enterprise Ready"
+**[00:06 - 00:16] Core Product Demo**
+* **Visual:** Cursor drops single API key into config, endpoints validate instantaneously in green. UI shows live synchronization between SaaS telemetry and face-to-face field dispatch logs.
+* **On-Screen Text:** One Key. Instant Sync. Sub-50ms Latency.
+* **VO:** "Deploy in under two minutes. Beacon API seamlessly unites your SaaS platform with field service operations in real time."
+
+**[00:16 - 00:24] Differentiator / Value Prop**
+* **Visual:** Split screen showing automated error routing and cost-per-query drop graph (-40%).
+* **On-Screen Text:** Cut Infra Overhead by 40%.
+* **VO:** "Built for scale and cost efficiency, giving your engineering team unmatched reliability at a fraction of the cost."
+
+**[00:24 - 00:30] Call to Action (CTA)**
+* **Visual:** I.T. Skokos lockup + Beacon API logo. Clean button: 'Deploy Free Today'.
+* **On-Screen Text:** Deploy Free | beacon.itskokos.com
+* **VO:** "Get started free today at beacon.itskokos.com." Tooling: Captured via OBS Studio; cut in DaVinci Resolve Free.
 ```
