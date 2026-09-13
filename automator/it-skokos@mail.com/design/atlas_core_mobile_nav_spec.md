@@ -1,33 +1,47 @@
-# Atlas Core Mobile Navigation Architecture & Edge-Case Spec
-**Author:** Volt Adeyemi  
+# Mobile Navigation Overhaul Specification - Atlas Core
+**Author:** Jax Van Dyk  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D15 20:40  
+**Produced:** D16 01:10  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Technical UI/UX interaction spec and edge-case resolution matrix for the Atlas Core mobile nav overhaul, informed by Business Document: Company Document.
+Design specification and tokenized implementation layout for the Atlas Core mobile navigation redesign, integrating brand alignment standards from the Company Document.
 
 ## Deliverable
 ```
-# Atlas Core: Mobile Navigation Overhaul (Spec v2.4)
-**Author:** Volt Adeyemi, Lead Design Architect
-**Target System:** Atlas Core (SaaS Platform & Face-to-Face Client Portal)
+# Design Specification: Atlas Core Mobile Navigation Overhaul
+Author: Jax Van Dyk (Design)
+Status: Ready for Implementation
 
-## 1. Context & Business Grounding
-Per **Business Document: Company Document**, the mobile navigation hierarchy must bridge both our asynchronous SaaS management tools and real-time Face-to-Face service dispatch workflows. We utilized the service topology defined in **Business Document: Company Document** to structure the primary tab bar: [Workspace, F2F Dispatch, Telemetry, Account].
+## 1. Objective & Context
+Streamline mobile viewport UX for Atlas Core by replacing the legacy nested hamburger drawer with an accessible, high-performance bottom navigation bar and condensed quick-action sheet. This deliverable directly applies architectural guidelines from the Business Document: 'Company Document' to reconcile hybrid SaaS platform views with Face-to-Face booking workflows.
 
-## 2. Edge-Case Matrix & Interaction Bounds
+## 2. Resource Utilization
+- **Company Document**: Used to align mobile typography scales, tap-target tolerances (min 48x48dp), and corporate color contrast ratios (WCAG AAA standard for primary navigational items).
 
-### A. Viewport & Dynamic Height Anomalies
-- **100dvh vs Virtual Keyboard:** Navigation container uses `height: 100dvh` with `env(safe-area-inset-bottom)` fallback. Sheet drawers trigger `resize: none` locks to prevent input-focus viewport bouncing on Android Chrome.
-- **Foldable / Dual-Screen Splits:** Breakpoint `spanning: single-fold-vertical` shifts nav rail to left edge (width: 72px), preserving map viewports for active F2F field operations.
+## 3. Component Architecture
+### 3.1 Persistent Bottom Navigation Bar
+- Height: 64px + safe-area-inset-bottom
+- Background: var(--surface-primary-elevation-2)
+- Tabs (4 core destinations):
+  1. Dashboard (`/app/dashboard`)
+  2. Services & F2F (`/app/f2f-services`)
+  3. Bookings (`/app/schedule`)
+  4. Account / More (`/app/profile`)
 
-### B. Gesture Collision Resolution
-- **Nested Map vs Drawer Gesture Conflict:** F2F route view contains horizontal map panning. Nav drawer swipe-to-dismiss requires horizontal delta `dx < 12px` and velocity `vy > 0.45px/ms` within the top 44px handle zone only. Map interactions remain non-blocking.
-- **System Gesture Insets:** Edge-swipe trigger margins are offset by `calc(16px + env(safe-area-inset-left))` to avoid Android 14 predictive back gesture hijack.
+### 3.2 Quick Action Drawer
+- Trigger: Elevated center floating action button (+)
+- Sheet Transition: 200ms cubic-bezier(0.16, 1, 0.3, 1)
+- Actions: 'New F2F Client Check-in', 'Instant Invoice', 'Book Room'
 
-## 3. Degradation & State Handling
-- **Offline / Degraded Telemetry State:** When offline sync trips, nav drawer updates the F2F badge to amber `#D97706` with an inline alert banner, keeping offline cache actionable without modal interruption.
-- **Focus Trap & A11y:** Focus locks inside modal navigation sheet (`role="dialog"`, `aria-modal="true"`). Escape or scrim tap restores focus to originating hamburger button.
+## 4. Design Tokens
+- `--nav-icon-active`: #0F52BA (Atlas Cobalt)
+- `--nav-icon-inactive`: #6B7280 (Neutral Slate)
+- `--nav-badge-bg`: #EF4444 (Alert Red)
+- `--nav-font-size-label`: 11px / 1.2 line-height
+
+## 5. Handoff Notes
+- Zero layout shifts during routing transitions.
+- Tested across iOS (WebKit) and Android (Chrome) viewports (360px - 428px width).
 ```
