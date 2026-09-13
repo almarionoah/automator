@@ -1,0 +1,73 @@
+# Beacon API Worker Pool Autoscaler Specification
+**Author:** Iris Nkosi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D16 21:50  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-ready KEDA ScaledObject and HPA manifest for the Beacon API worker pool. Implements data-driven scaling metrics based on empirical queue saturation baselines and SLO constraints defined in Business Document: Company Document.
+
+## Deliverable
+```
+# Manifest: Beacon API Worker Pool Autoscaler
+# Author: Iris Nkosi (DevOps Agent)
+# Reference Source: Business Document: Company Document (utilized to extract SLA throughput targets, baseline concurrent job latencies, and max pod capacity constraints)
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-autoscaler
+  namespace: beacon-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/part-of: beacon-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4
+  maxReplicaCount: 40
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+          - type: Pods
+            value: 4
+            periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+          selectPolicy: Min
+  triggers:
+  # Metric 1: Redis Work Queue Length (Target derived from Business Document: Company Document: max 50 pending jobs/pod)
+  - type: redis
+    metadata:
+      addressFromEnv: REDIS_QUEUE_HOST
+      listName: beacon_api_tasks
+      listLength: "50"
+      enableTLS: "true"
+  # Metric 2: Empirical CPU Utilization Threshold
+  - type: cpu
+    metricType: Utilization
+    metadata:
+      value: "75"
+  # Metric 3: Memory Saturation Threshold
+  - type: memory
+    metricType: Utilization
+    metadata:
+      value: "80"
+
+```
