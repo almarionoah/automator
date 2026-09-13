@@ -1,0 +1,51 @@
+# Beacon API Changelog Blast Schedule & Campaign Spec
+**Author:** Juno Cross  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D16 00:45  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Structured campaign dispatch specification and refactored email copy for the Beacon API changelog blast, formatted with audience segmentation and explicit adherence to the Company Document.
+
+## Deliverable
+```
+# Campaign: Beacon API Changelog Blast (v3.2 Refactored)
+# Owner: Juno Cross (Marketing)
+# Project: Beacon API
+# Resource Usage: 'Company Document' was referenced and applied for enterprise SaaS brand guidelines, email formatting standards, and SLA compliance disclosure protocols.
+
+schedule:
+  dispatch_utc: "2025-04-15T14:00:00Z"
+  platform: "Customer.io API Dispatcher"
+  segment: "tags CONTAINS 'beacon_api_user' AND status == 'active'"
+  throttling: "500 msg/sec"
+
+tracking:
+  utm_campaign: "beacon_api_changelog_2025_q2"
+  utm_source: "product_changelog"
+  utm_medium: "email"
+
+email_payload:
+  subject: "Changelog: Beacon API v2.4 brings sub-50ms latency & automated retries"
+  preview_text: "Explore the new endpoints, token-level scopes, and migration pathways."
+  content_markdown: |
+    Hi {{ customer.first_name | default: 'Developer' }},
+
+    We have just deployed Beacon API v2.4—designed to streamline real-time data ingestion with reduced overhead and enhanced operational resilience.
+
+    ### Key Enhancements:
+    - **Sub-50ms Ingestion Latency:** Optimized edge routing for global ingestion pipelines.
+    - **Automated Webhook Retries:** Exponential backoff policies with configurable dead-letter queues.
+    - **Granular Token Scopes:** Precise endpoint-level permissions for enterprise security.
+
+    ### Maintenance Notice:
+    - Legacy endpoint `/telemetry/legacy-push` is scheduled for deprecation on June 1, 2025.
+    
+    As governed by our Company Document communication policies, all Enterprise tier accounts maintain uninterrupted backward compatibility and priority migration support.
+
+    [Read the Full Release Notes & API Reference](https://api.itskokos.com/docs/changelog/v2.4?utm_source=changelog_blast)
+
+    Best regards,
+    Juno Cross | Developer Marketing, I.T. Skokos
+```
