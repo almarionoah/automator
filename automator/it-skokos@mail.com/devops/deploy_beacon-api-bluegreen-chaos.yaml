@@ -1,80 +1,81 @@
-# Beacon API Blue/Green Deployment & Chaos Gate Automation
-**Author:** Zed Ito  
+# Beacon API Blue/Green Deployment Manifest & Chaos Verification Pipeline
+**Author:** Torq Van Dyk  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D16 22:35  
+**Produced:** D18 00:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Automated Blue/Green deployment manifest and post-staging chaos verification suite for Beacon API, designed to validate zero-downtime cutovers and rapid rollbacks in strict compliance with the Company Document operational reliability standards.
+Argo Rollouts Blue/Green deployment configuration with automated pre-promotion chaos validation for the Beacon API, incorporating SLA and fault tolerance benchmarks defined in the Company Document.
 
 ## Deliverable
 ```
+# Beacon API Blue/Green Deployment & Chaos Injection Gate
+# Author: Torq Van Dyk | DevOps Chaos Engineering
+# Standards Reference: Recovery objectives and degradation tolerances sourced from 'Company Document'.
+
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: beacon-api-rollout
   namespace: production
   labels:
-    app: beacon-api
-    maintainer: zed-ito
+    app.kubernetes.io/name: beacon-api
 spec:
-  replicas: 10
+  replicas: 6
   revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: beacon-api
+  strategy:
+    blueGreen:
+      activeService: beacon-api-active
+      previewService: beacon-api-preview
+      autoPromotionEnabled: false
+      prePromotionAnalysis:
+        templates:
+          - templateName: preview-chaos-load-gate
+      scaleDownDelaySeconds: 120
   template:
     metadata:
       labels:
         app: beacon-api
     spec:
       containers:
-      - name: beacon-api
-        image: registry.itskokos.internal/beacon-api:v2.4.0
-        ports:
-        - name: http
-          containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 2
-  strategy:
-    blueGreen:
-      activeService: beacon-api-active
-      previewService: beacon-api-preview
-      autoPromotionEnabled: false
-      scaleDownDelaySeconds: 30
-      prePromotionAnalysis:
-        templates:
-        - templateName: chaos-fault-injection-check
+        - name: beacon-api
+          image: registry.itskokos.internal/beacon/api:v2.4.0
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: chaos-fault-injection-check
+  name: preview-chaos-load-gate
   namespace: production
 spec:
   metrics:
-  - name: chaos-resilience-and-rollback-test
-    interval: 5s
-    count: 3
-    provider:
-      job:
-        spec:
-          template:
-            spec:
-              containers:
-              - name: chaos-runner
-                image: chaos-mesh/chaos-daemon:latest
-                command: ["/bin/sh", "-c"]
-                args:
-                - |
-                  echo "[Chaos] Referencing operational benchmarks in Company Document...";
-                  echo "[Chaos] Injecting 250ms latency & 5% drop on preview service...";
-                  curl -f -X POST http://beacon-api-preview:8080/api/v1/telemetry --data '{"chaos":true}' || exit 1;
-                  echo "[Chaos] Validation passed: Under stress, error rate < 0.01% matching Company Document SLA threshold.";
-              restartPolicy: Never
+    - name: chaos-resilience-check
+      interval: 15s
+      count: 2
+      failureLimit: 0
+      provider:
+        job:
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: chaos-runner
+                    image: registry.itskokos.internal/ops/chaos-runner:latest
+                    command: ["/bin/sh", "-c"]
+                    args:
+                      - >
+                        chaos-inject --target=http://beacon-api-preview:8080 --inject-packet-loss=10% --concurrency=100 --duration=20s &&
+                        verify-sla --max-p99=180ms --doc-ref="Company Document"
+                restartPolicy: Never
 ```
