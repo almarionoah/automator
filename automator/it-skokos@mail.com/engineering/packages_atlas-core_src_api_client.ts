@@ -1,93 +1,84 @@
-# Atlas Core: Typed API Client Migration & Bundle Optimization
-**Author:** Juno Okafor  
+# Atlas Core Typed API Client Migration Spec & Implementation
+**Author:** Vex Adeyemi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D15 13:10  
+**Produced:** D16 06:05  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Migrated Atlas Core from legacy untyped Axios client to a zero-dependency, type-safe API client. Reduced bundle footprint by 44KB and aligned request schemas with Business Document: Company Document to avoid billable endpoint over-fetching.
+Type-safe, ergonomically crafted API client wrapper for Atlas Core, replacing legacy dynamic fetch calls with strongly-typed contracts aligned with the standard architecture in Company Document.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=39S30235HL497231R
+- Pay: https://www.paypal.com/checkoutnow?token=7GW84465E1168510L
 
 ## Deliverable
 ```
 /**
- * Project: Atlas Core - Typed API Client Migration
- * Author: Juno Okafor (Engineering)
- * Working Style: Cost Cutter (Zero-runtime overhead, lightweight native fetch wrapper)
+ * @file Atlas Core - Strongly-Typed API Client
+ * @author Vex Adeyemi <vex@itskokos.internal>
  * 
- * Compliance & Schema Ref: Explicitly verified against 'Business Document: Company Document'
- * for SLA bounds, endpoint payload trimming, and Face-to-Face booking rate limits.
+ * In alignment with the integration requirements from Business Document: Company Document,
+ * this module introduces an expressive, strongly-typed API layer engineered for developer
+ * ergonomics and resilient user experiences across our SaaS and F2F touchpoints.
  */
 
-export interface ApiResponse<T> {
-  data: T;
-  status: number;
-  durationMs: number;
+import { z } from 'zod';
+
+export const CustomerProfileSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  tier: z.enum(['standard', 'premium', 'concierge']),
+  f2fConsultationBooked: z.boolean(),
+  lastActive: z.string().datetime(),
+});
+
+export type CustomerProfile = z.infer<typeof CustomerProfileSchema>;
+
+export interface RequestOptions extends RequestInit {
+  timeoutMs?: number;
 }
 
-export interface SaaSUserSession {
-  tenantId: string;
-  userId: string;
-  roles: ('admin' | 'staff' | 'client')[];
-}
+export class AtlasApiClient {
+  private baseUrl: string;
 
-export interface F2FServiceBooking {
-  bookingId: string;
-  serviceType: 'in_person_consultation' | 'on_site_support';
-  locationCoords: [number, number];
-  scheduledAt: string;
-  costCenterId: string;
-}
-
-export class AtlasCoreClient {
-  private readonly baseUrl: string;
-
-  constructor(baseUrl: string = process.env.ATLAS_API_URL || 'https://api.itskokos.internal') {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
   }
 
-  // Lightweight typed request wrapper removing Axios dependency to cut bundle/compute costs
-  private async request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-    const start = performance.now();
-    const res = await fetch(`${this.baseUrl}${path}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Atlas-Client': 'AtlasCore-TS-v2',
-        ...options.headers,
-      },
-    });
+  private async request<T>(path: string, schema: z.ZodType<T>, options: RequestOptions = {}): Promise<T> {
+    const { timeoutMs = 8000, ...fetchOpts } = options;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (!res.ok) {
-      throw new Error(`[AtlasClient Error] ${res.status}: ${res.statusText}`);
+    try {
+      const response = await fetch(`${this.baseUrl}${path}`, {
+        ...fetchOpts,
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...fetchOpts.headers,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`[Atlas API Error] ${response.status}: ${response.statusText}`);
+      }
+
+      const rawData = await response.json();
+      return schema.parse(rawData);
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    const data: T = await res.json();
-    return {
-      data,
-      status: res.status,
-      durationMs: Math.round(performance.now() - start),
-    };
   }
 
-  public getSession(token: string): Promise<ApiResponse<SaaSUserSession>> {
-    return this.request<SaaSUserSession>('/v2/saas/session', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  }
-
-  public createBooking(payload: Omit<F2FServiceBooking, 'bookingId'>): Promise<ApiResponse<F2FServiceBooking>> {
-    return this.request<F2FServiceBooking>('/v2/f2f/bookings', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  }
+  public customer = {
+    getById: (id: string, opts?: RequestOptions): Promise<CustomerProfile> =>
+      this.request(`/v1/customers/${id}`, CustomerProfileSchema, { method: 'GET', ...opts }),
+  };
 }
 ```
