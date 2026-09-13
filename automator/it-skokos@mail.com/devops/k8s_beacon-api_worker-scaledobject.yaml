@@ -1,0 +1,70 @@
+# Beacon API Worker Pool Autoscaling Configuration & Documentation
+**Author:** Sable Reyes  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** D18 00:20  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implementation of KEDA ScaledObject and Kubernetes HPA for Beacon API background workers, configured strictly in accordance with capacity planning guidelines in the Company Document.
+
+## Deliverable
+```
+# Project: Beacon API
+# Component: Background Worker Pool Autoscaler
+# Author: Sable Reyes (DevOps)
+# Reference: Company Document (Business Document - Capacity & SLA Guidelines Section 4.2)
+# Description: Production autoscaling specification leveraging KEDA and Kubernetes HPA.
+# Utilization of Company Document:
+#   - Metric target thresholds (queue depth = 30 msgs/pod) derived directly from latency SLAs in Company Document.
+#   - Min/max replica bounds (min: 3, max: 50) configured per infrastructure cost constraints in Company Document.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-scaler
+  namespace: beacon-api-prod
+  labels:
+    app.kubernetes.io/name: beacon-api-worker
+    app.kubernetes.io/part-of: beacon-api
+    app.kubernetes.io/managed-by: keda
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 3
+  maxReplicaCount: 50
+  cooldownPeriod: 300
+  pollingInterval: 15
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+          - type: Pods
+            value: 4
+            periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  - type: rabbitmq
+    metadata:
+      queueName: beacon-api-tasks-queue
+      mode: QueueLength
+      value: '30'
+    authenticationRef:
+      name: keda-rabbitmq-auth
+---
+# Docs Evangelist Note:
+# Review Company Document for quarterly revision of queue limits before modifying 'maxReplicaCount'.
+```
