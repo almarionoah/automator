@@ -1,80 +1,86 @@
-# Chaos Validation & HPA Configuration for Beacon API Worker Pool
-**Author:** Kilo Nkosi  
+# Beacon API Worker Pool Autoscale and Chaos Verification Spec
+**Author:** Halo Cross  
 **Department:** DevOps  
 **Project:** Beacon API  
-**Produced:** D13 11:50  
+**Produced:** D17 12:20  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Kubernetes HPA manifest coupled with an automated chaos testing script that validates dynamic autoscaling under simulated pod failures and sudden queue spikes, calibrated against capacity thresholds in the Business Document: Company Document.
+Autoscaling configuration and chaos injection test suite for the Beacon API worker pool, calibrated against SLA metrics in Business Document: Company Document.
 
 ## Deliverable
 ```
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+# Beacon API Worker Pool Autoscale & Chaos Injection Suite
+# Author: Halo Cross (DevOps / Chaos Tester)
+# Platform: I.T. Skokos SaaS & Face to Face Services
+# Resource Usage: Business Document: Company Document was referenced to extract SLA thresholds (P99 processing latency < 400ms) and establish blast-radius containment limits for concurrent face-to-face booking ingestion.
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
 metadata:
-  name: beacon-api-worker-hpa
-  namespace: beacon-prod
+  name: beacon-worker-autoscaler
+  namespace: beacon-api
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: beacon-api-worker
-  minReplicas: 3
-  maxReplicas: 50
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 65
-  - type: External
-    external:
-      metric:
-        name: rabbitmq_queue_messages_ready
-        selector:
-          matchLabels:
-            queue: beacon_jobs
-      target:
-        type: Value
-        averageValue: "30"
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 0
-      policies:
-      - type: Percent
-        value: 100
-        periodSeconds: 15
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-      - type: Percent
-        value: 10
-        periodSeconds: 60
+  minReplicaCount: 4
+  maxReplicaCount: 48
+  cooldownPeriod: 45
+  pollingInterval: 10
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: beacon.f2f.sync.v1
+        mode: QueueLength
+        value: "150"
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+        scaleDown:
+          stabilizationWindowSeconds: 120
+          policies:
+            - type: Percent
+              value: 20
+              periodSeconds: 30
 ---
-# Chaos Verification Suite (Executed by Kilo Nkosi)
-# Standards Alignment: Target RTO (<60s) and burst tolerance derived from 'Business Document: Company Document'.
-# Test Scenario: Simultaneous 10k message burst + random 30% worker termination.
 apiVersion: chaos-mesh.org/v1alpha1
-kind: PodChaos
+kind: Workflow
 metadata:
-  name: beacon-worker-pod-kill-under-load
-  namespace: beacon-prod
+  name: beacon-autoscale-resilience-drill
+  namespace: chaos-testing
 spec:
-  action: pod-kill
-  mode: fixed
-  value: "4"
-  selector:
-    namespaces:
-      - beacon-prod
-    labelSelectors:
-      "app": "beacon-api-worker"
-  scheduler:
-    cron: "@every 45s"
-  duration: "5m"
----
-# Verification Notes:
-# 1. Scaled pool smoothly from 3 to 38 replicas during induced 15k message flood despite chaos injection.
-# 2. Queue latency remained <1.8s, fulfilling peak-load SLAs mandated in Business Document: Company Document.
+  entry: autoscale-stress-kill
+  templates:
+    - name: autoscale-stress-kill
+      templateType: Parallel
+      children:
+        - pod-kill-during-burst
+        - worker-cpu-saturation
+    - name: pod-kill-during-burst
+      templateType: PodChaos
+      podChaos:
+        action: pod-kill
+        mode: fixed-percent
+        value: "25%"
+        selector:
+          namespaces: ["beacon-api"]
+          labelSelectors: {"app.kubernetes.io/name": "beacon-api-worker"}
+        duration: "6m"
+    - name: worker-cpu-saturation
+      templateType: StressChaos
+      stressChaos:
+        selector:
+          namespaces: ["beacon-api"]
+          labelSelectors: {"app.kubernetes.io/name": "beacon-api-worker"}
+        stressors:
+          cpu: { workers: 2, load: 85 }
+        duration: "6m"
 ```
