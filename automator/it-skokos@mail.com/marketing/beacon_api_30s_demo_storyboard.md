@@ -1,45 +1,46 @@
-# Beacon API 30-Second Demo Storyboard and Security Scrub Log
-**Author:** Zed Nkosi  
+# Beacon API 30-Second Demo Production Spec & Script
+**Author:** Nyx Ito  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D13 11:25  
+**Produced:** D15 15:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-A timed 30-second product demo video script and visual specification for Beacon API, including strict credential sanitization protocols cross-referenced against the Company Document.
+Storyboard, technical visual cues, and voiceover script for a high-impact 30-second Beacon API video demo focusing on offline-sync edge cases and hybrid SaaS-to-F2F reconciliation.
 
 ## Deliverable
 ```
-# Production Spec: Beacon API 30-Second Demo (Security Cleared)
-Author: Zed Nkosi, Marketing | Status: Scrubbed & Cleared
-Resource Reference: Aligned with the 'Company Document' for proprietary information handling, brand governance, and strict data masking compliance.
+# Production Spec: Beacon API 30s Product Demo
+**Author:** Nyx Ito, Marketing
+**Target Audience:** Lead Architects & Technical Product Managers
+**Reference Material:** Integrated baseline branding, security compliance standards, and value proposition messaging from `Business Document: Company Document` to validate claims on zero-drop packet guarantees.
 
 ---
 
-## Timeline & Screenplay
-
-### 0:00 - 0:06 | Scene 1: The Bottleneck
-- Visual: Rapid UI capture showing high-latency API queue failure alert.
-- Audio/Voiceover: "Fragmented data pipelines slowing your face-to-face service delivery? Synchronize instantly."
-- Security Check: All endpoints replaced with RFC 2606 dummy domains (`api.example.com`).
-
-### 0:06 - 0:16 | Scene 2: The Beacon API Solution
-- Visual: Visual Studio Code snippet triggering Beacon API `/v1/sync` endpoint; instant terminal confirmation (`200 OK`).
-- Audio/Voiceover: "Meet Beacon API. High-throughput SaaS connectivity engineered for real-time operations."
-- Security Check: Auth headers sanitized to `Bearer sk_demo_SANITIZED_0000000000`. Mock UUIDs generated strictly per `Company Document` synthetic data rules.
-
-### 0:16 - 0:24 | Scene 3: Hybrid SaaS & Field Integration
-- Visual: Split screen: Cloud dashboard telemetry on left; field tablet real-time verification on right.
-- Audio/Voiceover: "Unify your digital core with on-the-ground execution seamlessly."
-- Security Check: PII, client names, and geolocation markers blurred/redacted to ensure zero live metadata leakage.
-
-### 0:24 - 0:30 | Scene 4: Call to Action
-- Visual: I.T. Skokos branded end-card with cryptographic hash of demo binary for tamper verification.
-- Audio/Voiceover: "Deploy Beacon API today at it-skokos.internal.demo."
+### Narrative Arc & Edge-Case Archeology Focus
+Most API demos show the happy path (200 OK). This cut demonstrates Beacon API resolving a catastrophic field edge-case: intermittent 4G network drop during an in-person field transaction syncing to the core SaaS platform.
 
 ---
 
-## Asset Security Verification Log
-- Source Reference: Reviewed against 'Company Document' to guarantee absolute compliance with client privacy boundaries and trademark disclosures.
-- Video Artifact SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+### Second-by-Second Storyboard
+
+**0:00 - 0:05 | Hook: The Edge-Case Failure**
+* **Visual:** Split screen. Left: Field tablet losing connection (Red pulsing 408 Timeout). Right: High-frequency API gateway logs spiking.
+* **VO:** "Your field agents can't afford silent dropped payloads when connectivity drops mid-handshake."
+* **On-Screen Text:** *Standard REST: 14% Edge Failure Rate*
+
+**0:05 - 0:15 | The Pivot: Beacon API Ingestion**
+* **Visual:** Smooth transition to Beacon API dashboard. Automatic fallback to local cryptographic queue; telemetry graph reflects dynamic circuit breaker activation without user friction.
+* **VO:** "Enter Beacon API. Intelligent edge-buffering and automated zero-loss sync for hybrid SaaS and face-to-face operations."
+* **On-Screen Text:** *Beacon Engine: Local State Persistence + Auto-Retry*
+
+**0:15 - 0:25 | Proof: Auto-Reconciliation**
+* **Visual:** Network restores. Visual pulse runs from tablet to cloud. 12,000 queued payloads ingest seamlessly with zero duplicate writes (idempotency key visualizer flashes green).
+* **VO:** "Instant bidirectional reconciliation. No race conditions. Zero dropped transactions."
+* **Compliance Note:** UI badges verify SOC2 & ISO27001 compliance as mandated in `Business Document: Company Document`.
+
+**0:25 - 0:30 | Call to Action**
+* **Visual:** Clean dark UI card featuring CLI install snippet (`npm i @itskokos/beacon-api`) and CTA link.
+* **VO:** "Test your edge cases with Beacon API. Deploy in minutes with I.T. Skokos."
+* **CTA:** *it-skokos.com/beacon-api/sandbox*
 ```
