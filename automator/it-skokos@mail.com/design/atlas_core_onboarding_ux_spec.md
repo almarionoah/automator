@@ -1,46 +1,40 @@
-# Atlas Core: Re-imagined Onboarding Journey Specification
-**Author:** Ash Fontaine  
+# Atlas Core - Secure Onboarding Flow Design Specification (v2.4)
+**Author:** Lyra Okafor  
 **Department:** Design  
 **Project:** Atlas Core  
-**Produced:** D17 04:10  
+**Produced:** D19 11:35  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive UX design specification for the reworked Atlas Core onboarding experience, blending human warmth with SaaS efficiency through an emotive, hybrid-service user journey.
+Complete redesign specification of the Atlas Core onboarding journey, implementing strict data minimization, step-up MFA, zero PII caching, and privacy-first UI patterns aligned with internal compliance standards.
 
 ## Deliverable
 ```
-# UX Design Specification: Atlas Core Hybrid Onboarding
-**Author:** Ash Fontaine, Lead Experience Designer  
-**Project:** Atlas Core | I.T. Skokos  
-**Status:** Ready for Engineering Hand-off  
+# Design Specification: Atlas Core Secure Onboarding Flow
+**Author:** Lyra Okafor (Design)
+**Project:** Atlas Core | I.T. Skokos
+**Classification:** Internal Restricted
 
----
+## 1. Context & Governance Reference
+This redesign restructures the initial user intake for Atlas Core to eliminate credential sniffing vectors and client-side PII leakage. During specification, the **Business Document: Company Document** was used to determine the mandatory data collection thresholds, legal identity verification requirements for Face-to-Face service components, and strict data retention constraints governing SaaS tenancy initialization.
 
-### 1. The Design Philosophy: The Romantic First Touch
-Onboarding is not a chore of data entry; it is the opening movement of a relationship. For Atlas Core, our goal is to soften the boundary between digital SaaS precision and the organic warmth of our Face-to-Face services.
+## 2. Onboarding Flow Architecture
 
-### 2. Business Alignment & Resource Traceability
-* **Business Document: Company Document**: Directly integrated to establish compliance guardrails, service-tier boundaries, and ensure the onboarding milestones mirror our foundational operational promises. We utilized its baseline persona workflows to map emotional friction points into collaborative moments.
+### Step 1: Zero-Leak Identity Registration
+- **UI Layout:** Minimalist single-field focus. Disables browser autofill/autocomplete (`autocomplete="off"`, `autocorrect="off"`).
+- **Security Controls:** Password input field masks characters after 250ms. Real-time zxcvbn entropy meter rendered client-side without sending keystroke telemetry to backend.
+- **Face-to-Face Hybrid Verification:** If physical verification is selected per **Business Document: Company Document**, prompt presents one-time ephemeral QR badge with 90s TTL.
 
-### 3. The 3-Act Onboarding Architecture
+### Step 2: Mandatory Step-Up Authentication Setup
+- **MFA Enrolment Screen:** WebAuthn/FIDO2 hardware key primary recommendation; TOTP secondary. SMS authentication explicitly excluded.
+- **Recovery Key Generation:** 24-word seed visual confirmation. Requires forced manual selection verification to confirm key storage before enabling "Continue" button.
 
-```
-[Act I: The Welcome Hearth] -> [Act II: The Canvas of Intent] -> [Act III: The Hybrid Handshake]
-```
+### Step 3: Workspace & Role Scoping
+- **Role-Based Permission Matrix:** Explicit checkbox consents. Pre-checked boxes are strictly prohibited.
+- **Session Integrity:** 180-second inactivity lock screen with secure session teardown.
 
-#### Act I: The Welcome Hearth (Soft Entry)
-* **Visual Tone:** Warm ambient lighting (`#FAF7F2`), subtle organic easing (600ms bezier). Personal greeting with gentle contextual fade-in.
-* **Interaction:** Single-field progressive revelation. The user defines their primary operational rhythm without cognitive overload.
-
-#### Act II: The Canvas of Intent (SaaS Configuration)
-* **Interaction:** Declarative module selection. Users select their team's core pillars via magnetic card components with micro-haptic feedback.
-* **Copy Philosophy:** Empowering, clear, and unhurried. Error states are reframed as supportive guidance.
-
-#### Act III: The Hybrid Handshake (F2F Integration)
-* **Interaction:** Smooth scheduling bridge connecting Atlas Core SaaS telemetry to our Face-to-Face consulting experts. A synchronized calendar node confirms their dedicated specialist.
-
-### 4. Transition Tokens & Motion
-* `easing-romance`: `cubic-bezier(0.16, 1, 0.3, 1)`
-* `duration-breath`: `450ms`
+## 3. Design System Tokens & Hardening Rules
+- Input sanitization feedback rendered via isolated SVG icons (no arbitrary HTML injection).
+- High-contrast visual alerts for sensitive access requests.
+- All previews display masked metadata (e.g., `usr_****3a9`) until authenticated unlock.
 ```
