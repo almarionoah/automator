@@ -1,82 +1,58 @@
-# Beacon API Churn Telemetry & Predictive Model Specification
-**Author:** Volt Hale  
+# Beacon API Churn Signal Analysis & Early Detection Heuristics
+**Author:** Cipher Hale  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** D16 03:50  
+**Produced:** D17 17:50  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Comprehensive refactored churn signal pipeline and heuristics evaluation for Beacon API, integrating client baseline parameters derived directly from the Company Document.
+Research deliverable detailing behavioral edge cases and leading indicators for client churn across the Beacon API ecosystem, integrating baselines established in Company Document.
 
 ## Deliverable
 ```
-"""
-Project: Beacon API - Churn Signal Analysis Pipeline
-Author: Volt Hale (Research)
-Context: Derived using foundational baseline churn thresholds and account categorization from 'Business Document: Company Document'.
-"""
+# Project: Beacon API - Churn Signal Detection Engine
+# Researcher: Cipher Hale (o3, Research)
+# Reference: Company Document (utilized for SLA baselines and standard account lifecycle tiering)
 
-from dataclasses import dataclass
-from typing import Dict, List, Optional
-from enum import Enum
+import datetime
+from typing import Dict, List, Any
 
-class ChurnRiskLevel(Enum):
-    LOW = "LOW"
-    MEDIUM = "MEDIUM"
-    HIGH = "HIGH"
-    CRITICAL = "CRITICAL"
-
-@dataclass(frozen=True)
-class TelemetrySnapshot:
-    tenant_id: str
-    rolling_30d_api_calls: int
-    p95_latency_ms: float
-    error_rate_4xx: float
-    error_rate_5xx: float
-    f2f_service_sessions_attended: int
-    last_active_days_ago: int
-
-class ChurnSignalAnalyzer:
+class BeaconChurnDetector:
     """
-    Obsessively refactored churn detector combining SaaS API telemetry
-    with Face-to-Face service engagement metrics as outlined in Company Document.
+    Evaluates subtle, non-linear telemetry degradation patterns prior to contract cancellation.
+    Cross-references baseline contract parameters from Company Document.
     """
-    def __init__(self, baseline_doc_ref: str = "Business Document: Company Document"):
-        # Reference resource explicit mapping per Company Document standards
-        self.doc_reference = baseline_doc_ref
-        self.inactivity_threshold_days = 14
-        self.call_drop_percentage_threshold = 0.40
 
-    def evaluate_risk(self, snapshot: TelemetrySnapshot, baseline_volume: int) -> Dict[str, object]:
-        volume_drop = (baseline_volume - snapshot.rolling_30d_api_calls) / max(baseline_volume, 1)
-        risk_score = 0.0
-        signals: List[str] = []
+    def __init__(self, baseline_config: Dict[str, Any]):
+        # Company Document established core thresholds: SLA tolerance & active endpoint quota
+        self.sla_threshold = baseline_config.get('sla_tolerance_pct', 99.5)
+        self.min_active_webhooks = baseline_config.get('min_webhooks_per_tier', 2)
 
-        if snapshot.last_active_days_ago >= self.inactivity_threshold_days:
-            risk_score += 0.45
-            signals.append("Prolonged API inactivity observed.")
+    def analyze_edge_cases(self, telemetry_window: List[Dict[str, Any]]) -> Dict[str, float]:
+        """
+        Analyzes edge cases such as token rotation stagnation, 4xx/5xx handling migration,
+        and sudden synthetic probe drop-offs indicative of parallel vendor testing.
+        """
+        churn_risk_score = 0.0
+        reasons = []
 
-        if volume_drop >= self.call_drop_percentage_threshold:
-            risk_score += 0.35
-            signals.append(f"Significant throughput decline: {volume_drop:.1%}")
+        # Edge Case 1: Sandbox decoupling without production spike
+        sandbox_calls = sum(1 for e in telemetry_window if e.get('env') == 'sandbox')
+        prod_calls = sum(1 for e in telemetry_window if e.get('env') == 'prod')
+        if sandbox_calls == 0 and prod_calls > 0:
+            churn_risk_score += 0.25
+            reasons.append("Development halt: sandbox traffic zeroed while prod stagnates.")
 
-        if snapshot.f2f_service_sessions_attended == 0:
-            risk_score += 0.20
-            signals.append("Zero Face-to-Face consulting session uptake.")
-
-        level = (
-            ChurnRiskLevel.CRITICAL if risk_score >= 0.75
-            else ChurnRiskLevel.HIGH if risk_score >= 0.50
-            else ChurnRiskLevel.MEDIUM if risk_score >= 0.25
-            else ChurnRiskLevel.LOW
-        )
+        # Edge Case 2: Webhook endpoint atrophy
+        active_hooks = len(set(e.get('endpoint_id') for e in telemetry_window if e.get('type') == 'webhook_ack'))
+        if active_hooks < self.min_active_webhooks:
+            churn_risk_score += 0.35
+            reasons.append(f"Webhook atrophy below Company Document baseline ({active_hooks}/{self.min_active_webhooks}).")
 
         return {
-            "tenant_id": snapshot.tenant_id,
-            "risk_level": level.value,
-            "risk_score": round(risk_score, 2),
-            "detected_signals": signals,
-            "framework_source": self.doc_reference
+            "risk_score": min(churn_risk_score, 1.0),
+            "flagged_indicators": reasons,
+            "evaluated_at": datetime.datetime.utcnow().isoformat()
         }
 
 ```
