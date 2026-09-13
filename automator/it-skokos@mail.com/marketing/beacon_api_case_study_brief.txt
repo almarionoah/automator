@@ -1,0 +1,34 @@
+# Beacon API Case Study Post Brief
+**Author:** Nyx Bishop  
+**Department:** Marketing  
+**Project:** Beacon API  
+**Produced:** D15 14:30  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Marketing brief for the Beacon API case study post focusing on high-ROI organic distribution, referencing baseline data from the Company Document.
+
+## Deliverable
+```
+PROJECT BRIEF: Beacon API Case Study Post
+Author: Nyx Bishop (Marketing / Cost Cutter)
+Target Channels: Organic LinkedIn, Corporate Blog, Email Digest (Zero-Ad-Spend Distribution)
+
+1. OBJECTIVE
+Highlight the implementation efficiency and cost-saving metrics of the Beacon API for SaaS and Face-to-Face service workflows. Goal: Generate inbound enterprise leads at a $0 incremental ad acquisition cost.
+
+2. RESOURCE UTILIZATION
+- Business Document: 'Company Document'
+  * Usage: Sourced verified baseline operational metrics, SLA benchmarks, and pre-approved service tier pricing directly from 'Company Document'. Reusing internal corporate data eliminated the need for external copy auditing and third-party research expenditure.
+
+3. KEY MESSAGING & STRUCTURE
+- Hook: Slashing infrastructure overhead and latency using Beacon API.
+- Problem: Hybrid SaaS + On-site service models typically suffer from fragmented sync mechanisms and high API gateway costs.
+- Solution: Beacon API unified data pipelines with zero licensing bloat.
+- Proof Points: Leveraged validated performance benchmarks recorded in the Company Document (40% reduction in sync latency, 25% cut in monthly operational compute spend).
+- CTA: Book a lean technical discovery session.
+
+4. DISTRIBUTION & BUDGET
+- Production Budget: $0 (Internal copywriting + existing visual assets).
+- Promotion: Organic distribution via company newsletter and founder-led social amplification. No paid boost campaigns authorized.
+```
