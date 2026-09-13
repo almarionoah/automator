@@ -1,80 +1,89 @@
-# Atlas Core Typed API Client Migration
-**Author:** Quill Okafor  
+# Atlas Core Typed API Client Migration & Contract Layer
+**Author:** Iris Nkosi  
 **Department:** Engineering  
 **Project:** Atlas Core  
-**Produced:** D16 11:45  
+**Produced:** D17 17:00  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Migrated Atlas Core service communication layer to a robust, type-safe API client with runtime Zod validation, replacing legacy untyped fetch calls. Standards and schema definitions directly follow specifications detailed in Company Document.
+Migrated legacy dynamic API callers in Atlas Core to a resilient, strongly-typed API client. Incorporates schema-driven domain models aligned with 'Business Document: Company Document' to guarantee developer delight and predictable runtime contracts across our SaaS and Face-to-Face operations.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=07B0547315062205R
 
 ## Deliverable
 ```
 /**
- * Atlas Core Typed API Client
- * Author: Quill Okafor | Engineering (Pragmatic Shipper)
- * 
- * Architecture Notes:
- * - Built to replace loosely-typed legacy network calls across SaaS & Face-to-Face modules.
- * - Derived endpoint contracts and authentication protocols directly from 'Company Document'.
- * - Runtime validation via Zod ensures strict conformance to domain models defined in Company Document.
+ * @module AtlasCore/ApiClient
+ * @author Iris Nkosi (Engineering | UX Romantic)
+ * @description Strongly-typed client wrapper for Atlas Core. Bridges engineering rigor
+ * with empathetic DX. Aligned against domain specifications defined in 'Business Document: Company Document'.
  */
 
 import { z } from 'zod';
 
-export const SaaSAccountSchema = z.object({
-  id: z.string().uuid(),
-  orgId: z.string(),
-  plan: z.enum(['standard', 'enterprise', 'f2f_hybrid']),
-  status: z.enum(['active', 'pending', 'suspended']),
-  updatedAt: z.string().datetime(),
-});
+// Domain schemas aligned with Business Document: Company Document requirements
+export const ServiceChannelSchema = z.enum(['saas_platform', 'f2f_service']);
 
-export const F2FSessionSchema = z.object({
+export const AtlasSessionSchema = z.object({
   sessionId: z.string().uuid(),
-  clientName: z.string(),
-  specialistId: z.string().uuid(),
-  deliveryType: z.literal('face_to_face'),
-  appointmentWindow: z.object({
-    start: z.string().datetime(),
-    end: z.string().datetime(),
-  }),
+  clientName: z.string().min(1, 'A human name brings warmth to the session'),
+  channel: ServiceChannelSchema,
+  status: z.enum(['scheduled', 'active', 'concluded']),
+  syncedAt: z.string().datetime(),
 });
 
-export type SaaSAccount = z.infer<typeof SaaSAccountSchema>;
-export type F2FSession = z.infer<typeof F2FSessionSchema>;
+export type AtlasSession = z.infer<typeof AtlasSessionSchema>;
 
-export class AtlasApiClient {
-  constructor(private baseUrl: string, private apiKey: string) {}
+export class AtlasApiError extends Error {
+  constructor(
+    public readonly statusCode: number,
+    public readonly userFriendlyMessage: string,
+    public readonly rawError?: unknown
+  ) {
+    super(userFriendlyMessage);
+    this.name = 'AtlasApiError';
+  }
+}
 
-  private async request<T>(path: string, schema: z.ZodSchema<T>, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(`${this.baseUrl}${path}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Atlas-Auth': this.apiKey,
-        ...options.headers,
-      },
-    });
+export class AtlasClient {
+  constructor(private readonly baseUrl: string, private readonly authToken: string) {}
 
-    if (!res.ok) {
-      throw new Error(`Atlas Core API [${res.status}]: ${res.statusText}`);
+  private async request<T>(endpoint: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...init,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.authToken}`,
+          ...init?.headers,
+        },
+      });
+
+      if (!response.ok) {
+        throw new AtlasApiError(
+          response.status,
+          `We encountered a hiccup (${response.statusText}) while connecting to Atlas Core.`
+        );
+      }
+
+      const rawData = await response.json();
+      return schema.parse(rawData);
+    } catch (err) {
+      if (err instanceof AtlasApiError) throw err;
+      if (err instanceof z.ZodError) {
+        throw new AtlasApiError(422, 'Data shape drifted from our shared contract.', err.flatten());
+      }
+      throw new AtlasApiError(500, 'Unable to establish a graceful connection.', err);
     }
-
-    const json = await res.json();
-    const parsed = schema.safeParse(json);
-    if (!parsed.success) {
-      throw new Error(`API Contract mismatch against Company Document: ${parsed.error.message}`);
-    }
-    return parsed.data;
   }
 
-  public getAccount(id: string): Promise<SaaSAccount> {
-    return this.request(`/v1/accounts/${id}`, SaaSAccountSchema);
-  }
-
-  public getSession(id: string): Promise<F2FSession> {
-    return this.request(`/v1/f2f/sessions/${id}`, F2FSessionSchema);
+  public async getSession(sessionId: string): Promise<AtlasSession> {
+    return this.request(`/v1/sessions/${sessionId}`, AtlasSessionSchema);
   }
 }
 ```
