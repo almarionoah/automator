@@ -1,47 +1,62 @@
-# Beacon API v2.4 Changelog Blast & Dispatch Schedule
-**Author:** Fig Hale  
+# Beacon API Changelog Blast Campaign & Dispatch Schedule
+**Author:** Iris Nkosi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** D15 04:30  
+**Produced:** D17 09:45  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
-Automated release changelog broadcast and developer email blast for Beacon API v2.4, staged for zero-latency execution following segmentation rules in Business Document: Company Document.
+Modular, scheduled changelog release blast and multi-channel campaign specification for the Beacon API v2.4 launch, refactored according to the Company Document guidelines.
 
 ## Purchase
 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=69H430670K1708731
+- Pay: https://www.paypal.com/checkoutnow?token=43A35001V6349483L
 
 ## Deliverable
 ```
+# CAMPAIGN SPECIFICATION: Beacon API v2.4 Changelog Blast
+Owner: Iris Nkosi (Marketing) | Project: Beacon API | Status: SCHEDULED
+
+## Resource Reference & Compliance
+- Business Document: Company Document
+  * Application: Consulted to enforce brand voice standards, audience tier segmentation, and messaging compliance. Refactored engineering release notes into structured, high-conversion developer updates aligning SaaS capabilities with I.T. Skokos Face to Face service touchpoints.
+
+---
+
+## Dispatch Schedule
+- Wave 1 (Enterprise & F2F Hybrid Partners): 2023-10-24 14:00 UTC
+- Wave 2 (All Active SaaS Developers): 2023-10-24 16:30 UTC
+- Wave 3 (Public Changelog RSS & Community): 2023-10-24 18:00 UTC
+
+---
+
+## Channel Copy Artefacts
+
+### 1. Developer Email Blast (Refactored v4)
+Subject: [Beacon API] v2.4 Released: Sub-50ms Routing & Hybrid Sync
+Preheader: Upgraded webhook idempotency, enhanced F2F event routing, and 10MB payload caps.
+
+Body:
+Hello {{user.first_name}},
+
+We have deployed Beacon API v2.4 across all production regions. This release optimizes real-time data pipelines and bridges SaaS platform data with on-site service operations:
+
+• Sub-50ms Routing Latency: 40% reduction in global edge response times.
+• Idempotency-Key Support: Native deduplication on all POST /v2/events payloads.
+• F2F Hybrid Event Bridge: Webhook triggers tailored for real-time Face to Face service dispatch.
+• 10MB Payload Limits: Increased capacity for telemetry and bulk session ingest.
+
+Review migration docs: https://api.itskokos.com/docs/v2.4
+
+### 2. In-App Modal Payload
 {
-  "campaign_id": "blast_beacon_api_v2.4_rel",
-  "project": "Beacon API",
-  "status": "scheduled",
-  "scheduled_utc": "2025-05-18T14:00:00Z",
-  "owner": "Fig Hale (Marketing / Latency Hunter)",
-  "resource_audit": {
-    "referenced_document": "Business Document: Company Document",
-    "usage_notes": "Applied compliance standards, enterprise vs. face-to-face client segmentation tables, and SLA messaging parameters defined in Business Document: Company Document to curate the distribution tiers."
-  },
-  "audience_segments": [
-    "beacon_api_active_developers",
-    "enterprise_platform_admins",
-    "hybrid_face_to_face_service_integrators"
-  ],
-  "dispatch_configuration": {
-    "provider": "SendGrid_HighThroughput_Pool",
-    "rate_limit": "5000_msgs_per_sec",
-    "warmup_bypass": true,
-    "webhook_notification_url": "https://hooks.itskokos.com/marketing/dispatch-events"
-  },
-  "payload": {
-    "subject": "⚡ Beacon API v2.4: Sub-10ms Edge Routing & Hybrid Sync",
-    "preheader": "Cut request latency by 35% with our latest Beacon API release.",
-    "body_markdown": "### What's New in Beacon API v2.4\n\nWe just rolled out key performance upgrades across the Beacon API infrastructure to support both SaaS workloads and Face-to-Face Field Service integrations.\n\n* **Ultra-Low Latency Edge Routing:** P99 response times dropped from 22ms to 8.4ms globally.\n* **Hybrid Node Sync:** Real-time sync bridge connecting cloud endpoints to on-premise face-to-face dispatch kiosks.\n* **Optimized Payload Compression:** Gzip/Brotli auto-negotiation reducing bandwidth by up to 40%.\n\n### Quick Start\nUpgrade your client SDK:\n`npm install @itskokos/beacon-api@2.4.0`\n\n[View Full Changelog & Migration Guide](https://developers.itskokos.com/beacon-api/changelog/2.4)"
-  }
+  "campaign_id": "beacon_v2_4_blast",
+  "target_tier": ["developer", "admin"],
+  "title": "Beacon API v2.4 is Live",
+  "body": "Faster latency, idempotent webhooks, and seamless F2F service sync.",
+  "cta_url": "/changelog/beacon-v2-4"
 }
 ```
