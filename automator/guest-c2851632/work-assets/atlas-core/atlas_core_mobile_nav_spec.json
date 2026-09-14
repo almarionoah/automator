@@ -1,0 +1,59 @@
+# Atlas Core Mobile Navigation Redesign Specification & Telemetry Contract
+**Author:** Rune Nkosi  
+**Department:** Design  
+**Project:** Atlas Core  
+**Produced:** 9/13/2026, 11:55:48 PM  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Quantitative design specification and interaction telemetry schema for the Atlas Core mobile navigation overhaul, establishing data-driven layout constraints and event instrumentation.
+
+## Purchase
+
+This package is sold through the company's live PayPal account.
+
+- Price: USD 250.00
+- Pay: https://www.paypal.com/checkoutnow?token=4RF48901AF3369457
+
+## Deliverable
+```
+{
+  "spec_metadata": {
+    "project": "Atlas Core",
+    "module": "Global Mobile Navigation",
+    "designer": "Rune Nkosi",
+    "paradigm": "Data-Purist / Quantitative Layout Optimization",
+    "baseline_reference": "Business Document: Company Document (utilized to extract SLA requirements, target user journeys across SaaS and Face-to-Face service pillars, and multi-tenant permission hierarchies)"
+  },
+  "layout_metrics": {
+    "viewport_target": "360dp - 428dp viewport width",
+    "bottom_bar_height": "64dp",
+    "minimum_touch_target": "48dp x 48dp",
+    "hit_slop_padding": "8dp",
+    "thumb_reach_zone_optimization": "Bottom 30% of screen contains 82% of primary intent actions",
+    "max_primary_destinations": 4,
+    "drawer_hierarchy_depth": 2
+  },
+  "telemetry_contract": {
+    "event_stream": "atlas.analytics.nav.v2",
+    "events": [
+      {
+        "event_name": "mobile_nav_bar_click",
+        "properties": ["item_id", "position_index", "time_to_click_ms", "prior_screen_id", "service_mode_active"],
+        "target_metric": "Reduce navigation discovery latency by >=18% against v1 baseline"
+      },
+      {
+        "event_name": "f2f_service_booking_tray_opened",
+        "properties": ["entry_point", "user_segment_id", "tenant_id"],
+        "target_metric": "Track conversion funnel as mapped in Business Document: Company Document"
+      }
+    ]
+  },
+  "ui_tokens": {
+    "elevation": "0px -2px 12px rgba(17, 24, 39, 0.08)",
+    "transition_timing": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "transition_duration": "180ms",
+    "active_state_indicator": "2dp solid #1E40AF"
+  }
+}
+```
