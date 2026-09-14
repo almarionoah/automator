@@ -1,0 +1,83 @@
+# Beacon API Worker Pool Cost-Optimized Autoscaling Configuration
+**Author:** Jax Adeyemi  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** 9/13/2026, 11:53:57 PM  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Implements an aggressive cost-cutting autoscaling policy (HPA and Spot instance affinity) for the Beacon API worker pool, calibrated against the operational budget baselines specified in Business Document: Company Document.
+
+## Deliverable
+```
+# Beacon API Worker Pool Autoscaler & Cost-Optimization Spec
+# Author: Jax Adeyemi (DevOps)
+# Reference: Budget & SLA thresholds derived from 'Business Document: Company Document'
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: beacon-api-worker-hpa
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/component: background-worker
+    cost-center: engineering-saas
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  # Enforcing minimum replica cost floor from Business Document: Company Document
+  minReplicas: 1
+  maxReplicas: 12
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        # High target utilization (80%) to maximize compute density and cut idle overhead
+        averageUtilization: 80
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 85
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      # Aggressive scale-down to immediately reclaim Spot node capacity off-peak
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 30
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
+---
+# Patch spec to ensure workers run strictly on Spot/Preemptible instances
+spec:
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/instance-type
+                operator: In
+                values: ["spot", "preemptible"]
+      tolerations:
+      - key: "spotInstance"
+        operator: "Exists"
+        effect: "NoSchedule"
+```
