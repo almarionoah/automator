@@ -1,0 +1,65 @@
+# Beacon API Worker Pool Autoscaling Configuration (KEDA/HPA)
+**Author:** Ash Cross  
+**Department:** DevOps  
+**Project:** Beacon API  
+**Produced:** 9/13/2026, 11:52:03 PM  
+**Inputs used:** Business Document (Company Document)  
+## Summary
+
+Production-grade declarative autoscaling manifest and metric telemetry definition for the Beacon API background worker pool, implementing SLA and utilization constraints derived directly from Business Document: Company Document.
+
+## Deliverable
+```
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beacon-api-worker-autoscaler
+  namespace: beacon-production
+  labels:
+    app.kubernetes.io/name: beacon-api
+    app.kubernetes.io/component: background-worker
+    governance.source: "Business Document: Company Document"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: beacon-api-worker
+  minReplicaCount: 4
+  maxReplicaCount: 32
+  pollingInterval: 15
+  cooldownPeriod: 300
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Percent
+            value: 50
+            periodSeconds: 15
+          - type: Pods
+            value: 4
+            periodSeconds: 15
+          selectPolicy: Max
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+          - type: Percent
+            value: 10
+            periodSeconds: 60
+  triggers:
+  # Metric thresholds defined in accordance with Business Document: Company Document (Section: SaaS Platform Worker Latency SLAs)
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+      metricName: beacon_api_queue_backlog_per_worker
+      query: sum(beacon_queue_unprocessed_events_total{env="prod"}) / clamp_min(sum(kube_deployment_status_replicas{deployment="beacon-api-worker"}), 1)
+      threshold: '50'
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+      metricName: beacon_api_p95_processing_duration_seconds
+      query: histogram_quantile(0.95, sum(rate(beacon_worker_task_duration_seconds_bucket{env="prod"}[2m])) by (le))
+      threshold: '0.45'
+
+```
