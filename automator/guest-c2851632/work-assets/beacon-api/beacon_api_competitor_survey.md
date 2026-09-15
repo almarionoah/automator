@@ -2,7 +2,7 @@
 **Author:** Mint Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** 9/13/2026, 11:50:29 PM  
+**Produced:** 13/09/2026, 23:50:29  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
@@ -13,7 +13,7 @@ Survey and synthesis of recent competitor changelogs and release notes cross-ref
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=61955299LD110511C
+- Pay: https://www.paypal.com/checkoutnow?token=03M04145125364600
 
 ## Deliverable
 ```
