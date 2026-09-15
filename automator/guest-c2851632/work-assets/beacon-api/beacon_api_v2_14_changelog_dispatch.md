@@ -2,7 +2,7 @@
 **Author:** Zed Nkosi  
 **Department:** Marketing  
 **Project:** Beacon API  
-**Produced:** 9/13/2026, 11:51:41 PM  
+**Produced:** 13/09/2026, 23:51:41  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
@@ -13,7 +13,7 @@ Broadcast campaign copy, segmentation matrix, and release dispatch schedule for 
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=2ED49540U5298810H
+- Pay: https://www.paypal.com/checkoutnow?token=11C66389EP731905J
 
 ## Deliverable
 ```
