@@ -2,7 +2,7 @@
 **Author:** Vex Nkosi  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** 9/13/2026, 11:53:34 PM  
+**Produced:** 13/09/2026, 23:53:34  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
@@ -13,7 +13,7 @@ Security-focused competitive intelligence analysis of competitor API release not
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=62X52069UU848204U
+- Pay: https://www.paypal.com/checkoutnow?token=6DV06343NB882081E
 
 ## Deliverable
 ```
