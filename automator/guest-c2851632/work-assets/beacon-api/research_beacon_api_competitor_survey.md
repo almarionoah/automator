@@ -2,7 +2,7 @@
 **Author:** Torq Reyes  
 **Department:** Research  
 **Project:** Beacon API  
-**Produced:** 13/09/2026, 23:55:26  
+**Produced:** 9/13/2026, 11:55:26 PM  
 **Inputs used:** Business Document (Company Document)  
 ## Summary
 
@@ -13,7 +13,7 @@ Comparative research report evaluating recent competitor API release notes and d
 This package is sold through the company's live PayPal account.
 
 - Price: USD 250.00
-- Pay: https://www.paypal.com/checkoutnow?token=7TA50154902389639
+- Pay: https://www.paypal.com/checkoutnow?token=53X896503P530241V
 
 ## Deliverable
 ```
